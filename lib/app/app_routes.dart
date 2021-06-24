@@ -1,5 +1,6 @@
 
 
+import 'package:ampd/views/home_view.dart';
 import 'package:ampd/views/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -31,8 +32,8 @@ class AppRoutes {
           return MaterialPageRoute<void>(
               settings: routeSettings,
               // builder: (BuildContext context) => TestPicker(),
-//              builder: (BuildContext context) => EntranceView(),
-               builder: (BuildContext context) => SplashView(),
+              builder: (BuildContext context) => HomeView(),
+//               builder: (BuildContext context) => SplashView(),
               // builder: (BuildContext context) => SimpleUsage(),
               fullscreenDialog: false);
         }
