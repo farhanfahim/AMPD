@@ -1,0 +1,83 @@
+import 'package:ampd/appresources/app_colors.dart';
+import 'package:ampd/appresources/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class Skeleton extends StatefulWidget {
+  final double height;
+  final double width;
+  final double cornerRadius;
+
+  Skeleton({
+    Key key,
+    this.height = 20,
+    this.width = 200,
+    this.cornerRadius = 4,
+  }) : super(key: key);
+
+  @override
+  _SkeletonState createState() => _SkeletonState();
+}
+
+class _SkeletonState extends State<Skeleton>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+
+  Animation gradientPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    gradientPosition = Tween<double>(
+      begin: -3,
+      end: 10,
+    ).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.linear),
+    )..addListener(
+          () {
+        setState(() {});
+      },
+    );
+
+    _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+   return ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: Consumer<ThemeNotifier>(
+          builder: (context, ThemeNotifier notifier, child) {
+            // print(notifier.darkTheme);
+            return Container(
+              width: widget.width,
+              height: widget.height,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(widget.cornerRadius),
+                gradient: LinearGradient(
+                  begin: Alignment(gradientPosition.value, 0),
+                  end: const Alignment(-1, 0),
+                  colors:  [
+                    notifier.darkTheme ? AppColors.APP_APP_BAR_DARK_COLOR : Color(0x0D000000),
+                    notifier.darkTheme ? Theme.of(context).iconTheme.color : Color(0x1A000000),
+                    notifier.darkTheme ? AppColors.APP_APP_BAR_DARK_COLOR :Color(0x0D000000),
+                  ],
+                ),
+              ),
+            );
+          }
+      ),
+    );
+  }
+}
