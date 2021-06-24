@@ -1,6 +1,7 @@
 
 
 import 'package:ampd/views/splash_view.dart';
+import 'package:ampd/views/welcome_view.dart';
 import 'package:flutter/material.dart';
 
 
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 class AppRoutes {
   //--------------------------------------------------------------- Constants ------------------------------------------------------------------------
   static const String APP_SPLASH = "/splash_view";
-  static const String WELCOME_SCREEN = "/welcome_screen";
+  static const String WELCOME_VIEW = "/welcome_view";
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
 
@@ -18,13 +19,13 @@ class AppRoutes {
   Route getRoutes(RouteSettings routeSettings) {
     switch (routeSettings.name) { // MutualFriendsView
 
- /*    case WELCOME_SCREEN:
+     case WELCOME_VIEW:
        {
          return MaterialPageRoute<void>(
            settings: routeSettings,
-           builder: (BuildContext context) => MyStoreMessagesView(routeSettings.arguments),
+           builder: (BuildContext context) => WelcomeView(),
          );
-       }*/
+       }
 
       default:
         {

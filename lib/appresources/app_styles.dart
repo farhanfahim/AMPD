@@ -53,9 +53,9 @@ class AppStyles {
 
   static TextStyle detailWithSmallTextSizeTextStyle(){
     return TextStyle(
-        fontSize: 12.0,
+        fontSize: 14.0,
         color: AppColors.APP__DETAILS_TEXT_COLOR,
-        fontFamily: AppFonts.SF_PRO_FONT_REGULAR,
+        fontFamily: AppFonts.POPPINS_MEDIUM,
         fontWeight: FontWeight.w400
     );
   }
@@ -74,8 +74,8 @@ class AppStyles {
     return TextStyle(
       color: Theme.of(context).appBarTheme.textTheme.headline1.color,
       fontSize: fontSize,
-      fontFamily: AppFonts.SF_PRO_FONT_BOLD,
-      fontWeight: FontWeight.w300,
+      fontFamily: AppFonts.NEXA_BOLD,
+      fontWeight: FontWeight.w800,
     );
   }
 

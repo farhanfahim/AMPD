@@ -11,6 +11,7 @@ class AppColors {
   static const Color BUSINESS_INFO_BACKGROUND_COLOR = Color(0xFFF9F9F9);
   static const Color YELLOW_COLOR = Color(0xffF4AE00);
   static const Color WHITE_COLOR = Color(0xffFFFFFF);
+  static const Color WHITE_BLUE = Color(0xff0074E4);
   static const Color APP_PRIMARY_COLOR = Colors.blueAccent;
 
 
@@ -39,7 +40,7 @@ class AppColors {
   static const Color APP_TEXT_COLOR2 = Color(0xFF5A5A5A);
   static const Color APP_TEXT2_COLOR = Color(0xFF707070);
   // static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF989898);
-  static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF8a8a8f);
+  static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF71828A);
   static const Color ACCENT_COLOR = Color(0xFFC95A2D);
   static const Color ADD_IMAGE_BUTTON_COLOR = Color(0xFFF5F4F4);
   static const Color COLOR_BLACK = Colors.black;

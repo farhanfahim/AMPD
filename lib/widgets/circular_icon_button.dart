@@ -24,7 +24,8 @@ class CircularIconButton extends StatelessWidget {
         onTap: onTap,
         child: ClipOval(
           child: Material(
-            color: backColor, // button color
+            color: backColor,
+            // button color
             child: InkWell(
               splashColor: backColor == AppColors.kBlueColorWithOpacity
                   ? backColor
@@ -34,8 +35,11 @@ class CircularIconButton extends StatelessWidget {
               onTap: onTap,
             ),
           ),
+
         ),
       ),
+
+
     );
   }
 }
