@@ -40,7 +40,7 @@ class AppColors {
   static const Color APP_TEXT2_COLOR = Color(0xFF707070);
   // static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF989898);
   static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF8a8a8f);
-  static const Color ACCENT_COLOR = Color(0xFFC95A2D);
+  static const Color ACCENT_COLOR = Color(0xFF2491EB);
   static const Color ADD_IMAGE_BUTTON_COLOR = Color(0xFFF5F4F4);
   static const Color COLOR_BLACK = Colors.black;
   static const Color RESEND_CODE_TEXT_COLOR = Color(0xFF292D33);
@@ -55,14 +55,13 @@ class AppColors {
   static const Color STORE_DIVIDER = Color(0xFFEEF2F4);
 
   static const Color colorGreen = Color(0xFF4BD964);
-  static const Color RED_COLOR= Color(0xFFE3001B);
   static const Color ORANGE_COLOR = Color(0xFFF7A900);
   static const Color colorLightGrey = Color(0xFF777777);
   static const Color colorLightBlack = Color(0xFF292D33);
 
 
 
-  static const Color DARK_GREY_COLOR = Color(0xFF707070);
+  static const Color DARK_GREY_COLOR1 = Color(0xFF707070);
   static const Color APP_TEXT3_COLOR = Color(0xFFD9D9D9);
   static const Color APP_TEXT4_COLOR = Color(0xFF6E767D);
   static const Color LIGHT_GREY_ARROW_COLOR = Color(0xFFCDCDD8);
@@ -101,9 +100,17 @@ class AppColors {
   static const Color ORDER_REQ_DETAIL_HEADING = Color(0xFF323643);
   static const Color DIALOG_CANCEL_COLOR = Color(0xFF007AFF);
 
+  static const Color UNSELECTED_COLOR = Color(0xFF8492A7);
+  static const Color GREY_COLOR = Color(0xFFB1BABF);
+  static const Color DARK_GREY_COLOR2 = Color(0xFF9F9FAC);
+  static const Color DARK_GREY_COLOR = Color(0xFF42425B);
+  static const Color GREEN_COLOR = Color(0xFF10A567);
+  static const Color GREEN_BRIGHT_COLOR = Color(0xFF14D88E);
+  static const Color RED_COLOR = Color(0xFFFF0000);
+  static const Color BLUE_COLOR_DARK = Color(0xFF228DE5);
+
   static const kBlueColorTextStyle = TextStyle(color: Colors.blue);
   static Color kBlueColorWithOpacity = Colors.blue.withOpacity(0.8);
-
 
 
 }

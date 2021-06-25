@@ -1,6 +1,8 @@
+import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/widgets/offer_card_widget.dart';
 import 'package:ampd/widgets/swipe_cards/swipe_cards.dart';
+import 'package:ampd/widgets/widgets.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 
@@ -9,14 +11,14 @@ class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin<HomeView>{
   List<SwipeItem> _swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   List<String> _names = ["Offer 25% Off", "Offer 15% Off", "\$5 Off", "Offer 20% Off", "\$10 Off"];
   List<String> _backgrounds = [
-    "https://i.pinimg.com/originals/50/2e/75/502e75acb506f2ee8c3cdbf788b951f1.jpg",
+    "https://papers.co/wallpaper/papers.co-ax29-starbucks-logo-green-illustration-art-40-wallpaper.jpg?download=true",
     "https://1000logos.net/wp-content/uploads/2016/10/Baskin-Robbins-emblem.jpg",
     "https://fsa.zobj.net/crop.php?r=uGpNyI_vMtmX0Dj-46X9O1IF5Sc4TrgIL5X2xYQqXkCO-QfpA6fMZhog9EZe0nkocECPSP7mXs3DQZHJYjmgsdxE2T0EZnDw2xc64kvCCuxBJLoyDo9XQCAD95mgYsf91cMKBUQTxBdJgtW8",
     "https://media.designrush.com/inspiration_images/134933/conversions/_1511456189_555_McDonald's-mobile.jpg",
@@ -30,17 +32,16 @@ class _HomeViewState extends State<HomeView> {
     Colors.orange
   ];
 
+
   @override
-  void initState() {
-    super.initState();
-  }
+  bool get wantKeepAlive => true;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     for (int i = 0; i < _names.length; i++) {
       _swipeItems.add(SwipeItem(
-          content: Content(text: _names[i], image: _backgrounds[i], color: _colors[i]),
+          content: Content(text: _names[i], image: _backgrounds[i]),
           likeAction: () {
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Liked ${_names[i]}"),
@@ -61,16 +62,19 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final body = SafeArea(
         child: Container(
-          height: 550,
+//          height: 550,
+//        color: Colors.yellow,
+          height: double.maxFinite,
           width: double.infinity,
           child: SwipeCards(
             matchEngine: _matchEngine,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                margin: EdgeInsets.zero,
+//                height: 550.0,
+                height: double.maxFinite,
                 child: OfferCardWidget(
                   image: _swipeItems[index].content.image,
-                  color: _swipeItems[index].content.color,
+//                  color: _swipeItems[index].content.color,
                   text: _swipeItems[index].content.text,
                 ),
               );

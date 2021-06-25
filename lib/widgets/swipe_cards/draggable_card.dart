@@ -3,8 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-enum SlideDirection { left, right, up }
-enum SlideRegion { inNopeRegion, inLikeRegion, inSuperLikeRegion }
+enum SlideDirection { left, right}
+enum SlideRegion { inNopeRegion, inLikeRegion}
 
 class DraggableCard extends StatefulWidget {
   final Widget card;
@@ -129,9 +129,9 @@ class _DraggableCardState extends State<DraggableCard>
         case SlideDirection.right:
           _slideRight();
           break;
-        case SlideDirection.up:
-          _slideUp();
-          break;
+//        case SlideDirection.up:
+//          _slideUp();
+//          break;
       }
     }
   }
@@ -201,7 +201,7 @@ class _DraggableCardState extends State<DraggableCard>
             ? SlideRegion.inNopeRegion
             : SlideRegion.inLikeRegion;
       } else if (isInTopRegion) {
-        slideRegion = SlideRegion.inSuperLikeRegion;
+//        slideRegion = SlideRegion.inSuperLikeRegion;
       } else {
         slideRegion = null;
       }
@@ -235,11 +235,11 @@ class _DraggableCardState extends State<DraggableCard>
         slideOutDirection =
         isInLeftRegion ? SlideDirection.left : SlideDirection.right;
       } else if (isInTopRegion) {
-        slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size.height));
-        slideOutAnimation.forward(from: 0.0);
-
-        slideOutDirection = SlideDirection.up;
+//        slideOutTween = Tween(
+//            begin: cardOffset, end: dragVector * (2 * context.size.height));
+//        slideOutAnimation.forward(from: 0.0);
+//
+//        slideOutDirection = SlideDirection.up;
       } else {
         slideBackStart = cardOffset;
         slideBackAnimation.forward(from: 0.0);

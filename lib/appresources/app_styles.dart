@@ -23,7 +23,8 @@ class AppStyles {
   static TextStyle unselectedTabTextStyle(){
     return TextStyle(
       fontSize: 13.0.sp,
-      fontFamily: AppFonts.SF_PRO_FONT_REGULAR,
+      color: AppColors.UNSELECTED_COLOR,
+      fontFamily: AppFonts.POPPINS,
       fontWeight: FontWeight.w400,
     );
   }
@@ -36,7 +37,8 @@ class AppStyles {
   static TextStyle selectedTabTextStyle(){
     return TextStyle(
       fontSize: 13.0.sp,
-      fontFamily: AppFonts.SF_PRO_FONT_REGULAR,
+      color: AppColors.ACCENT_COLOR,
+      fontFamily: AppFonts.POPPINS,
       fontWeight: FontWeight.w600,
     );
   }
@@ -172,6 +174,15 @@ class AppStyles {
        color: AppColors.ACCENT_COLOR,
        fontFamily: AppFonts.POPPINS_MEDIUM,
        fontWeight: FontWeight.w400
+   );
+ }
+
+ static TextStyle poppinsTextStyle({double fontSize, FontWeight weight}){
+   return TextStyle(
+       fontSize: fontSize,
+       color: Colors.white,
+       fontFamily: AppFonts.POPPINS,
+       fontWeight: weight
    );
  }
 

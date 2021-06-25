@@ -117,9 +117,9 @@ class _SwipeCardsState extends State<SwipeCards> {
       case SlideDirection.right:
         currentMatch.like();
         break;
-      case SlideDirection.up:
-        currentMatch.superLike();
-        break;
+//      case SlideDirection.up:
+//        currentMatch.superLike();
+//        break;
     }
 
     widget.matchEngine.cycleMatch();
@@ -134,8 +134,8 @@ class _SwipeCardsState extends State<SwipeCards> {
         return SlideDirection.left;
       case Decision.like:
         return SlideDirection.right;
-      case Decision.superLike:
-        return SlideDirection.up;
+//      case Decision.superLike:
+//        return SlideDirection.up;
       default:
         return null;
     }
@@ -235,11 +235,11 @@ class SwipeItem extends ChangeNotifier {
 
   void superLike() {
     if (decision == Decision.undecided) {
-      decision = Decision.superLike;
-      try {
-        superlikeAction();
-      } catch (e) {}
-      notifyListeners();
+//      decision = Decision.superLike;
+//      try {
+//        superlikeAction();
+//      } catch (e) {}
+//      notifyListeners();
     }
   }
 
@@ -251,4 +251,4 @@ class SwipeItem extends ChangeNotifier {
   }
 }
 
-enum Decision { undecided, nope, like, superLike }
+enum Decision { undecided, nope, like}
