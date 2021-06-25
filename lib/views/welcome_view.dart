@@ -1,3 +1,4 @@
+import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_styles.dart';
@@ -66,7 +67,9 @@ class _WelcomeViewState extends State<WelcomeView> {
                   SizedBox(
                     height: 15.0,
                   ),
-                  ButtonBorder(onTap:(){},text: "Sign In",),
+                  ButtonBorder(onTap:(){
+                    Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                  },text: "Sign In",),
                   SizedBox(
                     height: 15.0,
                   ),

@@ -1,5 +1,6 @@
 
 
+import 'package:ampd/views/sign_in_view.dart';
 import 'package:ampd/views/splash_view.dart';
 import 'package:ampd/views/welcome_view.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ class AppRoutes {
   //--------------------------------------------------------------- Constants ------------------------------------------------------------------------
   static const String APP_SPLASH = "/splash_view";
   static const String WELCOME_VIEW = "/welcome_view";
+  static const String SIGN_IN_VIEW = "/sign_in_view";
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
 
@@ -26,6 +28,14 @@ class AppRoutes {
            builder: (BuildContext context) => WelcomeView(),
          );
        }
+
+      case SIGN_IN_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => SignInView(),
+          );
+        }
 
       default:
         {
