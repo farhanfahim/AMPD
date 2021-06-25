@@ -6,6 +6,7 @@ import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sizer/sizer.dart';
 
 class WelcomeView extends StatefulWidget {
   @override
@@ -27,15 +28,14 @@ class _WelcomeViewState extends State<WelcomeView> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
 
-                  SizedBox(
-                    height: 200.0,
-                  ),
-                  SvgPicture.asset(
-                    AppImages.MAIN_LOGO,
-                  ),
-
-                  SizedBox(
-                    height: 70.0,
+                  Container(
+                    height: 25.0.h,
+                    margin: EdgeInsets.fromLTRB(0.0, 150.0, 0, 0),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImages.MAIN_LOGO,
+                      ),
+                    ),
                   ),
 
                   SizedBox(

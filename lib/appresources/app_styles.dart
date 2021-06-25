@@ -70,9 +70,9 @@ class AppStyles {
   static TextStyle blackWithBoldFontTextStyle(
       BuildContext context, double fontSize) {
     return TextStyle(
-      color: Theme.of(context).appBarTheme.textTheme.headline1.color,
+      color: AppColors.COLOR_BLACK,
       fontSize: fontSize,
-      fontFamily: AppFonts.NEXA_BOLD,
+      fontFamily: AppFonts.POPPINS_BOLD,
       fontWeight: FontWeight.w800,
     );
   }

@@ -52,6 +52,7 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String CHANGE_PASSWORD_ = "Change Password";
   static const String FORGOT_PASSWORD = "Forgot Password?";
   static const String SUBMIT = "Submit";
+  static const String RECOVER_NOW = "Recover Now";
   static const String ENTER_CODE = "Enter Code";
   static const String OPT_CODE_DESCRIPTION = "Enter the OTP code that has been\nemailed to you.";
   static const String SIGN_IN = "Log In";
@@ -326,5 +327,17 @@ static const String EMAIL_VALIDATION = "Please provide a valid email address";
 
 static const String PASSWORD_EMPTY_VALIDATION = 'Please provide a password';
 static const String PASSWORD_VALIDATION = 'Password cannot be less than 6 characters';
+
+
+static const String PHONE_NUMBER_TITLE = 'Phone Number';
+static const String ENTER_OTP_DIGIT = 'Enter 4 Digits Code';
+static const String OTP_DESC = 'Set the new password for your account so you can login and access all the features.';
+static const String PHONE_NUMBER_DESC = 'Enter your phone number for the verification process, we will send 4 digits code to your number.';
+static const String CREATE_AN_ACCOUNT = 'Create an Account';
+static const String LOGIN_TO_MY_ACCOUNT = 'Login to my Account';
+static const String FORGET_PASSWORD = 'Forgot password?';
+
+
+
 
 }

@@ -11,6 +11,7 @@ class AppImages {
 
   static const String NO_IMAGE_PLACEHOLDER = BASE_IMAGE_PATH + "noImage.png";
   static const String MAIN_LOGO = BASE_IMAGE_PATH + "logo.svg";
+  static const String BOTTOM_SHEET = BASE_IMAGE_PATH + "bottom_sheet.svg";
   static const String MAIN_LOGO_GREEN = BASE_IMAGE_PATH + "ic_logo_green.svg";
   static const String MAIN_COLORED_LOGO = BASE_IMAGE_PATH + "teemates_colored_logo.png";
   static const String PERSON_AVATAR = BASE_IMAGE_PATH + "ic_person_avatar.png";
