@@ -927,16 +927,19 @@ Widget appBar(
     title: new Text(title,
       style:
       AppStyles.blackWithBoldFontTextStyle(context, 20.0),),
-    leading: GestureDetector(
-      onTap: () {
-        onBackClick();
-      },
-      child: Transform.rotate(
-        angle: 180 * pi / 180,
-        child: Icon(
-          Icons.arrow_right_alt,
-          size: 32.0,
-          color: AppColors.COLOR_BLACK,// add custom icons also
+    leading: Padding(
+      padding: const EdgeInsets.only(left:10.0),
+      child: GestureDetector(
+        onTap: () {
+          onBackClick();
+        },
+        child: Transform.rotate(
+          angle: 180 * pi / 180,
+          child: Icon(
+            Icons.arrow_right_alt,
+            size: 32.0,
+            color: AppColors.COLOR_BLACK,// add custom icons also
+          ),
         ),
       ),
     ),

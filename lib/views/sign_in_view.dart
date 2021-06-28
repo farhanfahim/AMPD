@@ -180,7 +180,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.REVIEWS_VIEW);
+                        Navigator.pushNamed(context, AppRoutes.SETTING_VIEW);
                       /*  showDialog(
                             context: context,
                             builder: (BuildContext context1) {
