@@ -108,6 +108,7 @@ class AppColors {
   static const Color GREEN_BRIGHT_COLOR = Color(0xFF14D88E);
   static const Color RED_COLOR = Color(0xFFFF0000);
   static const Color BLUE_COLOR_DARK = Color(0xFF228DE5);
+  static const Color PALE_YELLOW_COLOR = Color(0xFFFFCD8E);
 
   static const kBlueColorTextStyle = TextStyle(color: Colors.blue);
   static Color kBlueColorWithOpacity = Colors.blue.withOpacity(0.8);

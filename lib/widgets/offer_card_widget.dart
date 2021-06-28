@@ -1,7 +1,11 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/widgets/Skeleton.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,14 +13,19 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:readmore/readmore.dart';
+import 'package:map_launcher/map_launcher.dart';
+import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OfferCardWidget extends StatefulWidget {
   String text;
   String image;
+  String offer;
+  String offerName;
+  String time;
   Color color;
 
-  OfferCardWidget({this.text, this.image, this.color});
+  OfferCardWidget({this.text, this.image, this.offer, this.offerName, this.time, this.color});
 
   @override
   _OfferCardWidgetState createState() => _OfferCardWidgetState();
@@ -26,12 +35,42 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
 
   int _selectedTab = 0;
+  bool _isDetail = false;
+  String _time = "2021-06-30 09:00:00";
+  String _days = "00";
+  String _hours = "00";
+  String _min = "00";
+  String _sec = "00";
+  Timer _timer;
 
+  @override
+  void initState() {
+    _time = widget.time;
+    _timer = Timer.periodic(Duration(seconds: 1),(timer) {
+      if (mounted) {
+        setState(() {
+          _days = TimerUtils.getDays(_time, 'days');
+          _hours = TimerUtils.getDays(_time, 'hours');
+          _min = TimerUtils.getDays(_time, 'min');
+          _sec = TimerUtils.getDays(_time, 'sec');
+        });
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Container(
-        height: MediaQuery.of(context).size.height * 1.5,
+        height: !_isDetail? MediaQuery.of(context).size.width * 2.65 : MediaQuery.of(context).size.width * 1.9,
+//        height: 140.0.h,
         color: Colors.white,
         child: Stack(
           fit: StackFit.loose,
@@ -39,6 +78,9 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
             GestureDetector(
               onDoubleTap: () {
                 print('double tapped');
+                setState(() {
+                  _isDetail = !_isDetail;
+                });
                 cardKey.currentState.toggleCard();
               },
               child: Container(
@@ -73,19 +115,23 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                       Container(
                         margin: EdgeInsets.only(top: 25.0, bottom: 100.0),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Center(
                               child: Text(
                                 widget.text,
-                                style: AppStyles.poppinsTextStyle(fontSize: 35.0, weight: FontWeight.w500),
+                                style: AppStyles.poppinsTextStyle(fontSize: 30.0.sp, weight: FontWeight.w500),
                               ),
                             ),
 
+                            SizedBox(height: 20.0,),
+
                             Image.asset(
-                              AppImages.STARBUCKS_OFFER,
-//                    width: 450.0,
-//                    height: 450.0,
+                              widget.offer,
+//                              width: 45.0.w,
+//                              height: 330.0,
+//                              width: 45.0.w,
+                              height: 80.0.w,
                             ),
                           ],
                         ),
@@ -104,7 +150,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                           return Image(
                             // width: constraints.maxWidth,
                             image: imageProvider,
-                            color: Colors.black38,
+                            color: Colors.black45,
                             colorBlendMode: BlendMode.srcATop,
                             fit: BoxFit.cover,
                           );
@@ -116,21 +162,248 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                       ),
 
                       Container(
-                        margin: EdgeInsets.only(top: 25.0, bottom: 100.0),
+                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text(
+                              widget.offerName,
+                              style: AppStyles.poppinsTextStyle(fontSize: 25.0.sp, weight: FontWeight.w500),
+                            ),
+
+                            SizedBox(height: 10.0,),
+
+                            RatingBar(
+                              onRatingUpdate: null,
+                              ratingWidget: RatingWidget(
+                                  full: Icon(
+                                    FontAwesomeIcons.solidStar,
+                                    color: AppColors.PALE_YELLOW_COLOR,
+                                  ),
+                                  half: Icon(
+                                    FontAwesomeIcons.starHalfAlt,
+                                    color: AppColors.PALE_YELLOW_COLOR,
+                                  ),
+                                  empty: Icon(
+                                    FontAwesomeIcons.star,
+//                                    color: AppColors.PALE_YELLOW_COLOR,
+                                    color: Colors.white,
+                                  )
+                              ),
+                              itemSize: 15.0,
+                              initialRating: 4.0,
+                              allowHalfRating: true,
+                              glow: false,
+                              itemPadding: EdgeInsets.only(left: 5.0),
+                            ),
+
+                            SizedBox(height: 25.0,),
+
+                            Row(
+                              children: [
+                                Text(
+                                  "Average Review :",
+                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                ),
+
+                                Spacer(),
+
+//                                Text(
+//                                  "  - - - - - - - - - -  ",
+//                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+//                                ),
+//
+//                                Spacer(),
+
+                                Text(
+                                  "4.3",
+                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                )
+                              ],
+                            ),
+
+                            SizedBox(height: 15.0,),
+
+                            Row(
+                              children: [
+                                Text(
+                                  "Number of Uses :",
+                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                ),
+
+                                Spacer(),
+
+//                                Text(
+//                                  "  - - - - - - - - - -  ",
+//                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+//                                ),
+
+//                                Spacer(),
+
+                                Text(
+                                  "08",
+                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                )
+                              ],
+                            )                ,
+
+                            SizedBox(height: 15.0,),
+
+                            Row(
+                              children: [
+                                Text(
+                                  "Distance :",
+                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                ),
+
+                                Spacer(),
+
+//                                Text(
+//                                  "  - - - - - - - - - -  ",
+//                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+//                                ),
+//
+//                                Spacer(),
+
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 8,
+                                        offset: Offset(0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                                  child: Text(
+                                    "4.5 miles",
+                                    style: AppStyles.poppinsTextStyle(fontSize: 11.0.sp, weight: FontWeight.w400).copyWith(color: Colors.black),
+                                  ),
+                                )
+                              ],
+                            ),
+
+                            SizedBox(height: 15.0,),
+
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Location :",
+                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                ),
+
+                                Spacer(),
+//                                SizedBox(width: 15.0,),
+
+//                                Text(
+//                                  "  - - - - - - - - - -  ",
+//                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+//                                ),
+//
+//                                SizedBox(width: 15.0,),
+
+                                Expanded(
+                                  child: Text(
+                                    "99 Balentine 123 Drive, Newark",
+                                    style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                  ),
+                                )
+                              ],
+                            ),
+
+                            SizedBox(height: 15.0,),
+
+                            Divider(color: Colors.grey[400], height: 1.0, thickness: 0.5,),
+
+                            SizedBox(height: 15.0,),
+
                             Center(
                               child: Text(
-                                widget.text + "Back",
-                                style: AppStyles.poppinsTextStyle(fontSize: 35.0, weight: FontWeight.w500),
+                                "Time to Avail the Offer:",
+                                style: AppStyles.poppinsTextStyle(fontSize: 16.0.sp, weight: FontWeight.w400),
                               ),
                             ),
 
-                            Image.asset(
-                              AppImages.STARBUCKS_OFFER,
-//                    width: 450.0,
-//                    height: 450.0,
+                            SizedBox(height: 10.0,),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      _days,
+                                      style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
+                                    ),
+
+                                    SizedBox(height: 6.0,),
+
+                                    Text(
+                                      int.parse(_days) > 1? 'Days' : 'Day',
+                                      style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(width: 20.0,),
+
+                                Column(
+                                  children: [
+                                    Text(
+                                      _hours,
+                                      style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
+                                    ),
+
+                                    SizedBox(height: 6.0,),
+
+                                    Text(
+                                      int.parse(_hours) > 1? 'Hours' : 'Hour',
+                                      style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(width: 20.0,),
+
+                                Column(
+                                  children: [
+                                    Text(
+                                      _min,
+                                      style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
+                                    ),
+
+                                    SizedBox(height: 6.0,),
+
+                                    Text(
+                                      'Min',
+                                      style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(width: 20.0,),
+
+                                Column(
+                                  children: [
+                                    Text(
+                                      _sec,
+                                      style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
+                                    ),
+
+                                    SizedBox(height: 6.0,),
+
+                                    Text(
+                                      'Sec',
+                                      style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -142,12 +415,13 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
             ),
 
             Positioned(
-              top: 470.0,
+              top: !_isDetail? 115.0.w : 120.0.w,
               left: 0.0,
               right: 0.0,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  !_isDetail? Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.0),
@@ -170,7 +444,8 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                             circularAvatar(
                                 60.0,
                                 60.0,
-                                "https://i1.wp.com/www.logoworks.com/blog/wp-content/uploads/2017/06/Untitled-2.png?fit=1280%2C800&ssl=1",
+//                                "https://i1.wp.com/www.logoworks.com/blog/wp-content/uploads/2017/06/Untitled-2.png?fit=1280%2C800&ssl=1",
+                                widget.image,
                                 28.0
                             ),
 
@@ -185,7 +460,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Starbucks Triple Mocha",
+                                          widget.offerName,
                                           style: AppStyles.poppinsTextStyle(fontSize: 18.0, weight: FontWeight.w500).copyWith(color: Colors.black),
                                         ),
 
@@ -243,9 +518,14 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
                             SizedBox(width: 15.0,),
 
-                            Text(
-                              "+1 1234567825",
-                              style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.GREEN_COLOR),
+                            GestureDetector(
+                              onTap: () {
+                                launch(('tel://+1 1234567825'));
+                              },
+                              child: Text(
+                                "+1 1234567825",
+                                style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.GREEN_COLOR),
+                              ),
                             )
                           ],
                         ),
@@ -263,9 +543,21 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                             SizedBox(width: 12.0,),
 
                             Expanded(
-                              child: Text(
-                                "4058 Little York Rd, Houston, TX 77093, USA",
-                                style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.BLUE_COLOR_DARK),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (await MapLauncher.isMapAvailable(Platform.isAndroid? MapType.google : MapType.apple)) {
+                                  await MapLauncher.showMarker(
+                                  mapType: Platform.isAndroid? MapType.google : MapType.apple,
+                                  coords: Coords(37.759392, -122.5107336),
+                                  title: "Ocean Beach",
+                                  description: "Map",
+                                  );
+                                  }
+                                },
+                                child: Text(
+                                  "4058 Little York Rd, Houston, TX 77093, USA",
+                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.BLUE_COLOR_DARK),
+                                ),
                               ),
                             )
                           ],
@@ -322,7 +614,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                 )
                               ),
                               itemSize: 13.0,
-                              initialRating: 4.5,
+                              initialRating: 5.0,
                               allowHalfRating: true,
                               glow: false,
                               itemPadding: EdgeInsets.only(left: 5.0),
@@ -345,18 +637,18 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                         )
                       ],
                     ),
-                  ),
+                  ) : Container(),
 
-                  SizedBox(height: 15.0,),
+                  true? SizedBox(height: 15.0,) : Container(),
 
                   Container(
                     color: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
                     child: Column(
                       children: [
-                        SizedBox(height: 20.0,),
+                        !_isDetail? SizedBox(height: 20.0,) : Container(),
 
-                        Divider(color: Colors.grey[400], height: 1.0, thickness: 0.5,),
+                        !_isDetail? Divider(color: Colors.grey[400], height: 1.0, thickness: 0.5,) : Container(),
 
                         SizedBox(height: 20.0,),
 
@@ -397,7 +689,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 //                          height: 500.0,
                           child: Text(
                             "Starbucks' new Triple Mocha Frappuccino was released on May Day 2018, and it's basically and enhanced version of the original MochaCookies are important to the proper functioning of a site. To improve your experience, we use cookies to remember log-in details and provide secure log-in, collect statistics..",
-                            style: AppStyles.poppinsTextStyle(fontSize: 14.0, weight: FontWeight.w400).copyWith(color: AppColors.GREY_COLOR, height: 1.5),
+                            style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w400).copyWith(color: AppColors.GREY_COLOR, height: 1.5),
                           ),
                         ) : Container(),
 

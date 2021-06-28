@@ -17,6 +17,14 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   List<String> _names = ["Offer 25% Off", "Offer 15% Off", "\$5 Off", "Offer 20% Off", "\$10 Off"];
+  List<String> _itemNames = [
+    "Starbucks Triple Mocha",
+    "Double Scoop Brownie Sundae",
+    "Crispy Chicken Family Bucket",
+    "Original's 6 Juice Packs",
+    "Red Bull Half Pack"
+  ];
+
   List<String> _backgrounds = [
     "https://papers.co/wallpaper/papers.co-ax29-starbucks-logo-green-illustration-art-40-wallpaper.jpg?download=true",
     "https://1000logos.net/wp-content/uploads/2016/10/Baskin-Robbins-emblem.jpg",
@@ -24,12 +32,21 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     "https://media.designrush.com/inspiration_images/134933/conversions/_1511456189_555_McDonald's-mobile.jpg",
     "https://wallpaperaccess.com/full/3188912.png"
   ];
-  List<Color> _colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.orange
+
+  List<String> _offers = [
+    AppImages.STARBUCKS_OFFER,
+    AppImages.BR_OFFER,
+    AppImages.KFC_OFFER,
+    AppImages.JUICE_OFFER,
+    AppImages.REDBULL_OFFER,
+  ];
+
+  List<String> _times = [
+    "2021-06-30 09:00:00",
+    "2021-07-03 09:00:00",
+    "2021-07-05 09:00:00",
+    "2021-07-10 09:00:00",
+    "2021-06-29 09:00:00",
   ];
 
 
@@ -41,7 +58,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     super.didChangeDependencies();
     for (int i = 0; i < _names.length; i++) {
       _swipeItems.add(SwipeItem(
-          content: Content(text: _names[i], image: _backgrounds[i]),
+          content: Content(text: _names[i], offer: _offers[i], offerName: _itemNames[i], time: _times[i], image: _backgrounds[i]),
           likeAction: () {
             _scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Liked ${_names[i]}"),
@@ -74,8 +91,10 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                 height: double.maxFinite,
                 child: OfferCardWidget(
                   image: _swipeItems[index].content.image,
-//                  color: _swipeItems[index].content.color,
+                  offer: _swipeItems[index].content.offer,
+                  offerName: _swipeItems[index].content.offerName,
                   text: _swipeItems[index].content.text,
+                  time: _swipeItems[index].content.time,
                 ),
               );
             },
@@ -98,7 +117,10 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
 class Content {
   final String text;
   final String image;
+  final String offer;
+  final String offerName;
+  final String time;
   final Color color;
 
-  Content({this.text, this.image, this.color});
+  Content({this.text, this.image, this.time, this.offer, this.offerName, this.color});
 }
