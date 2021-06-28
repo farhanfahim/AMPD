@@ -69,7 +69,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> {
                 Spacer(),
 
                 Image.asset(
-                  AppImages.STARBUCKS_OFFER,
+                  'AppImages.STARBUCKS_OFFER',
                   width: 500.0,
                   height: 500.0,
                 ),

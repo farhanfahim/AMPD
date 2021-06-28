@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
@@ -22,19 +24,9 @@ class _QrScanState extends State<QrScanView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: AppColors.WHITE_COLOR,// add custom icons also
-            ),
-          ),
-        ),
+        appBar: appBar(title:"",onBackClick: (){
+          Navigator.of(context).pop();
+        }),
         backgroundColor: AppColors.BLUE_COLOR,
         body: SafeArea(
           child: SingleChildScrollView(

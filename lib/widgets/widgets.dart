@@ -159,6 +159,8 @@ showBottomSheetWidget(BuildContext context, String title, String desc,
       });
 }
 
+
+
 showiOSBirthdayDatePicker(BuildContext context, bool isAllowFutureDates,
     bool isAllowPastDates, Function onConfirm) {
   DatePicker.showDatePicker(context,
@@ -917,30 +919,27 @@ Widget teeTimesItem(BuildContext context) {
 
 Widget appBar(
     {BuildContext context,
-    bool isBackButton,
-    String title,
-    IconData icon,
-    Function onBackClick}) {
+    String title,Function onBackClick}) {
   return AppBar(
-    brightness: Theme.of(context).appBarTheme.brightness,
-    elevation: 0.6,
-    backgroundColor: Theme.of(context).appBarTheme.color,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
     centerTitle: true,
-    automaticallyImplyLeading: isBackButton ? true : false,
-    title: Text(
-      title,
-      style: AppStyles.appBarTitleTextStyle(context),
+    title: new Text(title,
+      style:
+      AppStyles.blackWithBoldFontTextStyle(context, 20.0),),
+    leading: GestureDetector(
+      onTap: () {
+        onBackClick();
+      },
+      child: Transform.rotate(
+        angle: 180 * pi / 180,
+        child: Icon(
+          Icons.arrow_right_alt,
+          size: 32.0,
+          color: AppColors.COLOR_BLACK,// add custom icons also
+        ),
+      ),
     ),
-    leading: !isBackButton
-        ? null
-        : IconButton(
-            onPressed: onBackClick,
-            icon: Icon(
-              icon,
-              color: Theme.of(context).appBarTheme.iconTheme.color,
-              size: 30.0,
-            ),
-          ),
   );
 }
 

@@ -1,17 +1,11 @@
-import 'package:ampd/app/app_routes.dart';
+import 'dart:math';
+
 import 'package:ampd/appresources/app_colors.dart';
-import 'package:ampd/appresources/app_constants.dart';
-import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
-import 'package:ampd/widgets/otp_text_field.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sizer/sizer.dart';
 
 class RedeemMessageView extends StatefulWidget {
   @override
@@ -22,19 +16,9 @@ class _RedeemMessageState extends State<RedeemMessageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-            child: Icon(
-              Icons.arrow_back,
-              color: AppColors.WHITE_COLOR,// add custom icons also
-            ),
-          ),
-        ),
+        appBar: appBar(title:"",onBackClick: (){
+          Navigator.of(context).pop();
+        }),
         backgroundColor: AppColors.BLUE_COLOR,
         body: SafeArea(
           child: SingleChildScrollView(
