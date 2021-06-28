@@ -1,31 +1,38 @@
-class AppStrings{
-
+class AppStrings {
   static const String APP_NAME = "TeeMates";
 
   static const bool IS_LIVE_URL = true;
-  static const String FIREBASE_USERS_NODE = IS_LIVE_URL ? "users_live" : "users";
-  static const String FIREBASE_CHATROOM_NODE = IS_LIVE_URL ? "chatRoom_live" : "chatRoom";
-  static const String FIREBASE_STORE_NODE = IS_LIVE_URL ? "stores_live" : "stores";
-  static const String FIREBASE_STORE_CHATROOM_NODE = IS_LIVE_URL ? "stores_chatRoom_live" : "stores_chatRoom";
+  static const String FIREBASE_USERS_NODE =
+      IS_LIVE_URL ? "users_live" : "users";
+  static const String FIREBASE_CHATROOM_NODE =
+      IS_LIVE_URL ? "chatRoom_live" : "chatRoom";
+  static const String FIREBASE_STORE_NODE =
+      IS_LIVE_URL ? "stores_live" : "stores";
+  static const String FIREBASE_STORE_CHATROOM_NODE =
+      IS_LIVE_URL ? "stores_chatRoom_live" : "stores_chatRoom";
 
   //S3 bucket credentails
   static const String ACCESS_KEY_ID = "AKIAWI2ZY2XLE3MGJGGY";
-  static const String SECRET_KEY_ID = "G7xN1MOUYpbl6+xWwGjcfwn6PVGUzZLBkKs03Cgh";
+  static const String SECRET_KEY_ID =
+      "G7xN1MOUYpbl6+xWwGjcfwn6PVGUzZLBkKs03Cgh";
   static const String REGION = "us-east-1";
   static const String BUCKET_NAME = "teemates";
-  static const String S3_ENDPOINT = "https://teemates.s3.us-east-1.amazonaws.com/";
-  static const String AMZ_BASE_PATH = "https://teemates.s3.us-east-1.amazonaws.com/";
+  static const String S3_ENDPOINT =
+      "https://teemates.s3.us-east-1.amazonaws.com/";
+  static const String AMZ_BASE_PATH =
+      "https://teemates.s3.us-east-1.amazonaws.com/";
   static const String POSTS_FOLDER = "Posts/";
   static const String PRODUCTS_FOLDER = "Products/";
   static const String MEDIA_UPLOADING_STORIES_FOLDER = "Stories/";
 
   static const int VIDEO_FILE_SIZe = 100000000;
 
+  static const String GOOGLE_MAP_KEY =
+      "AIzaSyB-gcvnec9PZTfDg8IroxCXAekFSrYp6Vc";
 
-  static const String GOOGLE_MAP_KEY = "AIzaSyB-gcvnec9PZTfDg8IroxCXAekFSrYp6Vc";
   // static const String PUBLISHING_KEY_STRIPE = "pk_test_2kwes8cuUU2RbXg6xmnsrnqs00j4rEjAIa"; //Tekrevol stagging
-  static const String PUBLISHING_KEY_STRIPE = "pk_live_51IId8KClyE5SpfEmytYEToF84ZI44dUe1Ub0JEOkVcRhBy9wGImGr8JLIvyNpNHy3rShOFKjt6uU9qNmXuY0vI9100w7u7EnbC"; //Client Live
-
+  static const String PUBLISHING_KEY_STRIPE =
+      "pk_live_51IId8KClyE5SpfEmytYEToF84ZI44dUe1Ub0JEOkVcRhBy9wGImGr8JLIvyNpNHy3rShOFKjt6uU9qNmXuY0vI9100w7u7EnbC"; //Client Live
 
   // static const String PUBLISHING_KEY_STRIPE = "pk_test_51IId8KClyE5SpfEmZwHP3RYQ2bbE6uJb9337bZj7wSfwM8ew54nkEq02n2tVVKZ4MRZ2Mp0DJXDSWxtPCXN3EsHK00zqbNwiI1";
 
@@ -39,70 +46,72 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
 #STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGBacd4IghbX4gAvpVAmjnJoXIs7d4XpVryeXN00DqM01tDc
    */
 
-  static const String APP_DESCRIPTION_REGIX = '[a-zA-Z0-9\\|~`\'",.<>?!@#\$%^&*()\-\=\+£€¥_:;(){} "]';
+  static const String APP_DESCRIPTION_REGIX =
+      '[a-zA-Z0-9\\|~`\'",.<>?!@#\$%^&*()\-\=\+£€¥_:;(){} "]';
 
   //[0-9,"]
 
   static const String STORES = "Stores";
   static const String TEEMATES = "TeeMates";
 
-  static const String GET_STARTED = "Get Started";
-  static const String FORGOT_PASSWORD_DESCRIPTION = "Enter your email address below\nto reset password.";
+  static const String FORGOT_PASSWORD_DESCRIPTION =
+      "Enter your email address below\nto reset password.";
   static const String FORGOT_PASSWORD_ = "Forgot Password";
   static const String CHANGE_PASSWORD_ = "Change Password";
   static const String FORGOT_PASSWORD = "Forgot Password?";
   static const String SUBMIT = "Submit";
+  static const String RECOVER_NOW = "Recover Now";
   static const String ENTER_CODE = "Enter Code";
-  static const String OPT_CODE_DESCRIPTION = "Enter the OTP code that has been\nemailed to you.";
-  static const String SIGN_IN = "Log In";
+  static const String OPT_CODE_DESCRIPTION =
+      "Enter the OTP code that has been\nemailed to you.";
   static const String LOGIN_TXT = "Login";
   static const String SING_UP = "Sign Up";
   static const String FACEBOOK = "Facebook";
   static const String PASSWORD = "Password";
-  static const String CONFIRM_PASSWORD = "Confirm Password";
+
   static const String OR = "OR";
   static const String LOGIN_WITH = "LOG IN WITH";
   static const String EMAIL_ADDRESS = "Email Address";
   static const String DONT_HAVE_AN_ACCOUNT = "Need an account?";
-  static const String ALREADY_HAVE_AN_ACCOUNT = "Already have an account?";
   static const String SING_UP_WITH = "Sign Up WITH";
   static const String UPLOAD_PROFILE_PICTURE = "Upload Profile Picture";
   static const String FULL_NAME = "Full name";
-  static const String PHONE_NUMBER ="Phone number";
-  static const String GENDER ="Gender";
-  static const String CANCEL ="Cancel";
-  static const String FAV_COURSES ="Favorite courses";
-  static const String HANDICAP ="Handicap";
-  static const String LOCATION ="Location";
-  static const String BIRTHDAY ="Birthday";
-  static const String HOME_TOWN ="Home Town";
-  static const String MY_AVAILIBILITY ="My Availability";
-  static const String CURRENT_CITY ="Current city / town";
-  static const String ABOUT_YOURSELF ="Tell us something about yourself";
-  static const String COLLEGE ="College / University";
+  static const String PHONE_NUMBER = "Phone number";
+  static const String GENDER = "Gender";
+  static const String CANCEL = "Cancel";
+  static const String FAV_COURSES = "Favorite courses";
+  static const String HANDICAP = "Handicap";
+  static const String LOCATION = "Location";
+  static const String BIRTHDAY = "Birthday";
+  static const String HOME_TOWN = "Home Town";
+  static const String MY_AVAILIBILITY = "My Availability";
+  static const String CURRENT_CITY = "Current city / town";
+  static const String ABOUT_YOURSELF = "Tell us something about yourself";
+  static const String COLLEGE = "College / University";
 
-  static const String PUSH_NOTIFICATIONS ="Push Notifications";
-  static const String APP_THEME ="App Theme";
-  static const String MY_STORIES ='My Stories';
-  static const String COMMING ='Upcoming';
-  static const String PAST ='Past';
-  static const String DARK_MODE ="Dark Mode";
+  static const String PUSH_NOTIFICATIONS = "Push Notifications";
+  static const String APP_THEME = "App Theme";
+  static const String MY_STORIES = 'My Stories';
+  static const String COMMING = 'Upcoming';
+  static const String PAST = 'Past';
+  static const String DARK_MODE = "Dark Mode";
   static const String SAVE = "Save";
   static const String SETTINGS = "Settings";
-  static const String START_TIME ="Start Time";
-  static const String END_TIME ="End Time";
-  static const String DATE ="Date";
-  static const String REPEAT_WEEKLY ="Repeat Weekly";
-  static const String NEW_SHFIT ="New Slot";
-  static const String EDIT_SHFIT ="Edit Slot";
-  static const String ABOUT_TXT_1 ="This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed.  These words are here to provide the reader with a basic impression of how actual text will appear in its final presentation. Think of them merely as actors on a paper stage, in a performance devoid of content yet rich in form. That being the case, there is really no point in your continuing to read them. After all, you have many other things you should be doing. Who's paying you to waste this time, anyway? \n \n This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed.  These words are here to provide the reader with a basic impression of how actual text will appear in its final presentation. Think of them merely as actors on a paper stage, in a performance devoid of content yet rich in form. That being the case, there is really no point in your continuing to read them. After all, you have many other things you should be doing. Who's paying you to waste this time, anyway?";
-  static const String ABOUT_HEADING ="This is dummy copy.";
+  static const String START_TIME = "Start Time";
+  static const String END_TIME = "End Time";
+  static const String DATE = "Date";
+  static const String REPEAT_WEEKLY = "Repeat Weekly";
+  static const String NEW_SHFIT = "New Slot";
+  static const String EDIT_SHFIT = "Edit Slot";
+  static const String ABOUT_TXT_1 =
+      "This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed.  These words are here to provide the reader with a basic impression of how actual text will appear in its final presentation. Think of them merely as actors on a paper stage, in a performance devoid of content yet rich in form. That being the case, there is really no point in your continuing to read them. After all, you have many other things you should be doing. Who's paying you to waste this time, anyway? \n \n This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. Only for show. He who searches for meaning here will be sorely disappointed.  These words are here to provide the reader with a basic impression of how actual text will appear in its final presentation. Think of them merely as actors on a paper stage, in a performance devoid of content yet rich in form. That being the case, there is really no point in your continuing to read them. After all, you have many other things you should be doing. Who's paying you to waste this time, anyway?";
+  static const String ABOUT_HEADING = "This is dummy copy.";
   static const String CONTACT_US = "Contact Us";
   static const String NAME = "Name";
-  static const String SUBJECT ="Subject";
-  static const String MESSAGE ="Message";
-  static const String TERMS ="Terms of use";
-  static const String FEATURED_STORES ="Featured Stores";
+  static const String SUBJECT = "Subject";
+  static const String MESSAGE = "Message";
+  static const String TERMS = "Terms of use";
+  static const String FEATURED_STORES = "Featured Stores";
   static const String NEW_ARRIVAL = "New Arrival";
   static const String MOST_SELLING = "Most Selling";
   static const String ALL_PRODUCTS = "All Products";
@@ -129,6 +138,7 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
 
   static const String CREATE_SHIFT = "Post Availability";
   static const String EDIT_SHIFT = "Update Availability";
+
   // static const String CREATE_POST = "Create Post";
   // static const String POST_TITLE = "Post Title";
   // static const String PUBLIC_POST = "Public Post";
@@ -163,15 +173,16 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String TAG = "Tag";
   static const String TERMS_CONDITION = "Terms & Conditions";
   static const String PRIVACY_POLICY = "Privacy Policy";
-  static const String DONE = "Done";
   static const String SELECT_CHARITY = "Select a Charity";
   static const String WEEKLY_SPOTLIGHT = "Weekly Spotlight";
   static const String ADD_TO_FAVOURITE = "Add To Favourites";
   static const String REQUEST_TO_JOIN_TEETIMES = "Request to Join Tee Time";
-  static const String REQUESTED_TO_JOIN_TEETIMES = "Already Requested To Join Tee Time";
+  static const String REQUESTED_TO_JOIN_TEETIMES =
+      "Already Requested To Join Tee Time";
   static const String REQUESTED_TO_CHECKIN = "Already Checked In";
 
-  static const String DUMMY_TEXT = "Use some dummy text here. \n This will be used as a placeholder";
+  static const String DUMMY_TEXT =
+      "Use some dummy text here. \n This will be used as a placeholder";
 
   static const String PRODUCT_DETAIL = "Product Detail";
   static const String CART = "Shopping Cart";
@@ -180,7 +191,6 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String ADD_NEW_CARD_VIEW = "Add New Card";
   static const String ADD_NEW_SHIPPING = "Add New Shipping Address";
   static const String MY_ORDERS = "My Orders";
-
 
   static const String ORDER_DETAILS = "Order Details";
   static const String DELIVERY_TO = "Delivery to";
@@ -196,9 +206,11 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String HOURS = " Hours";
   static const String RESEND_CODE = "Resend Code";
   static const String VERIFY = "Verify";
+  static const String VERIFY_NOW = "Verify Now";
   static const String VERIFY_OTP = "Verify OTP Code";
   static const String MENU = " Menu";
   static const String RESET_PASSWORD = " Reset Password";
+  static const String UPDATE_PASSWORD = " Update Password";
   static const String RESET = " Reset";
   static const String RESERVATIONS = " Reservations";
   static const String RESERVATIONS_VALUE = " Not necessary";
@@ -220,8 +232,10 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String NEW_CHARITY_PARTNER = "New Charity Partner";
   static const String MOST_SEARCHED_PARTNERS = "Most Searched Partners";
 
-  static const String EMPTY_FAV_SOCIETY_PARTNERS = "No Society Partners added \nin favourites";
-  static const String EMPTY_FAV_CHARITY_PARTNERS = "No Charity Partners added \nin favourites";
+  static const String EMPTY_FAV_SOCIETY_PARTNERS =
+      "No Society Partners added \nin favourites";
+  static const String EMPTY_FAV_CHARITY_PARTNERS =
+      "No Charity Partners added \nin favourites";
 
   static const String VIEW_PROFILE = "VIEW PROFILE";
   static const String ACCOUNT = "Account";
@@ -279,7 +293,6 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String CHECKOUT = "Checkout";
   static const String SHIPPING_ADDRESS = "Shipping Address";
 
-
   static const String NEXT = "Next";
   static const String SHIPPING = "Shipping";
   static const String PAYMENT = "Payment";
@@ -316,15 +329,56 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String ADD_DELIVERY_INS = "Add Delivery Instruction";
   static const String STORE = "Store";
 
-
   static const String CHAT_START_MESSAGE = "Tap to start a conversation";
-  static const String STORE_ADMIN_FEE_TEXT = "Seller will be charged 6% flat transaction fee with no additional listing or payment processing fees.";
-
+  static const String STORE_ADMIN_FEE_TEXT =
+      "Seller will be charged 6% flat transaction fee with no additional listing or payment processing fees.";
 
   //Validation messages
-static const String EMAIL_VALIDATION = "Please provide a valid email address";
+  static const String EMAIL_VALIDATION = "Please provide a valid email address";
 
-static const String PASSWORD_EMPTY_VALIDATION = 'Please provide a password';
-static const String PASSWORD_VALIDATION = 'Password cannot be less than 6 characters';
+  static const String PASSWORD_EMPTY_VALIDATION = 'Please provide a password';
+  static const String PASSWORD_VALIDATION =
+      'Password cannot be less than 6 characters';
 
+  static const String PHONE_NUMBER_TITLE = 'Phone Number';
+  static const String PASSWORD_RESET_TITLE = 'Reset password';
+  static const String ENTER_OTP_DIGIT = 'Enter 4 Digits Code';
+  static const String OTP_DESC =
+      'Set the new password for your account so you can login and access all the features.';
+  static const String PHONE_NUMBER_DESC =
+      'Enter your phone number for the verification process, we will send 4 digits code to your number.';
+  static const String CREATE_AN_ACCOUNT_OR =
+      'Create account or sign in to start saving!';
+  static const String CREATE_AN_ACCOUNT = 'Create an account';
+  static const String CREATE_AN_ACCOUNT_AND =
+      'Create an account and get unlimited access to or app features!';
+  static const String LOGIN_TO_MY_ACCOUNT = 'Login to my account';
+  static const String FORGET_PASSWORD = 'Forgot password?';
+  static const String DIDNT_RECEIVE = ' Didn\'t receive the code?';
+  static const String RESEND = 'Resend';
+  static const String SIGN_IN = 'Sign In';
+  static const String YES = 'Yes';
+  static const String NO = 'No';
+  static const String ARE_YOU_SURE = 'Are you sure?';
+  static const String CONFIRM_PASSWORD = "Confirm Password";
+  static const String NEW_PASSWORD = "New Password";
+  static const String RE_ENTER_PASSWORD = "Re-enter Password";
+  static const String DONE = 'Done';
+  static const String GET_STARTED = 'Get Started';
+  static const String SETTING = 'Setting';
+  static const String MANAGE_YOUR_ACCOUNT_SETTING = 'Manage your account setting';
+  static const String SCAN_QR_CODE = 'Scan QR Code';
+  static const String TIME_REMAINING = 'Time Remaining';
+  static const String TIME_REMAINING_TO_SCAN = 'Time Remaining to Scan';
+  static const String SECONDS = 'SECONDS';
+  static const String REDEEM_MESSAGE = 'Redeem Message';
+  static const String REDEEM_NOW = 'Redeem Now';
+  static const String GO_BACK_TO_OFFER = 'Go Back To Offer';
+  static const String REDEEM_MESSAGE_TEXT = 'Sed ut perspiciatis omnis iste natus error sit valup tatem accus antiudm dolasor emque laudan tb eatae vitaae suant explicabo.';
+  static const String GUEST_LOGIN = 'Guest Log In';
+  static const String FAV_POP_UP_TEXT = 'This offer has been marked Favorite!';
+  static const String ALREADY_HAVE_AN_ACCOUNT =
+      'Already have an account, sign in to continue!';
+  static const String FIRST_NAME = 'First name';
+  static const String LAST_NAME = 'Last name';
 }

@@ -6,30 +6,34 @@ import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:sizer/sizer.dart';
 
-class CustomDialog extends StatefulWidget {
+class CustomRatingDialog extends StatefulWidget {
   String title;
   String subTitle;
   bool showImage;
   String buttonText1;
-  String buttonText2;
   Function onPressed1;
-  Function onPressed2;
   Widget child;
-  BuildContext contex ;
+  BuildContext contex;
 
-
-  CustomDialog({this.title = "", this.buttonText1 = "",this.buttonText2 = "", this.onPressed1,this.onPressed2, this.child,this.contex,this.subTitle = "",this.showImage});
+  CustomRatingDialog(
+      {this.title = "",
+      this.buttonText1 = "",
+      this.onPressed1,
+      this.child,
+      this.contex,
+      this.subTitle = "",
+      this.showImage});
 
   @override
-  _CustomDialogState createState() => _CustomDialogState();
+  _CustomRatingState createState() => _CustomRatingState();
 }
 
-class _CustomDialogState extends State<CustomDialog> {
+class _CustomRatingState extends State<CustomRatingDialog> {
   @override
   Widget build(BuildContext context) {
-    double height  =  MediaQuery.of(context).size.height * 0.48;
-    double width  =  MediaQuery.of(context).size.width * 0.4 ;
-    double height1  =  MediaQuery.of(context).size.height * 0.5;
+    double height = MediaQuery.of(context).size.height * 0.48;
+    double width = MediaQuery.of(context).size.width * 0.4;
+    double height1 = MediaQuery.of(context).size.height * 0.5;
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 0.0),
@@ -49,9 +53,7 @@ class _CustomDialogState extends State<CustomDialog> {
                       border: Border.all(
                         color: Colors.transparent,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20.0))
-                  ),
-
+                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -61,34 +63,54 @@ class _CustomDialogState extends State<CustomDialog> {
                       children: [
                         Container(
                           margin: EdgeInsets.symmetric(
-                              horizontal: MediaQuery.of(context).size.width * .13),
+                              horizontal:
+                                  MediaQuery.of(context).size.width * .13),
                           padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
                           child: Text(
                             widget.subTitle,
-                            style:
-                            AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0),textAlign: TextAlign.center,
+                            style: AppStyles.blackWithSemiBoldFontTextStyle(
+                                context, 18.0),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        widget.showImage?   Container(
-                          height: 10.0.h,
-                          margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 30),
-                          child: Center(
-                            child: widget.child,
+                        widget.showImage
+                            ? Container(
+                                height: 10.0.h,
+                                margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 30),
+                                child: Center(
+                                  child: widget.child,
+                                ),
+                              )
+                            : Container(),
+                        SizedBox(
+                          height: 35.0,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                          decoration: ShapeDecoration(
+                              color: AppColors.APP_COLOR_EXTRA_LIGHT_GREY,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  side: BorderSide(
+                                      width: 0.5,
+                                      color: AppColors.LIGHT_GREY_TEXT_COLOR))),
+                          child: TextField(
+                            keyboardType: TextInputType.multiline,
+                            maxLength: 150,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                                border: InputBorder.none, hintText: "Comments...",hintStyle: AppStyles.inputHintStyle(context)),
+                            style: AppStyles.inputTextStyle2(context),
                           ),
-                        ):Container(),
+                        ),
                         SizedBox(
                           height: 35.0,
                         ),
                         GradientButton(
-                          onTap: () { widget.onPressed1();},
+                          onTap: () {
+                            widget.onPressed1();
+                          },
                           text: widget.buttonText1,
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        ButtonBorder(
-                          onTap: () { widget.onPressed2();},
-                          text: widget.buttonText2,
                         ),
                         SizedBox(
                           height: 45.0,
@@ -96,21 +118,18 @@ class _CustomDialogState extends State<CustomDialog> {
                       ],
                     ),
                   ),
-
                 ),
               ),
               Positioned.fill(
                 right: 15,
                 child: Align(
                   alignment: Alignment.topRight,
-
                   child: Container(
                       width: 50,
                       height: 50,
-                      child:
-                      FloatingActionButton(
+                      child: FloatingActionButton(
                         heroTag: "tag",
-                        backgroundColor:AppColors.BLUE_COLOR ,
+                        backgroundColor: AppColors.BLUE_COLOR,
                         // backgroundColor:
                         // AppColors.PRIMARY_COLORTWO,
                         elevation: 2,
@@ -119,12 +138,11 @@ class _CustomDialogState extends State<CustomDialog> {
                           color: Colors.white,
                           size: 20.0,
                         ),
-                        onPressed: (){
+                        onPressed: () {
                           Navigator.pop(context);
                         },
                         // onPressed: widget.addClickListner
-                      )
-                  ),
+                      )),
                 ),
               )
             ],

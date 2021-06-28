@@ -1,5 +1,4 @@
 import 'package:ampd/appresources/app_constants.dart';
-import 'package:ampd/data/model/login_response.dart';
 import 'package:ampd/utils/DioConnectivityRequestRetrier.dart';
 import 'package:ampd/utils/RetryOnConnectionChangeInterceptor.dart';
 import 'package:ampd/utils/network_util.dart';
@@ -58,7 +57,7 @@ class Network {
     return dio;
   }
 
-  static Future<void> refreshToken(token) async {
+/*  static Future<void> refreshToken(token) async {
     NetworkUtil().post(
         url: NetworkEndpoints.REFRESH,
         hasHeader: true,
@@ -74,7 +73,7 @@ class Network {
       print(response);
       return response; //
     });
-  }
+  }*/
 
   static Future<Response<dynamic>> _retry(RequestOptions requestOptions) async {
     final options = new Options(

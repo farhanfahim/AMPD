@@ -45,8 +45,27 @@ class AppStyles {
     return TextStyle(
       color: Theme.of(context).appBarTheme.textTheme.headline1.color,
       fontSize: fontSize,
-      fontFamily: AppFonts.SF_PRO_SEMIBOLD,
+      fontFamily: AppFonts.POPPINS_BOLD,
     );
+  }
+
+
+  static TextStyle inputHintStyle(BuildContext context) {
+    return TextStyle(
+        color: AppColors.APP_TEXT3_COLOR,
+        fontSize: AppConstants.INPUT_TEXT_SIZE,
+        fontFamily: AppFonts.POPPINS_REGULAR,
+        fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w600);
+    // fontWeight: FontWeight.w400);
+  }
+
+  static TextStyle inputTextStyle2(BuildContext context) {
+    return TextStyle(
+        color: AppColors.APP__DETAILS_TEXT_COLOR,
+        fontSize: AppConstants.INPUT_TEXT_SIZE,
+        fontFamily: AppFonts.POPPINS_REGULAR,
+        fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w600);
+    // fontWeight: FontWeight.w400);
   }
 
   static TextStyle detailWithSmallTextSizeTextStyle() {
@@ -70,9 +89,9 @@ class AppStyles {
   static TextStyle blackWithBoldFontTextStyle(
       BuildContext context, double fontSize) {
     return TextStyle(
-      color: Theme.of(context).appBarTheme.textTheme.headline1.color,
+      color: AppColors.COLOR_BLACK,
       fontSize: fontSize,
-      fontFamily: AppFonts.NEXA_BOLD,
+      fontFamily: AppFonts.POPPINS_BOLD,
       fontWeight: FontWeight.w800,
     );
   }
@@ -115,9 +134,9 @@ class AppStyles {
 
   static TextStyle inputTextStyle(BuildContext context) {
     return TextStyle(
-        color: Theme.of(context).textTheme.headline1.color,
+        color: AppColors.LIGHT_GREY_TEXT_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.SF_PRO_SEMIBOLD,
+        fontFamily: AppFonts.POPPINS_REGULAR,
         fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400);
     // fontWeight: FontWeight.w400);
   }
@@ -126,7 +145,7 @@ class AppStyles {
     return TextStyle(
         color: AppColors.WHITE_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_MEDIUM,
+        fontFamily: AppFonts.POPPINS_REGULAR,
         fontWeight: FontWeight.w500);
   }
 
@@ -134,7 +153,7 @@ class AppStyles {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.APP__DETAILS_TEXT_COLOR,
-        fontFamily: AppFonts.SF_PRO_FONT_REGULAR,
+        fontFamily: AppFonts.POPPINS_REGULAR,
         fontWeight: FontWeight.w400);
   }
 
@@ -150,7 +169,7 @@ class AppStyles {
     return TextStyle(
         fontSize: fontSize,
         color: Theme.of(context).textTheme.headline1.color,
-        fontFamily: AppFonts.SF_PRO_SEMIBOLD,
+        fontFamily: AppFonts.POPPINS_REGULAR,
         fontWeight: FontWeight.w600);
   }
 
@@ -158,7 +177,7 @@ class AppStyles {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.ACCENT_COLOR,
-        fontFamily: AppFonts.POPPINS_SEMIBOLD,
+        fontFamily: AppFonts.POPPINS_REGULAR,
         fontWeight: FontWeight.w600);
   }
 
@@ -166,7 +185,7 @@ class AppStyles {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.ACCENT_COLOR,
-        fontFamily: AppFonts.POPPINS_MEDIUM,
+        fontFamily: AppFonts.POPPINS_REGULAR,
         fontWeight: FontWeight.w400);
   }
 
@@ -346,20 +365,20 @@ class AppStyles {
       /*labelText: title,
       alignLabelWithHint: true,*/
       disabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
-          borderSide: BorderSide(width: 1, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
       enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
-          borderSide: BorderSide(width: 1, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
       hintText: title,
       focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5.0),
-          borderSide: BorderSide(width: 1, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
       hintStyle: TextStyle(
           fontSize: 17.0,
           fontFamily: AppFonts.POPPINS_REGULAR,
-          fontWeight: FontWeight.w400,
-          color: AppColors.LIGHT_GREY_ARROW_COLOR),
+          fontWeight: FontWeight.w300,
+          color: AppColors.LIGHT_GREY_TEXT_COLOR),
       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
     );
   }

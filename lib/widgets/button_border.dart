@@ -11,36 +11,6 @@ class ButtonBorder extends StatelessWidget {
       this.text});
   @override
   Widget build(BuildContext context) {
-   /* return Container(
-      height: 50.0,
-      child: RaisedButton(
-        onPressed: onTap,
-        elevation: 0,
-        hoverElevation: 0,
-        focusElevation: 0,
-        highlightElevation: 0,
-        color: AppColors.WHITE_COLOR,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: AppColors.WHITE_BLUE)),
-
-
-        padding: EdgeInsets.all(0.0),
-        child: Ink(
-          child: Container(
-            constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-            alignment: Alignment.center,
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: AppColors.WHITE_BLUE
-              ),
-            ),
-          ),
-        ),
-      ),
-    );*/
 
     return GestureDetector(
       onTap: onTap,
@@ -57,7 +27,7 @@ class ButtonBorder extends StatelessWidget {
               shape: RoundedRectangleBorder (
                   borderRadius: BorderRadius.circular(10.0),
                   side: BorderSide(
-                      width: 1.5,
+                      width: 0.5,
                       color: AppColors.BLUE_COLOR
                   )
               )
@@ -66,7 +36,8 @@ class ButtonBorder extends StatelessWidget {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: AppColors.BLUE_COLOR
+                color: AppColors.BLUE_COLOR,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),

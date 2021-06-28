@@ -1,5 +1,10 @@
 
 
+import 'package:ampd/views/create_an_account_view.dart';
+import 'package:ampd/views/qr_scan_view.dart';
+import 'package:ampd/views/redeem_message_view.dart';
+import 'package:ampd/views/setting_view.dart';
+import 'package:ampd/views/reviews_view.dart';
 import 'package:ampd/views/sign_in_view.dart';
 import 'package:ampd/views/splash_view.dart';
 import 'package:ampd/views/welcome_view.dart';
@@ -12,6 +17,11 @@ class AppRoutes {
   static const String APP_SPLASH = "/splash_view";
   static const String WELCOME_VIEW = "/welcome_view";
   static const String SIGN_IN_VIEW = "/sign_in_view";
+  static const String CREATE_AN_ACCOUNT_VIEW = "/create_an_account_view";
+  static const String REDEEM_MESSAGE_VIEW = "/redeem_message_view";
+  static const String QR_SCAN_VIEW = "/qr_scan_view";
+  static const String SETTING_VIEW = "/setting_view";
+  static const String REVIEWS_VIEW = "/reviews_view";
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
 
@@ -34,6 +44,47 @@ class AppRoutes {
           return MaterialPageRoute<void>(
             settings: routeSettings,
             builder: (BuildContext context) => SignInView(),
+          );
+        }
+
+      case CREATE_AN_ACCOUNT_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => CreateAnAccountView(),
+          );
+        }
+
+      case REDEEM_MESSAGE_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => RedeemMessageView(),
+          );
+        }
+
+      case QR_SCAN_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => QrScanView(),
+          );
+        }
+
+      case SETTING_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => SettingView(),
+          );
+        }
+
+
+      case REVIEWS_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => ReviewsView(),
           );
         }
 
