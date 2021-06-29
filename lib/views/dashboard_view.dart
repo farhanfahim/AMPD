@@ -15,6 +15,14 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  List<String> _tutorialIcons = [
+    AppImages.IC_TUTORIAL_DISLIKE,
+    AppImages.IC_TUTORIAL_LIKE,
+    AppImages.IC_TUTORIAL_DETAILS,
+  ];
+
+  int _tutorialCount = 0;
+
   List<String> bottomBarIcons = [
     AppImages.IC_COUPONS,
     AppImages.IC_MENU,
@@ -69,125 +77,173 @@ class _DashboardViewState extends State<DashboardView> {
       children: listOfMainScreens,
     );
 
-    return Scaffold(
-      appBar: appBar,
-      body: body,
-      bottomNavigationBar: Container(
-        height: 90.0,
-        color: Colors.white,
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Material(
-                elevation: 10.0,
-                child: Container(
-                  color: Colors.white,
-                  height: 60.0,
-                  child: Row(
-                    children: [
-                      SizedBox(width: 50.0),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: appBar,
+          body: body,
+          bottomNavigationBar: Container(
+            height: 90.0,
+            color: Colors.white,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Material(
+                    elevation: 10.0,
+                    child: Container(
+                      color: Colors.white,
+                      height: 60.0,
+                      child: Row(
+                        children: [
+                          SizedBox(width: 50.0),
 
-                      GestureDetector(
-                        onTap: () {
-                          print('0 tapped');
-                          setState(() {
-                            _selectedPageIndex = 0;
-                            _pageController.jumpToPage(0);
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: SvgPicture.asset(
-                            bottomBarIcons[0],
-                            width: 25.0,
-                            height: 25.0,
-                            color: (_selectedPageIndex == 0) ? AppColors
-                            .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
+                          GestureDetector(
+                            onTap: () {
+                              print('0 tapped');
+                              setState(() {
+                                _selectedPageIndex = 0;
+                                _pageController.jumpToPage(0);
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: SvgPicture.asset(
+                                bottomBarIcons[0],
+                                width: 25.0,
+                                height: 25.0,
+                                color: (_selectedPageIndex == 0) ? AppColors
+                                .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
 //                              Theme.of(context).iconTheme.color,
-                            matchTextDirection: true,
+                                matchTextDirection: true,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
-                      Spacer(),
+                          Spacer(),
 
-                      GestureDetector(
-                        onTap: () {
-                          print('2 tapped');
-                          setState(() {
-                            _selectedPageIndex = 2;
-                            _pageController.jumpToPage(2);
-                          });
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(10.0),
-                          child: SvgPicture.asset(
-                            bottomBarIcons[1],
-                            width: 18.0,
-                            height: 18.0,
-                            color: (_selectedPageIndex == 2) ? AppColors
-                            .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
-                            //Theme.of(context).iconTheme.color,
-                            matchTextDirection: true,
+                          GestureDetector(
+                            onTap: () {
+                              print('2 tapped');
+                              setState(() {
+                                _selectedPageIndex = 2;
+                                _pageController.jumpToPage(2);
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: SvgPicture.asset(
+                                bottomBarIcons[1],
+                                width: 18.0,
+                                height: 18.0,
+                                color: (_selectedPageIndex == 2) ? AppColors
+                                .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
+                                //Theme.of(context).iconTheme.color,
+                                matchTextDirection: true,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
-                      SizedBox(width: 50.0),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            Positioned(
-              bottom: 15.0,
-              left: 0.0,
-              right: 0.0,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 70.5,
-                    width: 70.5,
-                    child: FloatingActionButton(
-                      elevation: 15,
-                      backgroundColor: Colors.white,
-                      child: Container(
-                        height: 70.5,
-                        width: 70.5,
-                        padding: EdgeInsets.all(20.0),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _selectedPageIndex == 1? AppColors.ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
-                          //border: Border.all(color: darkBlueColor, width: 1.7)
-                        ),
-                        child: SvgPicture.asset(
-                          AppImages.IC_HOME,
-                          width: 20.0,
-                          height: 20.0,
-                          color: Colors.white,
-                          //Theme.of(context).iconTheme.color,
-                          matchTextDirection: true,
-                        ),
+                          SizedBox(width: 50.0),
+                        ],
                       ),
-                      onPressed: () {
-                        print('1 tapped');
-                        setState(() {
-                          _selectedPageIndex = 1;
-                          _pageController.jumpToPage(1);
-                        });
-                      },
                     ),
                   ),
+                ),
+
+                Positioned(
+                  bottom: 15.0,
+                  left: 0.0,
+                  right: 0.0,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 70.5,
+                        width: 70.5,
+                        child: FloatingActionButton(
+                          elevation: 15,
+                          backgroundColor: Colors.white,
+                          child: Container(
+                            height: 70.5,
+                            width: 70.5,
+                            padding: EdgeInsets.all(20.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _selectedPageIndex == 1? AppColors.ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
+                              //border: Border.all(color: darkBlueColor, width: 1.7)
+                            ),
+                            child: SvgPicture.asset(
+                              AppImages.IC_HOME,
+                              width: 20.0,
+                              height: 20.0,
+                              color: Colors.white,
+                              //Theme.of(context).iconTheme.color,
+                              matchTextDirection: true,
+                            ),
+                          ),
+                          onPressed: () {
+                            print('1 tapped');
+                            setState(() {
+                              _selectedPageIndex = 1;
+                              _pageController.jumpToPage(1);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+
+        _tutorialCount < 3? GestureDetector(
+          onTap: () {
+            setState(() {
+              _tutorialCount++;
+            });
+          },
+          child: Container(
+            width: double.maxFinite,
+            height: double.maxFinite,
+            decoration: BoxDecoration(
+              color: Colors.black54.withOpacity(0.75),
+            ),
+            child: Container(
+              margin: EdgeInsets.only(left: 30.0, right: 30.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+//                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _tutorialCount == 0? Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(_tutorialIcons[0], width: 200.0, height: 200.0,),
+                    ],
+                  ) : Container(),
+
+                  _tutorialCount == 1? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Image.asset(_tutorialIcons[1], width: 250.0, height: 250.0,),
+                    ],
+                  ) : Container(),
+
+                  _tutorialCount == 2? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(_tutorialIcons[2], width: 250.0, height: 250.0,),
+                    ],
+                  ) : Container()
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        ) : Container()
+      ],
     );
   }
 }

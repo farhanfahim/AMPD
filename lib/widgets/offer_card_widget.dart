@@ -23,9 +23,10 @@ class OfferCardWidget extends StatefulWidget {
   String offer;
   String offerName;
   String time;
-  Color color;
+  String locationTitle;
+  Coords coord;
 
-  OfferCardWidget({this.text, this.image, this.offer, this.offerName, this.time, this.color});
+  OfferCardWidget({this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.locationTitle});
 
   @override
   _OfferCardWidgetState createState() => _OfferCardWidgetState();
@@ -520,7 +521,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
                             GestureDetector(
                               onTap: () {
-                                launch(('tel://+1 1234567825'));
+                                launch(('tel:+11234567825'));
                               },
                               child: Text(
                                 "+1 1234567825",
@@ -548,9 +549,9 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                   if (await MapLauncher.isMapAvailable(Platform.isAndroid? MapType.google : MapType.apple)) {
                                   await MapLauncher.showMarker(
                                   mapType: Platform.isAndroid? MapType.google : MapType.apple,
-                                  coords: Coords(37.759392, -122.5107336),
-                                  title: "Ocean Beach",
-                                  description: "Map",
+                                  coords: widget.coord,
+                                  title: widget.locationTitle,
+//                                  description: "Map",
                                   );
                                   }
                                 },

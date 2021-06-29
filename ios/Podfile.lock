@@ -15,6 +15,8 @@ PODS:
     - Flutter
   - "location_permissions (3.0.0+1)":
     - Flutter
+  - map_launcher (0.0.1):
+    - Flutter
   - notification_permissions (0.4.4):
     - Flutter
   - open_appstore (0.0.1):
@@ -45,6 +47,7 @@ DEPENDENCIES:
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - heic_to_jpg (from `.symlinks/plugins/heic_to_jpg/ios`)
   - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
+  - map_launcher (from `.symlinks/plugins/map_launcher/ios`)
   - notification_permissions (from `.symlinks/plugins/notification_permissions/ios`)
   - open_appstore (from `.symlinks/plugins/open_appstore/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -75,6 +78,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/heic_to_jpg/ios"
   location_permissions:
     :path: ".symlinks/plugins/location_permissions/ios"
+  map_launcher:
+    :path: ".symlinks/plugins/map_launcher/ios"
   notification_permissions:
     :path: ".symlinks/plugins/notification_permissions/ios"
   open_appstore:
@@ -105,6 +110,7 @@ SPEC CHECKSUMS:
   geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
   heic_to_jpg: cce9d6463ab11852a7393daa61be23f98a951c64
   location_permissions: 7e0f9aa0f60deb8ff93ddf0e2a164c7e8197bc94
+  map_launcher: e325db1261d029ff33e08e03baccffe09593ffea
   notification_permissions: b74860c2967c1579243a675e63cd55e0ae75cef7
   open_appstore: 4eddfae38848002fdde8d42e1734d16cb34439de
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c

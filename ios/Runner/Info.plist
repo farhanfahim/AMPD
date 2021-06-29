@@ -44,6 +44,7 @@
 	<key>LSApplicationQueriesSchemes</key>
     <array>
         <string>comgooglemaps</string>
+        <string>call</string>
     </array>
 </dict>
 </plist>

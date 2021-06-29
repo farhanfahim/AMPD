@@ -1,10 +1,14 @@
+import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/widgets/offer_card_widget.dart';
 import 'package:ampd/widgets/swipe_cards/swipe_cards.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -12,6 +16,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin<HomeView>{
+
+  bool _stackFinished = false;
   List<SwipeItem> _swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -49,6 +55,22 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     "2021-06-29 09:00:00",
   ];
 
+  List<Coords> _locations = [
+    Coords(40.7565007, -73.986803),
+    Coords(24.3035846, 54.1169487),
+    Coords(24.8328199, 66.9334615),
+    Coords(24.8326894, 66.9334608),
+    Coords(24.8325588, 66.9334601),
+  ];
+
+  List<String> _locationTitle = [
+    "Starbucks",
+    "Baskin-Robbins",
+    "KFC",
+    "Mc Donalds",
+    "Pizza Hut",
+  ];
+
 
   @override
   bool get wantKeepAlive => true;
@@ -58,27 +80,30 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     super.didChangeDependencies();
     for (int i = 0; i < _names.length; i++) {
       _swipeItems.add(SwipeItem(
-          content: Content(text: _names[i], offer: _offers[i], offerName: _itemNames[i], time: _times[i], image: _backgrounds[i]),
+          content: Content(text: _names[i], offer: _offers[i], offerName: _itemNames[i], time: _times[i], image: _backgrounds[i], coord: _locations[i], locationTitle: _locationTitle[i]),
           likeAction: () {
-            _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Liked ${_names[i]}"),
-              duration: Duration(milliseconds: 500),
-            ));
+            ToastUtil.showToast(context, "Liked ${_names[i]}");
+//            _scaffoldKey.currentState.showSnackBar(SnackBar(
+//              content: Text("Liked ${_names[i]}"),
+//              duration: Duration(milliseconds: 500),
+//            ));
           },
           nopeAction: () {
-            _scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Nope ${_names[i]}"),
-              duration: Duration(milliseconds: 500),
-            ));
+            ToastUtil.showToast(context, "Nope ${_names[i]}");
+//            _scaffoldKey.currentState.showSnackBar(SnackBar(
+//              content: Text("Nope ${_names[i]}"),
+//              duration: Duration(milliseconds: 500),
+//            ));
           },));
     }
 
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
+
   @override
   Widget build(BuildContext context) {
     final body = SafeArea(
-        child: Container(
+        child: !_stackFinished? Container(
 //          height: 550,
 //        color: Colors.yellow,
           height: double.maxFinite,
@@ -95,15 +120,32 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                   offerName: _swipeItems[index].content.offerName,
                   text: _swipeItems[index].content.text,
                   time: _swipeItems[index].content.time,
+                  coord: _swipeItems[index].content.coord,
+                  locationTitle: _swipeItems[index].content.locationTitle,
                 ),
               );
             },
             onStackFinished: () {
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text("Stack Finished"),
-                duration: Duration(milliseconds: 500),
-              ));
+              setState(() {
+                _stackFinished = true;
+              });
             },
+          ),
+        ) : Center(
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(AppImages.IC_COUPONS, width: 150.0, height: 150.0,),
+
+                SizedBox(height: 12.0,),
+
+                Text(
+                  'No more coupons left',
+                  style: AppStyles.poppinsTextStyle(fontSize: 25.0, weight: FontWeight.w500).copyWith(color: AppColors.UNSELECTED_COLOR),
+                )
+              ],
+            ),
           ),
         )
     );
@@ -120,7 +162,8 @@ class Content {
   final String offer;
   final String offerName;
   final String time;
-  final Color color;
+  final String locationTitle;
+  final Coords coord;
 
-  Content({this.text, this.image, this.time, this.offer, this.offerName, this.color});
+  Content({this.text, this.image, this.time, this.offer, this.offerName, this.coord, this.locationTitle});
 }
