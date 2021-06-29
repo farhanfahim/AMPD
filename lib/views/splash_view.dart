@@ -23,7 +23,12 @@ class _SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: AppColors.BACKGROUND_COLOR,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        toolbarHeight: 0.0,
+      ),
+      backgroundColor: AppColors.WHITE_COLOR,
       body: Center(
         child: SvgPicture.asset(
           AppImages.MAIN_LOGO,

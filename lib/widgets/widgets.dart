@@ -6,6 +6,7 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/ReviewModel.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,6 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
@@ -23,6 +25,120 @@ import 'package:sizer/sizer.dart';
 
 import 'Skeleton.dart';
 import 'gradient_button.dart';
+
+Widget NotificationTileView({BuildContext context, Reviews data, bool hasTopDivider = true}){
+  return Column(
+    children: [
+      SizedBox(height: 10.0,),
+
+      hasTopDivider? divider() : Container(),
+
+      hasTopDivider? SizedBox(height: 10.0,) : Container(),
+
+      InkWell(
+        onTap: (){
+
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+//          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+          child: Row(
+            children: [
+
+              circularAvatar(55.0, 55.0,
+                  data.image,
+                  30.0),
+
+              SizedBox(width: 10.0,),
+
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text(
+                        data.name,
+                        style: AppStyles.blackWithBoldFontTextStyle(context, 16.0).copyWith(color: AppColors.COLOR_BLACK).copyWith(fontWeight: FontWeight.w600)
+                    ),
+
+                    SizedBox(height: 6.0,),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+//                        Icon(
+//                          Icons.star,
+//                          size: 14.0,
+//                          color: AppColors.COLOR_GREEN_RATING,// add custom icons also
+//                        ),
+
+                        RatingBar(
+                          onRatingUpdate: null,
+                          ratingWidget: RatingWidget(
+                              full: Icon(
+                                FontAwesomeIcons.solidStar,
+                                color: AppColors.GREEN_BRIGHT_COLOR,
+                              ),
+                              half: Icon(
+                                FontAwesomeIcons.starHalfAlt,
+                                color: AppColors.GREEN_BRIGHT_COLOR,
+                              ),
+                              empty: Icon(
+                                FontAwesomeIcons.star,
+                                color: AppColors.GREEN_BRIGHT_COLOR,
+                              )
+                          ),
+                          itemSize: 10.0,
+                          initialRating: 4.8,
+                          allowHalfRating: true,
+                          glow: false,
+                          itemPadding: EdgeInsets.only(left: 2.0),
+                        ),
+
+                        SizedBox(width: 3.0,),
+
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5.0),
+                          child: Text(
+                            data.rating.toString(),
+                            style: AppStyles.blackWithBoldFontTextStyle(context, 13.0).copyWith(color: AppColors.COLOR_GREEN_RATING),
+                          ),
+                        )
+                      ],
+                    ),
+
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+      ),
+
+//      Padding(
+//        padding: EdgeInsets.symmetric(horizontal: 0.0,),
+//        child: Text(
+//          data.description,
+//          style: AppStyles.blackWithDifferentFontTextStyle(context, 12.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+//        ),
+//      ),
+
+      ReadMoreText(
+        data.description,
+        // "This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text.",
+        trimCollapsedText: AppStrings.READ_MORE,
+        trimExpandedText: AppStrings.READ_LESS,
+        trimLines: 2,
+        textAlign: TextAlign.start,
+        trimMode: TrimMode.Line,
+        delimiter: ".",
+        style: AppStyles.blackWithDifferentFontTextStyle(context, 10.0.sp).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+      ),
+
+      SizedBox(height: 10.0,),
+    ],
+  );
+}
 
 Widget searchTextField({BuildContext context}) {
   return TextFormField(
@@ -62,87 +178,87 @@ showBottomSheetWidget(BuildContext context, String title, String desc,
           child: StatefulBuilder(
               builder: (BuildContext context, StateSetter state) {
             return SingleChildScrollView(
-                child: InkWell(
-
-                    child: Container(
-                      margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          SvgPicture.asset(
-                            AppImages.BOTTOM_SHEET,
-                          ),
-                          SizedBox(
-                            height: 40.0,
-                          ),
-                          Text(
-                            title,
-                            style: AppStyles.blackWithBoldFontTextStyle(
-                                context, 20.0),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 25.0,
+              child: InkWell(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        SvgPicture.asset(
+                          AppImages.BOTTOM_SHEET,
+                        ),
+                        SizedBox(
+                          height: 40.0,
+                        ),
+                        Text(
+                          title,
+                          style: AppStyles.blackWithBoldFontTextStyle(
+                              context, 20.0),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25.0,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Text(
+                                  desc,
+                                  textAlign: TextAlign.center,
+                                  style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0),
                                 ),
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: Text(
-                                    desc,
-                                    textAlign: TextAlign.center,
-                                    style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0),
-                                  ),
+                              ),
+                            )),
+                        SizedBox(
+                          height: 25.0,
+                        ),
+                        widget,
+                        SizedBox(
+                          height: 25.0,
+                        ),
+                        GradientButton(
+                          onTap: onTap,
+                          text: btnText,
+                        ),
+                        showResendBtn
+                            ? Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                                child: new Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Text(
+                                      AppStrings.DIDNT_RECEIVE,
+                                      style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12)
+                                    ),
+                                    SizedBox(
+                                      width: 2.0,
+                                    ),
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Text(
+                                        AppStrings.RESEND,
+                                        style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12).copyWith(color: AppColors.BLUE_COLOR)
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              )),
-                          SizedBox(
-                            height: 25.0,
-                          ),
-                          widget,
-                          SizedBox(
-                            height: 25.0,
-                          ),
-                          GradientButton(
-                            onTap: onTap,
-                            text: btnText,
-                          ),
-                          showResendBtn
-                              ? Container(
-                                  margin:
-                                      EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Text(
-                                        AppStrings.DIDNT_RECEIVE,
-                                        style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12)
-                                      ),
-                                      SizedBox(
-                                        width: 2.0,
-                                      ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Text(
-                                          AppStrings.RESEND,
-                                          style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12).copyWith(color: AppColors.BLUE_COLOR)
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: 50.0,
-                                ),
-                        ],
-                      ),
-                    )));
+                              )
+                            : SizedBox(
+                                height: 50.0,
+                              ),
+                      ],
+                    ),
+                  )),
+            );
           }),
         );
       });
@@ -908,15 +1024,16 @@ Widget teeTimesItem(BuildContext context) {
 
 Widget appBar(
     {BuildContext context,
-    String title,Function onBackClick,Color iconColor}) {
+    String title,Function onBackClick,Color iconColor, bool hasLeading = true}) {
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
     centerTitle: true,
-    title: new Text(title,
+    title: new Text(
+      title,
       style:
-      AppStyles.blackWithBoldFontTextStyle(context, 20.0),),
-    leading: Padding(
+      AppStyles.blackWithBoldFontTextStyle(context, 20.0).copyWith(fontWeight: FontWeight.w600),),
+    leading: hasLeading? Padding(
       padding: const EdgeInsets.only(left:10.0),
       child: GestureDetector(
         onTap: () {
@@ -931,7 +1048,7 @@ Widget appBar(
           ),
         ),
       ),
-    ),
+    ) : Container(),
   );
 }
 

@@ -2,7 +2,7 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
-
+import 'package:sizer/sizer.dart';
 class OtpTextField extends StatelessWidget {
   const OtpTextField({
     Key key,
@@ -19,7 +19,7 @@ class OtpTextField extends StatelessWidget {
         fieldBorderStyle: FieldBorderStyle.Square,
         responsive: false,
         fieldHeight: 55.0,
-        fieldWidth: 65.0,
+        fieldWidth: 16.5.w,
         borderWidth: 1.0,
         activeBorderColor: AppColors.GREY_COLOR,
         /*activeBackgroundColor: Colors.pink.shade100,*/

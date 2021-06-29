@@ -13,14 +13,19 @@ class _SideMenuViewState extends State<SideMenuView> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
+    final body = SafeArea(
+        child: Center(
+          child: Container(
+            child: Text(
+              "Side Menu",
+              style: AppStyles.blackWithDifferentFontTextStyle(context, 30.0),
+            ),
+          ),
+        )
+    );
+
     return Scaffold(
-      body: Container(
-        color: Colors.yellow,
-        child: Text(
-          "Side Menu",
-          style: AppStyles.blackWithDifferentFontTextStyle(context, 30.0),
-        ),
-      ),
+      body: body,
     );
   }
 }

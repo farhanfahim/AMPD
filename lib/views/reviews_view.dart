@@ -83,87 +83,16 @@ class _ReviewsViewState extends State<ReviewsView> {
               shrinkWrap: true,
               itemCount: _listOfReviews.length,
               itemBuilder: (context, index) {
-
-                return NotificationTileView(_listOfReviews[index]);
+                return Container(
+                    padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 0.0),
+                    child: NotificationTileView(context: context, data: _listOfReviews[index])
+                );
               }),
         ));
 
   }
 
-  Widget NotificationTileView(Reviews data){
-    return Column(
-      children: [
 
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
-          child:divider(),),
-        InkWell(
-          onTap: (){
-
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
-            child: Row(
-              children: [
-
-                circularAvatar(55.0, 55.0,
-                    data.image,
-                    30.0),
-
-                SizedBox(width: 10.0,),
-
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      Text(
-                        data.name,
-                        style: AppStyles.blackWithBoldFontTextStyle(context, 16.0).copyWith(color: AppColors.COLOR_BLACK).copyWith(fontWeight: FontWeight.w600)
-                      ),
-
-                      SizedBox(height: 6.0,),
-                      Row(
-                        children: [
-
-
-                          Icon(
-                            Icons.star,
-                            size: 14.0,
-                            color: AppColors.COLOR_GREEN_RATING,// add custom icons also
-                          ),
-
-                          SizedBox(height: 5.0,),
-
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: Text(
-                              data.rating.toString(),
-                              style: AppStyles.blackWithBoldFontTextStyle(context, 14.0).copyWith(color: AppColors.COLOR_GREEN_RATING),
-                            ),
-                          )
-                        ],
-                      ),
-
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 30.0,),
-          child: Text(
-            data.description,
-            style: AppStyles.blackWithDifferentFontTextStyle(context, 12.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-          ),
-        )
-
-      ],
-    );
-  }
 
 
 

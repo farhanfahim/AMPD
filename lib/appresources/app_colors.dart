@@ -12,7 +12,7 @@ class AppColors {
   static const Color YELLOW_COLOR = Color(0xffF4AE00);
   static const Color WHITE_COLOR = Color(0xffFFFFFF);
   static const Color BLUE_COLOR = Color(0xff2491EB);
-  static const Color GREY_COLOR = Color(0xffE8EBEC);
+//  static const Color GREY_COLOR = Color(0xffE8EBEC);
   static const Color APP_PRIMARY_COLOR = Colors.blueAccent;
 
 
@@ -46,8 +46,8 @@ class AppColors {
   static const Color APP__DETAILS_TEXT_COLOR_LIGHT = Color(0xFFAAB0C3);
   static const Color COUNTDOWN_COLOR_LIGHT1 = Color(0xFF8492A7);
   static const Color COUNTDOWN_COLOR_LIGHT2 = Color(0xFF77879E);
-  static const Color ACCENT_COLOR = Color(0xFF174D9F);
-  static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF8a8a8f);
+//  static const Color ACCENT_COLOR = Color(0xFF174D9F);
+//  static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF8a8a8f);
   static const Color ACCENT_COLOR = Color(0xFF2491EB);
   static const Color ADD_IMAGE_BUTTON_COLOR = Color(0xFFF5F4F4);
   static const Color COLOR_BLACK = Colors.black;

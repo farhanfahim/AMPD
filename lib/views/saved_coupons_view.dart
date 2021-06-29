@@ -13,14 +13,19 @@ class _SavedCouponsViewState extends State<SavedCouponsView>  with AutomaticKeep
 
   @override
   Widget build(BuildContext context) {
+    final body = SafeArea(
+        child: Center(
+          child: Container(
+            child: Text(
+              "Saved Coupons",
+              style: AppStyles.blackWithDifferentFontTextStyle(context, 30.0),
+            ),
+          ),
+        )
+    );
+
     return Scaffold(
-      body: Container(
-        color: Colors.yellow,
-        child: Text(
-          "Saved Coupons",
-          style: AppStyles.blackWithDifferentFontTextStyle(context, 30.0),
-        ),
-      ),
+      body: body,
     );
   }
 }

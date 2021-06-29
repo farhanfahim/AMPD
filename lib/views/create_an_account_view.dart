@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_fonts.dart';
@@ -153,7 +154,8 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.of(context).pop();
+//                        Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD_VIEW);
                       },
                       text: AppStrings.LOGIN_TO_MY_ACCOUNT,
                     ),

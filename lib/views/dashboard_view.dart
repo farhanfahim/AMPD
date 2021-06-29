@@ -5,6 +5,7 @@ import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/views/home_view.dart';
 import 'package:ampd/views/saved_coupons_view.dart';
 import 'package:ampd/views/side_menu_view.dart';
+import 'package:ampd/widgets/widgets.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -52,7 +53,7 @@ class _DashboardViewState extends State<DashboardView> {
   }
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(
+    final appBar2 = AppBar(
 //      elevation: 0.6,
       brightness: Theme
           .of(context)
@@ -71,6 +72,14 @@ class _DashboardViewState extends State<DashboardView> {
       ],
     );
 
+    final appBar1 = appBar(
+        title:"Home",onBackClick: (){
+          Navigator.of(context).pop();
+        },
+        iconColor:AppColors.WHITE_COLOR,
+        hasLeading: _selectedPageIndex == 1? true : false
+    );
+
     final body = PageView(
       controller: _pageController,
       physics: NeverScrollableScrollPhysics(),
@@ -80,7 +89,7 @@ class _DashboardViewState extends State<DashboardView> {
     return Stack(
       children: [
         Scaffold(
-          appBar: appBar,
+          appBar: _selectedPageIndex == 1? appBar1 : null,
           body: body,
           bottomNavigationBar: Container(
             height: 90.0,

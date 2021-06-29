@@ -28,6 +28,8 @@ class AppRoutes {
   static const String CHANGE_PASSWORD_VIEW = "/change_password_view";
   static const String NOTIFICATIONS_VIEW = "/notifications_view";
   static const String REVIEWS_VIEW = "/reviews_view";
+  static const String HOME_VIEW = "/home_view";
+  static const String DASHBOARD_VIEW = "/dashboard_view";
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
 
@@ -36,6 +38,22 @@ class AppRoutes {
   /// @usage -> Returns route based on requested route settings ShippingAddressView
   Route getRoutes(RouteSettings routeSettings) {
     switch (routeSettings.name) { // MutualFriendsView
+
+     case DASHBOARD_VIEW:
+       {
+         return MaterialPageRoute<void>(
+           settings: routeSettings,
+           builder: (BuildContext context) => DashboardView(),
+         );
+       }
+
+     case HOME_VIEW:
+       {
+         return MaterialPageRoute<void>(
+           settings: routeSettings,
+           builder: (BuildContext context) => HomeView(),
+         );
+       }
 
      case WELCOME_VIEW:
        {

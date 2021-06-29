@@ -182,7 +182,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
+                        Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
                       /*  showDialog(
                             context: context,
                             builder: (BuildContext context1) {
@@ -351,7 +351,7 @@ class _SignInViewState extends State<SignInView> {
               /*onEditingComplete: () => FocusScope.of(context).requestFocus(confirmPasswordNode),
                           onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(confirmPasswordNode),*/
               obscureText: obscureText,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               decoration: AppStyles.decorationWithBorder(AppStrings.PASSWORD),
               //   , iconData, (){
               //

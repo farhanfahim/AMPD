@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/ReviewModel.dart';
 import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/widgets/Skeleton.dart';
 import 'package:ampd/widgets/widgets.dart';
@@ -43,9 +45,14 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
   String _min = "00";
   String _sec = "00";
   Timer _timer;
+  List<Reviews> _listOfReviews = [];
 
   @override
   void initState() {
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+
     _time = widget.time;
     _timer = Timer.periodic(Duration(seconds: 1),(timer) {
       if (mounted) {
@@ -65,12 +72,14 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
     _timer.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: ClampingScrollPhysics(),
       child: Container(
-        height: !_isDetail? MediaQuery.of(context).size.width * 2.65 : MediaQuery.of(context).size.width * 1.9,
+//            height: !_isDetail? MediaQuery.of(context).size.width * 3.15 : MediaQuery.of(context).size.width * 1.9,
+            height: !_isDetail? 290.0.w : MediaQuery.of(context).size.width * 1.9,
 //        height: 140.0.h,
         color: Colors.white,
         child: Stack(
@@ -696,9 +705,41 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
                         _selectedTab == 1? Container(
 //                          height: 500.0,
-                          child: Text(
-                            "Reviews",
-                            style: AppStyles.poppinsTextStyle(fontSize: 14.0, weight: FontWeight.w400).copyWith(color: AppColors.GREY_COLOR, height: 1.5),
+                          child: Column(
+                            children: [
+                              ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: _listOfReviews.length,
+                                  itemBuilder: (context, index) {
+
+                                    return NotificationTileView(context: context, data: _listOfReviews[index], hasTopDivider: index == 0? false : true);
+                                  }
+                               ),
+
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, AppRoutes.REVIEWS_VIEW);
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      AppStrings.VIEW_ALL,
+                                      style: AppStyles.poppinsTextStyle(fontSize: 15.0, weight: FontWeight.w500).copyWith(color: AppColors.UNSELECTED_COLOR),
+                                    ),
+
+                                    SizedBox(width: 5.0,),
+
+                                    Icon(
+                                      Icons.arrow_forward_ios_sharp,
+                                      color: AppColors.UNSELECTED_COLOR,
+                                      size: 15.0,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ) : Container(),
                       ],
