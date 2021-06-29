@@ -1,13 +1,13 @@
+import 'dart:async';
+
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/FriendRequestsModel.dart';
-import 'package:ampd/data/model/StoriesModel.dart';
-import 'package:ampd/data/model/TeeTimesResponse.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/widgets/button_border.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:math';
 
@@ -21,16 +21,17 @@ import 'package:readmore/readmore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sizer/sizer.dart';
 
-
 import 'Skeleton.dart';
+import 'gradient_button.dart';
 
-Widget searchTextField({BuildContext context}){
+Widget searchTextField({BuildContext context}) {
   return TextFormField(
     style: AppStyles.blackWithDifferentFontTextStyle(context, 12.0),
     obscureText: false,
     textInputAction: TextInputAction.done,
     keyboardType: TextInputType.visiblePassword,
-    decoration: AppStyles.decorationWithLeadingEdgeIcon(context, "Search", Icons.search),
+    decoration: AppStyles.decorationWithLeadingEdgeIcon(
+        context, "Search", Icons.search),
   );
 }
 //
@@ -44,66 +45,179 @@ Widget searchTextField({BuildContext context}){
 //   );
 // }
 
-showiOSBirthdayDatePicker(BuildContext context, bool isAllowFutureDates, bool isAllowPastDates, Function onConfirm){
-  DatePicker.showDatePicker(context,
-      showTitleActions: true,
-      theme: DatePickerTheme(
-        backgroundColor: Theme.of(context).backgroundColor,
-        cancelStyle: TextStyle(color: Colors.grey),
-        itemStyle: TextStyle(color: Theme.of(context).appBarTheme.textTheme.headline1.color),
-        //  containerHeight: 20.0.h,
+showBottomSheetWidget(BuildContext context, String title, String desc,
+    Widget widget, Function onTap, String btnText, bool showResendBtn) {
+
+
+  showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: AppColors.WHITE_COLOR,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
       ),
-      minTime: DateTime(1920, 1, 1) ,
-      maxTime:  DateTime.now().subtract(Duration(days: 4380)), onChanged: (date) {
-        print('change $date');
-      }, onConfirm: onConfirm,
-      currentTime: DateTime.now(), locale: LocaleType.en);
+      context: context,
+      builder: (BuildContext bc) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter state) {
+            return SingleChildScrollView(
+                child: InkWell(
+
+                    child: Container(
+                      margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          SvgPicture.asset(
+                            AppImages.BOTTOM_SHEET,
+                          ),
+                          SizedBox(
+                            height: 40.0,
+                          ),
+                          Text(
+                            title,
+                            style: AppStyles.blackWithBoldFontTextStyle(
+                                context, 20.0),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 25.0,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    desc,
+                                    textAlign: TextAlign.center,
+                                    style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0),
+                                  ),
+                                ),
+                              )),
+                          SizedBox(
+                            height: 25.0,
+                          ),
+                          widget,
+                          SizedBox(
+                            height: 25.0,
+                          ),
+                          GradientButton(
+                            onTap: onTap,
+                            text: btnText,
+                          ),
+                          showResendBtn
+                              ? Container(
+                                  margin:
+                                      EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                                  child: new Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Text(
+                                        AppStrings.DIDNT_RECEIVE,
+                                        style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12)
+                                      ),
+                                      SizedBox(
+                                        width: 2.0,
+                                      ),
+                                      InkWell(
+                                        onTap: () {},
+                                        child: Text(
+                                          AppStrings.RESEND,
+                                          style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12).copyWith(color: AppColors.BLUE_COLOR)
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 50.0,
+                                ),
+                        ],
+                      ),
+                    )));
+          }),
+        );
+      });
 }
 
-showiOSDatePicker(BuildContext context, bool isAllowFutureDates, bool isAllowPastDates, Function onConfirm){
+
+
+showiOSBirthdayDatePicker(BuildContext context, bool isAllowFutureDates,
+    bool isAllowPastDates, Function onConfirm) {
   DatePicker.showDatePicker(context,
       showTitleActions: true,
       theme: DatePickerTheme(
         backgroundColor: Theme.of(context).backgroundColor,
         cancelStyle: TextStyle(color: Colors.grey),
-        itemStyle: TextStyle(color: Theme.of(context).appBarTheme.textTheme.headline1.color),
-      //  containerHeight: 20.0.h,
+        itemStyle: TextStyle(
+            color: Theme.of(context).appBarTheme.textTheme.headline1.color),
+        //  containerHeight: 20.0.h,
+      ),
+      minTime: DateTime(1920, 1, 1),
+      maxTime: DateTime.now().subtract(Duration(days: 4380)),
+      onChanged: (date) {
+    print('change $date');
+  }, onConfirm: onConfirm, currentTime: DateTime.now(), locale: LocaleType.en);
+}
+
+showiOSDatePicker(BuildContext context, bool isAllowFutureDates,
+    bool isAllowPastDates, Function onConfirm) {
+  DatePicker.showDatePicker(context,
+      showTitleActions: true,
+      theme: DatePickerTheme(
+        backgroundColor: Theme.of(context).backgroundColor,
+        cancelStyle: TextStyle(color: Colors.grey),
+        itemStyle: TextStyle(
+            color: Theme.of(context).appBarTheme.textTheme.headline1.color),
+        //  containerHeight: 20.0.h,
       ),
       // minTime: isAllowPastDates ? DateTime(1920, 1, 1) : DateTime.now(),
       minTime: DateTime.now(),
       // maxTime: isAllowFutureDates ? DateTime(DateTime.now().year, 12, 31) : DateTime.now(), onChanged: (date) {
-      maxTime:  DateTime(DateTime.now().year, 12, 31).add(Duration(days: 1825)), onChanged: (date) {
-        print('change $date');
-      }, onConfirm: onConfirm,
-      currentTime: DateTime.now(), locale: LocaleType.en);
+      maxTime: DateTime(DateTime.now().year, 12, 31).add(Duration(days: 1825)),
+      onChanged: (date) {
+    print('change $date');
+  }, onConfirm: onConfirm, currentTime: DateTime.now(), locale: LocaleType.en);
 }
 
-cupertinoTimePicker(BuildContext context, Function onConfirm){
+cupertinoTimePicker(BuildContext context, Function onConfirm) {
   DatePicker.showTime12hPicker(context,
-
       theme: DatePickerTheme(
-
         backgroundColor: Theme.of(context).backgroundColor,
         cancelStyle: TextStyle(color: Colors.grey),
-        itemStyle: TextStyle(color: Theme.of(context).appBarTheme.textTheme.headline1.color),
+        itemStyle: TextStyle(
+            color: Theme.of(context).appBarTheme.textTheme.headline1.color),
         //  containerHeight: 20.0.h,
       ),
-      showTitleActions: true,
-      onChanged: (date) {
-        print('change $date in time zone ' + date.timeZoneOffset.inHours.toString());
-      },
-      onConfirm: onConfirm,
-      currentTime: DateTime.now());
+      showTitleActions: true, onChanged: (date) {
+    print(
+        'change $date in time zone ' + date.timeZoneOffset.inHours.toString());
+  }, onConfirm: onConfirm, currentTime: DateTime.now());
 }
 
-Widget searchTextFieldTeeTimes({String hintText, FocusNode focusNode, BuildContext context, bool enabled, TextEditingController controller, Function onSearch, Function onChange}){
+Widget searchTextFieldTeeTimes(
+    {String hintText,
+    FocusNode focusNode,
+    BuildContext context,
+    bool enabled,
+    TextEditingController controller,
+    Function onSearch,
+    Function onChange}) {
   return TextFormField(
-      controller: controller,
+    controller: controller,
     enabled: enabled,
-      autofocus: true,
-      focusNode: focusNode,
+    autofocus: true,
+    focusNode: focusNode,
     inputFormatters: [
-     // LengthLimitingTextInputFormatter(nameValidation),
+      // LengthLimitingTextInputFormatter(nameValidation),
       WhitelistingTextInputFormatter(RegExp("[a-zA-Z ]"))
     ],
     style: AppStyles.blackWithDifferentFontTextStyle(context, 12.0),
@@ -112,12 +226,130 @@ Widget searchTextFieldTeeTimes({String hintText, FocusNode focusNode, BuildConte
     onFieldSubmitted: onSearch,
     textInputAction: TextInputAction.search,
     keyboardType: TextInputType.text,
-    decoration: AppStyles.decorationWithLeadingEdgeIconTeeTimes(context, hintText, Icons.search),
+    decoration: AppStyles.decorationWithLeadingEdgeIconTeeTimes(
+        context, hintText, Icons.search),
   );
 }
 
+Widget productTile(
+    {BuildContext context,
+    String imageUrl,
+    String productName,
+    String productPrice,
+    String productBrand,
+    bool isMyProducts,
+    Function onProductTap,
+    Function onMenuOptionTap}) {
+  return GestureDetector(
+    onTap: onProductTap,
+    child: Container(
+      width: 160.0,
+      height: 240.0,
+      margin: EdgeInsets.symmetric(horizontal: 5.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              Container(
+                width: 160.0,
+                height: 180.0,
+                decoration: BoxDecoration(
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.grey.withOpacity(0.5),
+                  //     spreadRadius: 5,
+                  //     blurRadius: 7,
+                  //     offset: Offset(0, 1), // changes position of shadow
+                  //   ),
+                  // ],
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color(0xFFF2F1F1),
+                ),
+                child: ClipRRect(
+                  //networkCacheImageWithShimmerWithHeightWidth
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: networkCacheImageWithShimmerWithHeightWidth(
+                      width: 160.0,
+                      height: 180.0,
+                      // imagePath: "https://www.pngkit.com/png/full/89-896353_ladies-jacket-png-image-with-transparent-background-women.png",
+                      imagePath: imageUrl,
+                      boxFit: BoxFit.cover),
+                ),
+              ),
+              isMyProducts
+                  ? Positioned(
+                      top: 5.0,
+                      right: 10.0,
+                      child: InkWell(
+                        onTap: onMenuOptionTap,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Transform.rotate(
+                            angle: 90 * pi / 180,
+                            child: Container(
+                              width: 30.0,
+                              height: 30.0,
+                              padding: const EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: SvgPicture.asset(
+                                AppImages.IC_MENU_OPTIONS,
+                                width: 15.0,
+                                height: 15.0,
+                                color: Colors.black,
+                                matchTextDirection: true,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
+          SizedBox(
+            height: 5.0,
+          ),
+          Flexible(
+              child: Text(
+            productName,
+            overflow: TextOverflow.ellipsis,
+            style: AppStyles.subHeadingsTextStyle(context, 11.0.sp),
+          )),
+          SizedBox(
+            height: 3.0,
+          ),
+          Text(
+            productBrand,
+            overflow: TextOverflow.ellipsis,
+            style: AppStyles.detailTextStyle(fontSize: 10.0.sp)
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            height: 3.0,
+          ),
+          Text(
+            productPrice,
+            overflow: TextOverflow.ellipsis,
+            style: AppStyles.detailTextStyle(fontSize: 10.0.sp)
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
-Widget mostSellingTile({BuildContext context, String imageUrl, String productName, String productPrice, String productBrand, Function onProductTap}){
+Widget mostSellingTile(
+    {BuildContext context,
+    String imageUrl,
+    String productName,
+    String productPrice,
+    String productBrand,
+    Function onProductTap}) {
   return GestureDetector(
     onTap: onProductTap,
     child: Container(
@@ -134,54 +366,56 @@ Widget mostSellingTile({BuildContext context, String imageUrl, String productNam
               borderRadius: BorderRadius.circular(10.0),
               color: Color(0xFFF2F1F1),
             ),
-
-            child: ClipRRect( //networkCacheImageWithShimmerWithHeightWidth
+            child: ClipRRect(
+              //networkCacheImageWithShimmerWithHeightWidth
               borderRadius: BorderRadius.circular(10.0),
               child: networkCacheImageWithShimmerWithHeightWidth(
                   width: 120.0,
                   height: 150.0,
                   // imagePath: "https://www.pngkit.com/png/full/89-896353_ladies-jacket-png-image-with-transparent-background-women.png",
                   imagePath: imageUrl,
-                  boxFit: BoxFit.cover
-              ),
+                  boxFit: BoxFit.cover),
             ),
           ),
-
-          SizedBox(height: 5.0,),
-
+          SizedBox(
+            height: 5.0,
+          ),
           Flexible(
               child: Text(
-                productName,
-                overflow: TextOverflow.ellipsis,
-                style: AppStyles.subHeadingsTextStyle(context, 11.0.sp),)),
-
-          SizedBox(height: 3.0,),
-
+            productName,
+            overflow: TextOverflow.ellipsis,
+            style: AppStyles.subHeadingsTextStyle(context, 11.0.sp),
+          )),
+          SizedBox(
+            height: 3.0,
+          ),
           Text(
             productBrand,
             overflow: TextOverflow.ellipsis,
-            style: AppStyles.detailTextStyle(fontSize: 10.0.sp).copyWith(fontWeight: FontWeight.w600),),
-
-          SizedBox(height: 3.0,),
-
+            style: AppStyles.detailTextStyle(fontSize: 10.0.sp)
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            height: 3.0,
+          ),
           Text(
             productPrice,
             overflow: TextOverflow.ellipsis,
-            style: AppStyles.detailTextStyle(fontSize: 10.0.sp).copyWith(fontWeight: FontWeight.w600),),
+            style: AppStyles.detailTextStyle(fontSize: 10.0.sp)
+                .copyWith(fontWeight: FontWeight.w600),
+          ),
         ],
       ),
     ),
   );
 }
 
-
-Widget networkCacheImageWithShimmer({String imagePath}){
+Widget networkCacheImageWithShimmer({String imagePath}) {
   return CachedNetworkImage(
     imageUrl: imagePath,
     fit: BoxFit.cover,
     // fadeInCurve: Curves.easeIn,
-    imageBuilder: (BuildContext context,
-        ImageProvider<dynamic> imageProvider) {
+    imageBuilder: (BuildContext context, ImageProvider<dynamic> imageProvider) {
       return Image(
         // width: constraints.maxWidth,
         image: imageProvider,
@@ -189,32 +423,30 @@ Widget networkCacheImageWithShimmer({String imagePath}){
       );
     },
     placeholder: (context, url) => Skeleton(),
-    errorWidget: (context, url, error){
+    errorWidget: (context, url, error) {
       return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
     },
   );
 }
 
-Widget networkCacheImageWithShimmerWithFixedSkeleton({String imagePath,  BoxFit boxFit}){
+Widget networkCacheImageWithShimmerWithFixedSkeleton(
+    {String imagePath, BoxFit boxFit}) {
   return CachedNetworkImage(
     // height: height,
     // width: width,
     imageUrl: imagePath,
     fit: boxFit,
     // fadeInCurve: Curves.easeIn,
-    imageBuilder: (BuildContext context,
-        ImageProvider<dynamic> imageProvider) {
+    imageBuilder: (BuildContext context, ImageProvider<dynamic> imageProvider) {
       return Image(
         // width: constraints.maxWidth,
         image: imageProvider,
         fit: boxFit,
       );
     },
-    placeholder: (context, url) => Container(
-        height: 200.0,
-        width: double.maxFinite,
-        child: Skeleton()),
-    errorWidget: (context, url, error){
+    placeholder: (context, url) =>
+        Container(height: 200.0, width: double.maxFinite, child: Skeleton()),
+    errorWidget: (context, url, error) {
       return Container(
         height: 200.0,
         width: double.maxFinite,
@@ -226,15 +458,15 @@ Widget networkCacheImageWithShimmerWithFixedSkeleton({String imagePath,  BoxFit 
   );
 }
 
-Widget networkCacheImageWithShimmerWithHeightWidth({String imagePath, double height, double width, BoxFit boxFit}){
+Widget networkCacheImageWithShimmerWithHeightWidth(
+    {String imagePath, double height, double width, BoxFit boxFit}) {
   return CachedNetworkImage(
     height: height,
     width: width,
     imageUrl: imagePath,
     fit: boxFit,
     // fadeInCurve: Curves.easeIn,
-    imageBuilder: (BuildContext context,
-        ImageProvider<dynamic> imageProvider) {
+    imageBuilder: (BuildContext context, ImageProvider<dynamic> imageProvider) {
       return Image(
         // width: constraints.maxWidth,
         image: imageProvider,
@@ -242,7 +474,7 @@ Widget networkCacheImageWithShimmerWithHeightWidth({String imagePath, double hei
       );
     },
     placeholder: (context, url) => Skeleton(),
-    errorWidget: (context, url, error){
+    errorWidget: (context, url, error) {
       return errorImageWidget(
         height: height,
         width: width,
@@ -252,53 +484,57 @@ Widget networkCacheImageWithShimmerWithHeightWidth({String imagePath, double hei
   );
 }
 
-Widget errorImageWidget({double height, double width, BoxFit boxFit}){
+Widget errorImageWidget({double height, double width, BoxFit boxFit}) {
   return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),child: Image.asset(AppImages.NO_IMAGE_PLACEHOLDER,
-    width: width,
-    height: height,
-    fit: boxFit,));
+      borderRadius: BorderRadius.circular(10.0),
+      child: Image.asset(
+        AppImages.NO_IMAGE_PLACEHOLDER,
+        width: width,
+        height: height,
+        fit: boxFit,
+      ));
 }
 
-Widget circularNetworkCacheImageWithShimmerWithHeightWidth({String imagePath, double radius, BoxFit boxFit}){
+Widget circularNetworkCacheImageWithShimmerWithHeightWidth(
+    {String imagePath, double radius, BoxFit boxFit}) {
   return CircleAvatar(
     radius: radius + 1,
     backgroundColor: Colors.grey.withOpacity(0.4),
     child: CircleAvatar(
-    radius: radius,
-    child: ClipOval(
-      child: CachedNetworkImage(
-        // height: radius,
-        // width: radius,
-        imageUrl: imagePath,
-        fit: boxFit,
-        // fadeInCurve: Curves.easeIn,
-        imageBuilder: (BuildContext context,
-            ImageProvider<dynamic> imageProvider) {
-          return Image(
-            height: radius,
-            width: radius,
-            // width: constraints.maxWidth,
-            image: imageProvider,
-            fit: boxFit,
-          );
-        },
-        placeholder: (context, url) => Skeleton(),
-        errorWidget: (context, url, error){
-          return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-        },
-        // placeholder: (context, url) {return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER); },
+      radius: radius,
+      child: ClipOval(
+        child: CachedNetworkImage(
+          // height: radius,
+          // width: radius,
+          imageUrl: imagePath,
+          fit: boxFit,
+          // fadeInCurve: Curves.easeIn,
+          imageBuilder:
+              (BuildContext context, ImageProvider<dynamic> imageProvider) {
+            return Image(
+              height: radius,
+              width: radius,
+              // width: constraints.maxWidth,
+              image: imageProvider,
+              fit: boxFit,
+            );
+          },
+          placeholder: (context, url) => Skeleton(),
+          errorWidget: (context, url, error) {
+            return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
+          },
+          // placeholder: (context, url) {return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER); },
+        ),
       ),
     ),
-  ),);
+  );
 }
 
 Widget button({String title, BuildContext context, Function onTap}) {
   return InkWell(
     onTap: onTap,
     child: Container(
-
-        padding:  const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           // boxShadow: [
           //   BoxShadow(
@@ -313,21 +549,19 @@ Widget button({String title, BuildContext context, Function onTap}) {
         child: Center(
           child: Text(
             title,
-            style: AppStyles.inputTextStyleWithPoppinsBold().copyWith(
-                letterSpacing: 0.3
-            ),
+            style: AppStyles.inputTextStyleWithPoppinsBold()
+                .copyWith(letterSpacing: 0.3),
           ),
-        )
-    ),
+        )),
   );
 }
 
-Widget buttonWithColor({String title, Color color, BuildContext context, Function onTap}) {
+Widget buttonWithColor(
+    {String title, Color color, BuildContext context, Function onTap}) {
   return InkWell(
     onTap: onTap,
     child: Container(
-
-        padding:  const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           // boxShadow: [
           //   BoxShadow(
@@ -343,22 +577,19 @@ Widget buttonWithColor({String title, Color color, BuildContext context, Functio
         child: Center(
           child: Text(
             title,
-            style: AppStyles.inputTextStyleWithPoppinsBold().copyWith(
-                letterSpacing: 0.3
-            ),
+            style: AppStyles.inputTextStyleWithPoppinsBold()
+                .copyWith(letterSpacing: 0.3),
           ),
-        )
-    ),
+        )),
   );
 }
 
-
-
-Widget reviewItem(BuildContext context,) {
+Widget reviewItem(
+  BuildContext context,
+) {
   return Container(
     child: Column(
       children: [
-
         SizedBox(
           height: 10.0,
         ),
@@ -374,7 +605,8 @@ Widget reviewItem(BuildContext context,) {
                       child: ClipOval(
                         child: CachedNetworkImage(
                           height: 65.0,
-                          imageUrl: "https://expertphotography.com/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
+                          imageUrl:
+                              "https://expertphotography.com/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg",
                           fit: BoxFit.cover,
                           // fadeInCurve: Curves.easeIn,
                           imageBuilder: (BuildContext context,
@@ -391,19 +623,19 @@ Widget reviewItem(BuildContext context,) {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 0.0, horizontal: 10.0),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
                       child: Container(
                         child: Text(
                           "Marks Anthony",
                           style: AppStyles.subHeadingsTextStyleSfUiFont(
-                              context, 12.0.sp)
+                                  context, 12.0.sp)
                               .copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .headline1
-                                  .color),
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline1
+                                      .color),
                         ),
                       ),
                     ),
@@ -414,9 +646,9 @@ Widget reviewItem(BuildContext context,) {
                 alignment: AlignmentDirectional.topEnd,
                 child: Text(
                   "1 mo",
-                  style: AppStyles.blackWithDifferentFontTextStyle(
-                      context, 9.0.sp)
-                      .copyWith(
+                  style:
+                      AppStyles.blackWithDifferentFontTextStyle(context, 9.0.sp)
+                          .copyWith(
                     color: AppColors.APP_GREY_TEXT_COLOR,
                     fontFamily: AppFonts.SF_UI_DISPLAY,
                   ),
@@ -439,13 +671,14 @@ Widget reviewItem(BuildContext context,) {
         SizedBox(
           height: 10.0,
         ),
-       divider(),
+        divider(),
       ],
     ),
   );
 }
 
-cupertinoModalPopupDialog(BuildContext context, String title, String body, Function onPressed){
+cupertinoModalPopupDialog(
+    BuildContext context, String title, String body, Function onPressed) {
   var alert = new CupertinoAlertDialog(
     // barrierDismissible: false,
     title: new Text(title),
@@ -455,18 +688,15 @@ cupertinoModalPopupDialog(BuildContext context, String title, String body, Funct
     ),
     actions: <Widget>[
       new CupertinoDialogAction(
-          child: const Text('OK'),
-          isDefaultAction: true,
-          onPressed: onPressed
-      ),
+          child: const Text('OK'), isDefaultAction: true, onPressed: onPressed),
     ],
   );
   showDialog(context: context, child: alert, barrierDismissible: false);
 }
 
-
-Widget circularAvatar(double width, double height, String img_url, double radius){
-  return  CircleAvatar(
+Widget circularAvatar(
+    double width, double height, String img_url, double radius) {
+  return CircleAvatar(
     radius: radius,
     backgroundColor: Colors.transparent,
     child: ClipOval(
@@ -476,8 +706,8 @@ Widget circularAvatar(double width, double height, String img_url, double radius
         imageUrl: img_url,
         fit: BoxFit.cover,
         // fadeInCurve: Curves.easeIn,
-        imageBuilder: (BuildContext context,
-            ImageProvider<dynamic> imageProvider) {
+        imageBuilder:
+            (BuildContext context, ImageProvider<dynamic> imageProvider) {
           return Image(
             // width: constraints.maxWidth,
             image: imageProvider,
@@ -485,7 +715,7 @@ Widget circularAvatar(double width, double height, String img_url, double radius
           );
         },
         placeholder: (context, url) => Skeleton(),
-        errorWidget: (context, url, error){
+        errorWidget: (context, url, error) {
           return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
         },
       ),
@@ -493,8 +723,9 @@ Widget circularAvatar(double width, double height, String img_url, double radius
   );
 }
 
-Widget circularAvatarWithBoxFit(double width, double height, String img_url, double radius, BoxFit boxFit){
-  return  CircleAvatar(
+Widget circularAvatarWithBoxFit(
+    double width, double height, String img_url, double radius, BoxFit boxFit) {
+  return CircleAvatar(
     radius: radius,
     backgroundColor: Colors.transparent,
     child: ClipOval(
@@ -504,8 +735,8 @@ Widget circularAvatarWithBoxFit(double width, double height, String img_url, dou
         imageUrl: img_url,
         fit: boxFit,
         // fadeInCurve: Curves.easeIn,
-        imageBuilder: (BuildContext context,
-            ImageProvider<dynamic> imageProvider) {
+        imageBuilder:
+            (BuildContext context, ImageProvider<dynamic> imageProvider) {
           return Image(
             // width: constraints.maxWidth,
             image: imageProvider,
@@ -513,7 +744,7 @@ Widget circularAvatarWithBoxFit(double width, double height, String img_url, dou
           );
         },
         placeholder: (context, url) => Skeleton(),
-        errorWidget: (context, url, error){
+        errorWidget: (context, url, error) {
           return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
         },
       ),
@@ -521,7 +752,7 @@ Widget circularAvatarWithBoxFit(double width, double height, String img_url, dou
   );
 }
 
-Widget teeTimesItem(BuildContext context){
+Widget teeTimesItem(BuildContext context) {
   return Container(
     child: Padding(
       padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
@@ -533,16 +764,21 @@ Widget teeTimesItem(BuildContext context){
           ),
           Row(
             children: [
-              circularAvatar(45.0, 45.0,
-                  "https://cdn.fastly.picmonkey.com/contentful/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=800&q=70", 20.0),
-              SizedBox(width: 8.0,),
+              circularAvatar(
+                  45.0,
+                  45.0,
+                  "https://cdn.fastly.picmonkey.com/contentful/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=800&q=70",
+                  20.0),
+              SizedBox(
+                width: 8.0,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "John Doe",
                     style: AppStyles.blackWithSemiBoldFontTextStyle(
-                        context, 12.0.sp)
+                            context, 12.0.sp)
                         .copyWith(fontWeight: FontWeight.w600),
                   ),
                   SizedBox(
@@ -551,10 +787,10 @@ Widget teeTimesItem(BuildContext context){
                   Text(
                     "Organiser",
                     style: AppStyles.blackWithDifferentFontTextStyle(
-                        context, 11.0.sp)
+                            context, 11.0.sp)
                         .copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.APP_GREY_TEXT_COLOR),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.APP_GREY_TEXT_COLOR),
                   ),
                 ],
               )
@@ -585,10 +821,10 @@ Widget teeTimesItem(BuildContext context){
                       child: Text(
                         "10:00 AM - 11:30 PM",
                         style: AppStyles.blackWithDifferentFontTextStyle(
-                            context, 9.5.sp)
+                                context, 9.5.sp)
                             .copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.APP_GREY_TEXT_COLOR),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.APP_GREY_TEXT_COLOR),
                       ),
                     )
                   ],
@@ -613,10 +849,10 @@ Widget teeTimesItem(BuildContext context){
                       child: Text(
                         "20 Nov, 2020",
                         style: AppStyles.blackWithDifferentFontTextStyle(
-                            context, 9.5.sp)
+                                context, 9.5.sp)
                             .copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.APP_GREY_TEXT_COLOR),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.APP_GREY_TEXT_COLOR),
                       ),
                     )
                   ],
@@ -652,10 +888,10 @@ Widget teeTimesItem(BuildContext context){
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: AppStyles.blackWithDifferentFontTextStyle(
-                        context, 10.5.sp)
+                            context, 10.5.sp)
                         .copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.APP_GREY_TEXT_COLOR),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.APP_GREY_TEXT_COLOR),
                   ),
                 ),
               ),
@@ -670,26 +906,41 @@ Widget teeTimesItem(BuildContext context){
   );
 }
 
-
-Widget appBar({BuildContext context, bool isBackButton, String title, IconData icon, Function onBackClick}){
+Widget appBar(
+    {BuildContext context,
+    String title,Function onBackClick,Color iconColor}) {
   return AppBar(
-    brightness: Theme.of(context).appBarTheme.brightness,
-    elevation: 0.6,
-    backgroundColor: Theme.of(context).appBarTheme.color,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
     centerTitle: true,
-    automaticallyImplyLeading: isBackButton ? true : false,
-    title: Text(
-      title,
-      style: AppStyles.appBarTitleTextStyle(context),
-    ),
-    leading: !isBackButton ? null : IconButton(
-      onPressed: onBackClick,
-      icon:  Icon(icon , color: Theme.of(context).appBarTheme.iconTheme.color, size: 30.0,),
+    title: new Text(title,
+      style:
+      AppStyles.blackWithBoldFontTextStyle(context, 20.0),),
+    leading: Padding(
+      padding: const EdgeInsets.only(left:10.0),
+      child: GestureDetector(
+        onTap: () {
+          onBackClick();
+        },
+        child: Transform.rotate(
+          angle: 180 * pi / 180,
+          child: Icon(
+            Icons.arrow_right_alt,
+            size: 32.0,
+            color: iconColor,// add custom icons also
+          ),
+        ),
+      ),
     ),
   );
 }
 
-Widget appBarSearch1({BuildContext context, bool isBackButton, String title, IconData icon, Function onBackClick}){
+Widget appBarSearch1(
+    {BuildContext context,
+    bool isBackButton,
+    String title,
+    IconData icon,
+    Function onBackClick}) {
   return AppBar(
     brightness: Theme.of(context).appBarTheme.brightness,
     elevation: 0.6,
@@ -700,10 +951,16 @@ Widget appBarSearch1({BuildContext context, bool isBackButton, String title, Ico
       title,
       style: AppStyles.appBarTitleTextStyle(context),
     ),
-    leading: !isBackButton ? null : IconButton(
-      onPressed: onBackClick,
-      icon:  Icon(icon , color: Theme.of(context).appBarTheme.iconTheme.color, size: 30.0,),
-    ),
+    leading: !isBackButton
+        ? null
+        : IconButton(
+            onPressed: onBackClick,
+            icon: Icon(
+              icon,
+              color: Theme.of(context).appBarTheme.iconTheme.color,
+              size: 30.0,
+            ),
+          ),
     bottom: PreferredSize(
       preferredSize: Size.fromHeight(55.0),
       child: Padding(
@@ -720,7 +977,12 @@ Widget appBarSearch1({BuildContext context, bool isBackButton, String title, Ico
   );
 }
 
-Widget appBarSearch({BuildContext context, bool isBackButton, String title, IconData icon, Function onBackClick}){
+Widget appBarSearch(
+    {BuildContext context,
+    bool isBackButton,
+    String title,
+    IconData icon,
+    Function onBackClick}) {
   return AppBar(
     brightness: Theme.of(context).appBarTheme.brightness,
     elevation: 0.6,
@@ -731,10 +993,16 @@ Widget appBarSearch({BuildContext context, bool isBackButton, String title, Icon
       title,
       style: AppStyles.appBarTitleTextStyle(context),
     ),
-    leading: !isBackButton ? null : IconButton(
-      onPressed: onBackClick,
-      icon: Icon(icon , color: Theme.of(context).appBarTheme.iconTheme.color, size: 30.0,),
-    ),
+    leading: !isBackButton
+        ? null
+        : IconButton(
+            onPressed: onBackClick,
+            icon: Icon(
+              icon,
+              color: Theme.of(context).appBarTheme.iconTheme.color,
+              size: 30.0,
+            ),
+          ),
     // bottom: PreferredSize(
     //   preferredSize: Size.fromHeight(55.0),
     //   child: Padding(
@@ -751,7 +1019,6 @@ Widget appBarSearch({BuildContext context, bool isBackButton, String title, Icon
   );
 }
 
-
 Widget orderRequestDetailItem(BuildContext context, bool isLast) {
   return Column(
     children: [
@@ -764,7 +1031,7 @@ Widget orderRequestDetailItem(BuildContext context, bool isLast) {
               borderRadius: BorderRadius.circular(10.0),
               child: networkCacheImageWithShimmerWithHeightWidth(
                 imagePath:
-                "https://www.sunspel.com/media/catalog/product/cache/bee6a030eca197d5b3b98b85dbca461b/m/t/mtsh0001-gyab_1_1.jpg",
+                    "https://www.sunspel.com/media/catalog/product/cache/bee6a030eca197d5b3b98b85dbca461b/m/t/mtsh0001-gyab_1_1.jpg",
                 width: 60.0,
                 height: 70.0,
                 boxFit: BoxFit.cover,
@@ -805,7 +1072,7 @@ Widget orderRequestDetailItem(BuildContext context, bool isLast) {
                         fontFamily: AppFonts.SF_PRO_FONT_REGULAR,
                         fontWeight: FontWeight.w500),
                     style: AppStyles.blackWithDifferentFontTextStyle(
-                        context, 10.0.sp)
+                            context, 10.0.sp)
                         .copyWith(color: AppColors.SUBHEADING_COLOR_2),
                   ),
                   SizedBox(
@@ -831,10 +1098,10 @@ Widget orderRequestDetailItem(BuildContext context, bool isLast) {
                             TextSpan(
                                 text: 'Qty:',
                                 style: AppStyles.blackWithSemiBoldFontTextStyle(
-                                    context, 13.0)
+                                        context, 13.0)
                                     .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.SUBHEADING_COLOR_2)),
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.SUBHEADING_COLOR_2)),
                             TextSpan(
                                 text: ' ',
                                 style: AppStyles.blackWithSemiBoldFontTextStyle(
@@ -842,13 +1109,13 @@ Widget orderRequestDetailItem(BuildContext context, bool isLast) {
                             TextSpan(
                                 text: '100',
                                 style: AppStyles.blackWithSemiBoldFontTextStyle(
-                                    context, 13.0)
+                                        context, 13.0)
                                     .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .subtitle1
-                                        .color)),
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1
+                                            .color)),
                           ],
                         ),
                       ),
@@ -862,10 +1129,10 @@ Widget orderRequestDetailItem(BuildContext context, bool isLast) {
                       Text(
                         "Size:",
                         style: AppStyles.blackWithDifferentFontTextStyle(
-                            context, 11.0.sp)
+                                context, 11.0.sp)
                             .copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.SUBHEADING_COLOR_2),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.SUBHEADING_COLOR_2),
                       ),
                       SizedBox(
                         width: 10.0,
@@ -874,11 +1141,15 @@ Widget orderRequestDetailItem(BuildContext context, bool isLast) {
                         padding: EdgeInsets.fromLTRB(0, 2.5, 0, 0),
                         child: Text(
                           "Medium",
-                          style: AppStyles.mainHeadingTextStyle(context).copyWith(
-                              fontFamily: AppFonts.SF_PRO_SEMIBOLD,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).textTheme.subtitle1.color,
-                              fontSize: 11.0.sp),
+                          style: AppStyles.mainHeadingTextStyle(context)
+                              .copyWith(
+                                  fontFamily: AppFonts.SF_PRO_SEMIBOLD,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1
+                                      .color,
+                                  fontSize: 11.0.sp),
                         ),
                       ),
                     ],
@@ -892,7 +1163,6 @@ Widget orderRequestDetailItem(BuildContext context, bool isLast) {
           ],
         ),
       ),
-
       isLast ? Container() : divider(),
     ],
   );
@@ -911,8 +1181,8 @@ Widget orderHistoryItem(BuildContext context, String status) {
               "07 Nov, 2020",
               style: AppStyles.blackWithSemiBoldFontTextStyle(context, 12.0.sp)
                   .copyWith(
-                  fontWeight: FontWeight.w800,
-                  fontFamily: AppFonts.SF_PRO_FONT_BOLD),
+                      fontWeight: FontWeight.w800,
+                      fontFamily: AppFonts.SF_PRO_FONT_BOLD),
             ),
             Row(
               children: [
@@ -921,10 +1191,10 @@ Widget orderHistoryItem(BuildContext context, String status) {
                   child: Text(
                     "\$450",
                     style: AppStyles.blackWithSemiBoldFontTextStyle(
-                        context, 12.0.sp)
+                            context, 12.0.sp)
                         .copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.APP__DETAILS_TEXT_COLOR),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.APP__DETAILS_TEXT_COLOR),
                   ),
                 ),
                 SizedBox(
@@ -952,11 +1222,11 @@ Widget orderHistoryItem(BuildContext context, String status) {
                   TextSpan(
                       text: 'Order ID:',
                       style: AppStyles.blackWithSemiBoldFontTextStyle(
-                          context, 13.0)
+                              context, 13.0)
                           .copyWith(
-                          fontWeight: FontWeight.w500,
-                          color:
-                          Theme.of(context).textTheme.subtitle1.color)),
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  Theme.of(context).textTheme.subtitle1.color)),
                   TextSpan(
                       text: ' ',
                       style: AppStyles.blackWithSemiBoldFontTextStyle(
@@ -964,11 +1234,11 @@ Widget orderHistoryItem(BuildContext context, String status) {
                   TextSpan(
                       text: '1234ABCD',
                       style: AppStyles.blackWithSemiBoldFontTextStyle(
-                          context, 13.0)
+                              context, 13.0)
                           .copyWith(
-                          fontWeight: FontWeight.w500,
-                          color:
-                          Theme.of(context).textTheme.subtitle1.color)),
+                              fontWeight: FontWeight.w500,
+                              color:
+                                  Theme.of(context).textTheme.subtitle1.color)),
                 ],
               ),
             ),
@@ -994,46 +1264,7 @@ Widget orderHistoryItem(BuildContext context, String status) {
   );
 }
 
-Widget storeItem(BuildContext context, bool isCheckout) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-              padding: EdgeInsets.fromLTRB(10, 8, 0, 0),
-              child: Text("Nike",
-                  style:
-                      AppStyles.blackWithSemiBoldFontTextStyle(context, 15.0.sp)
-                          .copyWith(fontWeight: FontWeight.w500))),
-          isCheckout
-              ? Container()
-              : InkWell(
-                  onTap: () {
-                    showCustomDialog(context, "Contact Seller", "Write your views");
-                  },
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(0, 8, 10, 0),
-                    child: Text(
-                      "Contact Seller",
-                      style: AppStyles.blackWithSemiBoldFontTextStyle(
-                              context, 12.0.sp)
-                          .copyWith(
-                              fontWeight: FontWeight.w500, color: Colors.green),
-                    ),
-                  ),
-                )
-        ],
-      ),
-      Divider(
-        color: AppColors.LIGHT_GREY_ARROW_COLOR,
-      )
-    ],
-  );
-}
-
-Widget divider(){
+Widget divider() {
   return Divider(
     color: AppColors.DIVIDER_COLOR,
     height: 1.0,
@@ -1041,93 +1272,59 @@ Widget divider(){
   );
 }
 
-void showCustomDialog(BuildContext context, String title, String hint){
+void showCustomDialog(BuildContext context, String title,String btn1Title,String btn2Title,bool showImage,SvgPicture image) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Color(0xFFF7F7F7),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0)),
+          backgroundColor: Color(0xFFFFFFFFF),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           //this right here
           child: Container(
-            width: 250,
-            height: 200,
+
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               //mainAxisAlignment: MainAxisAlignment.center,
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding:
-                  EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment:
-                    CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "Cancel",
-                          style: AppStyles
-                              .detailWithSmallTextSizeTextStyle()
-                              .copyWith(
-                              color: AppColors
-                                  .APP_PRIMARY_COLOR,
-                              fontSize: 12.0.sp,
-                              fontWeight:
-                              FontWeight.w400),
-                        ),
-                      ),
-                      Text(
-                        title,
-                        style: AppStyles
-                            .detailWithSmallTextSizeTextStyle()
-                            .copyWith(
-                            fontSize: 12.0.sp,
-                            color: Theme.of(context)
-                                .textTheme
-                                .headline1
-                                .color,
-                            fontWeight:
-                            FontWeight.w600),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "Done",
-                          style: AppStyles
-                              .detailWithSmallTextSizeTextStyle()
-                              .copyWith(
-                              fontSize: 12.0.sp,
-                              color: AppColors
-                                  .ACCENT_COLOR,
-                              fontWeight:
-                              FontWeight.w500),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Divider(
-                  color: AppColors.DIVIDER_COLOR_LIGHT,
+
+                SizedBox(
+                  height: 15.0,
                 ),
                 Container(
-                  padding:
-                  EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: TextField(
-                    keyboardType: TextInputType.multiline,
-                    maxLength: 150,
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: hint),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .13),
+                  padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  child: Text(
+                    title,
+                    style:
+                    AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0),textAlign: TextAlign.center,
                   ),
+                ),
+                showImage?   Container(
+                  height: 10.0.h,
+                  margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 30),
+                  child: Center(
+                    child: image,
+                  ),
+                ):Container(),
+                SizedBox(
+                  height: 35.0,
+                ),
+                GradientButton(
+                  onTap: () {},
+                  text: btn1Title,
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                ButtonBorder(
+                  onTap: () {},
+                  text: btn2Title,
+                ),
+                SizedBox(
+                  height: 45.0,
                 ),
               ],
             ),
@@ -1143,12 +1340,12 @@ Widget genderItem(BuildContext bc, String name, Function onTap) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         new ListTile(
-          title: new Text(
-            name,
-            style: AppStyles.blackWithDifferentFontTextStyle(bc, 11.0.sp).copyWith(color: AppColors.APP_GREY_TEXT_COLOR),
-          ),
-          onTap: onTap
-        ),
+            title: new Text(
+              name,
+              style: AppStyles.blackWithDifferentFontTextStyle(bc, 11.0.sp)
+                  .copyWith(color: AppColors.APP_GREY_TEXT_COLOR),
+            ),
+            onTap: onTap),
         divider(),
       ],
     ),
@@ -1162,14 +1359,12 @@ Widget handicapItem(BuildContext bc, String name, Function onTap) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         new ListTile(
-          title: new Text(
-            name,
-          ),
-          onTap: onTap
-        ),
+            title: new Text(
+              name,
+            ),
+            onTap: onTap),
         divider(),
       ],
     ),
   );
 }
-

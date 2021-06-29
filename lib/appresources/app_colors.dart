@@ -11,6 +11,8 @@ class AppColors {
   static const Color BUSINESS_INFO_BACKGROUND_COLOR = Color(0xFFF9F9F9);
   static const Color YELLOW_COLOR = Color(0xffF4AE00);
   static const Color WHITE_COLOR = Color(0xffFFFFFF);
+  static const Color BLUE_COLOR = Color(0xff2491EB);
+  static const Color GREY_COLOR = Color(0xffE8EBEC);
   static const Color APP_PRIMARY_COLOR = Colors.blueAccent;
 
 
@@ -21,6 +23,7 @@ class AppColors {
   static const Color APP_SCAFOLD_BACKGROUND_COLOR = Color(0xFFF4F7F8);
   static const Color APP_APP_BAR_DARK_COLOR = Color(0xFF323233);
   static const Color APP_COLOR_LIGHT_GREY = Color(0xFFF6F6F6);
+  static const Color APP_COLOR_EXTRA_LIGHT_GREY = Color(0xFFEFEFF2);
   static const Color OUTLINE = Color(0xFFCBCBCB);
 
   static const Color TAG_FRIEND_OUTLINE = Color(0xFFB9B9B9);
@@ -39,10 +42,16 @@ class AppColors {
   static const Color APP_TEXT_COLOR2 = Color(0xFF5A5A5A);
   static const Color APP_TEXT2_COLOR = Color(0xFF707070);
   // static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF989898);
+  static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF71828A);
+  static const Color APP__DETAILS_TEXT_COLOR_LIGHT = Color(0xFFAAB0C3);
+  static const Color COUNTDOWN_COLOR_LIGHT1 = Color(0xFF8492A7);
+  static const Color COUNTDOWN_COLOR_LIGHT2 = Color(0xFF77879E);
+  static const Color ACCENT_COLOR = Color(0xFF174D9F);
   static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF8a8a8f);
   static const Color ACCENT_COLOR = Color(0xFF2491EB);
   static const Color ADD_IMAGE_BUTTON_COLOR = Color(0xFFF5F4F4);
   static const Color COLOR_BLACK = Colors.black;
+  static const Color COLOR_GREEN_RATING= Color(0xFF16DA90);
   static const Color RESEND_CODE_TEXT_COLOR = Color(0xFF292D33);
 
   static const Color COLOR_FACEBOOK_CIRCLE = Color(0xFF3B5998);
@@ -65,6 +74,7 @@ class AppColors {
   static const Color APP_TEXT3_COLOR = Color(0xFFD9D9D9);
   static const Color APP_TEXT4_COLOR = Color(0xFF6E767D);
   static const Color LIGHT_GREY_ARROW_COLOR = Color(0xFFCDCDD8);
+  static const Color LIGHT_GREY_TEXT_COLOR = Color(0xFF8E9CA2);
 
   static const Color RED_COLOR2= Color(0xFFFF4D4D);
   static const Color APP_MAIN_SPLASH_COLOR_LIGHT = Color(0xFFB4DBB8);

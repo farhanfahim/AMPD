@@ -73,7 +73,7 @@ dependencies:
   #  gallery_saver: ^2.0.3
   geocoder: ^0.2.1
 #  connectivity: ^2.0.2
-  pin_code_fields: ^6.1.0
+#  pin_code_fields: ^6.1.0
 #  flutter_exif_rotation: ^0.3.2
   permission_handler: 3.1.0
   location_permissions: ^3.0.0
@@ -83,13 +83,16 @@ dependencies:
   geolocator:
   heic_to_jpg: ^0.1.3
   flutter_native_image: ^0.0.5+3
-
+  flutter_pin_code_fields: ^1.1.0
+#  flip_card: #^0.5.0
+  flutter_xlider: ^3.4.0
   flutter_html:
   #  file_picker: ^2.0.6
 #  stripe_payment: ^1.0.11
 #  video_thumbnail: ^0.2.5+1
   infinite_scroll_pagination: ^2.3.0
   timeago: ^2.0.30
+  flutter_switch:
   #  hashtagable: ^1.0.8
 #  swipe_cards: ^0.0.5
   flip_card: ^0.4.4
@@ -136,22 +139,41 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/fonts/
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
   fonts:
+    - family: CeraPro
+      fonts:
+        - asset: assets/fonts/CeraPro-Medium.ttf
+        - weight: 400
+
+    - family: Nexa
+      fonts:
+        - asset: assets/fonts/Nexa-Light.otf
+        - weight: 100
+        - asset: assets/fonts/Nexa-Bold.otf
+        - weight: 800
+
+
+    - family: SFProText-Regular
+      fonts:
+        - asset: assets/fonts/SFProText-Regular.ttf
+        - weight: 200
+
+    - family: SFProText-Bold
+      fonts:
+        - asset: assets/fonts/SFProText-Bold.ttf
+        - weight: 700
+
+    - family: SFUIDisplay
+      fonts:
+        - asset: assets/fonts/SF-UI-Display-Regular.otf
+        - weight: 200
+        - asset: assets/fonts/SF-UI-Display-Semibold.ttf
+        - weight: 400
+
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Light.ttf
@@ -164,16 +186,3 @@ flutter:
         - weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
         - weight: 800
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages

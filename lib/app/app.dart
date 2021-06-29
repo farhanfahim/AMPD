@@ -41,27 +41,19 @@ class App extends StatelessWidget {
         return OrientationBuilder(
           builder: (context, orientation) {
             SizerUtil().init(constraints, orientation);
-            return ChangeNotifierProvider(
-              create: (_) => ThemeNotifier(),
-              child: Consumer<ThemeNotifier>(
-                  builder: (context, ThemeNotifier notifier, child) {
-                    // print(notifier.darkTheme);
-                    return MaterialApp(
-                      navigatorKey: GlobalVariable.navState,
-                      debugShowCheckedModeBanner: false,
-                    //  darkTheme: dark,
-                      onGenerateRoute: getAppRoutes().getRoutes,
-                      // routes: getAppRoutes().getRoutes,
-                      theme: notifier.darkTheme ? dark : light,
-                      builder: (BuildContext context, Widget child) {
-                        return MediaQuery(
-                          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0, boldText: false),
-                         child: child,
-                        );
-                      },
-                    );
-                  }
-              ),
+            return MaterialApp(
+              navigatorKey: GlobalVariable.navState,
+              debugShowCheckedModeBanner: false,
+               darkTheme: light,
+              onGenerateRoute: getAppRoutes().getRoutes,
+              // routes: getAppRoutes().getRoutes,
+              theme:  light,
+              builder: (BuildContext context, Widget child) {
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0, boldText: false),
+                  child: child,
+                );
+              },
             );
           },
         );

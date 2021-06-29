@@ -55,28 +55,20 @@ class _SkeletonState extends State<Skeleton>
 
   @override
   Widget build(BuildContext context) {
-   return ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(),
-      child: Consumer<ThemeNotifier>(
-          builder: (context, ThemeNotifier notifier, child) {
-            // print(notifier.darkTheme);
-            return Container(
-              width: widget.width,
-              height: widget.height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(widget.cornerRadius),
-                gradient: LinearGradient(
-                  begin: Alignment(gradientPosition.value, 0),
-                  end: const Alignment(-1, 0),
-                  colors:  [
-                    notifier.darkTheme ? AppColors.APP_APP_BAR_DARK_COLOR : Color(0x0D000000),
-                    notifier.darkTheme ? Theme.of(context).iconTheme.color : Color(0x1A000000),
-                    notifier.darkTheme ? AppColors.APP_APP_BAR_DARK_COLOR :Color(0x0D000000),
-                  ],
-                ),
-              ),
-            );
-          }
+    return Container(
+      width: widget.width,
+      height: widget.height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(widget.cornerRadius),
+        gradient: LinearGradient(
+          begin: Alignment(gradientPosition.value, 0),
+          end: const Alignment(-1, 0),
+          colors:  [
+             Color(0x0D000000),
+             Color(0x1A000000),
+             Color(0x0D000000),
+          ],
+        ),
       ),
     );
   }
