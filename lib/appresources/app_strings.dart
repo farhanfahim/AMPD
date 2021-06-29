@@ -68,6 +68,7 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String SING_UP = "Sign Up";
   static const String FACEBOOK = "Facebook";
   static const String PASSWORD = "Password";
+  static const String CURRENT_PASSWORD = "Current Password";
 
   static const String OR = "OR";
   static const String LOGIN_WITH = "LOG IN WITH";
@@ -366,6 +367,8 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String GET_STARTED = 'Get Started';
   static const String SETTING = 'Setting';
   static const String MANAGE_YOUR_ACCOUNT_SETTING = 'Manage your account setting';
+  static const String UPDATE_YOUR_PASSWORD = 'Update your password';
+  static const String ALL_NOTIIFICATION_SHOW_HERE = 'All notification show here\'s';
   static const String SCAN_QR_CODE = 'Scan QR Code';
   static const String TIME_REMAINING = 'Time Remaining';
   static const String TIME_REMAINING_TO_SCAN = 'Time Remaining to Scan';

@@ -44,6 +44,8 @@ class AppColors {
   // static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF989898);
   static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF71828A);
   static const Color APP__DETAILS_TEXT_COLOR_LIGHT = Color(0xFFAAB0C3);
+  static const Color COUNTDOWN_COLOR_LIGHT1 = Color(0xFF8492A7);
+  static const Color COUNTDOWN_COLOR_LIGHT2 = Color(0xFF77879E);
   static const Color ACCENT_COLOR = Color(0xFF174D9F);
   static const Color ADD_IMAGE_BUTTON_COLOR = Color(0xFFF5F4F4);
   static const Color COLOR_BLACK = Colors.black;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_fonts.dart';
@@ -25,6 +27,9 @@ class CreateAnAccountView extends StatefulWidget {
 }
 
 class _CreateAnAccountViewState extends State<CreateAnAccountView> {
+
+
+
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
@@ -162,6 +167,8 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
           )),
     );
   }
+
+
 
   Stack firstNameTextField(BuildContext context) {
     return Stack(

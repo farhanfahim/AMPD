@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
@@ -45,6 +47,8 @@ Widget searchTextField({BuildContext context}) {
 
 showBottomSheetWidget(BuildContext context, String title, String desc,
     Widget widget, Function onTap, String btnText, bool showResendBtn) {
+
+
   showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: AppColors.WHITE_COLOR,
@@ -92,11 +96,7 @@ showBottomSheetWidget(BuildContext context, String title, String desc,
                                   child: Text(
                                     desc,
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 12.0,
-                                        color: AppColors.COLOR_BLACK,
-                                        fontFamily: AppFonts.POPPINS_MEDIUM,
-                                        fontWeight: FontWeight.w400),
+                                    style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0),
                                   ),
                                 ),
                               )),
@@ -122,13 +122,7 @@ showBottomSheetWidget(BuildContext context, String title, String desc,
                                     children: <Widget>[
                                       Text(
                                         AppStrings.DIDNT_RECEIVE,
-                                        style: TextStyle(
-                                            fontSize: 12.0,
-                                            color: AppColors
-                                                .APP__DETAILS_TEXT_COLOR_LIGHT,
-                                            fontFamily:
-                                            AppFonts.POPPINS_MEDIUM,
-                                            fontWeight: FontWeight.w400),
+                                        style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12)
                                       ),
                                       SizedBox(
                                         width: 2.0,
@@ -137,12 +131,7 @@ showBottomSheetWidget(BuildContext context, String title, String desc,
                                         onTap: () {},
                                         child: Text(
                                           AppStrings.RESEND,
-                                          style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: AppColors.BLUE_COLOR,
-                                              fontFamily:
-                                              AppFonts.POPPINS_MEDIUM,
-                                              fontWeight: FontWeight.w400),
+                                          style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12).copyWith(color: AppColors.BLUE_COLOR)
                                         ),
                                       ),
                                     ],
@@ -919,7 +908,7 @@ Widget teeTimesItem(BuildContext context) {
 
 Widget appBar(
     {BuildContext context,
-    String title,Function onBackClick}) {
+    String title,Function onBackClick,Color iconColor}) {
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
@@ -938,7 +927,7 @@ Widget appBar(
           child: Icon(
             Icons.arrow_right_alt,
             size: 32.0,
-            color: AppColors.COLOR_BLACK,// add custom icons also
+            color: iconColor,// add custom icons also
           ),
         ),
       ),

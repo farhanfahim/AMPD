@@ -75,11 +75,11 @@ class _ReviewsViewState extends State<ReviewsView> {
     return Scaffold(
         appBar: appBar(title:AppStrings.REVIEWS,onBackClick: (){
           Navigator.of(context).pop();
-        }),
+        },iconColor:AppColors.COLOR_BLACK),
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
           child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
+              physics: ClampingScrollPhysics(),
               shrinkWrap: true,
               itemCount: _listOfReviews.length,
               itemBuilder: (context, index) {

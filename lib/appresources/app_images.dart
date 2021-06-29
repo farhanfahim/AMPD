@@ -13,6 +13,7 @@ class AppImages {
   static const String MAIN_LOGO = BASE_IMAGE_PATH + "logo.svg";
   static const String FAV_ICON = BASE_IMAGE_PATH + "fav.svg";
   static const String QR_CODE = BASE_IMAGE_PATH + "qr_code.svg";
+  static const String QR_IMAGE = BASE_IMAGE_PATH + "qr_image.svg";
   static const String CANCEL_POPUP = BASE_IMAGE_PATH + "cancel_popup.svg";
   static const String BACK_BTN = BASE_IMAGE_PATH + "back.svg";
   static const String BOTTOM_SHEET = BASE_IMAGE_PATH + "bottom_sheet.svg";

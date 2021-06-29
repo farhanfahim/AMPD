@@ -26,7 +26,7 @@ class _SettingState extends State<SettingView> {
     return Scaffold(
         appBar: appBar(title:"",onBackClick: (){
           Navigator.of(context).pop();
-        }),
+        },iconColor:AppColors.COLOR_BLACK),
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
           child: SingleChildScrollView(
@@ -143,46 +143,6 @@ class _SettingState extends State<SettingView> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    Container(
-                        margin: EdgeInsets.only(top: 50, left: 20, right: 20),
-                        alignment: Alignment.centerLeft,
-                        child: FlutterSlider(
-                          values: [3000, 17000],
-                          rangeSlider: true,
-
-                          max: 25000,
-                          min: 0,
-                          step: FlutterSliderStep(step: 100),
-                          jump: true,
-                          trackBar: FlutterSliderTrackBar(
-                            inactiveTrackBarHeight: 2,
-                            activeTrackBarHeight: 3,
-                          ),
-
-                          disabled: false,
-
-                          handler: customHandler(Icons.chevron_right),
-                          rightHandler: customHandler(Icons.chevron_left),
-                          tooltip: FlutterSliderTooltip(
-                            leftPrefix: Icon(
-                              Icons.attach_money,
-                              size: 19,
-                              color: Colors.black45,
-                            ),
-                            rightSuffix: Icon(
-                              Icons.attach_money,
-                              size: 19,
-                              color: Colors.black45,
-                            ),
-                            textStyle: TextStyle(fontSize: 17, color: Colors.black45),
-                          ),
-
-                          onDragging: (handlerIndex, lowerValue, upperValue) {
-                            _lowerValue = lowerValue;
-                            _upperValue = upperValue;
-                            setState(() {});
-                          },
-                        )),
 
                   ],
 
@@ -194,36 +154,6 @@ class _SettingState extends State<SettingView> {
         ));
   }
 }
-
-customHandler(IconData icon) {
-  return FlutterSliderHandler(
-    decoration: BoxDecoration(),
-    child: Container(
-      child: Container(
-        margin: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.3), shape: BoxShape.circle),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 23,
-        ),
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.blue.withOpacity(0.3),
-              spreadRadius: 0.05,
-              blurRadius: 5,
-              offset: Offset(0, 1))
-        ],
-      ),
-    ),
-  );
-}
-
 class Header extends StatelessWidget {
   final String heading1;
   final String heading2;

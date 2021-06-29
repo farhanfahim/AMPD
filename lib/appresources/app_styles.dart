@@ -63,7 +63,7 @@ class AppStyles {
     return TextStyle(
         color: AppColors.APP__DETAILS_TEXT_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_REGULAR,
+        fontFamily: AppFonts.POPPINS_LIGHT,
         fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w600);
     // fontWeight: FontWeight.w400);
   }
@@ -72,7 +72,8 @@ class AppStyles {
     return TextStyle(
         fontSize: 14.0,
         color: AppColors.APP__DETAILS_TEXT_COLOR,
-        fontFamily: AppFonts.POPPINS_MEDIUM,
+        height: 1.5,
+        fontFamily: AppFonts.POPPINS_LIGHT,
         fontWeight: FontWeight.w400);
   }
 
@@ -91,7 +92,7 @@ class AppStyles {
     return TextStyle(
       color: AppColors.COLOR_BLACK,
       fontSize: fontSize,
-      fontFamily: AppFonts.POPPINS_BOLD,
+      fontFamily: AppFonts.POPPINS_REGULAR,
       fontWeight: FontWeight.w800,
     );
   }
@@ -127,7 +128,7 @@ class AppStyles {
     return TextStyle(
       color: Theme.of(context).appBarTheme.textTheme.headline1.color,
       fontSize: 18.0,
-      fontFamily: AppFonts.SF_PRO_SEMIBOLD,
+      fontFamily: AppFonts.POPPINS_REGULAR,
       fontWeight: FontWeight.w500,
     );
   }
@@ -136,8 +137,8 @@ class AppStyles {
     return TextStyle(
         color: AppColors.LIGHT_GREY_TEXT_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_REGULAR,
-        fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400);
+        fontFamily: AppFonts.POPPINS_LIGHT,
+        fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w300);
     // fontWeight: FontWeight.w400);
   }
 
@@ -145,7 +146,7 @@ class AppStyles {
     return TextStyle(
         color: AppColors.WHITE_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_REGULAR,
+        fontFamily: AppFonts.POPPINS_LIGHT,
         fontWeight: FontWeight.w500);
   }
 
@@ -376,7 +377,7 @@ class AppStyles {
           borderSide: BorderSide(width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
       hintStyle: TextStyle(
           fontSize: 17.0,
-          fontFamily: AppFonts.POPPINS_REGULAR,
+          fontFamily: AppFonts.POPPINS_LIGHT,
           fontWeight: FontWeight.w300,
           color: AppColors.LIGHT_GREY_TEXT_COLOR),
       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),

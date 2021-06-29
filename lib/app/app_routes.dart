@@ -1,6 +1,8 @@
 
 
+import 'package:ampd/views/change_password_view.dart';
 import 'package:ampd/views/create_an_account_view.dart';
+import 'package:ampd/views/notifications_view.dart';
 import 'package:ampd/views/qr_scan_view.dart';
 import 'package:ampd/views/redeem_message_view.dart';
 import 'package:ampd/views/setting_view.dart';
@@ -21,6 +23,8 @@ class AppRoutes {
   static const String REDEEM_MESSAGE_VIEW = "/redeem_message_view";
   static const String QR_SCAN_VIEW = "/qr_scan_view";
   static const String SETTING_VIEW = "/setting_view";
+  static const String CHANGE_PASSWORD_VIEW = "/change_password_view";
+  static const String NOTIFICATIONS_VIEW = "/notifications_view";
   static const String REVIEWS_VIEW = "/reviews_view";
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
@@ -79,12 +83,28 @@ class AppRoutes {
           );
         }
 
+      case CHANGE_PASSWORD_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => ChangePasswordView(),
+          );
+        }
+
 
       case REVIEWS_VIEW:
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
             builder: (BuildContext context) => ReviewsView(),
+          );
+        }
+
+      case NOTIFICATIONS_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => NotificationsView(),
           );
         }
 

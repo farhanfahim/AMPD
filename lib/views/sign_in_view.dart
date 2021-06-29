@@ -67,6 +67,8 @@ class _SignInViewState extends State<SignInView> {
   IconData iconData1 = Icons.visibility_off;
   IconData iconData2 = Icons.visibility_off;
 
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -180,7 +182,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.SETTING_VIEW);
+                        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
                       /*  showDialog(
                             context: context,
                             builder: (BuildContext context1) {
@@ -229,6 +231,8 @@ class _SignInViewState extends State<SignInView> {
           )),
     );
   }
+
+
 
   Stack customEmailTextField(BuildContext context) {
     return Stack(
