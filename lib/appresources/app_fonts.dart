@@ -3,7 +3,7 @@ class AppFonts{
   static const String BASE_FONT_PATH = "assets/fonts/";
 
   static const String CERA_PRO_MEDIUM = BASE_FONT_PATH + "CeraPro-Medium";
-  static const String POPPINS = BASE_FONT_PATH + "Poppins";
+  static const String POPPINS =  "Poppins";
   static const String POPPINS_REGULAR = BASE_FONT_PATH + "Poppins-Regular";
   static const String POPPINS_LIGHT = BASE_FONT_PATH + "Poppins-Light";
   static const String POPPINS_MEDIUM = BASE_FONT_PATH + "Poppins-Medium";

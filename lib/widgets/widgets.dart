@@ -26,42 +26,45 @@ import 'package:sizer/sizer.dart';
 import 'Skeleton.dart';
 import 'gradient_button.dart';
 
-Widget NotificationTileView({BuildContext context, Reviews data, bool hasTopDivider = true}){
+Widget NotificationTileView(
+    {BuildContext context, Reviews data, bool hasTopDivider = true}) {
   return Column(
     children: [
-      SizedBox(height: 10.0,),
+      SizedBox(
+        height: 10.0,
+      ),
 
-      hasTopDivider? divider() : Container(),
+      hasTopDivider ? divider() : Container(),
 
-      hasTopDivider? SizedBox(height: 10.0,) : Container(),
+      hasTopDivider
+          ? SizedBox(
+              height: 10.0,
+            )
+          : Container(),
 
       InkWell(
-        onTap: (){
-
-        },
+        onTap: () {},
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
 //          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
           child: Row(
             children: [
-
-              circularAvatar(55.0, 55.0,
-                  data.image,
-                  30.0),
-
-              SizedBox(width: 10.0,),
-
+              circularAvatar(55.0, 55.0, data.image, 30.0),
+              SizedBox(
+                width: 10.0,
+              ),
               Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-                    Text(
-                        data.name,
-                        style: AppStyles.blackWithBoldFontTextStyle(context, 16.0).copyWith(color: AppColors.COLOR_BLACK).copyWith(fontWeight: FontWeight.w600)
+                    Text(data.name,
+                        style:
+                            AppStyles.blackWithBoldFontTextStyle(context, 15.0)
+                                .copyWith(color: AppColors.COLOR_BLACK)
+                                .copyWith(fontWeight: FontWeight.w600)),
+                    SizedBox(
+                      height: 5.0,
                     ),
-
-                    SizedBox(height: 6.0,),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -71,48 +74,33 @@ Widget NotificationTileView({BuildContext context, Reviews data, bool hasTopDivi
 //                          color: AppColors.COLOR_GREEN_RATING,// add custom icons also
 //                        ),
 
-                        RatingBar(
-                          onRatingUpdate: null,
-                          ratingWidget: RatingWidget(
-                              full: Icon(
-                                FontAwesomeIcons.solidStar,
-                                color: AppColors.GREEN_BRIGHT_COLOR,
-                              ),
-                              half: Icon(
-                                FontAwesomeIcons.starHalfAlt,
-                                color: AppColors.GREEN_BRIGHT_COLOR,
-                              ),
-                              empty: Icon(
-                                FontAwesomeIcons.star,
-                                color: AppColors.GREEN_BRIGHT_COLOR,
-                              )
-                          ),
-                          itemSize: 10.0,
-                          initialRating: 4.8,
-                          allowHalfRating: true,
-                          glow: false,
-                          itemPadding: EdgeInsets.only(left: 2.0),
+                        Icon(
+                          FontAwesomeIcons.solidStar,
+                          color: AppColors.GREEN_BRIGHT_COLOR,
+                          size: 10.0,
                         ),
 
-                        SizedBox(width: 3.0,),
+                        SizedBox(
+                          width: 3.0,
+                        ),
 
                         Padding(
                           padding: const EdgeInsets.only(left: 5.0),
                           child: Text(
                             data.rating.toString(),
-                            style: AppStyles.blackWithBoldFontTextStyle(context, 13.0).copyWith(color: AppColors.COLOR_GREEN_RATING),
+                            style: AppStyles.blackWithBoldFontTextStyle(
+                                    context, 13.0)
+                                .copyWith(color: AppColors.COLOR_GREEN_RATING),
                           ),
                         )
                       ],
                     ),
-
                   ],
                 ),
               ),
             ],
           ),
         ),
-
       ),
 
 //      Padding(
@@ -132,10 +120,13 @@ Widget NotificationTileView({BuildContext context, Reviews data, bool hasTopDivi
         textAlign: TextAlign.start,
         trimMode: TrimMode.Line,
         delimiter: ".",
-        style: AppStyles.blackWithDifferentFontTextStyle(context, 10.0.sp).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+        style: AppStyles.blackWithDifferentFontTextStyle(context, 10.0.sp)
+            .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
       ),
 
-      SizedBox(height: 10.0,),
+      SizedBox(
+        height: 10.0,
+      ),
     ],
   );
 }
@@ -161,10 +152,14 @@ Widget searchTextField({BuildContext context}) {
 //   );
 // }
 
-showBottomSheetWidget(BuildContext context, String title, String desc,
-    Widget widget, Function onTap, String btnText, bool showResendBtn) {
-
-
+showBottomSheetWidget(
+    BuildContext context,
+    String title,
+    String desc,
+    Widget widget,
+    ValueChanged<BuildContext> onTap,
+    String btnText,
+    bool showResendBtn) {
   showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: AppColors.WHITE_COLOR,
@@ -180,91 +175,93 @@ showBottomSheetWidget(BuildContext context, String title, String desc,
             return SingleChildScrollView(
               child: InkWell(
                   child: Container(
-                    margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        SvgPicture.asset(
-                          AppImages.BOTTOM_SHEET,
-                        ),
-                        SizedBox(
-                          height: 40.0,
-                        ),
-                        Text(
-                          title,
-                          style: AppStyles.blackWithBoldFontTextStyle(
-                              context, 20.0),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Align(
-                            alignment: Alignment.center,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 25.0,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  desc,
-                                  textAlign: TextAlign.center,
-                                  style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0),
-                                ),
-                              ),
-                            )),
-                        SizedBox(
-                          height: 25.0,
-                        ),
-                        widget,
-                        SizedBox(
-                          height: 25.0,
-                        ),
-                        GradientButton(
-                          onTap: onTap,
-                          text: btnText,
-                        ),
-                        showResendBtn
-                            ? Container(
-                                margin:
-                                    EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
-                                child: new Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    Text(
-                                      AppStrings.DIDNT_RECEIVE,
-                                      style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12)
-                                    ),
-                                    SizedBox(
-                                      width: 2.0,
-                                    ),
-                                    InkWell(
-                                      onTap: () {},
-                                      child: Text(
-                                        AppStrings.RESEND,
-                                        style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12).copyWith(color: AppColors.BLUE_COLOR)
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : SizedBox(
-                                height: 50.0,
-                              ),
-                      ],
+                margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 20.0,
                     ),
-                  )),
+                    SvgPicture.asset(
+                      AppImages.BOTTOM_SHEET,
+                    ),
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    Text(
+                      title,
+                      style:
+                          AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 25.0,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              desc,
+                              textAlign: TextAlign.center,
+                              style:
+                                  AppStyles.detailWithSmallTextSizeTextStyle()
+                                      .copyWith(fontSize: 12.0),
+                            ),
+                          ),
+                        )),
+                    SizedBox(
+                      height: 25.0,
+                    ),
+                    widget,
+                    SizedBox(
+                      height: 25.0,
+                    ),
+                    GradientButton(
+                      onTap: () {
+                        onTap(bc);
+                      },
+                      text: btnText,
+                    ),
+                    showResendBtn
+                        ? Container(
+                            margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(AppStrings.DIDNT_RECEIVE,
+                                    style: AppStyles
+                                            .detailWithSmallTextSizeTextStyle()
+                                        .copyWith(fontSize: 12)),
+                                SizedBox(
+                                  width: 2.0,
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Text(AppStrings.RESEND,
+                                      style: AppStyles
+                                              .detailWithSmallTextSizeTextStyle()
+                                          .copyWith(fontSize: 12)
+                                          .copyWith(
+                                              color: AppColors.BLUE_COLOR)),
+                                ),
+                              ],
+                            ),
+                          )
+                        : SizedBox(
+                            height: 50.0,
+                          ),
+                  ],
+                ),
+              )),
             );
           }),
         );
       });
 }
-
-
 
 showiOSBirthdayDatePicker(BuildContext context, bool isAllowFutureDates,
     bool isAllowPastDates, Function onConfirm) {
@@ -1024,31 +1021,37 @@ Widget teeTimesItem(BuildContext context) {
 
 Widget appBar(
     {BuildContext context,
-    String title,Function onBackClick,Color iconColor, bool hasLeading = true}) {
+    String title,
+    Function onBackClick,
+    Color iconColor,
+    bool hasLeading = true}) {
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
     centerTitle: true,
     title: new Text(
       title,
-      style:
-      AppStyles.blackWithBoldFontTextStyle(context, 20.0).copyWith(fontWeight: FontWeight.w600),),
-    leading: hasLeading? Padding(
-      padding: const EdgeInsets.only(left:10.0),
-      child: GestureDetector(
-        onTap: () {
-          onBackClick();
-        },
-        child: Transform.rotate(
-          angle: 180 * pi / 180,
-          child: Icon(
-            Icons.arrow_right_alt,
-            size: 32.0,
-            color: iconColor,// add custom icons also
-          ),
-        ),
-      ),
-    ) : Container(),
+      style: AppStyles.blackWithBoldFontTextStyle(context, 20.0)
+          .copyWith(fontWeight: FontWeight.w600),
+    ),
+    leading: hasLeading
+        ? Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: GestureDetector(
+              onTap: () {
+                onBackClick();
+              },
+              child: Transform.rotate(
+                angle: 180 * pi / 180,
+                child: Icon(
+                  Icons.arrow_right_alt,
+                  size: 32.0,
+                  color: iconColor, // add custom icons also
+                ),
+              ),
+            ),
+          )
+        : Container(),
   );
 }
 
@@ -1389,7 +1392,8 @@ Widget divider() {
   );
 }
 
-void showCustomDialog(BuildContext context, String title,String btn1Title,String btn2Title,bool showImage,SvgPicture image) {
+void showCustomDialog(BuildContext context, String title, String btn1Title,
+    String btn2Title, bool showImage, SvgPicture image) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1399,13 +1403,11 @@ void showCustomDialog(BuildContext context, String title,String btn1Title,String
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           //this right here
           child: Container(
-
             child: Column(
               mainAxisSize: MainAxisSize.min,
               //mainAxisAlignment: MainAxisAlignment.center,
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 SizedBox(
                   height: 15.0,
                 ),
@@ -1416,16 +1418,19 @@ void showCustomDialog(BuildContext context, String title,String btn1Title,String
                   child: Text(
                     title,
                     style:
-                    AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0),textAlign: TextAlign.center,
+                        AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                showImage?   Container(
-                  height: 10.0.h,
-                  margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 30),
-                  child: Center(
-                    child: image,
-                  ),
-                ):Container(),
+                showImage
+                    ? Container(
+                        height: 10.0.h,
+                        margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 30),
+                        child: Center(
+                          child: image,
+                        ),
+                      )
+                    : Container(),
                 SizedBox(
                   height: 35.0,
                 ),

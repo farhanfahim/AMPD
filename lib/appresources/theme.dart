@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:ampd/appresources/app_fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +9,7 @@ import 'app_colors.dart';
 import 'app_colors.dart';
 
 ThemeData light = ThemeData(
+    fontFamily: 'Poppins',
     visualDensity: VisualDensity.adaptivePlatformDensity,
     brightness: Brightness.light,
     primarySwatch: Colors.blue,

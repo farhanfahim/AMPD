@@ -42,6 +42,7 @@ class App extends StatelessWidget {
           builder: (context, orientation) {
             SizerUtil().init(constraints, orientation);
             return MaterialApp(
+
               navigatorKey: GlobalVariable.navState,
               debugShowCheckedModeBanner: false,
                darkTheme: light,
