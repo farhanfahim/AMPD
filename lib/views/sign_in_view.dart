@@ -99,11 +99,11 @@ class _SignInViewState extends State<SignInView> {
                           AppStyles.blackWithBoldFontTextStyle(context, 20.0),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 10.0,
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * .23),
+                          horizontal: MediaQuery.of(context).size.width * .20),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -153,7 +153,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false);
                         /*  showDialog(
                             context: context,
                             builder: (BuildContext context1) {
@@ -603,7 +603,7 @@ class _SignInViewState extends State<SignInView> {
                   ),
                   onPressed: () {
                     if (_enabled2) {
-                      setState(() {
+                      setStates(() {
                         if (cPasswordObscureText) {
                           cPasswordObscureText = false;
                           iconData2 = Icons.visibility;

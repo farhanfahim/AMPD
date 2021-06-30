@@ -99,11 +99,11 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                           AppStyles.blackWithBoldFontTextStyle(context, 20.0),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 10.0,
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * .14),
+                          horizontal: MediaQuery.of(context).size.width * .09),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -155,9 +155,9 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                     GradientButton(
                       onTap: () {
 //                        Navigator.of(context).pop();
-                      Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD_VIEW);
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false);
                       },
-                      text: AppStrings.LOGIN_TO_MY_ACCOUNT,
+                      text: AppStrings.CREATE,
                     ),
                     SizedBox(
                       height: 50.0,

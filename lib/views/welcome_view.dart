@@ -96,7 +96,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                 ),
                 ButtonBorder(
                   onTap: () {
-                    Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
+                    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false);
                   },
                   text: AppStrings.GUEST_LOGIN,
                 ),

@@ -98,7 +98,7 @@ class AppStyles {
       color: AppColors.COLOR_BLACK,
       fontSize: fontSize,
       fontFamily: AppFonts.POPPINS,
-      fontWeight: FontWeight.w800,
+      fontWeight: FontWeight.w600,
     );
   }
 
@@ -143,7 +143,7 @@ class AppStyles {
         color: AppColors.LIGHT_GREY_TEXT_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
         fontFamily: AppFonts.POPPINS,
-        fontWeight: Platform.isIOS ? FontWeight.w400 : FontWeight.w200);
+        fontWeight: Platform.isIOS ? FontWeight.w400 : FontWeight.w400);
     // fontWeight: FontWeight.w400);
   }
 
@@ -391,9 +391,9 @@ class AppStyles {
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
       hintStyle: TextStyle(
-          fontSize: 17.0,
+          fontSize: 15.0,
           fontFamily: AppFonts.POPPINS,
-          fontWeight: FontWeight.w200,
+          fontWeight: FontWeight.w400,
           color: AppColors.LIGHT_GREY_TEXT_COLOR),
       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
     );

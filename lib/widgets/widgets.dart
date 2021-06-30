@@ -59,11 +59,11 @@ Widget NotificationTileView(
                   children: [
                     Text(data.name,
                         style:
-                            AppStyles.blackWithBoldFontTextStyle(context, 16.0)
+                            AppStyles.blackWithBoldFontTextStyle(context, 15.0)
                                 .copyWith(color: AppColors.COLOR_BLACK)
                                 .copyWith(fontWeight: FontWeight.w600)),
                     SizedBox(
-                      height: 6.0,
+                      height: 5.0,
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -193,7 +193,7 @@ showBottomSheetWidget(
                           AppStyles.blackWithBoldFontTextStyle(context, 20.0),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 10.0,
                     ),
                     Align(
                         alignment: Alignment.center,
