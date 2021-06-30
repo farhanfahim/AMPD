@@ -52,27 +52,45 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
     _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
     _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
     _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
 
     _time = widget.time;
-    _timer = Timer.periodic(Duration(seconds: 1),(timer) {
-      if (mounted) {
-        setState(() {
-          _days = TimerUtils.getDays(_time, 'days');
-          _hours = TimerUtils.getDays(_time, 'hours');
-          _min = TimerUtils.getDays(_time, 'min');
-          _sec = TimerUtils.getDays(_time, 'sec');
-          if(int.parse(_sec) == 0) {
-            _timer.cancel();
+    if(!TimerUtils.isAheadOrBefore(_time)) {
+      _timer = Timer.periodic(Duration(seconds: 1),(timer) {
+        if (!TimerUtils.isAheadOrBefore(_time)) {
+          if (mounted) {
+            setState(() {
+              _days = TimerUtils.getDays(_time, 'days');
+              _hours = TimerUtils.getDays(_time, 'hours');
+              _min = TimerUtils.getDays(_time, 'min');
+              _sec = TimerUtils.getDays(_time, 'sec');
+          //          if(int.parse(_sec) == 0) {
+          //            _timer.cancel();
+          //          }
+            });
           }
-        });
-      }
-    });
+        } else {
+          _timer.cancel();
+          if (mounted) {
+            setState(() {
+              _days = "00";
+              _hours = "00";
+              _min = "00";
+              _sec = "00";
+            });
+          }
+        }
+      });
+    }
     super.initState();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
+    if (_timer != null) {
+      _timer.cancel();
+    }
     super.dispose();
   }
 
@@ -86,7 +104,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 //            height: !_isDetail? MediaQuery.of(context).size.width * 3.15 : MediaQuery.of(context).size.width * 1.9,
 //              height: !_isDetail? 320.0.w : MediaQuery.of(context).size.width * 2.5,
 //        height: 140.0.h,
-          height: _selectedTab == 1? !_isDetail? 1200.0 : 950.0 : !_isDetail? 1000.0 : 750.0,
+          height: _selectedTab == 1? !_isDetail? 1500.0 : 1250.0 : !_isDetail? 1000.0 : 750.0,
           color: Colors.white,
           child: Stack(
             fit: StackFit.loose,
@@ -100,7 +118,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                   cardKey.currentState.toggleCard();
                 },
                 child: Container(
-                  height: 550.0,
+                  height: !_isDetail? 550.0 : 520.0,
                   child: FlipCard(
                     direction: FlipDirection.HORIZONTAL, // default
                     flipOnTouch: false,
@@ -129,14 +147,14 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                         ),
 
                       Container(
-                        margin: EdgeInsets.only(top: 25.0, bottom: 100.0),
+                        margin: EdgeInsets.only(top: 25.0, bottom: 80.0),
                         child: Column(
 //                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Center(
                               child: Text(
                                 widget.text,
-                                style: AppStyles.poppinsTextStyle(fontSize: 30.0.sp, weight: FontWeight.w500),
+                                style: AppStyles.poppinsTextStyle(fontSize: 30.0.sp, weight: FontWeight.w400),
                               ),
                             ),
 
@@ -145,9 +163,9 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                             Image.asset(
                               widget.offer,
 //                              width: 45.0.w,
-//                              height: 330.0,
+                              height: 300.0,
 //                              width: 45.0.w,
-                              height: 80.0.w,
+//                              height: 80.0.w,
                             ),
                           ],
                         ),
@@ -178,16 +196,17 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                       ),
 
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+                        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               widget.offerName,
                               // 'hello heloo jdfsd jdf jbdfkj  fsdfdsfsf fsdf fbsdfb djbdksf jkdfskjds bfdsbfk',
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: AppStyles.poppinsTextStyle(fontSize: 20.0.sp, weight: FontWeight.w500),
+                              style: AppStyles.poppinsTextStyle(fontSize: 18.0.sp, weight: FontWeight.w500),
                             ),
 
                             SizedBox(height: 10.0,),
@@ -216,7 +235,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                               itemPadding: EdgeInsets.only(left: 5.0),
                             ),
 
-                            SizedBox(height: 25.0,),
+                            SizedBox(height: 20.0,),
 
                               Row(
                                 children: [
@@ -344,11 +363,11 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                             Center(
                               child: Text(
                                 "Time to Avail the Offer:",
-                                style: AppStyles.poppinsTextStyle(fontSize: 16.0.sp, weight: FontWeight.w400),
+                                style: AppStyles.poppinsTextStyle(fontSize: 15.0.sp, weight: FontWeight.w400),
                               ),
                             ),
 
-                            SizedBox(height: 10.0,),
+                            SizedBox(height: 8.0,),
 
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -360,7 +379,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                       style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
                                     ),
 
-                                    SizedBox(height: 6.0,),
+//                                    SizedBox(height: 6.0,),
 
                                     Text(
                                       int.parse(_days) > 1? 'Days' : 'Day',
@@ -378,7 +397,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                       style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
                                     ),
 
-                                    SizedBox(height: 6.0,),
+//                                    SizedBox(height: 6.0,),
 
                                     Text(
                                       int.parse(_hours) > 1? 'Hours' : 'Hour',
@@ -396,7 +415,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                       style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
                                     ),
 
-                                    SizedBox(height: 6.0,),
+//                                    SizedBox(height: 6.0,),
 
                                     Text(
                                       'Min',
@@ -414,7 +433,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                       style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
                                     ),
 
-                                    SizedBox(height: 6.0,),
+//                                    SizedBox(height: 0.0,),
 
                                     Text(
                                       'Sec',
@@ -434,7 +453,8 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
             ),
 
             Positioned(
-              top: !_isDetail? 115.0.w : 120.0.w,
+//              top: !_isDetail? 115.0.w : 130.0.w,
+              top: !_isDetail? 450.0: 500.0,
               left: 0.0,
               right: 0.0,
               child: Column(
@@ -481,7 +501,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                         Text(
                                           widget.offerName,
                                           // 'asdsd sdsad sdasd sfdf dsfds dfdsf sfsdf fsf sfdsf fsdf  dfsd fsdf fsdf sdfsdf dfs',
-                                          style: AppStyles.poppinsTextStyle(fontSize: 18.0, weight: FontWeight.w500).copyWith(color: Colors.black),
+                                          style: AppStyles.poppinsTextStyle(fontSize: 17.0, weight: FontWeight.w500).copyWith(color: Colors.black),
                                         ),
 
                                         SizedBox(height: 5.0,),
@@ -492,7 +512,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                             Flexible(
                                               child: Text(
                                                 "Triple Mocha Frappuccino",
-                                                style: AppStyles.poppinsTextStyle(fontSize: 15.0, weight: FontWeight.w300).copyWith(color: Colors.black),
+                                                style: AppStyles.poppinsTextStyle(fontSize: 14.0, weight: FontWeight.w300).copyWith(color: Colors.black),
                                               ),
                                             ),
                                           ],
@@ -639,20 +659,6 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                               glow: false,
                               itemPadding: EdgeInsets.only(left: 5.0),
                             ),
-
-//                    RatingBarIndicator(
-//                      itemCount: 5,
-//                      rating: 5.0,
-//                      itemSize: 13.0,
-//                      itemPadding: EdgeInsets.only(left: 5.0),
-//                      unratedColor: Colors.white,
-//                      itemBuilder: (context, index) {
-//                        return Icon(
-//                          FontAwesomeIcons.star,
-//                          color: AppColors.GREEN_BRIGHT_COLOR,
-//                        );
-//                      },
-//                    )
                           ],
                         )
                       ],
@@ -666,11 +672,11 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
                     child: Column(
                       children: [
-                        !_isDetail? SizedBox(height: 20.0,) : Container(),
+                        !_isDetail? SizedBox(height: 10.0,) : Container(),
 
                         !_isDetail? Divider(color: Colors.grey[400], height: 1.0, thickness: 0.5,) : Container(),
 
-                        SizedBox(height: 20.0,),
+                        SizedBox(height: 10.0,),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -708,8 +714,8 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                         _selectedTab == 0? Container(
 //                          height: 500.0,
                           child: Text(
-                            "Starbucks' new Triple Mocha Frappuccino was released on May Day 2018, and it's basically and enhanced version of the original MochaCookies are important to the proper functioning of a site. To improve your experience, we use cookies to remember log-in details and provide secure log-in, collect statistics..",
-                            style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w400).copyWith(color: AppColors.GREY_COLOR, height: 1.5),
+                            "Starbucks' new Triple Mocha Frappuccino was released on May Day 2018, and it's basically and enhanced version of the original MochaCookies are important to the proper functioning of a site. To improve your experience, we use cookies to remember log-in details and provide secure log-in, collect statistics.",
+                            style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.GREY_COLOR, height: 1.5),
                           ),
                         ) : Container(),
 
@@ -726,6 +732,8 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                     return NotificationTileView(context: context, data: _listOfReviews[index], hasTopDivider: index == 0? false : true);
                                   }
                                ),
+
+                              SizedBox(height: 5.0,),
 
                               InkWell(
                                 onTap: () {
@@ -761,6 +769,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
           ],
         ),
       ),
+      ]
     );
   }
 }

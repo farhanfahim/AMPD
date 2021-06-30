@@ -41,7 +41,7 @@ class _WelcomeViewState extends State<WelcomeView> {
               children: [
                 Container(
                   height: 25.0.h,
-                  margin: EdgeInsets.fromLTRB(0.0, 8.0.h, 0, 0),
+                  margin: EdgeInsets.fromLTRB(0.0, 7.0.h, 0, 0),
                   child: Center(
                     child: SvgPicture.asset(
                       AppImages.MAIN_LOGO,
@@ -96,7 +96,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                 ),
                 ButtonBorder(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: true);
                   },
                   text: AppStrings.GUEST_LOGIN,
                 ),

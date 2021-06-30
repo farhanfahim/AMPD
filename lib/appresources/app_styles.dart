@@ -22,7 +22,7 @@ class AppStyles {
 
   static TextStyle unselectedTabTextStyle(){
     return TextStyle(
-      fontSize: 13.0.sp,
+      fontSize: 12.0.sp,
       color: AppColors.UNSELECTED_COLOR,
       fontFamily: AppFonts.POPPINS,
       fontWeight: FontWeight.w400,
@@ -36,7 +36,7 @@ class AppStyles {
 
   static TextStyle selectedTabTextStyle(){
     return TextStyle(
-      fontSize: 13.0.sp,
+      fontSize: 12.0.sp,
       color: AppColors.ACCENT_COLOR,
       fontFamily: AppFonts.POPPINS,
       fontWeight: FontWeight.w600,

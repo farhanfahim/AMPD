@@ -234,7 +234,7 @@ class _DraggableCardState extends State<DraggableCard>
 
         slideOutDirection =
         isInLeftRegion ? SlideDirection.left : SlideDirection.right;
-      } else if (isInTopRegion) {
+//      } else if (isInTopRegion) {
 //        slideOutTween = Tween(
 //            begin: cardOffset, end: dragVector * (2 * context.size.height));
 //        slideOutAnimation.forward(from: 0.0);

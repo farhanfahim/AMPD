@@ -57,11 +57,11 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   ];
 
   List<String> _times = [
-    "2021-06-30 09:04:00",
     "2021-07-03 09:00:00",
     "2021-07-05 09:00:00",
     "2021-07-10 09:00:00",
     "2021-06-29 09:00:00",
+    "2021-07-29 09:00:00",
   ];
 
   List<Coords> _locations = [
@@ -188,7 +188,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
 
                 Text(
                   'No more coupons left',
-                  style: AppStyles.poppinsTextStyle(fontSize: 20.0, weight: FontWeight.w500).copyWith(color: AppColors.UNSELECTED_COLOR),
+                  style: AppStyles.poppinsTextStyle(fontSize: 18.0, weight: FontWeight.w500).copyWith(color: AppColors.UNSELECTED_COLOR),
                 ),
 
                 SizedBox(height: 30.0,),
