@@ -178,7 +178,10 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                           children: [
                             Text(
                               widget.offerName,
-                              style: AppStyles.poppinsTextStyle(fontSize: 25.0.sp, weight: FontWeight.w500),
+                              // 'hello heloo jdfsd jdf jbdfkj  fsdfdsfsf fsdf fbsdfb djbdksf jkdfskjds bfdsbfk',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.poppinsTextStyle(fontSize: 20.0.sp, weight: FontWeight.w500),
                             ),
 
                             SizedBox(height: 10.0,),
@@ -471,6 +474,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                       children: [
                                         Text(
                                           widget.offerName,
+                                          // 'asdsd sdsad sdasd sfdf dsfds dfdsf sfsdf fsf sfdsf fsdf  dfsd fsdf fsdf sdfsdf dfs',
                                           style: AppStyles.poppinsTextStyle(fontSize: 18.0, weight: FontWeight.w500).copyWith(color: Colors.black),
                                         ),
 

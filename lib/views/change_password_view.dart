@@ -275,7 +275,7 @@ class _ChangePasswordState extends State<ChangePasswordView> {
             },
             child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: _enabled,
+              enabled: _enabled2,
               focusNode: cPasswordNode,
               cursorColor: AppColors.ACCENT_COLOR,
               onChanged: (String newVal) {

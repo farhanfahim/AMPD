@@ -49,7 +49,8 @@ class AppStyles {
     return TextStyle(
       color: Theme.of(context).appBarTheme.textTheme.headline1.color,
       fontSize: fontSize,
-      fontFamily: AppFonts.POPPINS_BOLD,
+      fontFamily: AppFonts.POPPINS,
+      fontWeight: FontWeight.w400,
     );
   }
 
@@ -58,8 +59,8 @@ class AppStyles {
     return TextStyle(
         color: AppColors.APP_TEXT3_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_REGULAR,
-        fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w600);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: Platform.isIOS ? FontWeight.w400 : FontWeight.w200);
     // fontWeight: FontWeight.w400);
   }
 
@@ -67,8 +68,8 @@ class AppStyles {
     return TextStyle(
         color: AppColors.APP__DETAILS_TEXT_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_LIGHT,
-        fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w600);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: Platform.isIOS ? FontWeight.w400 : FontWeight.w200);
     // fontWeight: FontWeight.w400);
   }
 
@@ -77,7 +78,7 @@ class AppStyles {
         fontSize: 14.0,
         color: AppColors.APP__DETAILS_TEXT_COLOR,
         height: 1.5,
-        fontFamily: AppFonts.POPPINS_LIGHT,
+        fontFamily: AppFonts.POPPINS,
         fontWeight: FontWeight.w400);
   }
 
@@ -96,7 +97,7 @@ class AppStyles {
     return TextStyle(
       color: AppColors.COLOR_BLACK,
       fontSize: fontSize,
-      fontFamily: AppFonts.POPPINS_REGULAR,
+      fontFamily: AppFonts.POPPINS,
       fontWeight: FontWeight.w800,
     );
   }
@@ -132,8 +133,8 @@ class AppStyles {
     return TextStyle(
       color: Theme.of(context).appBarTheme.textTheme.headline1.color,
       fontSize: 18.0,
-      fontFamily: AppFonts.POPPINS_REGULAR,
-      fontWeight: FontWeight.w500,
+      fontFamily: AppFonts.POPPINS,
+      fontWeight: FontWeight.w400,
     );
   }
 
@@ -141,8 +142,8 @@ class AppStyles {
     return TextStyle(
         color: AppColors.LIGHT_GREY_TEXT_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_LIGHT,
-        fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w300);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: Platform.isIOS ? FontWeight.w400 : FontWeight.w200);
     // fontWeight: FontWeight.w400);
   }
 
@@ -150,15 +151,15 @@ class AppStyles {
     return TextStyle(
         color: AppColors.WHITE_COLOR,
         fontSize: AppConstants.INPUT_TEXT_SIZE,
-        fontFamily: AppFonts.POPPINS_LIGHT,
-        fontWeight: FontWeight.w500);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: FontWeight.w200);
   }
 
   static TextStyle detailTextStyle({double fontSize}) {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.APP__DETAILS_TEXT_COLOR,
-        fontFamily: AppFonts.POPPINS_REGULAR,
+        fontFamily: AppFonts.POPPINS,
         fontWeight: FontWeight.w400);
   }
 
@@ -166,15 +167,15 @@ class AppStyles {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.APP_TEXT_COLOR2,
-        fontFamily: AppFonts.POPPINS_REGULAR,
-        fontWeight: FontWeight.w600);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: FontWeight.w800);
   }
 
   static TextStyle subHeadingsTextStyle(BuildContext context, double fontSize) {
     return TextStyle(
         fontSize: fontSize,
         color: Theme.of(context).textTheme.headline1.color,
-        fontFamily: AppFonts.POPPINS_REGULAR,
+        fontFamily: AppFonts.POPPINS,
         fontWeight: FontWeight.w600);
   }
 
@@ -182,24 +183,24 @@ class AppStyles {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.ACCENT_COLOR,
-        fontFamily: AppFonts.POPPINS_REGULAR,
-        fontWeight: FontWeight.w600);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: FontWeight.w200);
   }
 
   static TextStyle smallTextAccentColorTextStyle({double fontSize}) {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.ACCENT_COLOR,
-        fontFamily: AppFonts.POPPINS_REGULAR,
-        fontWeight: FontWeight.w400);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: FontWeight.w200);
   }
 
   static TextStyle detailTextStyleWithDarkColor({double fontSize}) {
     return TextStyle(
         fontSize: fontSize,
         color: AppColors.APP_TEXT_COLOR2,
-        fontFamily: AppFonts.POPPINS_REGULAR,
-        fontWeight: FontWeight.w400);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: FontWeight.w200);
   }
 
   static TextStyle poppinsTextStyle({double fontSize, FontWeight weight}){
@@ -215,7 +216,7 @@ class AppStyles {
     return TextStyle(
         color: AppColors.WHITE_COLOR,
         fontSize: 14.0,
-        fontFamily: AppFonts.POPPINS_SEMIBOLD,
+        fontFamily: AppFonts.POPPINS,
         fontWeight: FontWeight.w600);
   }
 
@@ -223,8 +224,8 @@ class AppStyles {
     return TextStyle(
         fontSize: fontSize,
         color: Colors.black,
-        fontFamily: AppFonts.POPPINS_BOLD,
-        fontWeight: FontWeight.w600);
+        fontFamily: AppFonts.POPPINS,
+        fontWeight: FontWeight.w800);
   }
 
 //
@@ -391,8 +392,8 @@ class AppStyles {
           borderSide: BorderSide(width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR)),
       hintStyle: TextStyle(
           fontSize: 17.0,
-          fontFamily: AppFonts.POPPINS_LIGHT,
-          fontWeight: FontWeight.w300,
+          fontFamily: AppFonts.POPPINS,
+          fontWeight: FontWeight.w200,
           color: AppColors.LIGHT_GREY_TEXT_COLOR),
       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
     );
@@ -567,12 +568,12 @@ class AppStyles {
         prefixIconConstraints: BoxConstraints(minWidth: 0, minHeight: 0),
         hintStyle: TextStyle(
             fontSize: 17.0,
-            fontFamily: AppFonts.POPPINS_MEDIUM,
+            fontFamily: AppFonts.POPPINS,
             color: AppColors.APP_TEXT2_COLOR),
         labelText: title,
         alignLabelWithHint: true,
         labelStyle: TextStyle(
-            fontFamily: AppFonts.POPPINS_MEDIUM,
+            fontFamily: AppFonts.POPPINS,
             color: AppColors.APP_TEXT2_COLOR),
         contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
         enabledBorder: OutlineInputBorder(
@@ -598,11 +599,11 @@ class AppStyles {
         labelText: title,
         alignLabelWithHint: true,
         labelStyle: TextStyle(
-            fontFamily: AppFonts.POPPINS_MEDIUM,
+            fontFamily: AppFonts.POPPINS,
             color: AppColors.APP_TEXT2_COLOR),
         hintStyle: TextStyle(
             fontSize: 17.0,
-            fontFamily: AppFonts.POPPINS_MEDIUM,
+            fontFamily: AppFonts.POPPINS,
             color: AppColors.APP_TEXT2_COLOR),
         contentPadding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
         enabledBorder: OutlineInputBorder(

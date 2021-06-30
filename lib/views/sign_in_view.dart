@@ -67,8 +67,6 @@ class _SignInViewState extends State<SignInView> {
   IconData iconData1 = Icons.visibility_off;
   IconData iconData2 = Icons.visibility_off;
 
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -137,34 +135,7 @@ class _SignInViewState extends State<SignInView> {
                           ),
                           child: GestureDetector(
                             onTap: () {
-                              showBottomSheetWidget(
-                                  context,
-                                  "Forgot password",
-                                  AppStrings.PHONE_NUMBER_DESC,
-                                  customWidget(context), () {
-                                showBottomSheetWidget(
-                                    context,
-                                    AppStrings.ENTER_OTP_DIGIT,
-                                    AppStrings.OTP_DESC,
-                                    OtpTextField(), () {
-                                  showBottomSheetWidget(
-                                      context,
-                                      AppStrings.PASSWORD_RESET_TITLE,
-                                      AppStrings.OTP_DESC,
-                                      Column(
-                                        children: [
-
-                                          newPasswordTextField(context),
-                                          SizedBox(
-                                            height: 20.0,
-                                          ),
-                                          confirmPasswordTextField(context),
-                                        ],
-                                      ), () {
-                                    print("submit");
-                                  }, AppStrings.UPDATE_PASSWORD, false);
-                                }, AppStrings.VERIFY_NOW, true);
-                              }, AppStrings.RECOVER_NOW, false);
+                              showForgetBottomSheet(context);
                             },
                             child: Text(
                               AppStrings.FORGET_PASSWORD,
@@ -183,7 +154,7 @@ class _SignInViewState extends State<SignInView> {
                     GradientButton(
                       onTap: () {
                         Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
-                      /*  showDialog(
+                        /*  showDialog(
                             context: context,
                             builder: (BuildContext context1) {
                               return CustomRatingDialog(
@@ -205,19 +176,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     ButtonBorder(
                       onTap: () {
-                        showBottomSheetWidget(
-                            context,
-                            AppStrings.PHONE_NUMBER_TITLE,
-                            AppStrings.PHONE_NUMBER_DESC,
-                            customWidget(context), () {
-                          showBottomSheetWidget(
-                              context,
-                              AppStrings.ENTER_OTP_DIGIT,
-                              AppStrings.OTP_DESC,
-                              OtpTextField(), () {
-                            Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW);
-                          }, AppStrings.VERIFY_NOW, true);
-                        }, AppStrings.SUBMIT, false);
+                        showPhoneNoBottomSheet(context);
                       },
                       text: AppStrings.CREATE_AN_ACCOUNT,
                     ),
@@ -232,7 +191,56 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
+  showForgetBottomSheet(BuildContext context) {
+    showBottomSheetWidget(context, "Forgot password",
+        AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc) {
+      Navigator.pop(bc);
+      showOtp2BottomSheet(context);
+    }, AppStrings.RECOVER_NOW, false);
+  }
 
+  showOtp2BottomSheet(BuildContext context) {
+    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC, OtpTextField(), (bc1) {
+      Navigator.pop(bc1);
+      showResetPasswordBottomSheet(context);
+    }, AppStrings.VERIFY_NOW, true);
+  }
+
+  showResetPasswordBottomSheet(BuildContext context) {
+    showBottomSheetWidget(
+        context,
+        AppStrings.PASSWORD_RESET_TITLE,
+        AppStrings.OTP_DESC,
+        Column(
+          children: [
+            newPasswordTextField(context),
+            SizedBox(
+              height: 20.0,
+            ),
+            confirmPasswordTextField(context),
+          ],
+        ), (bc2) {
+      Navigator.pop(bc2);
+      print("submit");
+    }, AppStrings.UPDATE_PASSWORD, false);
+  }
+
+  showPhoneNoBottomSheet(BuildContext context) {
+    showBottomSheetWidget(context, AppStrings.PHONE_NUMBER_TITLE,
+        AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc3) {
+      Navigator.pop(bc3);
+      showOtpBottomSheet(context);
+    }, AppStrings.SUBMIT, false);
+  }
+
+  showOtpBottomSheet(BuildContext context) {
+    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC, OtpTextField(), (bc4) {
+      Navigator.pop(bc4);
+      Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW);
+    }, AppStrings.VERIFY_NOW, true);
+  }
 
   Stack customEmailTextField(BuildContext context) {
     return Stack(
@@ -386,6 +394,7 @@ class _SignInViewState extends State<SignInView> {
       ],
     );
   }
+
   Stack customWidget(BuildContext context) {
     return Stack(
       children: [
@@ -445,159 +454,170 @@ class _SignInViewState extends State<SignInView> {
       ],
     );
   }
-  Stack newPasswordTextField(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 25.0),
-          child: Focus(
-            onFocusChange: (value) {
-              if (value) {
-                nPasswordController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: cPasswordController.text.length));
-              }
-            },
-            child: TextFormField(
+
+  Widget newPasswordTextField(BuildContext context) {
+    return StatefulBuilder(
+      builder: (ctx, setStates) {
+        return Stack(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 25.0),
+              child: Focus(
+                onFocusChange: (value) {
+                  if (value) {
+                    nPasswordController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: cPasswordController.text.length));
+                  }
+                },
+                child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: _enabled1,
-              focusNode: nPasswordNode,
-              cursorColor: AppColors.ACCENT_COLOR,
-              onChanged: (String newVal) {
-                if (newVal.length <= nPasswordValidation) {
-                  password = newVal;
-                } else {
-                  nPasswordController.value = new TextEditingValue(
-                      text: password,
-                      selection: new TextSelection(
-                          baseOffset: nPasswordValidation,
-                          extentOffset: nPasswordValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing:
-                      new TextRange(start: 0, end: nPasswordValidation));
-                  //  _emailController.text = text;
-                }
-              },
-              controller: nPasswordController,
-              keyboardType: TextInputType.visiblePassword,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(nPasswordValidation),
-              ],
-              onEditingComplete: () => FocusScope.of(context).requestFocus(cPasswordNode),
-                          onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(cPasswordNode),
-              obscureText: nPasswordObscureText,
-              textInputAction: TextInputAction.next,
-              decoration: AppStyles.decorationWithBorder(AppStrings.NEW_PASSWORD),
-              //   , iconData, (){
-              //
-              // }),
-              style: AppStyles.inputTextStyle(context),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 5.0,
-          bottom: 0.0,
-          right: 25.0,
-          child: IconButton(
-              icon: Icon(
-                iconData1,
-                color: AppColors.LIGHT_GREY_TEXT_COLOR,
-              ),
-              onPressed: () {
-                if (_enabled1) {
-                  setState(() {
-                    if (nPasswordObscureText) {
-                      nPasswordObscureText = false;
-                      iconData1 = Icons.visibility;
+                  enabled: _enabled1,
+                  focusNode: nPasswordNode,
+                  cursorColor: AppColors.ACCENT_COLOR,
+                  onChanged: (String newVal) {
+                    if (newVal.length <= nPasswordValidation) {
+                      password = newVal;
                     } else {
-                      nPasswordObscureText = true;
-                      iconData1 = Icons.visibility_off;
+                      nPasswordController.value = new TextEditingValue(
+                          text: password,
+                          selection: new TextSelection(
+                              baseOffset: nPasswordValidation,
+                              extentOffset: nPasswordValidation,
+                              affinity: TextAffinity.downstream,
+                              isDirectional: false),
+                          composing: new TextRange(
+                              start: 0, end: nPasswordValidation));
+                      //  _emailController.text = text;
                     }
-                  });
-                }
-              }),
-        ),
-      ],
+                  },
+                  controller: nPasswordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(nPasswordValidation),
+                  ],
+                  onEditingComplete: () =>
+                      FocusScope.of(context).requestFocus(cPasswordNode),
+                  onFieldSubmitted: (_) =>
+                      FocusScope.of(context).requestFocus(cPasswordNode),
+                  obscureText: nPasswordObscureText,
+                  textInputAction: TextInputAction.next,
+                  decoration:
+                      AppStyles.decorationWithBorder(AppStrings.NEW_PASSWORD),
+                  //   , iconData, (){
+                  //
+                  // }),
+                  style: AppStyles.inputTextStyle(context),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 5.0,
+              bottom: 0.0,
+              right: 25.0,
+              child: IconButton(
+                  icon: Icon(
+                    iconData1,
+                    color: AppColors.LIGHT_GREY_TEXT_COLOR,
+                  ),
+                  onPressed: () {
+                    if (_enabled1) {
+                      setStates(() {
+                        if (nPasswordObscureText) {
+                          nPasswordObscureText = false;
+                          iconData1 = Icons.visibility;
+                        } else {
+                          nPasswordObscureText = true;
+                          iconData1 = Icons.visibility_off;
+                        }
+                      });
+                    }
+                  }),
+            ),
+          ],
+        );
+      },
     );
   }
-  Stack confirmPasswordTextField(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 25.0),
-          child: Focus(
-            onFocusChange: (value) {
-              if (value) {
-                cPasswordController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: cPasswordController.text.length));
-              }
-            },
-            child: TextFormField(
+
+  Widget confirmPasswordTextField(BuildContext context) {
+    return StatefulBuilder(
+      builder: (ctx, setStates) {
+        return Stack(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 25.0),
+              child: Focus(
+                onFocusChange: (value) {
+                  if (value) {
+                    cPasswordController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: cPasswordController.text.length));
+                  }
+                },
+                child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: _enabled,
-              focusNode: cPasswordNode,
-              cursorColor: AppColors.ACCENT_COLOR,
-              onChanged: (String newVal) {
-                if (newVal.length <= cPasswordValidation) {
-                  password = newVal;
-                } else {
-                  cPasswordController.value = new TextEditingValue(
-                      text: password,
-                      selection: new TextSelection(
-                          baseOffset: cPasswordValidation,
-                          extentOffset: cPasswordValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing:
-                      new TextRange(start: 0, end: cPasswordValidation));
-                  //  _emailController.text = text;
-                }
-              },
-              controller: cPasswordController,
-              keyboardType: TextInputType.visiblePassword,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(cPasswordValidation),
-              ],
-              /*onEditingComplete: () => FocusScope.of(context).requestFocus(cPasswordNode),
+                  enabled: _enabled2,
+                  focusNode: cPasswordNode,
+                  cursorColor: AppColors.ACCENT_COLOR,
+                  onChanged: (String newVal) {
+                    if (newVal.length <= cPasswordValidation) {
+                      password = newVal;
+                    } else {
+                      cPasswordController.value = new TextEditingValue(
+                          text: password,
+                          selection: new TextSelection(
+                              baseOffset: cPasswordValidation,
+                              extentOffset: cPasswordValidation,
+                              affinity: TextAffinity.downstream,
+                              isDirectional: false),
+                          composing: new TextRange(
+                              start: 0, end: cPasswordValidation));
+                      //  _emailController.text = text;
+                    }
+                  },
+                  controller: cPasswordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(cPasswordValidation),
+                  ],
+                  /*onEditingComplete: () => FocusScope.of(context).requestFocus(cPasswordNode),
                           onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(cPasswordNode),*/
-              obscureText: cPasswordObscureText,
-              textInputAction: TextInputAction.next,
-              decoration: AppStyles.decorationWithBorder(AppStrings.RE_ENTER_PASSWORD),
-              //   , iconData, (){
-              //
-              // }),
-              style: AppStyles.inputTextStyle(context),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 5.0,
-          bottom: 0.0,
-          right: 25.0,
-          child: IconButton(
-              icon: Icon(
-                iconData2,
-                color: AppColors.LIGHT_GREY_TEXT_COLOR,
+                  obscureText: cPasswordObscureText,
+                  textInputAction: TextInputAction.next,
+                  decoration: AppStyles.decorationWithBorder(
+                      AppStrings.RE_ENTER_PASSWORD),
+                  //   , iconData, (){
+                  //
+                  // }),
+                  style: AppStyles.inputTextStyle(context),
+                ),
               ),
-              onPressed: () {
-                if (_enabled2) {
-                  setState(() {
-                    if (cPasswordObscureText) {
-                      cPasswordObscureText = false;
-                      iconData2 = Icons.visibility;
-                    } else {
-                      cPasswordObscureText = true;
-                      iconData2 = Icons.visibility_off;
+            ),
+            Positioned(
+              top: 5.0,
+              bottom: 0.0,
+              right: 25.0,
+              child: IconButton(
+                  icon: Icon(
+                    iconData2,
+                    color: AppColors.LIGHT_GREY_TEXT_COLOR,
+                  ),
+                  onPressed: () {
+                    if (_enabled2) {
+                      setState(() {
+                        if (cPasswordObscureText) {
+                          cPasswordObscureText = false;
+                          iconData2 = Icons.visibility;
+                        } else {
+                          cPasswordObscureText = true;
+                          iconData2 = Icons.visibility_off;
+                        }
+                      });
                     }
-                  });
-                }
-              }),
-        ),
-      ],
+                  }),
+            ),
+          ],
+        );
+      },
     );
   }
-
 }
-
-

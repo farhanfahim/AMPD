@@ -14,35 +14,31 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
 class WelcomeView extends StatefulWidget {
-
   @override
   _WelcomeViewState createState() => _WelcomeViewState();
 }
 
 class _WelcomeViewState extends State<WelcomeView> {
-
   TextEditingController numberController = new TextEditingController();
   int numberValidation = AppConstants.PHONE_VALIDATION;
   String phoneNo = "";
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-       appBar: AppBar(
-         backgroundColor: Colors.white,
-         elevation: 0.0,
-         toolbarHeight: 0.0,
-       ),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          toolbarHeight: 0.0,
+        ),
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
           child: Center(
             child: Column(
-
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-
                 Container(
                   height: 25.0.h,
                   margin: EdgeInsets.fromLTRB(0.0, 8.0.h, 0, 0),
@@ -52,67 +48,81 @@ class _WelcomeViewState extends State<WelcomeView> {
                     ),
                   ),
                 ),
-
                 SizedBox(
                   height: 50.0,
                 ),
-
-                Text(AppStrings.GET_STARTED,style: AppStyles.blackWithBoldFontTextStyle(context, 20.0),),
-
-
+                Text(
+                  AppStrings.GET_STARTED,
+                  style: AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                ),
                 SizedBox(
                   height: 30.0,
                 ),
-
-
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * .2),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * .2),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(child: Text(AppStrings.CREATE_AN_ACCOUNT_OR,style: AppStyles.detailWithSmallTextSizeTextStyle(),textAlign: TextAlign.center,)),
+                      Expanded(
+                          child: Text(
+                        AppStrings.CREATE_AN_ACCOUNT_OR,
+                        style: AppStyles.detailWithSmallTextSizeTextStyle(),
+                        textAlign: TextAlign.center,
+                      )),
                     ],
                   ),
                 ),
-
                 SizedBox(
                   height: 30.0,
                 ),
-                GradientButton(onTap:(){
-                  showBottomSheetWidget(
-                      context,
-                      AppStrings.PHONE_NUMBER_TITLE,
-                      AppStrings.PHONE_NUMBER_DESC,
-                      customWidget(context), () {
-                    showBottomSheetWidget(
-                        context,
-                        AppStrings.ENTER_OTP_DIGIT,
-                        AppStrings.OTP_DESC,
-                        OtpTextField(), () {
-                      Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW);
-                    }, AppStrings.VERIFY_NOW, true);
-                  }, AppStrings.SUBMIT, false);
-                },text: AppStrings.CREATE_AN_ACCOUNT,),
+                GradientButton(
+                  onTap: () {
+                    showPhoneNoBottomSheet(context);
+                  },
+                  text: AppStrings.CREATE_AN_ACCOUNT,
+                ),
                 SizedBox(
                   height: 15.0,
                 ),
-                ButtonBorder(onTap:(){
-                  Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-                },text: AppStrings.SIGN_IN,),
+                ButtonBorder(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                  },
+                  text: AppStrings.SIGN_IN,
+                ),
                 SizedBox(
                   height: 15.0,
                 ),
-                ButtonBorder(onTap:(){
-                  Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
-                },text: AppStrings.GUEST_LOGIN,),
+                ButtonBorder(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
+                  },
+                  text: AppStrings.GUEST_LOGIN,
+                ),
                 SizedBox(
                   height: 70.0,
                 )
-
               ],
             ),
           ),
         ));
+  }
+
+  showPhoneNoBottomSheet(BuildContext context) {
+    showBottomSheetWidget(context, AppStrings.PHONE_NUMBER_TITLE,
+        AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc) {
+      Navigator.pop(bc);
+      showOtpBottomSheet(context);
+    }, AppStrings.SUBMIT, false);
+  }
+
+  showOtpBottomSheet(BuildContext context) {
+    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC, OtpTextField(), (bc1) {
+      Navigator.pop(bc1);
+      Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW);
+    }, AppStrings.VERIFY_NOW, true);
   }
 
   Stack customWidget(BuildContext context) {
@@ -142,7 +152,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                           affinity: TextAffinity.downstream,
                           isDirectional: false),
                       composing:
-                      new TextRange(start: 0, end: numberValidation));
+                          new TextRange(start: 0, end: numberValidation));
                   //  _emailController.text = text;
                 }
               },
@@ -162,7 +172,7 @@ class _WelcomeViewState extends State<WelcomeView> {
               },
               textInputAction: TextInputAction.next,
               decoration:
-              AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
+                  AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
               //   , iconData, (){
               //
               // }),
