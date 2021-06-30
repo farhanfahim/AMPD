@@ -66,11 +66,12 @@ class _CustomDialogState extends State<CustomDialog> {
                           child: Text(
                             widget.subTitle,
                             style:
-                            AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0),textAlign: TextAlign.center,
+                            AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0).copyWith(fontWeight: FontWeight.w600),textAlign: TextAlign.center,
                           ),
                         ),
                         widget.showImage?   Container(
-                          height: 10.0.h,
+//                          height: 15.0.h,
+                          height: 100.0,
                           margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 30),
                           child: Center(
                             child: widget.child,

@@ -155,7 +155,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                     GradientButton(
                       onTap: () {
 //                        Navigator.of(context).pop();
-                      Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD_VIEW);
+                      Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD_VIEW, arguments: false);
                       },
                       text: AppStrings.LOGIN_TO_MY_ACCOUNT,
                     ),

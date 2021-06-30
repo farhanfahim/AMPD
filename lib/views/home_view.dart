@@ -1,7 +1,11 @@
+import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
+import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/widgets/dialog_view.dart';
+import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/offer_card_widget.dart';
 import 'package:ampd/widgets/swipe_cards/swipe_cards.dart';
 import 'package:ampd/widgets/widgets.dart';
@@ -9,8 +13,13 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:sizer/sizer.dart';
 
 class HomeView extends StatefulWidget {
+  bool isGuestLogin;
+
+  HomeView(this.isGuestLogin);
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -48,7 +57,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   ];
 
   List<String> _times = [
-    "2021-06-30 09:00:00",
+    "2021-06-30 09:04:00",
     "2021-07-03 09:00:00",
     "2021-07-05 09:00:00",
     "2021-07-10 09:00:00",
@@ -82,18 +91,52 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
       _swipeItems.add(SwipeItem(
           content: Content(text: _names[i], offer: _offers[i], offerName: _itemNames[i], time: _times[i], image: _backgrounds[i], coord: _locations[i], locationTitle: _locationTitle[i]),
           likeAction: () {
-            ToastUtil.showToast(context, "Liked ${_names[i]}");
-//            _scaffoldKey.currentState.showSnackBar(SnackBar(
-//              content: Text("Liked ${_names[i]}"),
-//              duration: Duration(milliseconds: 500),
-//            ));
-          },
+          if (!widget.isGuestLogin) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context1) {
+                  return CustomDialog(
+                    contex: context,
+                    subTitle: "This offer has been marked Favorite!",
+                    child: SvgPicture.asset(AppImages.FAV_ICON),
+                    //title: "Your feedback will help us improve our services.",
+                    buttonText1: AppStrings.REDEEM_NOW,
+                    buttonText2: AppStrings.GO_BACK_TO_OFFER,
+                    onPressed1: () {
+                      Navigator.pop(context1);
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context1) {
+                            return CustomDialog(
+                              contex: context,
+                              subTitle: "Are you sure?",
+                              //title: "Your feedback will help us improve our services.",
+                              buttonText1: AppStrings.YES,
+                              buttonText2: AppStrings.NO,
+                              onPressed1: () {
+                                Navigator.pop(context1);
+                              },
+                              onPressed2: () {
+                                Navigator.pop(context1);
+                              },
+                              showImage: false,
+                            );
+                          });                  },
+                    onPressed2: () {
+                      Navigator.pop(context1);
+                    },
+                    showImage: true,
+                  );
+                });
+          } else {
+            Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+          }
+        },
           nopeAction: () {
-            ToastUtil.showToast(context, "Nope ${_names[i]}");
-//            _scaffoldKey.currentState.showSnackBar(SnackBar(
-//              content: Text("Nope ${_names[i]}"),
-//              duration: Duration(milliseconds: 500),
-//            ));
+            if(widget.isGuestLogin) {
+              Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+            }
+//            ToastUtil.showToast(context, "Disliked ${_names[i]}");
           },));
     }
 
@@ -136,13 +179,34 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(AppImages.IC_COUPONS, width: 150.0, height: 150.0,),
+                Opacity(
+                  opacity: 0.3,
+                  child: SvgPicture.asset(AppImages.IC_COUPONS, width: 110.0, height: 110.0,)
+                ),
 
-                SizedBox(height: 12.0,),
+                SizedBox(height: 10.0,),
 
                 Text(
                   'No more coupons left',
-                  style: AppStyles.poppinsTextStyle(fontSize: 25.0, weight: FontWeight.w500).copyWith(color: AppColors.UNSELECTED_COLOR),
+                  style: AppStyles.poppinsTextStyle(fontSize: 20.0, weight: FontWeight.w500).copyWith(color: AppColors.UNSELECTED_COLOR),
+                ),
+
+                SizedBox(height: 30.0,),
+
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 25.0.w),
+                  child: GradientButton(
+                    onTap: () {
+//                      print('length ${_swipeItems.length}');
+                      _matchEngine = MatchEngine(swipeItems: _swipeItems);
+//                      print('length ${_matchEngine.currentItem}');
+                      _matchEngine.rewindMatch();
+                      setState(() {
+                        _stackFinished = false;
+                      });
+                    },
+                    text: "Fetch More",
+                  ),
                 )
               ],
             ),

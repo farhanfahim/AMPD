@@ -103,7 +103,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                   height: 15.0,
                 ),
                 ButtonBorder(onTap:(){
-                  Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
+                  Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW, arguments: true);
                 },text: AppStrings.GUEST_LOGIN,),
                 SizedBox(
                   height: 70.0,

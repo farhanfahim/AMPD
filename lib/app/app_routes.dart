@@ -43,7 +43,7 @@ class AppRoutes {
        {
          return MaterialPageRoute<void>(
            settings: routeSettings,
-           builder: (BuildContext context) => DashboardView(),
+           builder: (BuildContext context) => DashboardView(routeSettings.arguments),
          );
        }
 
@@ -51,7 +51,7 @@ class AppRoutes {
        {
          return MaterialPageRoute<void>(
            settings: routeSettings,
-           builder: (BuildContext context) => HomeView(),
+           builder: (BuildContext context) => HomeView(routeSettings.arguments),
          );
        }
 

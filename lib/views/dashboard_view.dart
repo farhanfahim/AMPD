@@ -1,3 +1,4 @@
+import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
@@ -11,6 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class DashboardView extends StatefulWidget {
+  bool isGuestLogin;
+
+  DashboardView(this.isGuestLogin);
+
   @override
   _DashboardViewState createState() => _DashboardViewState();
 }
@@ -29,11 +34,7 @@ class _DashboardViewState extends State<DashboardView> {
     AppImages.IC_MENU,
   ];
 
-  List<Widget> listOfMainScreens = [
-    SavedCouponsView(),
-    HomeView(),
-    SideMenuView(),
-  ];
+  List<Widget> listOfMainScreens = [];
 
   var _selectedPageIndex;
   PageController _pageController;
@@ -41,6 +42,12 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   void initState() {
     _selectedPageIndex = 1;
+    listOfMainScreens = [
+      SavedCouponsView(),
+      HomeView(widget.isGuestLogin),
+      SideMenuView(),
+    ];
+
     _pageController = PageController(initialPage: _selectedPageIndex);
 
     super.initState();
@@ -110,10 +117,14 @@ class _DashboardViewState extends State<DashboardView> {
                           GestureDetector(
                             onTap: () {
                               print('0 tapped');
-                              setState(() {
-                                _selectedPageIndex = 0;
-                                _pageController.jumpToPage(0);
-                              });
+                              if (!widget.isGuestLogin) {
+                                setState(() {
+                                  _selectedPageIndex = 0;
+                                  _pageController.jumpToPage(0);
+                                });
+                              } else {
+                                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                              }
                             },
                             child: Container(
                               padding: EdgeInsets.all(10.0),
@@ -134,10 +145,14 @@ class _DashboardViewState extends State<DashboardView> {
                           GestureDetector(
                             onTap: () {
                               print('2 tapped');
-                              setState(() {
-                                _selectedPageIndex = 2;
-                                _pageController.jumpToPage(2);
-                              });
+                              if (!widget.isGuestLogin) {
+                                setState(() {
+                                  _selectedPageIndex = 2;
+                                  _pageController.jumpToPage(2);
+                                });
+                              } else {
+                                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                              }
                             },
                             child: Container(
                               padding: EdgeInsets.all(10.0),

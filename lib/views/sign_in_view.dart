@@ -182,7 +182,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW);
+                        Navigator.pushNamed(context, AppRoutes.DASHBOARD_VIEW, arguments: false);
                       /*  showDialog(
                             context: context,
                             builder: (BuildContext context1) {
