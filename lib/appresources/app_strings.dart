@@ -82,7 +82,9 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String CANCEL = "Cancel";
   static const String FAV_COURSES = "Favorite courses";
   static const String HANDICAP = "Handicap";
-  static const String LOCATION = "Location";
+  static const String LOCATION = "Location:";
+  static const String PHONE = "Phone:";
+  static const String UPDATE_PROFILE = "Update Profile";
   static const String BIRTHDAY = "Birthday";
   static const String HOME_TOWN = "Home Town";
   static const String MY_AVAILIBILITY = "My Availability";
@@ -242,8 +244,10 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String ACCOUNT = "Account";
   static const String EDIT_PROFILE = "Edit Profile";
   static const String CHANGE_PASSWORD = "Change Password";
+  static const String CHANGE = "Change";
   static const String TERMS_AND_CONDITIONS = "Terms & Conditions";
   static const String LOGOUT = "Logout";
+  static const String EMAIL = "Email:";
 
   static const String UPDATE = "Update";
 
@@ -341,21 +345,29 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
       'Password cannot be less than 6 characters';
 
   static const String PHONE_NUMBER_TITLE = 'Phone Number';
+  static const String REQUEST_TO_PHONE_NUMBER_TITLE = 'Request to Change Phone Number';
+  static const String REQUEST_TO_EMAIL_TITLE = 'Request to Change Email';
   static const String PASSWORD_RESET_TITLE = 'Reset password';
   static const String ENTER_OTP_DIGIT = 'Enter 4 Digits Code';
+  static const String ENTER_NEW_EMAIL = 'Enter New Email';
+  static const String ENTER_NEW_PHONE = 'Enter New Phone No';
   static const String OTP_DESC =
       'Set the new password for your account so you can login and access all the features.';
   static const String PHONE_NUMBER_DESC =
       'Enter your phone number for the verification process, we will send 4 digits code to your number.';
+
+  static const String EMAIL_DESC =
+      'Enter your email address for the verification process, we will send 4 digits code to your email.';
   static const String CREATE_AN_ACCOUNT_OR =
       'Create account or sign in to start saving!';
-  static const String CREATE_AN_ACCOUNT = 'Create an account';
+  static const String CREATE_AN_ACCOUNT = 'Create Account';
   static const String CREATE_AN_ACCOUNT_AND =
       'Create an account and get unlimited access to or app features!';
   static const String LOGIN_TO_MY_ACCOUNT = 'Login to my account';
   static const String FORGET_PASSWORD = 'Forgot password?';
   static const String DIDNT_RECEIVE = ' Didn\'t receive the code?';
   static const String RESEND = 'Resend';
+  static const String SEND = 'Send';
   static const String SIGN_IN = 'Sign In';
   static const String YES = 'Yes';
   static const String NO = 'No';
@@ -366,6 +378,8 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String DONE = 'Done';
   static const String GET_STARTED = 'Get Started';
   static const String SETTING = 'Setting';
+  static const String FILTER = 'Filter';
+  static const String FILTER_YOUR = 'Filter your save coupons result';
   static const String MANAGE_YOUR_ACCOUNT_SETTING = 'Manage your account setting';
   static const String UPDATE_YOUR_PASSWORD = 'Update your password';
   static const String ALL_NOTIIFICATION_SHOW_HERE = 'All notification show here\'s';
@@ -378,7 +392,7 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String REVIEWS = 'Reviews';
   static const String GO_BACK_TO_OFFER = 'Go Back To Offer';
   static const String REDEEM_MESSAGE_TEXT = 'Sed ut perspiciatis omnis iste natus error sit valup tatem accus antiudm dolasor emque laudan tb eatae vitaae suant explicabo.';
-  static const String GUEST_LOGIN = 'Guest Log In';
+  static const String GUEST_LOGIN = 'Guest Sign In';
   static const String FAV_POP_UP_TEXT = 'This offer has been marked Favorite!';
   static const String ALREADY_HAVE_AN_ACCOUNT =
       'Already have an account, sign in to continue!';

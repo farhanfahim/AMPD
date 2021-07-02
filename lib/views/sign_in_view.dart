@@ -144,7 +144,7 @@ class _SignInViewState extends State<SignInView> {
                                   fontSize: 12.0,
                                   color: AppColors.COLOR_BLACK,
                                   fontFamily: AppFonts.POPPINS_MEDIUM,
-                                  fontWeight: FontWeight.w400),
+                                  fontWeight: FontWeight.w600),
                             ),
                           ),
                         )),

@@ -17,7 +17,7 @@ class _SplashViewState extends State<SplashView> {
     // TODO: implement initState
     super.initState();
     Timer(Duration(seconds: 3),
-            () => Navigator.pushReplacementNamed(context, AppRoutes.WELCOME_VIEW));
+            () =>  Navigator.pushNamed(context, AppRoutes.FILTER_VIEW));
   }
   @override
   Widget build(BuildContext context) {

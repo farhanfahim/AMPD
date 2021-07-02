@@ -263,6 +263,78 @@ showBottomSheetWidget(
       });
 }
 
+showProfilePhotoBottomSheetWidget(
+  BuildContext context,
+  String title,
+  String desc,
+  Widget widget,
+  ValueChanged<BuildContext> onTap,
+) {
+  showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: AppColors.WHITE_COLOR,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      context: context,
+      builder: (BuildContext bc) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter state) {
+            return SingleChildScrollView(
+              child: InkWell(
+                  child: Container(
+                margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    SvgPicture.asset(
+                      AppImages.BOTTOM_SHEET,
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      title,
+                      style:
+                          AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                    ),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 25.0,
+                          ),
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              desc,
+                              textAlign: TextAlign.center,
+                              style:
+                                  AppStyles.detailWithSmallTextSizeTextStyle()
+                                      .copyWith(fontSize: 12.0),
+                            ),
+                          ),
+                        )),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    widget,
+                    SizedBox(
+                      height: 25.0,
+                    ),
+                  ],
+                ),
+              )),
+            );
+          }),
+        );
+      });
+}
+
 showiOSBirthdayDatePicker(BuildContext context, bool isAllowFutureDates,
     bool isAllowPastDates, Function onConfirm) {
   DatePicker.showDatePicker(context,
@@ -1023,8 +1095,11 @@ Widget appBar(
     {BuildContext context,
     String title,
     Function onBackClick,
+    Function onActionClick,
     Color iconColor,
-    bool hasLeading = true}) {
+    bool hasLeading = true,
+    bool showAction = false,
+    String actionText}) {
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
@@ -1052,6 +1127,24 @@ Widget appBar(
             ),
           )
         : Container(),
+    actions: <Widget>[
+      showAction
+          ? Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                  onTap: () {
+                    onActionClick();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:20.0),
+                    child: Text(
+                      actionText,
+                      style: AppStyles.blackWithBoldFontTextStyle(context, 12.0)
+                          .copyWith(fontWeight: FontWeight.w400).copyWith(color: AppColors.BLUE_COLOR),
+                    ),
+                  )))
+          : Container()
+    ],
   );
 }
 

@@ -317,7 +317,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                 }
               },
               controller: emailController,
-              keyboardType: TextInputType.visiblePassword,
+              keyboardType: TextInputType.emailAddress,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(emailValidation),
               ],
@@ -329,9 +329,14 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                     .hasMatch(email);
                 if (emailValid) {
-                  _isEmailValid = true;
+
+                  setState(() {
+                    _isEmailValid = true;
+                  });
                 } else {
-                  _isEmailValid = false;
+                  setState(() {
+                    _isEmailValid = false;
+                  });
                 }
                 FocusScope.of(context).requestFocus(passwordNode);
               },

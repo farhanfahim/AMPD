@@ -12,6 +12,7 @@ class AppColors {
   static const Color YELLOW_COLOR = Color(0xffF4AE00);
   static const Color WHITE_COLOR = Color(0xffFFFFFF);
   static const Color BLUE_COLOR = Color(0xff2491EB);
+  static const Color AVATAR_BORDER_COLOR = Color(0xffE5F1FC);
 //  static const Color GREY_COLOR = Color(0xffE8EBEC);
   static const Color APP_PRIMARY_COLOR = Colors.blueAccent;
 

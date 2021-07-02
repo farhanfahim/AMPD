@@ -1,9 +1,12 @@
 
 
 import 'package:ampd/views/dashboard_view.dart';
+import 'package:ampd/views/edit_profile_view.dart';
+import 'package:ampd/views/filter_view.dart';
 import 'package:ampd/views/home_view.dart';
 import 'package:ampd/views/change_password_view.dart';
 import 'package:ampd/views/create_an_account_view.dart';
+import 'package:ampd/views/my_profile_view.dart';
 import 'package:ampd/views/notifications_view.dart';
 import 'package:ampd/views/qr_scan_view.dart';
 import 'package:ampd/views/redeem_message_view.dart';
@@ -30,6 +33,9 @@ class AppRoutes {
   static const String REVIEWS_VIEW = "/reviews_view";
   static const String HOME_VIEW = "/home_view";
   static const String DASHBOARD_VIEW = "/dashboard_view";
+  static const String EDIT_PROFILE_VIEW = "/edit_profile_view";
+  static const String MY_PROFILE_VIEW = "/my_profile_view";
+  static const String FILTER_VIEW = "/filter_view";
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
 
@@ -55,7 +61,32 @@ class AppRoutes {
          );
        }
 
-     case WELCOME_VIEW:
+
+      case EDIT_PROFILE_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => EditProfileView(),
+          );
+        }
+
+      case FILTER_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => FilterView(),
+          );
+        }
+
+      case MY_PROFILE_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => MyProfileView(),
+          );
+        }
+
+      case WELCOME_VIEW:
        {
          return MaterialPageRoute<void>(
            settings: routeSettings,
