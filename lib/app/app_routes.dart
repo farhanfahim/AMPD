@@ -1,5 +1,6 @@
 
 
+import 'package:ampd/views/about.dart';
 import 'package:ampd/views/dashboard_view.dart';
 import 'package:ampd/views/edit_profile_view.dart';
 import 'package:ampd/views/filter_view.dart';
@@ -10,10 +11,13 @@ import 'package:ampd/views/my_profile_view.dart';
 import 'package:ampd/views/notifications_view.dart';
 import 'package:ampd/views/qr_scan_view.dart';
 import 'package:ampd/views/redeem_message_view.dart';
+import 'package:ampd/views/saved_coupon_1_view.dart';
+import 'package:ampd/views/saved_coupon_2_view.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/views/reviews_view.dart';
 import 'package:ampd/views/sign_in_view.dart';
 import 'package:ampd/views/splash_view.dart';
+import 'package:ampd/views/terms_conditions.dart';
 import 'package:ampd/views/welcome_view.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +40,11 @@ class AppRoutes {
   static const String EDIT_PROFILE_VIEW = "/edit_profile_view";
   static const String MY_PROFILE_VIEW = "/my_profile_view";
   static const String FILTER_VIEW = "/filter_view";
+  static const String SAVED_COUPONS_1 = "/saved_coupon_1_view";
+  static const String SAVED_COUPONS_2 = "/saved_coupon_2_view";
+  static const String TERMS_CONDITIONS = "/terms_conditions_view";
+  static const String ABOUT = "/about_view";
+
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
 
@@ -78,6 +87,23 @@ class AppRoutes {
           );
         }
 
+      case TERMS_CONDITIONS:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => TermsConditionsView(),
+          );
+        }
+
+
+      case ABOUT:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => AboutView(),
+          );
+        }
+
       case MY_PROFILE_VIEW:
         {
           return MaterialPageRoute<void>(
@@ -85,6 +111,25 @@ class AppRoutes {
             builder: (BuildContext context) => MyProfileView(),
           );
         }
+
+      case SAVED_COUPONS_2:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => SavedCoupons2View(),
+          );
+        }
+
+
+      case SAVED_COUPONS_1:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => SavedCoupons1View(),
+          );
+        }
+
+
 
       case WELCOME_VIEW:
        {

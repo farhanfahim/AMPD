@@ -22,22 +22,23 @@ class AppStyles {
 
   static TextStyle unselectedTabTextStyle(){
     return TextStyle(
-      fontSize: 12.0.sp,
-      color: AppColors.UNSELECTED_COLOR,
+      fontSize: 9.0.sp,
+
+      color: AppColors.BLUE_COLOR,
       fontFamily: AppFonts.POPPINS,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w600,
     );
   }
 
   static TextStyle staticLabelsTextStyle(BuildContext context) {
-    return AppStyles.blackWithSemiBoldFontTextStyle(context, 13.0.sp).copyWith(
+    return AppStyles.blackWithSemiBoldFontTextStyle(context, 10.0.sp).copyWith(
         fontWeight: FontWeight.w400, color: AppColors.APP_TEXT2_COLOR);
   }
 
   static TextStyle selectedTabTextStyle(){
     return TextStyle(
-      fontSize: 12.0.sp,
-      color: AppColors.ACCENT_COLOR,
+      fontSize: 9.0.sp,
+      color: AppColors.WHITE_COLOR,
       fontFamily: AppFonts.POPPINS,
       fontWeight: FontWeight.w600,
     );

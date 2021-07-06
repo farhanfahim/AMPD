@@ -41,7 +41,9 @@ class _EditProfileViewState extends State<EditProfileView> {
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
+  TextEditingController editableEmailController = new TextEditingController();
   TextEditingController numberController = new TextEditingController();
+  TextEditingController editableNumberController = new TextEditingController();
 
   int firstNameValidation = AppConstants.NAME_VALIDATION;
   int lastNameValidation = AppConstants.NAME_VALIDATION;
@@ -71,6 +73,14 @@ class _EditProfileViewState extends State<EditProfileView> {
   IconData checkIconData = Icons.check;
 
   File _image = null;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    emailController.text = "YusufNahass@email.com";
+    numberController.text = "(800) 362-9239";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -451,7 +461,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                 right: 40.0,
                 child: GestureDetector(
                   onTap: (){
-                    emailController.text = "YusufNahass@email.com";
+
                     showEmailBottomSheet(context);
                   },
                   child: Text(
@@ -529,7 +539,7 @@ class _EditProfileViewState extends State<EditProfileView> {
           right: 40.0,
           child: GestureDetector(
             onTap: (){
-              numberController.text = "(800) 362-9239";
+
               showPhoneNoBottomSheet(context);
             },
             child: Text(
@@ -561,7 +571,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             },
             child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: _enabled,
+              enabled: false,
               cursorColor: AppColors.ACCENT_COLOR,
               onChanged: (String newVal) {
                 if (newVal.length <= numberValidation) {
@@ -621,7 +631,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             },
             child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: _enabled,
+              enabled: false,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
               onChanged: (String newVal) {
@@ -684,6 +694,140 @@ class _EditProfileViewState extends State<EditProfileView> {
     );
   }
 
+  Stack editableCustomEmailTextField(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          child: Focus(
+            onFocusChange: (value) {
+              if (value) {
+                editableEmailController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: editableEmailController.text.length));
+              }
+            },
+            child: TextFormField(
+//                                enableInteractiveSelection: false,
+              enabled: _enabled,
+              focusNode: emailFocus,
+              cursorColor: AppColors.ACCENT_COLOR,
+              onChanged: (String newVal) {
+                if (newVal.length <= emailValidation) {
+                  email = newVal;
+                } else {
+                  editableEmailController.value = new TextEditingValue(
+                      text: email,
+                      selection: new TextSelection(
+                          baseOffset: emailValidation,
+                          extentOffset: emailValidation,
+                          affinity: TextAffinity.downstream,
+                          isDirectional: false),
+                      composing: new TextRange(start: 0, end: emailValidation));
+                  //  _emailController.text = text;
+                }
+              },
+              controller: editableEmailController,
+              keyboardType: TextInputType.emailAddress,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(emailValidation),
+              ],
+
+
+              onFieldSubmitted: (texttt) {
+                bool emailValid = RegExp(
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    .hasMatch(email);
+                if (emailValid) {
+                  setState(() {
+                    _isEmailValid = true;
+                    emailController.text = texttt;
+                  });
+                } else {
+                  setState(() {
+                    _isEmailValid = false;
+                  });
+                }
+              },
+              textInputAction: TextInputAction.next,
+              decoration:
+              AppStyles.decorationWithBorder(AppStrings.EMAIL_ADDRESS),
+              //   , iconData, (){
+              //
+              // }),
+              style: AppStyles.inputTextStyle(context),
+            ),
+          ),
+        ),
+        _isEmailValid
+            ? Positioned(
+          top: 5.0,
+          bottom: 0.0,
+          right: 35.0,
+          child: Icon(
+            checkIconData,
+            color: AppColors.BLUE_COLOR,
+          ),
+        )
+            : Container(),
+      ],
+    );
+  }
+
+  Stack editableCustomPhoneNoWidget(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          child: Focus(
+            onFocusChange: (value) {
+              if (value) {
+                editableNumberController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: editableNumberController.text.length));
+              }
+            },
+            child: TextFormField(
+//                                enableInteractiveSelection: false,
+              enabled: _enabled,
+              cursorColor: AppColors.ACCENT_COLOR,
+              onChanged: (String newVal) {
+                if (newVal.length <= numberValidation) {
+                  phoneNo = newVal;
+                } else {
+                  editableNumberController.value = new TextEditingValue(
+                      text: phoneNo,
+                      selection: new TextSelection(
+                          baseOffset: numberValidation,
+                          extentOffset: numberValidation,
+                          affinity: TextAffinity.downstream,
+                          isDirectional: false),
+                      composing:
+                      new TextRange(start: 0, end: numberValidation));
+                  //  _emailController.text = text;
+                }
+              },
+              controller: editableNumberController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(numberValidation),
+              ],
+
+              onFieldSubmitted: (texttt) {
+                numberController.text = texttt;
+              },
+              textInputAction: TextInputAction.next,
+              decoration:
+              AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
+              //   , iconData, (){
+              //
+              // }),
+              style: AppStyles.inputTextStyle(context),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   showPhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
 
@@ -703,7 +847,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   showUpdatePhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.ENTER_NEW_PHONE,
-        "", phoneNoWidget(context), (bc3) {
+        "", editableCustomPhoneNoWidget(context), (bc3) {
           Navigator.pop(bc3);
         }, AppStrings.CHANGE, false);
   }
@@ -726,7 +870,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   showUpdateEmailBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.ENTER_NEW_EMAIL,
-        "", emailWidget(context), (bc3) {
+        "", editableCustomEmailTextField(context), (bc3) {
           Navigator.pop(bc3);
 
         }, AppStrings.CHANGE, false);
@@ -871,8 +1015,6 @@ class _EditProfileViewState extends State<EditProfileView> {
           );
         });
   }
-
-
 
 
 }
