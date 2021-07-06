@@ -4,10 +4,9 @@ import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/views/home_view.dart';
-import 'package:ampd/views/saved_coupons_view.dart';
+import 'package:ampd/views/saved_coupon_1_view.dart';
 import 'package:ampd/views/side_menu_view.dart';
 import 'package:ampd/widgets/widgets.dart';
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -43,7 +42,7 @@ class _DashboardViewState extends State<DashboardView> {
   void initState() {
     _selectedPageIndex = 1;
     listOfMainScreens = [
-      SavedCouponsView(),
+      SavedCoupons1View(),
       HomeView(widget.isGuestLogin),
       SideMenuView(),
     ];
