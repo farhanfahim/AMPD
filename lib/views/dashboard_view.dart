@@ -80,7 +80,7 @@ class _DashboardViewState extends State<DashboardView> {
 
     final appBar1 = appBar(
         title:"Home",onBackClick: (){
-          Navigator.of(context).pop();
+
         },
         iconColor:AppColors.WHITE_COLOR,
         hasLeading: _selectedPageIndex == 1? true : false

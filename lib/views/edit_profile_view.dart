@@ -880,7 +880,7 @@ class _EditProfileViewState extends State<EditProfileView> {
     showModalBottomSheet(
         backgroundColor: AppColors.WHITE_COLOR,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.only(topRight: Radius.circular(30.0),topLeft: Radius.circular(30.0)),
         ),
         context: context,
         builder: (BuildContext bc) {

@@ -19,10 +19,12 @@ class SettingView extends StatefulWidget {
 }
 
 class _SettingState extends State<SettingView> {
+  bool pushNotificationSwitch = false;
+  int a = 0;
+  double min=0.0,max=10.0;
   @override
   Widget build(BuildContext context) {
-    bool pushNotificationSwitch = false;
-    int a = 0;
+
     return Scaffold(
         appBar: appBar(
             title: "",
@@ -174,7 +176,7 @@ class _SettingState extends State<SettingView> {
                           Container(
                             margin: EdgeInsets.only(top: 10, left: 0, right: 0),
                             child: FlutterSlider(
-                              values: [00, 10],
+                              values: [min, max],
                               rangeSlider: true,
                               tooltip: FlutterSliderTooltip(
                                 format: (String value) {
@@ -192,6 +194,7 @@ class _SettingState extends State<SettingView> {
                                   fontFamily: AppFonts.POPPINS,
                                   fontWeight: FontWeight.w600,
                                 ),
+
                                 alwaysShowTooltip: true,
                                 direction: FlutterSliderTooltipDirection.top,
                                 positionOffset:
@@ -199,6 +202,12 @@ class _SettingState extends State<SettingView> {
                               ),
                               max: 20,
                               min: 0,
+
+                              onDragging: (handlerIndex, lowerValue, upperValue) {
+                                min = lowerValue;
+                                max = upperValue;
+                                setState(() {});
+                              },
                               trackBar: FlutterSliderTrackBar(
                                 inactiveTrackBarHeight: 6,
                                 activeTrackBarHeight: 6,

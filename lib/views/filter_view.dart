@@ -27,10 +27,9 @@ class _FilterState extends State<FilterView> {
   DateTime selectedDate = DateTime.now();
   bool isDateSelected = false;
   String fromDate="To Expiration",toDate="From Expiration";
+  double min=0.0,max=10.0,min1=0.0,max1=500.0;
   @override
   Widget build(BuildContext context) {
-    bool pushNotificationSwitch = false;
-    int a  = 0;
 
 
     return Scaffold(
@@ -174,7 +173,7 @@ class _FilterState extends State<FilterView> {
                                     Container(
                                       margin: EdgeInsets.only(top: 10, left: 0, right: 0),
                                       child: FlutterSlider(
-                                        values: [00, 1000],
+                                        values: [min1, max1],
                                         rangeSlider: true,
                                         tooltip: FlutterSliderTooltip(
                                           format: (String value) {
@@ -199,6 +198,12 @@ class _FilterState extends State<FilterView> {
                                         ),
                                         max: 1000,
                                         min: 0,
+
+                                        onDragging: (handlerIndex, lowerValue, upperValue) {
+                                          min1 = lowerValue;
+                                          max1 = upperValue;
+                                          setState(() {});
+                                        },
                                         trackBar: FlutterSliderTrackBar(
                                           inactiveTrackBarHeight: 6,
                                           activeTrackBarHeight: 6,
@@ -289,7 +294,7 @@ class _FilterState extends State<FilterView> {
                                     Container(
                                       margin: EdgeInsets.only(top: 10, left: 0, right: 0),
                                       child: FlutterSlider(
-                                        values: [00, 10],
+                                        values: [min, max],
                                         rangeSlider: true,
                                         tooltip: FlutterSliderTooltip(
                                           format: (String value) {
@@ -314,6 +319,12 @@ class _FilterState extends State<FilterView> {
                                         ),
                                         max: 20,
                                         min: 0,
+
+                                        onDragging: (handlerIndex, lowerValue, upperValue) {
+                                          min = lowerValue;
+                                          max = upperValue;
+                                          setState(() {});
+                                        },
                                         trackBar: FlutterSliderTrackBar(
                                           inactiveTrackBarHeight: 6,
                                           activeTrackBarHeight: 6,

@@ -272,27 +272,32 @@ class _SideMenuState extends State<SideMenuView> {
                   Expanded(flex:1,child: Container()),
                   Expanded(
                     flex: 1,
-                    child: Container(
+                    child: GestureDetector(
+                      onTap: (){
+
+                      },
+                      child: Container(
 
 
-                      decoration: ShapeDecoration(
-                        color: AppColors.RED_COLOR2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30.0),
-                              bottomLeft: Radius.circular(30.0)),
+                        decoration: ShapeDecoration(
+                          color: AppColors.RED_COLOR2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30.0),
+                                bottomLeft: Radius.circular(30.0)),
+                          ),
                         ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 15,bottom: 15),
-                        child: Text(
-                          "LOG OUT",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 16.0,
-                              color: AppColors.WHITE_COLOR,
-                              fontFamily: AppFonts.POPPINS_MEDIUM,
-                              fontWeight: FontWeight.w400),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15,bottom: 15),
+                          child: Text(
+                            "LOG OUT",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: AppColors.WHITE_COLOR,
+                                fontFamily: AppFonts.POPPINS_MEDIUM,
+                                fontWeight: FontWeight.w400),
+                          ),
                         ),
                       ),
                     ),
