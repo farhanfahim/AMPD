@@ -164,7 +164,7 @@ showBottomSheetWidget(
       isScrollControlled: true,
       backgroundColor: AppColors.WHITE_COLOR,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.only(topRight: Radius.circular(30.0),topLeft: Radius.circular(30.0)),
       ),
       context: context,
       builder: (BuildContext bc) {
@@ -274,7 +274,7 @@ showProfilePhotoBottomSheetWidget(
       isScrollControlled: true,
       backgroundColor: AppColors.WHITE_COLOR,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.only(topRight: Radius.circular(30.0),topLeft: Radius.circular(30.0)),
       ),
       context: context,
       builder: (BuildContext bc) {
@@ -1099,6 +1099,7 @@ Widget appBar(
     Color iconColor,
     bool hasLeading = true,
     bool showAction = false,
+    bool showActionIcon = false,
     String actionText}) {
   return AppBar(
     backgroundColor: Colors.transparent,
@@ -1128,6 +1129,23 @@ Widget appBar(
           )
         : Container(),
     actions: <Widget>[
+
+      showActionIcon
+          ? Padding(
+            padding: const EdgeInsets.only(top:10.0),
+            child: Container(
+              margin: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                child: SvgPicture.asset(
+                  AppImages.NOTIFICATION,
+                ),
+                onTap: (){
+                  onActionClick();
+                },
+              ),
+            ),
+          )
+          : Container(),
       showAction
           ? Padding(
               padding: EdgeInsets.only(right: 20.0),

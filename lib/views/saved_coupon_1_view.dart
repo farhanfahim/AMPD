@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:ampd/app/app_routes.dart';
+import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/data/model/SavedCouponsModel.dart';
 import 'package:ampd/views/setting_view.dart';
@@ -12,6 +13,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/appresources/app_colors.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
 class SavedCoupons1View extends StatefulWidget {
@@ -426,15 +428,17 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
 
         ),
 
-        IconButton(
-            icon: Icon(
-              Icons.filter_alt_outlined,
-              size: 24.0,
-              color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT, // add custom icons also
+        Container(
+          margin: EdgeInsets.only(right: 20.0),
+          child: GestureDetector(
+            child: SvgPicture.asset(
+              AppImages.FILTER,
             ),
-            onPressed: (){Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);}
-
-        )
+            onTap: (){
+              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+            },
+          ),
+        ),
       ],
     );
   }
@@ -442,9 +446,9 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   void _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,);
+        this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
         this._appBarTitle = new TextFormField(
-          cursorColor: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,
+          cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
           keyboardType: TextInputType.text,
           decoration: new InputDecoration(
               border: InputBorder.none,
@@ -456,13 +460,13 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
         );
 
       } else {
-        this._searchIcon = new Icon(Icons.search ,color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,);
+        this._searchIcon = new Icon(Icons.search ,color: AppColors.APP__DETAILS_TEXT_COLOR,);
         this._appBarTitle = new Text(
           '',
           style: AppStyles.blackWithDifferentFontTextStyle(
               context, 15.0)
               .copyWith(
-              color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+              color: AppColors.APP__DETAILS_TEXT_COLOR),
         );
         filteredNames = names;
         _filter.clear();

@@ -4,6 +4,8 @@ import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 class CustomRatingDialog extends StatefulWidget {
@@ -13,6 +15,7 @@ class CustomRatingDialog extends StatefulWidget {
   String buttonText1;
   Function onPressed1;
   Widget child;
+  Widget ratingBar;
   BuildContext contex;
 
   CustomRatingDialog(
@@ -22,6 +25,7 @@ class CustomRatingDialog extends StatefulWidget {
       this.child,
       this.contex,
       this.subTitle = "",
+        this.ratingBar,
       this.showImage});
 
   @override
@@ -69,7 +73,18 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                           child: Text(
                             widget.subTitle,
                             style: AppStyles.blackWithSemiBoldFontTextStyle(
-                                context, 18.0),
+                                context, 20.0),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+
+                        Container(
+
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          child: Text(
+                            widget.title,
+                            style: AppStyles.blackWithSemiBoldFontTextStyle(
+                                context, 15.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -83,7 +98,18 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                               )
                             : Container(),
                         SizedBox(
-                          height: 35.0,
+                          height: 30.0,
+                        ),
+
+
+                        Container(
+                          child: Center(
+                            child: widget.ratingBar,
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 40.0,
                         ),
                         Container(
                           padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
@@ -93,7 +119,7 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                                   borderRadius: BorderRadius.circular(10.0),
                                   side: BorderSide(
                                       width: 0.5,
-                                      color: AppColors.LIGHT_GREY_TEXT_COLOR))),
+                                      color: AppColors.LIGHT_GREY_ARROW_COLOR))),
                           child: TextField(
                             keyboardType: TextInputType.multiline,
                             maxLength: 150,

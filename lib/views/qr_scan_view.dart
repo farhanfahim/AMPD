@@ -9,10 +9,13 @@ import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
+import 'package:ampd/widgets/rating_dialog_view.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 class QrScanView extends StatefulWidget {
@@ -113,7 +116,23 @@ class _QrScanState extends State<QrScanView> {
                   ),
                   GradientButton(
                     onTap: () {
-                      Navigator.of(context).pop();
+           /*           Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context1) {
+                              return CustomRatingDialog(
+                                contex: context,
+                                subTitle: "How was Starbucks?",
+                                title: "Your feedback will help us improve our services.",
+                                ratingBar: RatingBarWidget(),
+                                buttonText1: AppStrings.SUBMIT,
+                                onPressed1: () {
+                                  Navigator.pop(context1);
+                                },
+                                showImage: false,
+                              );
+                            });*/
+
                     },
                     text: AppStrings.DONE,
                   ),
@@ -125,6 +144,39 @@ class _QrScanState extends State<QrScanView> {
             ),
           ),
         ));
+  }
+}
+
+class RatingBarWidget extends StatelessWidget {
+  const RatingBarWidget({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RatingBar(
+      onRatingUpdate: null,
+      ratingWidget: RatingWidget(
+          full: Icon(
+            FontAwesomeIcons.solidStar,
+            color: AppColors.GREEN_BRIGHT_COLOR,
+          ),
+          half: Icon(
+            FontAwesomeIcons.starHalfAlt,
+            color: AppColors.GREEN_BRIGHT_COLOR,
+          ),
+          empty: Icon(
+            FontAwesomeIcons.star,
+//                                    color: AppColors.PALE_YELLOW_COLOR,
+            color: AppColors.GREY_COLOR,
+          )
+      ),
+      itemSize: 22.0,
+      initialRating: 4.0,
+      allowHalfRating: true,
+      glow: false,
+      itemPadding: EdgeInsets.only(left: 5.0),
+    );
   }
 }
 
@@ -142,7 +194,7 @@ class CountDownWidget extends StatelessWidget {
             children: [
               Container(
                 constraints: BoxConstraints(
-                    maxWidth: 35.0, minHeight: 70.0),
+                    maxWidth: 38.0, minHeight: 70.0),
                 alignment: Alignment.center,
                 decoration: ShapeDecoration(
                     color: AppColors.COUNTDOWN_COLOR_LIGHT1,
@@ -155,7 +207,7 @@ class CountDownWidget extends StatelessWidget {
               ),
               Container(
                 constraints: BoxConstraints(
-                    maxWidth: 35.0, minHeight: 32.0),
+                    maxWidth: 38.0, minHeight: 32.0),
                 alignment: Alignment.center,
                 decoration: ShapeDecoration(
                     color: AppColors.COUNTDOWN_COLOR_LIGHT2,
@@ -171,7 +223,7 @@ class CountDownWidget extends StatelessWidget {
                 child: Align(
                     alignment: Alignment.center,
                   child: Text(
-                    "1",
+                    "3",
                     style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
                     ,
                   ),

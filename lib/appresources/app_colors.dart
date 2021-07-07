@@ -43,7 +43,7 @@ class AppColors {
   static const Color APP_TEXT_COLOR2 = Color(0xFF5A5A5A);
   static const Color APP_TEXT2_COLOR = Color(0xFF707070);
   // static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF989898);
-  static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF71828A);
+  static const Color APP__DETAILS_TEXT_COLOR = Color(0xFF77879E);
   static const Color APP__DETAILS_TEXT_COLOR_LIGHT = Color(0xFFAAB0C3);
   static const Color COUNTDOWN_COLOR_LIGHT1 = Color(0xFF8492A7);
   static const Color COUNTDOWN_COLOR_LIGHT2 = Color(0xFF77879E);
@@ -77,7 +77,7 @@ class AppColors {
   static const Color LIGHT_GREY_ARROW_COLOR = Color(0xFFCDCDD8);
   static const Color LIGHT_GREY_TEXT_COLOR = Color(0xFF8E9CA2);
 
-  static const Color RED_COLOR2= Color(0xFFFF4D4D);
+  static const Color RED_COLOR2= Color(0xFFF52E57);
   static const Color APP_MAIN_SPLASH_COLOR_LIGHT = Color(0xFFB4DBB8);
   static const Color INDICTOR_UNSELECT = Color(0xFFAAB7A5);
 

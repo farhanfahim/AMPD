@@ -16,6 +16,9 @@ class AppImages {
 
   static const String NO_IMAGE_PLACEHOLDER = BASE_IMAGE_PATH + "noImage.png";
   static const String MAIN_LOGO = BASE_IMAGE_PATH + "logo.svg";
+  static const String FILTER = BASE_IMAGE_PATH + "filter.svg";
+  static const String NOTIFICATION = BASE_IMAGE_PATH + "notification.svg";
+  static const String CALENDER = BASE_IMAGE_PATH + "calendar.svg";
   static const String FAV_ICON = BASE_IMAGE_PATH + "fav.svg";
   static const String QR_CODE = BASE_IMAGE_PATH + "qr_code.svg";
   static const String QR_IMAGE = BASE_IMAGE_PATH + "qr_image.svg";

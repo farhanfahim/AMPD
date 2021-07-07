@@ -22,7 +22,7 @@ class _SettingState extends State<SettingView> {
   @override
   Widget build(BuildContext context) {
     bool pushNotificationSwitch = false;
-    int a  = 0;
+    int a = 0;
     return Scaffold(
         appBar: appBar(
             title: "",
@@ -33,75 +33,24 @@ class _SettingState extends State<SettingView> {
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                children: [
-                  Header(
-                      heading1: AppStrings.SETTING,
-                      heading2: AppStrings.MANAGE_YOUR_ACCOUNT_SETTING),
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          AppStrings.NOTIFICATIONS,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              color: AppColors.COLOR_BLACK,
-                              fontFamily: AppFonts.POPPINS_MEDIUM,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        Container(
-                          child: CupertinoSwitch(
-                            activeColor: AppColors.BLUE_COLOR,
-                            value: pushNotificationSwitch,
-                            onChanged: (value) {
-                              print(value);
-                              setState(() {
-                                pushNotificationSwitch = value;
-                              });
-                            },
-                            // activeColor: Colors.green,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  divider(),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      //crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    children: [
+                      Header(
+                          heading1: AppStrings.SETTING,
+                          heading2: AppStrings.MANAGE_YOUR_ACCOUNT_SETTING),
+                      SizedBox(
+                        height: 50.0,
+                      ),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Change Password",
-                              style: AppStyles.blackWithDifferentFontTextStyle(
-                                      context, 12.0)
-                                  .copyWith(
-                                      color: AppColors
-                                          .APP__DETAILS_TEXT_COLOR_LIGHT),
-                            ),
-                            SizedBox(
-                              height: 6.0,
-                            ),
-                            Text(
-                              "Update your password",
+                              AppStrings.NOTIFICATIONS,
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   fontSize: 14.0,
@@ -109,110 +58,194 @@ class _SettingState extends State<SettingView> {
                                   fontFamily: AppFonts.POPPINS_MEDIUM,
                                   fontWeight: FontWeight.w400),
                             ),
+                            Container(
+                              child: CupertinoSwitch(
+                                activeColor: AppColors.BLUE_COLOR,
+                                value: pushNotificationSwitch,
+                                onChanged: (value) {
+                                  print(value);
+                                  setState(() {
+                                    pushNotificationSwitch = value;
+                                  });
+                                },
+                                // activeColor: Colors.green,
+                              ),
+                            )
                           ],
                         ),
-                        Spacer(),
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.pushNamed(context, AppRoutes.CHANGE_PASSWORD_VIEW);
-                          },
-                          child: Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 16.0,
-                            color: AppColors.COLOR_BLACK, // add custom icons also
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      divider(),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Container(
+                        width: double.maxFinite,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          //crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Change Password",
+                                  style: AppStyles.blackWithDifferentFontTextStyle(
+                                          context, 12.0)
+                                      .copyWith(
+                                          color: AppColors
+                                              .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                ),
+                                SizedBox(
+                                  height: 6.0,
+                                ),
+                                Text(
+                                  "Update your password",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: AppColors.COLOR_BLACK,
+                                      fontFamily: AppFonts.POPPINS_MEDIUM,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, AppRoutes.CHANGE_PASSWORD_VIEW);
+                              },
+                              child: Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 16.0,
+                                color:
+                                    AppColors.COLOR_BLACK, // add custom icons also
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Container(
+                        width: double.maxFinite,
+                        child: Text(
+                          "Set Radius",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              color: AppColors.COLOR_BLACK,
+                              fontFamily: AppFonts.POPPINS_MEDIUM,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+
+                    ],
+                  ),
+                ),
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+
+                    children: [
+                      Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right:15.0),
+                              child: Text(
+                                "20\nmile",
+                                style: AppStyles.blackWithBoldFontTextStyle(
+                                    context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                textAlign: TextAlign.center,
+
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    child: Text(
-                      "Set Radius",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          fontSize: 14.0,
-                          color: AppColors.COLOR_BLACK,
-                          fontFamily: AppFonts.POPPINS_MEDIUM,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 50, left: 0, right: 0),
-                    child: FlutterSlider(
+                          Container(
+                            margin: EdgeInsets.only(top: 10, left: 0, right: 0),
+                            child: FlutterSlider(
+                              values: [00, 10],
+                              rangeSlider: true,
+                              tooltip: FlutterSliderTooltip(
+                                format: (String value) {
+                                  String newValue = value;
+                                  if (newValue.contains(".0")) {
+                                    newValue.replaceAll(".0", "123");
+                                    return newValue + ' \nmile ';
+                                  } else {
+                                    return "0" + ' \nmile ';
+                                  }
+                                },
+                                textStyle: TextStyle(
+                                  color: AppColors.BLUE_COLOR,
+                                  fontSize: 11.0,
+                                  fontFamily: AppFonts.POPPINS,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                alwaysShowTooltip: true,
+                                direction: FlutterSliderTooltipDirection.top,
+                                positionOffset:
+                                FlutterSliderTooltipPositionOffset(top: -30),
+                              ),
+                              max: 20,
+                              min: 0,
+                              trackBar: FlutterSliderTrackBar(
+                                inactiveTrackBarHeight: 6,
+                                activeTrackBarHeight: 6,
+                                activeTrackBar:
+                                BoxDecoration(color: AppColors.BLUE_COLOR),
+                              ),
+                              handler: FlutterSliderHandler(
+                                decoration: BoxDecoration(),
+                                child: Container(
+                                  height: 20.0,
+                                  width: 20.0,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.BLUE_COLOR,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  padding: EdgeInsets.all(5),
+                                ),
+                              ),
+                              rightHandler: FlutterSliderHandler(
+                                decoration: BoxDecoration(),
+                                child: Container(
+                                  height: 20.0,
+                                  width: 20.0,
+                                  decoration: BoxDecoration(
+                                      color: AppColors.BLUE_COLOR,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  padding: EdgeInsets.all(5),
+                                ),
+                              ),
 
-                      values: [00, 10],
-                      rangeSlider: true,
-                      tooltip: FlutterSliderTooltip(
-                        format: (String value) {
+                              /* onDragging: (handlerIndex, lowerValue, upperValue) {
+                            _lowerValue = lowerValue;
+                            _upperValue = upperValue;
+                            setState(() {
 
-                          String newValue = value;
-                          if(newValue.contains(".0")){
-                            newValue.replaceAll(".0", "123");
-                            return newValue + ' \nmile ';
-                          }else{
-                            return "0" + ' \nmile ';
-                          }
-
-                        },
-                        textStyle: TextStyle(
-                          color: AppColors.BLUE_COLOR,
-                          fontSize: 11.0,
-                          fontFamily: AppFonts.POPPINS,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        alwaysShowTooltip: true,
-                        direction: FlutterSliderTooltipDirection.top,
-                        positionOffset:
-                            FlutterSliderTooltipPositionOffset(top: -30),
+                            });
+                          },*/
+                            ),
+                          ),
+                        ],
                       ),
-                      max: 20,
-                      min: 0,
-                      trackBar: FlutterSliderTrackBar(
-                        activeTrackBarHeight: 6,
-                        activeTrackBar:
-                            BoxDecoration(color: AppColors.BLUE_COLOR),
+                      SizedBox(
+                        height: 20.0,
                       ),
-                      handler: FlutterSliderHandler(
-                        decoration: BoxDecoration(),
-                        child: Container(
-                          height: 20.0,
-                          width: 20.0,
-                          decoration: BoxDecoration(
-                              color: AppColors.BLUE_COLOR,
-                              borderRadius: BorderRadius.circular(15)),
-                          padding: EdgeInsets.all(5),
-                        ),
-                      ),
-                      rightHandler: FlutterSliderHandler(
-                        decoration: BoxDecoration(),
-                        child: Container(
-                          height: 20.0,
-                          width: 20.0,
-                          decoration: BoxDecoration(
-                              color: AppColors.BLUE_COLOR,
-                              borderRadius: BorderRadius.circular(15)),
-                          padding: EdgeInsets.all(5),
-                        ),
-                      ),
-
-                      /* onDragging: (handlerIndex, lowerValue, upperValue) {
-                          _lowerValue = lowerValue;
-                          _upperValue = upperValue;
-                          setState(() {
-
-                          });
-                        },*/
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                ],
-              ),
+                    ],
+                  )
+                )
+              ],
             ),
           ),
         ));

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:ampd/app/app_routes.dart';
+import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/data/model/NotificationsModel.dart';
 import 'package:ampd/data/model/ReviewModel.dart';
@@ -13,6 +14,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/appresources/app_colors.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SavedCoupons2View extends StatefulWidget {
   @override
@@ -38,7 +40,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
   String _searchText = "";
   List names = new List();
   List filteredNames = new List();
-  Icon _searchIcon = new Icon(Icons.search_rounded, color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,);
+  Icon _searchIcon = new Icon(Icons.search_rounded, color: AppColors.APP__DETAILS_TEXT_COLOR,);
   Widget _appBarTitle = new Text( '' );
 
 
@@ -251,15 +253,17 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
 
         ),
 
-        IconButton(
-            icon: Icon(
-              Icons.filter_alt_outlined,
-              size: 24.0,
-              color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT, // add custom icons also
+        Container(
+          margin: EdgeInsets.only(right: 20.0),
+          child: GestureDetector(
+            child: SvgPicture.asset(
+              AppImages.FILTER,
             ),
-            onPressed: (){Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);}
-
-        )
+            onTap: (){
+              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+            },
+          ),
+        ),
       ],
     );
   }
@@ -267,9 +271,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
   void _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,);
+        this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
         this._appBarTitle = new TextFormField(
-          cursorColor: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,
+          cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
           keyboardType: TextInputType.text,
           decoration: new InputDecoration(
               border: InputBorder.none,
@@ -281,13 +285,13 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         );
 
       } else {
-        this._searchIcon = new Icon(Icons.search ,color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,);
+        this._searchIcon = new Icon(Icons.search ,color: AppColors.APP__DETAILS_TEXT_COLOR,);
         this._appBarTitle = new Text(
           '',
           style: AppStyles.blackWithDifferentFontTextStyle(
               context, 15.0)
               .copyWith(
-              color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+              color: AppColors.APP__DETAILS_TEXT_COLOR),
         );
         filteredNames = names;
         _filter.clear();

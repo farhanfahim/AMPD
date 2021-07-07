@@ -24,7 +24,13 @@ class _SideMenuState extends State<SideMenuView> {
     int a = 0;
     return Scaffold(
         appBar: appBar(
-            title: "", onBackClick: () {}, iconColor: AppColors.COLOR_BLACK),
+            title: "",
+            onBackClick: () {Navigator.of(context).pop();},
+            onActionClick: () { Navigator.pushNamed(context, AppRoutes.NOTIFICATIONS_VIEW);},
+            iconColor: AppColors.COLOR_BLACK,
+            showActionIcon: true,
+          hasLeading: false
+        ),
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
           child: Column(
