@@ -84,7 +84,7 @@ class _DashboardViewState extends State<DashboardView> {
           Navigator.of(context).pop();
         },
         iconColor:AppColors.WHITE_COLOR,
-        hasLeading: _selectedPageIndex == 1? true : false
+        hasLeading: _selectedPageIndex == 1? false : true
     );
 
     final body = PageView(
@@ -96,10 +96,10 @@ class _DashboardViewState extends State<DashboardView> {
     return Stack(
       children: [
         Scaffold(
-          appBar: _selectedPageIndex == 1? appBar1 : null,
+          // appBar: _selectedPageIndex == 1? appBar1 : null,
           body: body,
           bottomNavigationBar: Container(
-            height: 90.0,
+            height: 95.0,
             color: Colors.white,
             child: Stack(
               children: [
@@ -109,12 +109,12 @@ class _DashboardViewState extends State<DashboardView> {
                     elevation: 10.0,
                     child: Container(
                       color: Colors.white,
-                      height: 60.0,
+                      height: 65.0,
                       child: Row(
                         children: [
                           SizedBox(width: 50.0),
 
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               print('0 tapped');
                               if (!widget.isGuestLogin) {
@@ -142,7 +142,7 @@ class _DashboardViewState extends State<DashboardView> {
 
                           Spacer(),
 
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               print('2 tapped');
                               if (!widget.isGuestLogin) {
@@ -176,7 +176,7 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
 
                 Positioned(
-                  bottom: 15.0,
+                  bottom: 20.0,
                   left: 0.0,
                   right: 0.0,
                   child: Row(

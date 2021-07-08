@@ -26,6 +26,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin<HomeView>{
 
+  String _appBarTitle = 'Home';
   bool _stackFinished = false;
   List<SwipeItem> _swipeItems = <SwipeItem>[];
   MatchEngine _matchEngine;
@@ -145,6 +146,14 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
 
   @override
   Widget build(BuildContext context) {
+    final appBar1 = appBar(
+        title: _appBarTitle, onBackClick: (){
+      Navigator.of(context).pop();
+    },
+        iconColor:AppColors.WHITE_COLOR,
+        hasLeading: false
+    );
+
     final body = SafeArea(
         child: !_stackFinished? Container(
 //          height: 550,
@@ -165,12 +174,22 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                   time: _swipeItems[index].content.time,
                   coord: _swipeItems[index].content.coord,
                   locationTitle: _swipeItems[index].content.locationTitle,
+                  changeDetailTitle: (value) {
+                    setState(() {
+                      if(value) {
+                        _appBarTitle = 'Offer Details';
+                      } else {
+                        _appBarTitle = 'Home';
+                      }
+                    });
+                  },
                 ),
               );
             },
             onStackFinished: () {
               setState(() {
                 _stackFinished = true;
+                _appBarTitle = 'Home';
               });
             },
           ),
@@ -215,6 +234,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     );
 
     return Scaffold(
+      appBar: appBar1,
       body: body
     );
   }
