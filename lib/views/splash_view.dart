@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
+import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
+import 'package:ampd/appresources/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -29,10 +31,31 @@ class _SplashViewState extends State<SplashView> {
         toolbarHeight: 0.0,
       ),
       backgroundColor: AppColors.WHITE_COLOR,
-      body: Center(
-        child: SvgPicture.asset(
-          AppImages.MAIN_LOGO,
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: SvgPicture.asset(
+                AppImages.MAIN_LOGO,
+              ),
+            ),
+          ),
+
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              "Version 1.2.0",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  fontSize: 12.0,
+                  color: AppColors.COLOR_BLACK,
+                  fontFamily: AppFonts.POPPINS_MEDIUM,
+                  fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
       ),
     );
   }

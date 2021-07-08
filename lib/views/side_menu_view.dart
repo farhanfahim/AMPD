@@ -274,7 +274,7 @@ class _SideMenuState extends State<SideMenuView> {
                     flex: 1,
                     child: GestureDetector(
                       onTap: (){
-
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
                       },
                       child: Container(
 
