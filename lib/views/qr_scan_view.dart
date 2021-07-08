@@ -116,7 +116,7 @@ class _QrScanState extends State<QrScanView> {
                   ),
                   GradientButton(
                     onTap: () {
-           /*           Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
+                      Navigator.pop(context);
                         showDialog(
                             context: context,
                             builder: (BuildContext context1) {
@@ -131,7 +131,7 @@ class _QrScanState extends State<QrScanView> {
                                 },
                                 showImage: false,
                               );
-                            });*/
+                            });
 
                     },
                     text: AppStrings.DONE,

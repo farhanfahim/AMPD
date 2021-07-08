@@ -51,7 +51,7 @@ class _TermsConditionsState extends State<TermsConditionsView> {
                           horizontal: 0.0,
                         ),
                         child: Text(
-                            AppStrings.REDEEM_MESSAGE_TEXT,
+                            AppStrings.LOREM_IPSUM,
                             textAlign: TextAlign.left,
                             style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0)
                         ),

@@ -115,6 +115,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                               buttonText2: AppStrings.NO,
                               onPressed1: () {
                                 Navigator.pop(context1);
+                                Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
                               },
                               onPressed2: () {
                                 Navigator.pop(context1);
@@ -146,11 +147,13 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   @override
   Widget build(BuildContext context) {
     final body = SafeArea(
+
         child: !_stackFinished? Container(
 //          height: 550,
 //        color: Colors.yellow,
           height: double.maxFinite,
           width: double.infinity,
+
           child: SwipeCards(
             matchEngine: _matchEngine,
             itemBuilder: (BuildContext context, int index) {
@@ -179,6 +182,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
                 Opacity(
                   opacity: 0.3,
                   child: SvgPicture.asset(AppImages.IC_COUPONS, width: 110.0, height: 110.0,)

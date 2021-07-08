@@ -47,213 +47,213 @@ class _SideMenuState extends State<SideMenuView> {
                       SizedBox(
                         height: 30.0,
                       ),
-                      Container(
-                        width: double.maxFinite,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Setting",
-                                  style: AppStyles.blackWithDifferentFontTextStyle(
-                                          context, 12.0)
-                                      .copyWith(
-                                          color: AppColors
-                                              .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                ),
-                                SizedBox(
-                                  height: 6.0,
-                                ),
-                                Text(
-                                  "Manage your account setting",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: AppColors.COLOR_BLACK,
-                                      fontFamily: AppFonts.POPPINS_MEDIUM,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRoutes.SETTING_VIEW);
-                              },
-                              child: Icon(
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AppRoutes.SETTING_VIEW);
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            //crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Setting",
+                                    style: AppStyles.blackWithDifferentFontTextStyle(
+                                            context, 12.0)
+                                        .copyWith(
+                                            color: AppColors
+                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                  ),
+                                  SizedBox(
+                                    height: 6.0,
+                                  ),
+                                  Text(
+                                    "Manage your account setting",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: AppColors.COLOR_BLACK,
+                                        fontFamily: AppFonts.POPPINS_MEDIUM,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 16.0,
                                 color:
                                     AppColors.COLOR_BLACK, // add custom icons also
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: 30.0,
                       ),
-                      Container(
-                        width: double.maxFinite,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Help",
-                                  style: AppStyles.blackWithDifferentFontTextStyle(
-                                          context, 12.0)
-                                      .copyWith(
-                                          color: AppColors
-                                              .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                ),
-                                SizedBox(
-                                  height: 6.0,
-                                ),
-                                Text(
-                                  "Help and Terms of use",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: AppColors.COLOR_BLACK,
-                                      fontFamily: AppFonts.POPPINS_MEDIUM,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRoutes.TERMS_CONDITIONS);
-                              },
-                              child: Icon(
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AppRoutes.TERMS_CONDITIONS);
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            //crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Help",
+                                    style: AppStyles.blackWithDifferentFontTextStyle(
+                                            context, 12.0)
+                                        .copyWith(
+                                            color: AppColors
+                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                  ),
+                                  SizedBox(
+                                    height: 6.0,
+                                  ),
+                                  Text(
+                                    "Help and Terms of use",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: AppColors.COLOR_BLACK,
+                                        fontFamily: AppFonts.POPPINS_MEDIUM,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 16.0,
                                 color:
                                     AppColors.COLOR_BLACK, // add custom icons also
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: 30.0,
                       ),
-                      Container(
-                        width: double.maxFinite,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "My Profile",
-                                  style: AppStyles.blackWithDifferentFontTextStyle(
-                                          context, 12.0)
-                                      .copyWith(
-                                          color: AppColors
-                                              .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                ),
-                                SizedBox(
-                                  height: 6.0,
-                                ),
-                                Text(
-                                  "Manage your profile",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: AppColors.COLOR_BLACK,
-                                      fontFamily: AppFonts.POPPINS_MEDIUM,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRoutes.MY_PROFILE_VIEW);
-                              },
-                              child: Icon(
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AppRoutes.MY_PROFILE_VIEW);
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            //crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "My Profile",
+                                    style: AppStyles.blackWithDifferentFontTextStyle(
+                                            context, 12.0)
+                                        .copyWith(
+                                            color: AppColors
+                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                  ),
+                                  SizedBox(
+                                    height: 6.0,
+                                  ),
+                                  Text(
+                                    "Manage your profile",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: AppColors.COLOR_BLACK,
+                                        fontFamily: AppFonts.POPPINS_MEDIUM,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 16.0,
                                 color:
                                     AppColors.COLOR_BLACK, // add custom icons also
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
                         height: 30.0,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
+                      InkWell(
+                        onTap: (){
+                          Navigator.pushNamed(context, AppRoutes.ABOUT);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
 
-                            width: double.maxFinite,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              //crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "About us",
-                                      style: AppStyles.blackWithDifferentFontTextStyle(
-                                              context, 12.0)
-                                          .copyWith(
-                                              color: AppColors
-                                                  .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                    ),
-                                    SizedBox(
-                                      height: 6.0,
-                                    ),
-                                    Text(
-                                      "Who we are",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: AppColors.COLOR_BLACK,
-                                          fontFamily: AppFonts.POPPINS_MEDIUM,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, AppRoutes.ABOUT);
-                                  },
-                                  child: Icon(
+                              width: double.maxFinite,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                //crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "About us",
+                                        style: AppStyles.blackWithDifferentFontTextStyle(
+                                                context, 12.0)
+                                            .copyWith(
+                                                color: AppColors
+                                                    .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                      ),
+                                      SizedBox(
+                                        height: 6.0,
+                                      ),
+                                      Text(
+                                        "Who we are",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            color: AppColors.COLOR_BLACK,
+                                            fontFamily: AppFonts.POPPINS_MEDIUM,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Icon(
                                     Icons.arrow_forward_ios_rounded,
                                     size: 16.0,
                                     color:
                                         AppColors.COLOR_BLACK, // add custom icons also
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 20.0,

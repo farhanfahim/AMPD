@@ -26,7 +26,7 @@ class _FilterState extends State<FilterView> {
 
   DateTime selectedDate = DateTime.now();
   bool isDateSelected = false;
-  String fromDate="To Expiration",toDate="From Expiration";
+  String startDate="Start Expiration",endDate="End Expiration";
   double min=0.0,max=10.0,min1=0.0,max1=500.0;
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class _FilterState extends State<FilterView> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          fromDate,
+                                          startDate,
                                           style: AppStyles.blackWithDifferentFontTextStyle(context, 14.0)
                                               .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                                         ),
@@ -117,7 +117,7 @@ class _FilterState extends State<FilterView> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          toDate,
+                                          endDate,
                                           style: AppStyles.blackWithDifferentFontTextStyle(context, 14.0)
                                               .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                                         ),
@@ -404,10 +404,10 @@ class _FilterState extends State<FilterView> {
     if (picked != null && picked != selectedDate)
       setState(() {
 
-        if(!isDateSelected){
-          fromDate = getFormatedDate(picked);
+        if(isDateSelected){
+          endDate = getFormatedDate(picked);
         }else{
-          toDate = getFormatedDate(picked);
+          startDate = getFormatedDate(picked);
 
         }
 
