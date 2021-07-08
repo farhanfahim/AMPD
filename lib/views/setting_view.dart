@@ -45,7 +45,7 @@ class _SettingState extends State<SettingView> {
                           heading1: AppStrings.SETTING,
                           heading2: AppStrings.MANAGE_YOUR_ACCOUNT_SETTING),
                       SizedBox(
-                        height: 50.0,
+                        height: 20.0,
                       ),
                       Container(
                         child: Row(
@@ -83,52 +83,52 @@ class _SettingState extends State<SettingView> {
                       SizedBox(
                         height: 30.0,
                       ),
-                      Container(
-                        width: double.maxFinite,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Change Password",
-                                  style: AppStyles.blackWithDifferentFontTextStyle(
-                                          context, 12.0)
-                                      .copyWith(
-                                          color: AppColors
-                                              .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                ),
-                                SizedBox(
-                                  height: 6.0,
-                                ),
-                                Text(
-                                  "Update your password",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: AppColors.COLOR_BLACK,
-                                      fontFamily: AppFonts.POPPINS_MEDIUM,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, AppRoutes.CHANGE_PASSWORD_VIEW);
-                              },
-                              child: Icon(
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, AppRoutes.CHANGE_PASSWORD_VIEW);
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            //crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Change Password",
+                                    style: AppStyles.blackWithDifferentFontTextStyle(
+                                            context, 12.0)
+                                        .copyWith(
+                                            color: AppColors
+                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                  ),
+                                  SizedBox(
+                                    height: 6.0,
+                                  ),
+                                  Text(
+                                    "Update your password",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: AppColors.COLOR_BLACK,
+                                        fontFamily: AppFonts.POPPINS_MEDIUM,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              Icon(
                                 Icons.arrow_forward_ios_rounded,
                                 size: 16.0,
                                 color:
                                     AppColors.COLOR_BLACK, // add custom icons also
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(

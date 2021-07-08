@@ -55,7 +55,7 @@ class _FilterState extends State<FilterView> {
                             heading1: AppStrings.FILTER,
                             heading2: AppStrings.FILTER_YOUR),
                         SizedBox(
-                          height: 50.0,
+                          height: 30.0,
                         ),
 
 

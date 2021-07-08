@@ -106,7 +106,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     Stack(
                       children: [
@@ -175,7 +175,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                       ],
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     Text(
                       "Yusuf Nahass",
@@ -198,7 +198,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                       ),
                     ),
                     SizedBox(
-                      height: 40.0,
+                      height: 20.0,
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 25.0),

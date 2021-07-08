@@ -48,98 +48,100 @@ class _QrScanState extends State<QrScanView> {
                       borderRadius: BorderRadius.circular(20.0),
                       side:
                           BorderSide(width: 0.5, color: AppColors.BLUE_COLOR))),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  Text(
-                    AppStrings.SCAN_QR_CODE,
-                    style: AppStyles.blackWithBoldFontTextStyle(context, 20.0),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Container(
-                    height: 30.0.h,
-                    margin: EdgeInsets.fromLTRB(0.0, 30.0, 0, 0),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        AppImages.QR_IMAGE,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(
+                      height: 40.0,
+                    ),
+                    Text(
+                      AppStrings.SCAN_QR_CODE,
+                      style: AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Container(
+                      height: 30.0.h,
+                      margin: EdgeInsets.fromLTRB(0.0, 30.0, 0, 0),
+                      child: Center(
+                        child: SvgPicture.asset(
+                          AppImages.QR_IMAGE,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 50.0,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * .14),
-                    child: Row(
+                    SizedBox(
+                      height: 50.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * .14),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                              child: Text(
+                            AppStrings.TIME_REMAINING_TO_SCAN,
+                            style: AppStyles.blackWithBoldFontTextStyle(
+                                context, 16.0),
+                            textAlign: TextAlign.center,
+                          )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                            child: Text(
-                          AppStrings.TIME_REMAINING_TO_SCAN,
-                          style: AppStyles.blackWithBoldFontTextStyle(
-                              context, 16.0),
-                          textAlign: TextAlign.center,
-                        )),
+                        CountDownWidget(),
+                        SizedBox(
+                          width: 8.0,
+
+                        ),
+                        CountDownWidget(),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CountDownWidget(),
-                      SizedBox(
-                        width: 8.0,
 
-                      ),
-                      CountDownWidget(),
-                    ],
-                  ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Text(AppStrings.SECONDS,
+                        style: AppStyles.detailWithSmallTextSizeTextStyle()),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    GradientButton(
+                      onTap: () {
+                        Navigator.pop(context);
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context1) {
+                                return CustomRatingDialog(
+                                  contex: context,
+                                  subTitle: "How was Starbucks?",
+                                  title: "Your feedback will help us improve our services.",
+                                  ratingBar: RatingBarWidget(),
+                                  buttonText1: AppStrings.SUBMIT,
+                                  onPressed1: () {
+                                    Navigator.pop(context1);
+                                  },
+                                  showImage: false,
+                                );
+                              });
 
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Text(AppStrings.SECONDS,
-                      style: AppStyles.detailWithSmallTextSizeTextStyle()),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  GradientButton(
-                    onTap: () {
-                      Navigator.pop(context);
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context1) {
-                              return CustomRatingDialog(
-                                contex: context,
-                                subTitle: "How was Starbucks?",
-                                title: "Your feedback will help us improve our services.",
-                                ratingBar: RatingBarWidget(),
-                                buttonText1: AppStrings.SUBMIT,
-                                onPressed1: () {
-                                  Navigator.pop(context1);
-                                },
-                                showImage: false,
-                              );
-                            });
-
-                    },
-                    text: AppStrings.DONE,
-                  ),
-                  SizedBox(
-                    height: 40.0,
-                  )
-                ],
+                      },
+                      text: AppStrings.DONE,
+                    ),
+                    SizedBox(
+                      height: 40.0,
+                    )
+                  ],
+                ),
               ),
             ),
           ),

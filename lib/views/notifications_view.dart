@@ -115,7 +115,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                     heading1: AppStrings.NOTIFICATIONS,
                     heading2: AppStrings.ALL_NOTIIFICATION_SHOW_HERE),
                 SizedBox(
-                  height: 30.0,
+                  height: 10.0,
                 ),
                 Expanded(
                   child: ListView.builder(

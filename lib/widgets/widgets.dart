@@ -1132,7 +1132,7 @@ Widget appBar(
 
       showActionIcon
           ? Padding(
-            padding: const EdgeInsets.only(top:10.0),
+            padding: const EdgeInsets.all(10.0),
             child: Container(
               margin: EdgeInsets.only(right: 20.0),
               child: GestureDetector(

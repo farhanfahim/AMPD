@@ -111,63 +111,71 @@ class _DashboardViewState extends State<DashboardView> {
                       height: 60.0,
                       child: Row(
                         children: [
-                          SizedBox(width: 50.0),
 
-                          GestureDetector(
-                            onTap: () {
-                              print('0 tapped');
-                              if (!widget.isGuestLogin) {
-                                setState(() {
-                                  _selectedPageIndex = 0;
-                                  _pageController.jumpToPage(0);
-                                });
-                              } else {
-                                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(10.0),
-                              child: SvgPicture.asset(
-                                bottomBarIcons[0],
-                                width: 25.0,
-                                height: 25.0,
-                                color: (_selectedPageIndex == 0) ? AppColors
-                                .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                print('0 tapped');
+                                if (!widget.isGuestLogin) {
+                                  setState(() {
+                                    _selectedPageIndex = 0;
+                                    _pageController.jumpToPage(0);
+                                  });
+                                } else {
+                                  Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10.0),
+//                                color: Colors .red,
+                                color: Colors.white,
+                                child: SvgPicture.asset(
+                                  bottomBarIcons[0],
+
+
+//                                width: 25.0,
+//                                height: 25.0,
+                                  color: (_selectedPageIndex == 0) ? AppColors
+                                  .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
 //                              Theme.of(context).iconTheme.color,
-                                matchTextDirection: true,
+                                  matchTextDirection: true,
+                                ),
                               ),
                             ),
                           ),
 
                           Spacer(),
 
-                          GestureDetector(
-                            onTap: () {
-                              print('2 tapped');
-                              if (!widget.isGuestLogin) {
-                                setState(() {
-                                  _selectedPageIndex = 2;
-                                  _pageController.jumpToPage(2);
-                                });
-                              } else {
-                                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(10.0),
-                              child: SvgPicture.asset(
-                                bottomBarIcons[1],
-                                width: 18.0,
-                                height: 18.0,
-                                color: (_selectedPageIndex == 2) ? AppColors
-                                .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
-                                //Theme.of(context).iconTheme.color,
-                                matchTextDirection: true,
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                print('2 tapped');
+                                if (!widget.isGuestLogin) {
+                                  setState(() {
+                                    _selectedPageIndex = 2;
+                                    _pageController.jumpToPage(2);
+                                  });
+                                } else {
+                                  Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                                }
+                              },
+                              child: Container(
+                                color: Colors.white,
+                                padding: EdgeInsets.all(10.0),
+                                child: SvgPicture.asset(
+                                  bottomBarIcons[1],
+//                                  width: 18.0,
+//                                  height: 18.0,
+                                  color: (_selectedPageIndex == 2) ? AppColors
+                                  .ACCENT_COLOR : AppColors.UNSELECTED_COLOR,
+                                  //Theme.of(context).iconTheme.color,
+                                  matchTextDirection: true,
+                                ),
                               ),
                             ),
                           ),
 
-                          SizedBox(width: 50.0),
+//                          SizedBox(width: 50.0),
                         ],
                       ),
                     ),

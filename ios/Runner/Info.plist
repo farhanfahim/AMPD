@@ -26,6 +26,10 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSCameraUsageDescription</key>
+	<string>AMPD would required access to your camera for capturing videos and images. Please provide the same.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>AMPD requires access to your photo library for selecting images and videos. </string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -42,9 +46,9 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>comgooglemaps</string>
-        <string>call</string>
-    </array>
+	<array>
+		<string>comgooglemaps</string>
+		<string>call</string>
+	</array>
 </dict>
 </plist>

@@ -34,77 +34,79 @@ class _RedeemMessageState extends State<RedeemMessageView> {
                         borderRadius: BorderRadius.circular(20.0),
                         side: BorderSide(
                             width: 0.5, color: AppColors.BLUE_COLOR))),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      height: 40.0,
-                    ),
-                    Text(
-                      AppStrings.REDEEM_MESSAGE,
-                      style:
-                          AppStyles.blackWithBoldFontTextStyle(context, 20.0),
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * .14),
-                      child: Row(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 40.0,
+                      ),
+                      Text(
+                        AppStrings.REDEEM_MESSAGE,
+                        style:
+                            AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * .14),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                                child: Text(
+                              AppStrings.REDEEM_MESSAGE_TEXT,
+                              style: AppStyles.detailWithSmallTextSizeTextStyle(),
+                              textAlign: TextAlign.center,
+                            )),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 70.0,
+                      ),
+                      Text(
+                        AppStrings.TIME_REMAINING,
+                        style:
+                            AppStyles.blackWithBoldFontTextStyle(context, 16.0),
+                      ),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Expanded(
-                              child: Text(
-                            AppStrings.REDEEM_MESSAGE_TEXT,
-                            style: AppStyles.detailWithSmallTextSizeTextStyle(),
-                            textAlign: TextAlign.center,
-                          )),
+                          CountDownWidget(),
+                          SizedBox(
+                            width: 8.0,
+
+                          ),
+                          CountDownWidget(),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 70.0,
-                    ),
-                    Text(
-                      AppStrings.TIME_REMAINING,
-                      style:
-                          AppStyles.blackWithBoldFontTextStyle(context, 16.0),
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CountDownWidget(),
-                        SizedBox(
-                          width: 8.0,
 
-                        ),
-                        CountDownWidget(),
-                      ],
-                    ),
-
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Text(AppStrings.SECONDS,
-                        style: AppStyles.detailWithSmallTextSizeTextStyle()),
-                    SizedBox(
-                      height: 50.0,
-                    ),
-                    GradientButton(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      text: AppStrings.DONE,
-                    ),
-                    SizedBox(
-                      height: 40.0,
-                    )
-                  ],
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Text(AppStrings.SECONDS,
+                          style: AppStyles.detailWithSmallTextSizeTextStyle()),
+                      SizedBox(
+                        height: 50.0,
+                      ),
+                      GradientButton(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        text: AppStrings.DONE,
+                      ),
+                      SizedBox(
+                        height: 40.0,
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

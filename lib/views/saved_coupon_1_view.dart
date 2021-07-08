@@ -186,9 +186,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                SizedBox(
-                  height: 15.0,
-                ),
+
                 Header(
                     heading1: AppStrings.SAVED_COUPONS,
                     heading2: AppStrings.SHOW_ALL_COUPONS),
@@ -212,7 +210,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                             ))
                     ,child: tabBar),
                 SizedBox(
-                  height: 20.0,
+                  height: 10.0,
                 ),
                 Expanded(
                   child: Container(
@@ -338,7 +336,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
           ),
         ),
         SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         divider(),
       ],
@@ -412,7 +410,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
           ),
         ),
         SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         divider(),
       ],

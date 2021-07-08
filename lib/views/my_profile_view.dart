@@ -53,7 +53,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 30.0,
+                      height: 20.0,
                     ),
                     Padding(
                       padding:
