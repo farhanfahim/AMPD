@@ -27,8 +27,9 @@ class OfferCardWidget extends StatefulWidget {
   String time;
   String locationTitle;
   Coords coord;
+  ValueChanged<bool> changeDetailTitle;
 
-  OfferCardWidget({this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.locationTitle});
+  OfferCardWidget({this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.locationTitle, this.changeDetailTitle});
 
   @override
   _OfferCardWidgetState createState() => _OfferCardWidgetState();
@@ -83,6 +84,9 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
         }
       });
     }
+    // widget.changeDetailTitle(_isDetail);
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => widget.changeDetailTitle(_isDetail));
     super.initState();
   }
 
@@ -104,7 +108,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 //            height: !_isDetail? MediaQuery.of(context).size.width * 3.15 : MediaQuery.of(context).size.width * 1.9,
 //              height: !_isDetail? 320.0.w : MediaQuery.of(context).size.width * 2.5,
 //        height: 140.0.h,
-          height: _selectedTab == 1? !_isDetail? 1500.0 : 1250.0 : !_isDetail? 1000.0 : 750.0,
+          height: _selectedTab == 1? !_isDetail? 1470.0 : 1200.0 : !_isDetail? 1000.0 : 750.0,
           color: Colors.white,
           child: Stack(
             fit: StackFit.loose,
@@ -115,6 +119,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                   setState(() {
                     _isDetail = !_isDetail;
                   });
+                  widget.changeDetailTitle(_isDetail);
                   cardKey.currentState.toggleCard();
                 },
                 child: Container(
@@ -241,7 +246,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                 children: [
                                   Text(
                                     "Average Review :",
-                                    style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                    style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                   ),
 
                                   Spacer(),
@@ -255,7 +260,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
                                 Text(
                                   "4.3",
-                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                  style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 )
                               ],
                             ),
@@ -266,7 +271,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                               children: [
                                 Text(
                                   "Number of Uses :",
-                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                  style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 ),
 
                                 Spacer(),
@@ -280,7 +285,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
                                 Text(
                                   "08",
-                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                  style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 )
                               ],
                             )                ,
@@ -291,7 +296,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                               children: [
                                 Text(
                                   "Distance :",
-                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                  style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 ),
 
                                 Spacer(),
@@ -316,7 +321,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                       ),
                                     ],
                                   ),
-                                  padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
                                   child: Text(
                                     "4.5 miles",
                                     style: AppStyles.poppinsTextStyle(fontSize: 11.0.sp, weight: FontWeight.w400).copyWith(color: Colors.black),
@@ -332,7 +337,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                               children: [
                                 Text(
                                   "Location :",
-                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                  style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 ),
 
                                 Spacer(),
@@ -348,7 +353,8 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                 Expanded(
                                   child: Text(
                                     "99 Balentine 123 Drive, Newark",
-                                    style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+                                    style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
+                                    textAlign: TextAlign.end,
                                   ),
                                 )
                               ],
@@ -556,7 +562,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                               size: 20.0,
                             ),
 
-                            SizedBox(width: 15.0,),
+                            SizedBox(width: 12.0,),
 
                             GestureDetector(
                               onTap: () {
@@ -678,32 +684,48 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
                         SizedBox(height: 10.0,),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        Stack(
                           children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedTab = 0;
-                                });
-                              },
-                              child: Text(
-                                AppStrings.DESCRIPTION,
-                                style: _selectedTab == 0? AppStyles.selectedTabTextStyle() : AppStyles.unselectedTabTextStyle(),
+                            Align(
+                              alignment: Alignment.center,
+                              // left: 0.0,
+                              // right: 0.0,
+                              child: Container(width: 1.0, height: 25.0, color: Colors.grey[400],)
+                            ),
+
+                            Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                margin: EdgeInsets.only(right: 120.0, top: 2.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedTab = 0;
+                                    });
+                                  },
+                                  child: Text(
+                                    AppStrings.DESCRIPTION,
+                                    style: _selectedTab == 0? AppStyles.selectedTabTextStyle() : AppStyles.unselectedTabTextStyle(),
+                                  ),
+                                ),
                               ),
                             ),
 
-                            Container(width: 1.0, height: 25.0, color: Colors.grey[400],),
-
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedTab = 1;
-                                });
-                              },
-                              child: Text(
-                                AppStrings.REVIEWS,
-                                style: _selectedTab == 1? AppStyles.selectedTabTextStyle() : AppStyles.unselectedTabTextStyle(),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                margin: EdgeInsets.only(left: 100.0, top: 2.0),
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedTab = 1;
+                                    });
+                                  },
+                                  child: Text(
+                                    AppStrings.REVIEWS,
+                                    style: _selectedTab == 1? AppStyles.selectedTabTextStyle() : AppStyles.unselectedTabTextStyle(),
+                                  ),
+                                ),
                               ),
                             )
                           ],
