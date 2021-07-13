@@ -325,7 +325,9 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                                         AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                           ),
                           FlatButtonWidget(
-                              onTap: () {}, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
+                              onTap: () {
+                                Navigator.pushNamed(context, AppRoutes.REDEEM_NOW);
+                              }, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
                         ],
                       ),
                     ],

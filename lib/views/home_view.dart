@@ -7,6 +7,7 @@ import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/offer_card_widget.dart';
+import 'package:ampd/widgets/offer_card_widget_2.dart';
 import 'package:ampd/widgets/swipe_cards/swipe_cards.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flip_card/flip_card.dart';
@@ -168,8 +169,9 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
             itemBuilder: (BuildContext context, int index) {
               return Container(
 //                height: 550.0,
-                height: double.maxFinite,
-                child: OfferCardWidget(
+//                height: double.maxFinite,
+                child: OfferCardWidget2(
+                  isRedeemNow: false,
                   image: _swipeItems[index].content.image,
                   offer: _swipeItems[index].content.offer,
                   offerName: _swipeItems[index].content.offerName,

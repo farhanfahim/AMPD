@@ -76,10 +76,41 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     emailController.text = "YusufNahass@email.com";
     numberController.text = "(800) 362-9239";
+
+    firstNameController.addListener(() {
+      if (firstNameController.text.length <= firstNameValidation) {
+        firstName = firstNameController.text;
+      } else {
+        firstNameController.value = new TextEditingValue(
+            text: firstName,
+            selection: new TextSelection(
+                baseOffset: firstNameValidation,
+                extentOffset: firstNameValidation,
+                affinity: TextAffinity.downstream,
+                isDirectional: true),
+            composing: new TextRange(start: 0, end: firstNameValidation)
+        );
+      }
+    });
+
+    lastNameController.addListener(() {
+      if (lastNameController.text.length <= lastNameValidation) {
+        lastName = lastNameController.text;
+      } else {
+        lastNameController.value = new TextEditingValue(
+            text: lastName,
+            selection: new TextSelection(
+                baseOffset: lastNameValidation,
+                extentOffset: lastNameValidation,
+                affinity: TextAffinity.downstream,
+                isDirectional: true),
+            composing: new TextRange(start: 0, end: lastNameValidation)
+        );
+      }
+    });
   }
 
   @override
@@ -294,22 +325,22 @@ class _EditProfileViewState extends State<EditProfileView> {
               enabled: _enabled,
               focusNode: firstNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              onChanged: (String newVal) {
-                if (newVal.length <= firstNameValidation) {
-                  firstName = newVal;
-                } else {
-                  firstNameController.value = new TextEditingValue(
-                      text: firstName,
-                      selection: new TextSelection(
-                          baseOffset: firstNameValidation,
-                          extentOffset: firstNameValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing:
-                          new TextRange(start: 0, end: firstNameValidation));
-                  //  _emailController.text = text;
-                }
-              },
+//              onChanged: (String newVal) {
+//                if (newVal.length <= firstNameValidation) {
+//                  firstName = newVal;
+//                } else {
+//                  firstNameController.value = new TextEditingValue(
+//                      text: firstName,
+//                      selection: new TextSelection(
+//                          baseOffset: firstNameValidation,
+//                          extentOffset: firstNameValidation,
+//                          affinity: TextAffinity.downstream,
+//                          isDirectional: false),
+//                      composing:
+//                          new TextRange(start: 0, end: firstNameValidation));
+//                  //  _emailController.text = text;
+//                }
+//              },
               controller: firstNameController,
               keyboardType: TextInputType.name,
               inputFormatters: [
@@ -350,22 +381,22 @@ class _EditProfileViewState extends State<EditProfileView> {
               enabled: _enabled,
               focusNode: lastNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              onChanged: (String newVal) {
-                if (newVal.length <= lastNameValidation) {
-                  lastName = newVal;
-                } else {
-                  lastNameController.value = new TextEditingValue(
-                      text: lastName,
-                      selection: new TextSelection(
-                          baseOffset: lastNameValidation,
-                          extentOffset: lastNameValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing:
-                          new TextRange(start: 0, end: lastNameValidation));
-                  //  _emailController.text = text;
-                }
-              },
+//              onChanged: (String newVal) {
+//                if (newVal.length <= lastNameValidation) {
+//                  lastName = newVal;
+//                } else {
+//                  lastNameController.value = new TextEditingValue(
+//                      text: lastName,
+//                      selection: new TextSelection(
+//                          baseOffset: lastNameValidation,
+//                          extentOffset: lastNameValidation,
+//                          affinity: TextAffinity.downstream,
+//                          isDirectional: false),
+//                      composing:
+//                          new TextRange(start: 0, end: lastNameValidation));
+//                  //  _emailController.text = text;
+//                }
+//              },
               controller: lastNameController,
               keyboardType: TextInputType.name,
               inputFormatters: [

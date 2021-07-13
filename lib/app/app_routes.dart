@@ -11,6 +11,7 @@ import 'package:ampd/views/my_profile_view.dart';
 import 'package:ampd/views/notifications_view.dart';
 import 'package:ampd/views/qr_scan_view.dart';
 import 'package:ampd/views/redeem_message_view.dart';
+import 'package:ampd/views/redeem_now_view.dart';
 import 'package:ampd/views/saved_coupon_1_view.dart';
 import 'package:ampd/views/saved_coupon_2_view.dart';
 import 'package:ampd/views/setting_view.dart';
@@ -44,6 +45,7 @@ class AppRoutes {
   static const String SAVED_COUPONS_2 = "/saved_coupon_2_view";
   static const String TERMS_CONDITIONS = "/terms_conditions_view";
   static const String ABOUT = "/about_view";
+  static const String REDEEM_NOW = "/redeem_now_view";
 
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
@@ -53,6 +55,14 @@ class AppRoutes {
   /// @usage -> Returns route based on requested route settings ShippingAddressView
   Route getRoutes(RouteSettings routeSettings) {
     switch (routeSettings.name) { // MutualFriendsView
+
+     case REDEEM_NOW:
+       {
+         return MaterialPageRoute<void>(
+           settings: routeSettings,
+           builder: (BuildContext context) => RedeemNowView(),
+         );
+       }
 
      case DASHBOARD_VIEW:
        {

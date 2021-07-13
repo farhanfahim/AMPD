@@ -43,8 +43,9 @@ class _SplashViewState extends State<SplashView> {
           ),
 
 
-          Align(
+          Container(
             alignment: Alignment.bottomCenter,
+            margin: EdgeInsets.only(bottom: 15.0),
             child: Text(
               "Version 1.2.0",
               textAlign: TextAlign.left,
