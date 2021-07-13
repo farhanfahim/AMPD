@@ -85,8 +85,8 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      height: 30.0.h,
-                      margin: EdgeInsets.fromLTRB(0.0, 30.0, 0, 0),
+                      height: 25.0.h,
+                      margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 0),
                       child: Center(
                         child: SvgPicture.asset(
                           AppImages.MAIN_LOGO,
@@ -147,11 +147,9 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                     ),
                     confirmPasswordTextField(context),
                     SizedBox(
-                      height: 25.0,
+                      height: 30.0,
                     ),
-                    SizedBox(
-                      height: 25.0,
-                    ),
+
                     GradientButton(
                       onTap: () {
 //                        Navigator.of(context).pop();

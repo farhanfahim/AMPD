@@ -332,7 +332,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               //   , iconData, (){
               //
               // }),
-              style: AppStyles.inputTextStyle(context),
+              style: AppStyles.inputTextStyle(context).copyWith(color: Colors.black,),
             ),
           ),
         ),
@@ -395,7 +395,7 @@ class _EditProfileViewState extends State<EditProfileView> {
               //   , iconData, (){
               //
               // }),
-              style: AppStyles.inputTextStyle(context),
+              style: AppStyles.inputTextStyle(context).copyWith(color: Colors.black,),
             ),
           ),
         ),
