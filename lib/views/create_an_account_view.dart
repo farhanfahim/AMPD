@@ -188,6 +188,13 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
               enabled: _enabled,
               focusNode: firstNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              textCapitalization: TextCapitalization.words,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= firstNameValidation) {
                   firstName = newVal;
@@ -243,6 +250,13 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
               enabled: _enabled,
               focusNode: lastNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              textCapitalization: TextCapitalization.words,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= lastNameValidation) {
                   lastName = newVal;
@@ -301,6 +315,12 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
               enabled: _enabled,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= emailValidation) {
                   email = newVal;
@@ -382,6 +402,12 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
               enabled: _enabled,
               focusNode: passwordNode,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= passwordValidation) {
                   password = newVal;
@@ -459,6 +485,12 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
               enabled: _enabled,
               focusNode: cPasswordNode,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= cPasswordValidation) {
                   password = newVal;

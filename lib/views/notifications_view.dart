@@ -36,43 +36,43 @@ class _NotificationsViewState extends State<NotificationsView> {
 
     _listOfNotification.add(Notifications(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         address: "99 Balentine Drive Newark",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfNotification.add(Notifications(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         address: "99 Balentine Drive Newark",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfNotification.add(Notifications(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         address: "99 Balentine Drive Newark",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfNotification.add(Notifications(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         address: "99 Balentine Drive Newark",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfNotification.add(Notifications(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         address: "99 Balentine Drive Newark",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfNotification.add(Notifications(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         address: "99 Balentine Drive Newark",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfNotification.add(Notifications(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         address: "99 Balentine Drive Newark",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
@@ -143,6 +143,7 @@ class _NotificationsViewState extends State<NotificationsView> {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0),
             child: Row(
+
               children: [
                 Container(
                   width: 70.0,
@@ -161,6 +162,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                 Flexible(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: [
                       Text(data.name,
                           style: AppStyles.blackWithBoldFontTextStyle(
@@ -168,7 +170,7 @@ class _NotificationsViewState extends State<NotificationsView> {
                               .copyWith(color: AppColors.COLOR_BLACK)
                               .copyWith(fontWeight: FontWeight.w600)),
                       SizedBox(
-                        height: 6.0,
+                        height: 5.0,
                       ),
                       Text(
                         data.dateTime,
@@ -187,6 +189,9 @@ class _NotificationsViewState extends State<NotificationsView> {
                             .copyWith(
                                 color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                       ),
+                      SizedBox(
+                        height: 3.0,
+                      ),
                     ],
                   ),
                 ),
@@ -195,7 +200,7 @@ class _NotificationsViewState extends State<NotificationsView> {
           ),
         ),
         SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         divider(),
       ],

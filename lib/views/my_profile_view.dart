@@ -70,10 +70,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                           radius: 60.0,
                           backgroundColor: AppColors.WHITE_COLOR,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(80),
+                            borderRadius: BorderRadius.circular(60),
                             child: Image.asset(
-                              "assets/images/profile.png",
-                              fit: BoxFit.cover,
+                              "assets/images/user.png",
+                              fit: BoxFit.fill,
                             ),
                           ),
 

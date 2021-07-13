@@ -52,11 +52,11 @@ class _EditProfileViewState extends State<EditProfileView> {
   int numberValidation = AppConstants.PHONE_VALIDATION;
 
   bool _enabled = true;
-  bool _enabled2 = true;
 
   var firstNameFocus = FocusNode();
   var lastNameFocus = FocusNode();
   var emailFocus = FocusNode();
+  var email2Focus = FocusNode();
   var addressFocus = FocusNode();
   var phoneNoFocus = FocusNode();
 
@@ -67,7 +67,6 @@ class _EditProfileViewState extends State<EditProfileView> {
   String email = "";
   String address = "";
   String phoneNo = "";
-  String phoneNo2 = "";
 
   bool _isEmailValid = false;
   IconData checkIconData = Icons.check;
@@ -138,7 +137,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(80.0)),
                                       child: Image.asset(
-                                        "assets/images/profile.png",
+                                        "assets/images/user.png",
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -294,6 +293,13 @@ class _EditProfileViewState extends State<EditProfileView> {
               enabled: _enabled,
               focusNode: firstNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              textCapitalization: TextCapitalization.words,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= firstNameValidation) {
                   firstName = newVal;
@@ -350,6 +356,13 @@ class _EditProfileViewState extends State<EditProfileView> {
               enabled: _enabled,
               focusNode: lastNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              textCapitalization: TextCapitalization.words,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= lastNameValidation) {
                   lastName = newVal;
@@ -407,6 +420,12 @@ class _EditProfileViewState extends State<EditProfileView> {
               enabled: false,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= emailValidation) {
                   email = newVal;
@@ -495,6 +514,12 @@ class _EditProfileViewState extends State<EditProfileView> {
 //                                enableInteractiveSelection: false,
               enabled: false,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= numberValidation) {
                   phoneNo = newVal;
@@ -573,6 +598,12 @@ class _EditProfileViewState extends State<EditProfileView> {
 //                                enableInteractiveSelection: false,
               enabled: false,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= numberValidation) {
                   phoneNo = newVal;
@@ -634,6 +665,12 @@ class _EditProfileViewState extends State<EditProfileView> {
               enabled: false,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= emailValidation) {
                   email = newVal;
@@ -694,84 +731,9 @@ class _EditProfileViewState extends State<EditProfileView> {
     );
   }
 
-  Stack editableCustomEmailTextField(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 25.0),
-          child: Focus(
-            onFocusChange: (value) {
-              if (value) {
-                editableEmailController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: editableEmailController.text.length));
-              }
-            },
-            child: TextFormField(
-//                                enableInteractiveSelection: false,
-              enabled: _enabled,
-              focusNode: emailFocus,
-              cursorColor: AppColors.ACCENT_COLOR,
-              onChanged: (String newVal) {
-                if (newVal.length <= emailValidation) {
-                  email = newVal;
-                } else {
-                  editableEmailController.value = new TextEditingValue(
-                      text: email,
-                      selection: new TextSelection(
-                          baseOffset: emailValidation,
-                          extentOffset: emailValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing: new TextRange(start: 0, end: emailValidation));
-                  //  _emailController.text = text;
-                }
-              },
-              controller: editableEmailController,
-              keyboardType: TextInputType.emailAddress,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(emailValidation),
-              ],
-
-
-              onFieldSubmitted: (texttt) {
-                bool emailValid = RegExp(
-                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(email);
-                if (emailValid) {
-                  setState(() {
-                    _isEmailValid = true;
-                    emailController.text = texttt;
-                  });
-                } else {
-                  setState(() {
-                    _isEmailValid = false;
-                  });
-                }
-              },
-              textInputAction: TextInputAction.next,
-              decoration:
-              AppStyles.decorationWithBorder(AppStrings.EMAIL_ADDRESS),
-              //   , iconData, (){
-              //
-              // }),
-              style: AppStyles.inputTextStyle(context),
-            ),
-          ),
-        ),
-        _isEmailValid
-            ? Positioned(
-          top: 5.0,
-          bottom: 0.0,
-          right: 35.0,
-          child: Icon(
-            checkIconData,
-            color: AppColors.BLUE_COLOR,
-          ),
-        )
-            : Container(),
-      ],
-    );
-  }
+  // Stack editableCustomEmailTextField(BuildContext context) {
+  //   return customUziar();
+  // }
 
   Stack editableCustomPhoneNoWidget(BuildContext context) {
     return Stack(
@@ -789,6 +751,12 @@ class _EditProfileViewState extends State<EditProfileView> {
 //                                enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= numberValidation) {
                   phoneNo = newVal;
@@ -810,11 +778,10 @@ class _EditProfileViewState extends State<EditProfileView> {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
-
               onFieldSubmitted: (texttt) {
                 numberController.text = texttt;
               },
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               decoration:
               AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
               //   , iconData, (){
@@ -831,16 +798,16 @@ class _EditProfileViewState extends State<EditProfileView> {
   showPhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
 
-        AppStrings.PHONE_NUMBER_DESC, phoneNoWidget(context), (bc3) {
-          Navigator.pop(bc3);
+        AppStrings.PHONE_NUMBER_DESC, phoneNoWidget(context), (bc1) {
+          Navigator.pop(bc1);
           showPhoneOtpBottomSheet(context);
         }, AppStrings.SEND, false);
   }
 
   showPhoneOtpBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc4) {
-          Navigator.pop(bc4);
+        AppStrings.OTP_DESC, OtpTextField(), (bc2) {
+          Navigator.pop(bc2);
           showUpdatePhoneNoBottomSheet(context);
         }, AppStrings.VERIFY_NOW, true);
   }
@@ -862,16 +829,16 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   showEmailBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.REQUEST_TO_EMAIL_TITLE,
-        AppStrings.EMAIL_DESC, emailWidget(context), (bc3) {
-          Navigator.pop(bc3);
+        AppStrings.EMAIL_DESC, emailWidget(context), (bc5) {
+          Navigator.pop(bc5);
           showEmailOtpBottomSheet(context);
         }, AppStrings.CHANGE, false);
   }
 
   showUpdateEmailBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.ENTER_NEW_EMAIL,
-        "", editableCustomEmailTextField(context), (bc3) {
-          Navigator.pop(bc3);
+        "", customEditableEmailWidget(), (bc6) {
+          Navigator.pop(bc6);
 
         }, AppStrings.CHANGE, false);
   }
@@ -1018,3 +985,108 @@ class _EditProfileViewState extends State<EditProfileView> {
 
 
 }
+
+class customEditableEmailWidget extends StatefulWidget {
+
+
+  @override
+  _customEditableEmailWidgetState createState() => _customEditableEmailWidgetState();
+}
+
+class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
+
+  var email2Focus = FocusNode();
+  int emailValidation = AppConstants.EMAIL_VALIDATION;
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController editableEmailController = new TextEditingController();
+  bool _isEmailValid = false;
+  IconData checkIconData = Icons.check;
+  String email = "";
+  bool _enabled = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          child: Focus(
+            onFocusChange: (value) {
+              if (value) {
+                editableEmailController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: editableEmailController.text.length));
+              }
+            },
+            child: TextFormField(
+//                                enableInteractiveSelection: false,
+              enabled: _enabled,
+              focusNode: email2Focus,
+              cursorColor: AppColors.ACCENT_COLOR,
+
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
+              onChanged: (String newVal) {
+                bool emailValid = RegExp(
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    .hasMatch(newVal);
+                if (emailValid) {
+
+                  setState(() {
+                    _isEmailValid = true;
+                    emailController.text = newVal;
+                  });
+                } else {
+                  setState(() {
+                    _isEmailValid = false;
+                  });
+                }
+
+                if (newVal.length <= emailValidation) {
+                  email = newVal;
+                } else {
+                  editableEmailController.value = new TextEditingValue(
+                      text: email,
+                      selection: new TextSelection(
+                          baseOffset: emailValidation,
+                          extentOffset: emailValidation,
+                          affinity: TextAffinity.downstream,
+                          isDirectional: false),
+                      composing: new TextRange(start: 0, end: emailValidation));
+                }
+              },
+              controller: editableEmailController,
+              keyboardType: TextInputType.emailAddress,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(emailValidation),
+              ],
+
+              textInputAction: TextInputAction.done,
+              decoration:
+              AppStyles.decorationWithBorder(AppStrings.EMAIL_ADDRESS),
+              //   , iconData, (){
+              //
+              // }),
+              style: AppStyles.inputTextStyle(context),
+            ),
+          ),
+        ),
+        _isEmailValid
+            ? Positioned(
+          top: 5.0,
+          bottom: 0.0,
+          right: 35.0,
+          child: Icon(
+            checkIconData,
+            color: AppColors.BLUE_COLOR,
+          ),
+        )
+            : Container(),
+      ],
+    );
+  }
+}
+

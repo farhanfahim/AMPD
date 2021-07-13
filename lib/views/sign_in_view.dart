@@ -259,6 +259,12 @@ class _SignInViewState extends State<SignInView> {
               enabled: _enabled,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= emailValidation) {
                   email = newVal;
@@ -275,7 +281,7 @@ class _SignInViewState extends State<SignInView> {
                 }
               },
               controller: emailController,
-              keyboardType: TextInputType.visiblePassword,
+              keyboardType: TextInputType.emailAddress,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(emailValidation),
               ],
@@ -284,12 +290,17 @@ class _SignInViewState extends State<SignInView> {
 
               onFieldSubmitted: (texttt) {
                 bool emailValid = RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                     .hasMatch(email);
                 if (emailValid) {
-                  _isEmailValid = true;
+
+                  setState(() {
+                    _isEmailValid = true;
+                  });
                 } else {
-                  _isEmailValid = false;
+                  setState(() {
+                    _isEmailValid = false;
+                  });
                 }
                 FocusScope.of(context).requestFocus(passwordNode);
               },
@@ -335,6 +346,12 @@ class _SignInViewState extends State<SignInView> {
               enabled: _enabled,
               focusNode: passwordNode,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= passwordValidation) {
                   password = newVal;
@@ -411,6 +428,12 @@ class _SignInViewState extends State<SignInView> {
 //                                enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= numberValidation) {
                   phoneNo = newVal;
@@ -474,6 +497,12 @@ class _SignInViewState extends State<SignInView> {
                   enabled: _enabled1,
                   focusNode: nPasswordNode,
                   cursorColor: AppColors.ACCENT_COLOR,
+                  toolbarOptions: ToolbarOptions(
+                    copy: true,
+                    cut: true,
+                    paste: false,
+                    selectAll: false,
+                  ),
                   onChanged: (String newVal) {
                     if (newVal.length <= nPasswordValidation) {
                       password = newVal;
@@ -558,6 +587,12 @@ class _SignInViewState extends State<SignInView> {
                   enabled: _enabled2,
                   focusNode: cPasswordNode,
                   cursorColor: AppColors.ACCENT_COLOR,
+                  toolbarOptions: ToolbarOptions(
+                    copy: true,
+                    cut: true,
+                    paste: false,
+                    selectAll: false,
+                  ),
                   onChanged: (String newVal) {
                     if (newVal.length <= cPasswordValidation) {
                       password = newVal;

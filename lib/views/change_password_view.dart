@@ -152,6 +152,12 @@ class _ChangePasswordState extends State<ChangePasswordView> {
               enabled: _enabled,
               focusNode: passwordNode,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= passwordValidation) {
                   password = newVal;
@@ -228,6 +234,12 @@ class _ChangePasswordState extends State<ChangePasswordView> {
               enabled: _enabled1,
               focusNode: nPasswordNode,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= nPasswordValidation) {
                   password = newVal;
@@ -304,6 +316,12 @@ class _ChangePasswordState extends State<ChangePasswordView> {
               enabled: _enabled2,
               focusNode: cPasswordNode,
               cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
               onChanged: (String newVal) {
                 if (newVal.length <= cPasswordValidation) {
                   password = newVal;

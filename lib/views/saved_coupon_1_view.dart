@@ -74,43 +74,43 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
     });
     _listOfSavedCoupons.add(SavedCoupons(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         timeToAvail: "Time to Avail: (1 hour)",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfSavedCoupons.add(SavedCoupons(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         timeToAvail: "Time to Avail: (1 hour)",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfSavedCoupons.add(SavedCoupons(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         timeToAvail: "Time to Avail: (1 hour)",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfSavedCoupons.add(SavedCoupons(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         timeToAvail: "Time to Avail: (1 hour)",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfSavedCoupons.add(SavedCoupons(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         timeToAvail: "Time to Avail: (1 hour)",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfSavedCoupons.add(SavedCoupons(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         timeToAvail: "Time to Avail: (1 hour)",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
     _listOfSavedCoupons.add(SavedCoupons(
         name: "Nice EpicReact Flyknit",
-        dateTime: "May 30,2021 - 12:45",
+        dateTime: "May 30, 2021 - 12:45",
         timeToAvail: "Time to Avail: (1 hour)",
         image:
             "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
@@ -301,7 +301,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                                   .copyWith(color: AppColors.COLOR_BLACK)
                                   .copyWith(fontWeight: FontWeight.w600)),
                       SizedBox(
-                        height: 6.0,
+                        height: 3.0,
                       ),
                       Text(
                         data.dateTime,
@@ -310,9 +310,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                             .copyWith(
                                 color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                       ),
-                      SizedBox(
-                        height: 6.0,
-                      ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -328,6 +326,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                               onTap: () {}, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
                         ],
                       ),
+
                     ],
                   ),
                 ),
@@ -376,7 +375,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                             .copyWith(color: AppColors.COLOR_BLACK)
                             .copyWith(fontWeight: FontWeight.w600)),
                     SizedBox(
-                      height: 6.0,
+                      height: 3.0,
                     ),
                     Text(
                       data.dateTime,
@@ -385,9 +384,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                           .copyWith(
                           color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                     ),
-                    SizedBox(
-                      height: 6.0,
-                    ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -403,6 +400,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                             onTap: () {}, text: AppStrings.EXPIRED,color: AppColors.RED_COLOR2,),
                       ],
                     ),
+
                   ],
                 ),
               ),
