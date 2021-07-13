@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/data/model/ReviewModel.dart';
+import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -85,7 +86,7 @@ class _ReviewsViewState extends State<ReviewsView> {
               itemBuilder: (context, index) {
                 return Container(
                     padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 0.0),
-                    child: NotificationTileView(context: context, data: _listOfReviews[index])
+                    child: NotificationTileView(data: _listOfReviews[index])
                 );
               }),
         ));

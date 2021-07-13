@@ -8,6 +8,7 @@ import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/model/ReviewModel.dart';
 import 'package:ampd/utils/timer_utils.dart';
+import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/Skeleton.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -751,7 +752,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                   itemCount: _listOfReviews.length,
                                   itemBuilder: (context, index) {
 
-                                    return NotificationTileView(context: context, data: _listOfReviews[index], hasTopDivider: index == 0? false : true);
+                                    return NotificationTileView(data: _listOfReviews[index], hasTopDivider: index == 0? false : true);
                                   }
                                ),
 

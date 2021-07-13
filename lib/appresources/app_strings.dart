@@ -408,4 +408,5 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
       'Already have an account, sign in to continue!';
   static const String FIRST_NAME = 'First name';
   static const String LAST_NAME = 'Last name';
+  static const String LATER = 'Later';
 }

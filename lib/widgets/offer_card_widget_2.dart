@@ -8,7 +8,10 @@ import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/model/ReviewModel.dart';
 import 'package:ampd/utils/timer_utils.dart';
+import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/Skeleton.dart';
+import 'package:ampd/widgets/button_border.dart';
+import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -482,7 +485,136 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                           children: [
                             widget.isRedeemNow? GestureDetector(
                               onTap: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context1) {
+                                      return Dialog(
+                                        insetPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                        backgroundColor: Colors.transparent,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 20),
+                                                  child: Container(
+                                                    margin: EdgeInsets.symmetric(horizontal: 30.0),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border.all(
+                                                          color: Colors.transparent,
+                                                        ),
+                                                        borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                                    ),
 
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(10.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        //mainAxisAlignment: MainAxisAlignment.center,
+                                                        //crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Container(
+                                                            margin: EdgeInsets.symmetric(
+                                                                horizontal: MediaQuery.of(context).size.width * .13),
+                                                            padding: EdgeInsets.fromLTRB(10, 20, 10, 25),
+                                                            child: Text(
+                                                              "Redeem Offer Now",
+                                                              style:
+                                                              AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0).copyWith(fontWeight: FontWeight.w600),textAlign: TextAlign.center,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.symmetric(
+                                                                horizontal: MediaQuery.of(context).size.width * 0.1),
+                                                            child: Text(
+                                                              "Do you want to Redeem this offer right now?",
+                                                              style:
+                                                              AppStyles.blackWithSemiBoldFontTextStyle(context, 15.0).copyWith(fontWeight: FontWeight.w500),textAlign: TextAlign.center,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 25.0,
+                                                          ),
+                                                          GradientButton(
+                                                            onTap: () {
+                                                              Navigator.pop(context1);
+                                                              showDialog(
+                                                                  context: context,
+                                                                  builder: (BuildContext context1) {
+                                                                    return CustomDialog(
+                                                                      contex: context,
+                                                                      subTitle: "Are you sure?",
+                                                                      //title: "Your feedback will help us improve our services.",
+                                                                      buttonText1: AppStrings.YES,
+                                                                      buttonText2: AppStrings.NO,
+                                                                      onPressed1: () {
+                                                                        Navigator.pop(context1);
+                                                                        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
+                                                                      },
+                                                                      onPressed2: () {
+                                                                        Navigator.pop(context1);
+                                                                      },
+                                                                      showImage: false,
+                                                                    );
+                                                                  });
+                                                            },
+                                                            text: AppStrings.REDEEM_NOW,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 20.0,
+                                                          ),
+                                                          ButtonBorder(
+                                                            onTap: () {
+                                                              Navigator.pop(context1);
+                                                            },
+                                                            text: AppStrings.LATER,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 45.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+
+                                                  ),
+                                                ),
+                                                Positioned.fill(
+                                                  right: 15,
+                                                  child: Align(
+                                                    alignment: Alignment.topRight,
+
+                                                    child: Container(
+                                                        width: 50,
+                                                        height: 50,
+                                                        child:
+                                                        FloatingActionButton(
+                                                          heroTag: "tag",
+                                                          backgroundColor:AppColors.BLUE_COLOR ,
+                                                          // backgroundColor:
+                                                          // AppColors.PRIMARY_COLORTWO,
+                                                          elevation: 2,
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                            size: 20.0,
+                                                          ),
+                                                          onPressed: (){
+                                                            Navigator.pop(context);
+                                                          },
+                                                          // onPressed: widget.addClickListner
+                                                        )
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
                               },
                               child: Container(
                                 height: 50.0,
@@ -779,7 +911,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                       itemCount: _listOfReviews.length,
                                       itemBuilder: (context, index) {
 
-                                        return NotificationTileView(context: context, data: _listOfReviews[index], hasTopDivider: index == 0? false : true);
+                                        return NotificationTileView(data: _listOfReviews[index], hasTopDivider: index == 0? false : true);
                                       }
                                   ),
 

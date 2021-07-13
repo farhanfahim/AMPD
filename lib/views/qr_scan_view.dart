@@ -40,14 +40,14 @@ class _QrScanState extends State<QrScanView> {
               height: MediaQuery.of(context).size.height * 0.85,
               margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
               constraints:
-                  BoxConstraints(maxWidth: double.maxFinite, minHeight: 50.0),
+              BoxConstraints(maxWidth: double.maxFinite, minHeight: 50.0),
               alignment: Alignment.center,
               decoration: ShapeDecoration(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                       side:
-                          BorderSide(width: 0.5, color: AppColors.BLUE_COLOR))),
+                      BorderSide(width: 0.5, color: AppColors.BLUE_COLOR))),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,11 +84,11 @@ class _QrScanState extends State<QrScanView> {
                         children: [
                           Expanded(
                               child: Text(
-                            AppStrings.TIME_REMAINING_TO_SCAN,
-                            style: AppStyles.blackWithBoldFontTextStyle(
-                                context, 16.0),
-                            textAlign: TextAlign.center,
-                          )),
+                                AppStrings.TIME_REMAINING_TO_SCAN,
+                                style: AppStyles.blackWithBoldFontTextStyle(
+                                    context, 16.0),
+                                textAlign: TextAlign.center,
+                              )),
                         ],
                       ),
                     ),
@@ -118,21 +118,21 @@ class _QrScanState extends State<QrScanView> {
                     GradientButton(
                       onTap: () {
                         Navigator.pop(context);
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context1) {
-                                return CustomRatingDialog(
-                                  contex: context,
-                                  subTitle: "How was Starbucks?",
-                                  title: "Your feedback will help us improve our services.",
-                                  ratingBar: RatingBarWidget(),
-                                  buttonText1: AppStrings.SUBMIT,
-                                  onPressed1: () {
-                                    Navigator.pop(context1);
-                                  },
-                                  showImage: false,
-                                );
-                              });
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context1) {
+                              return CustomRatingDialog(
+                                contex: context,
+                                subTitle: "How was Starbucks?",
+                                title: "Your feedback will help us improve our services.",
+                                ratingBar: RatingBarWidget(),
+                                buttonText1: AppStrings.SUBMIT,
+                                onPressed1: () {
+                                  Navigator.pop(context1);
+                                },
+                                showImage: false,
+                              );
+                            });
 
                       },
                       text: AppStrings.DONE,
@@ -223,7 +223,7 @@ class CountDownWidget extends StatelessWidget {
 
               Positioned.fill(
                 child: Align(
-                    alignment: Alignment.center,
+                  alignment: Alignment.center,
                   child: Text(
                     "3",
                     style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)

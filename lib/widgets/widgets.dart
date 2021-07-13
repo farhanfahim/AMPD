@@ -26,110 +26,110 @@ import 'package:sizer/sizer.dart';
 import 'Skeleton.dart';
 import 'gradient_button.dart';
 
-Widget NotificationTileView(
-    {BuildContext context, Reviews data, bool hasTopDivider = true}) {
-  return Column(
-    children: [
-      SizedBox(
-        height: 10.0,
-      ),
-
-      hasTopDivider ? divider() : Container(),
-
-      hasTopDivider
-          ? SizedBox(
-              height: 10.0,
-            )
-          : Container(),
-
-      InkWell(
-        onTap: () {},
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-//          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
-          child: Row(
-            children: [
-              circularAvatar(55.0, 55.0, data.image, 30.0),
-              SizedBox(
-                width: 10.0,
-              ),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(data.name,
-                        style:
-                            AppStyles.blackWithBoldFontTextStyle(context, 15.0)
-                                .copyWith(color: AppColors.COLOR_BLACK)
-                                .copyWith(fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+//Widget NotificationTileView(
+//    {BuildContext context, Reviews data, bool hasTopDivider = true}) {
+//  return Column(
+//    children: [
+//      SizedBox(
+//        height: 10.0,
+//      ),
+//
+//      hasTopDivider ? divider() : Container(),
+//
+//      hasTopDivider
+//          ? SizedBox(
+//              height: 10.0,
+//            )
+//          : Container(),
+//
+//      InkWell(
+//        onTap: () {},
+//        child: Padding(
+//          padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+////          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+//          child: Row(
+//            children: [
+//              circularAvatar(55.0, 55.0, data.image, 30.0),
+//              SizedBox(
+//                width: 10.0,
+//              ),
+//              Flexible(
+//                child: Column(
+//                  crossAxisAlignment: CrossAxisAlignment.start,
+//                  children: [
+//                    Text(data.name,
+//                        style:
+//                            AppStyles.blackWithBoldFontTextStyle(context, 15.0)
+//                                .copyWith(color: AppColors.COLOR_BLACK)
+//                                .copyWith(fontWeight: FontWeight.w600)),
+//                    SizedBox(
+//                      height: 5.0,
+//                    ),
+//                    Row(
+//                      crossAxisAlignment: CrossAxisAlignment.center,
+//                      children: [
+////                        Icon(
+////                          Icons.star,
+////                          size: 14.0,
+////                          color: AppColors.COLOR_GREEN_RATING,// add custom icons also
+////                        ),
+//
 //                        Icon(
-//                          Icons.star,
-//                          size: 14.0,
-//                          color: AppColors.COLOR_GREEN_RATING,// add custom icons also
+//                          FontAwesomeIcons.solidStar,
+//                          color: AppColors.GREEN_BRIGHT_COLOR,
+//                          size: 10.0,
 //                        ),
-
-                        Icon(
-                          FontAwesomeIcons.solidStar,
-                          color: AppColors.GREEN_BRIGHT_COLOR,
-                          size: 10.0,
-                        ),
-
-                        SizedBox(
-                          width: 3.0,
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5.0),
-                          child: Text(
-                            data.rating.toString(),
-                            style: AppStyles.blackWithBoldFontTextStyle(
-                                    context, 13.0)
-                                .copyWith(color: AppColors.COLOR_GREEN_RATING),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-
-//      Padding(
-//        padding: EdgeInsets.symmetric(horizontal: 0.0,),
-//        child: Text(
-//          data.description,
-//          style: AppStyles.blackWithDifferentFontTextStyle(context, 12.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+//
+//                        SizedBox(
+//                          width: 3.0,
+//                        ),
+//
+//                        Padding(
+//                          padding: const EdgeInsets.only(left: 5.0),
+//                          child: Text(
+//                            data.rating.toString(),
+//                            style: AppStyles.blackWithBoldFontTextStyle(
+//                                    context, 13.0)
+//                                .copyWith(color: AppColors.COLOR_GREEN_RATING),
+//                          ),
+//                        )
+//                      ],
+//                    ),
+//                  ],
+//                ),
+//              ),
+//            ],
+//          ),
 //        ),
 //      ),
-
-      ReadMoreText(
-        data.description,
-        // "This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text.",
-        trimCollapsedText: AppStrings.READ_MORE,
-        trimExpandedText: AppStrings.READ_LESS,
-        trimLines: 2,
-        textAlign: TextAlign.start,
-        trimMode: TrimMode.Line,
-        delimiter: ".",
-        style: AppStyles.blackWithDifferentFontTextStyle(context, 10.0.sp)
-            .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-      ),
-
-      SizedBox(
-        height: 10.0,
-      ),
-    ],
-  );
-}
+//
+////      Padding(
+////        padding: EdgeInsets.symmetric(horizontal: 0.0,),
+////        child: Text(
+////          data.description,
+////          style: AppStyles.blackWithDifferentFontTextStyle(context, 12.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+////        ),
+////      ),
+//
+//      ReadMoreText(
+//        data.description,
+//        // "This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text.",
+//        trimCollapsedText: AppStrings.READ_MORE,
+//        trimExpandedText: AppStrings.READ_LESS,
+//        trimLines: 2,
+//        textAlign: TextAlign.start,
+//        trimMode: TrimMode.Line,
+////        delimiter: ".",
+//        style: AppStyles.blackWithDifferentFontTextStyle(context, 10.0.sp)
+//            .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+//      ),
+//
+//      SizedBox(
+//        height: 10.0,
+//      ),
+//    ],
+//  );
+//}
 
 Widget searchTextField({BuildContext context}) {
   return TextFormField(

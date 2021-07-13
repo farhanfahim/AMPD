@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+//import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sizer/sizer.dart';
 class OtpTextField extends StatelessWidget {
   const OtpTextField({

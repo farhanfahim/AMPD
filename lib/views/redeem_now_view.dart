@@ -11,7 +11,7 @@ class RedeemNowView extends StatefulWidget {
 }
 
 class _RedeemNowViewState extends State<RedeemNowView> {
-  String _appBarTitle = 'Home';
+  String _appBarTitle = 'Offer';
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _RedeemNowViewState extends State<RedeemNowView> {
               if(value) {
                 _appBarTitle = 'Offer Details';
               } else {
-                _appBarTitle = 'Home';
+                _appBarTitle = 'Offer';
               }
             });
           },
