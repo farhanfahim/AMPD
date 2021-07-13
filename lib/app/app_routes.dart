@@ -177,7 +177,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => QrScanView(),
+            builder: (BuildContext context) => QrScanView(routeSettings.arguments),
           );
         }
 

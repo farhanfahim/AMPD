@@ -189,7 +189,11 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                     GradientButton(
                       onTap: () {
 //                        Navigator.of(context).pop();
-                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: false);
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+                          'isGuestLogin' : false,
+                          'tab_index' : 1,
+                          'show_tutorial' : true
+                        });
                       },
                       text: AppStrings.CREATE,
                     ),

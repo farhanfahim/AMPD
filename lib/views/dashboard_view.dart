@@ -12,8 +12,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class DashboardView extends StatefulWidget {
   bool isGuestLogin;
+  Map<String, dynamic> map;
 
-  DashboardView(this.isGuestLogin);
+  DashboardView(this.map);
 
   @override
   _DashboardViewState createState() => _DashboardViewState();
@@ -40,10 +41,10 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   void initState() {
-    _selectedPageIndex = 1;
+    _selectedPageIndex = widget.map['tab_index'];
     listOfMainScreens = [
       SavedCoupons1View(),
-      HomeView(widget.isGuestLogin),
+      HomeView(widget.map['isGuestLogin']),
       SideMenuView(),
     ];
 
@@ -116,7 +117,7 @@ class _DashboardViewState extends State<DashboardView> {
                             child: GestureDetector(
                               onTap: () {
                                 print('0 tapped');
-                                if (!widget.isGuestLogin) {
+                                if (!widget.map['isGuestLogin']) {
                                   setState(() {
                                     _selectedPageIndex = 0;
                                     _pageController.jumpToPage(0);
@@ -150,7 +151,7 @@ class _DashboardViewState extends State<DashboardView> {
                             child: GestureDetector(
                               onTap: () {
                                 print('2 tapped');
-                                if (!widget.isGuestLogin) {
+                                if (!widget.map['isGuestLogin']) {
                                   setState(() {
                                     _selectedPageIndex = 2;
                                     _pageController.jumpToPage(2);
@@ -231,7 +232,7 @@ class _DashboardViewState extends State<DashboardView> {
           ),
         ),
 
-        _tutorialCount < 3? GestureDetector(
+        widget.map['show_tutorial']? _tutorialCount < 3? GestureDetector(
           onTap: () {
             setState(() {
               _tutorialCount++;
@@ -273,7 +274,7 @@ class _DashboardViewState extends State<DashboardView> {
               ),
             ),
           ),
-        ) : Container()
+        ) : Container() : Container()
       ],
     );
   }

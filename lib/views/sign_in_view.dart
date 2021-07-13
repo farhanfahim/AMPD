@@ -153,7 +153,11 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: false);
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+                          'isGuestLogin' : false,
+                          'tab_index' : 1,
+                          'show_tutorial' : true
+                        });
                         /*  showDialog(
                             context: context,
                             builder: (BuildContext context1) {

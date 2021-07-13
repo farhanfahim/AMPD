@@ -6,6 +6,7 @@ import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/utils/Util.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
@@ -19,6 +20,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 class QrScanView extends StatefulWidget {
+  bool fromSavedCoupons;
+
+  QrScanView(this.fromSavedCoupons);
+
   @override
   _QrScanState createState() => _QrScanState();
 }
@@ -117,7 +122,9 @@ class _QrScanState extends State<QrScanView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pop(context);
+                        if (!widget.fromSavedCoupons) {
+                          Navigator.pop(context);
+                        }
                         showDialog(
                             context: context,
                             builder: (BuildContext context1) {
@@ -128,7 +135,16 @@ class _QrScanState extends State<QrScanView> {
                                 ratingBar: RatingBarWidget(),
                                 buttonText1: AppStrings.SUBMIT,
                                 onPressed1: () {
-                                  Navigator.pop(context1);
+                                  if(widget.fromSavedCoupons) {
+                                    Navigator.pop(context1);
+                                    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+                                      'isGuestLogin' : false,
+                                      'tab_index' : 0,
+                                      'show_tutorial' : false
+                                    });
+                                  } else {
+                                    Navigator.pop(context1);
+                                  }
                                 },
                                 showImage: false,
                               );

@@ -552,7 +552,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                                                       buttonText2: AppStrings.NO,
                                                                       onPressed1: () {
                                                                         Navigator.pop(context1);
-                                                                        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
+                                                                        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: true);
                                                                       },
                                                                       onPressed2: () {
                                                                         Navigator.pop(context1);

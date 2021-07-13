@@ -117,7 +117,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                               buttonText2: AppStrings.NO,
                               onPressed1: () {
                                 Navigator.pop(context1);
-                                Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW);
+                                Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: false);
                               },
                               onPressed2: () {
                                 Navigator.pop(context1);
