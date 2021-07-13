@@ -68,7 +68,7 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                         Container(
                           margin: EdgeInsets.symmetric(
                               horizontal:
-                                  MediaQuery.of(context).size.width * .13),
+                                  MediaQuery.of(context).size.width),
                           padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
                           child: Text(
                             widget.subTitle,

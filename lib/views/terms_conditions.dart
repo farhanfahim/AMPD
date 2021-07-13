@@ -41,7 +41,7 @@ class _TermsConditionsState extends State<TermsConditionsView> {
                       heading1: AppStrings.TERMS_CONDITION,
                       heading2: AppStrings.TERMS_AND_CONDITIONS_HELP),
                   SizedBox(
-                    height: 10.0,
+                    height: 30.0,
                   ),
 
                   Align(

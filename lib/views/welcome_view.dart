@@ -56,7 +56,7 @@ class _WelcomeViewState extends State<WelcomeView> {
                   style: AppStyles.blackWithBoldFontTextStyle(context, 20.0),
                 ),
                 SizedBox(
-                  height: 30.0,
+                  height: 20.0,
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(
