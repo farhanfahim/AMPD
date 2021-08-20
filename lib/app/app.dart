@@ -2,6 +2,7 @@
 import 'package:ampd/appresources/theme.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/repo/register_repository.dart';
+import 'package:ampd/repo/register_via_phone_repository.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -87,5 +88,9 @@ class App extends StatelessWidget {
   //
   RegisterRepository getRegisterRepository({@required AppPreferences appPreferences}) {
     return RegisterRepository(appPreferences: appPreferences);
+  }
+
+  RegisterViaPhoneRepository getRegisterViaPhoneRepository({@required AppPreferences appPreferences}) {
+    return RegisterViaPhoneRepository(appPreferences: appPreferences);
   }
 }

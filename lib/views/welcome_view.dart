@@ -1,13 +1,19 @@
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/login_response.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/viewmodel/register_via_phone_viewmodel.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +28,11 @@ class _WelcomeViewState extends State<WelcomeView> {
   TextEditingController numberController = new TextEditingController();
   int numberValidation = AppConstants.PHONE_VALIDATION;
   String phoneNo = "";
+  bool _enabled = true;
+  bool _isInternetAvailable = true;
+  String _loginPlatform;
+
+  RegisterViaPhoneViewModel _registerViaPhoneViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +107,13 @@ class _WelcomeViewState extends State<WelcomeView> {
                 ),
                 ButtonBorder(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-                      'isGuestLogin' : true,
-                      'tab_index' : 1,
-                      'show_tutorial' : true
-                    });
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, AppRoutes.DASHBOARD_VIEW, (route) => false,
+                        arguments: {
+                          'isGuestLogin': true,
+                          'tab_index': 1,
+                          'show_tutorial': true
+                        });
                   },
                   text: AppStrings.GUEST_LOGIN,
                 ),
@@ -113,11 +126,16 @@ class _WelcomeViewState extends State<WelcomeView> {
         ));
   }
 
+  @override
+  void initState() {
+    subscribeToViewModel();
+  }
+
   showPhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.PHONE_NUMBER_TITLE,
         AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc) {
       Navigator.pop(bc);
-      showOtpBottomSheet(context);
+      callRegisterViaPhoneApi();
     }, AppStrings.SUBMIT, false);
   }
 
@@ -186,5 +204,64 @@ class _WelcomeViewState extends State<WelcomeView> {
         ),
       ],
     );
+  }
+
+  void subscribeToViewModel() {
+    _registerViaPhoneViewModel
+        .getSignUpRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+      if (mounted) {
+        setState(() {
+          _enabled = true;
+        });
+      }
+
+      if (response.success) {
+         ToastUtil.showToast(context, response.toString());
+
+        LoginResponse responseLogin = response.data;
+
+        if (response.data != null) {
+          App().getAppPreferences().isPreferenceReady;
+          App().getAppPreferences().setIsLoggedIn(loggedIn: true);
+          App().getAppPreferences().setLoginPlatform(platform: _loginPlatform);
+
+          showOtpBottomSheet(context);
+        } else {
+          ToastUtil.showToast(context, response.msg);
+        }
+      } else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+  }
+
+  Future<void> callRegisterViaPhoneApi() async {
+    setState(() {
+      _enabled = false;
+      _loginPlatform = "normal";
+    });
+
+    String number = numberController.text.trim();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map();
+        map['phone'] = number;
+        _registerViaPhoneViewModel.registerViaPhone(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
   }
 }
