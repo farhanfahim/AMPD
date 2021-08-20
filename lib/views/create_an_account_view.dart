@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
-import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
@@ -12,19 +10,13 @@ import 'package:ampd/data/model/login_response.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/register_viewmodel.dart';
-import 'package:ampd/widgets/button_border.dart';
-import 'package:ampd/widgets/custom_text_form.dart';
 import 'package:ampd/widgets/gradient_button.dart';
-import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
-
-import '../appresources/app_colors.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
 
