@@ -1,14 +1,16 @@
 class NetworkEndpoints {
 
-   static const String BASE_URL = "https://staging.teematesgolf.com/api/v1/";
+   static const String BASE_URL = "https://ampd.tekstaging.com/api/v1/";
 
   //AUTH
   static const String LOGIN = BASE_URL+"login";
-  static const String SIGNUP = BASE_URL+"register_user";
+  static const String REGISTER_VIA_PHONE = BASE_URL+"register-via-phone";
+  static const String REGISTER = BASE_URL+"register";
   static const String CHANGE_PASSWORD = BASE_URL+"change-password";
   static const String FORGOT_PASSWORD = BASE_URL+"forget-password";
   static const String SOCIAL_LOGIN = BASE_URL+"social_login";
   static const String VERIFY_EMAIL_API = BASE_URL+"verify/email-confirmation";
+
   //CONTACT-US
   static const String CONTACT_US  = BASE_URL+"contact";
 
@@ -32,7 +34,7 @@ class NetworkEndpoints {
   static const String DASHBOARD  = BASE_URL+"get_dashboard";
 
   //FORGET PASSWORD
-  static const String FORGET_PASSWORD = BASE_URL + "forget-password";
+  static const String FORGET_PASSWORD = BASE_URL + "forgot-password";
 
   //NOTIFICATION
   static const String NOTIFICATION = BASE_URL + "get_all_notifications";
@@ -41,6 +43,7 @@ class NetworkEndpoints {
   //VERIFY_OTP /
   static const String VERIFY_OTP_CODE = BASE_URL + "verify-reset-code";
   static const String RESEND_CODE = BASE_URL + "resend-code";
+  static const String VERIFY_PHONE = BASE_URL + "verify-phone";
   static const String RESEND_EMAIL_OTP_CODE = BASE_URL + "resend-email-confirmation";
 
   //RESET PASSWORD /
