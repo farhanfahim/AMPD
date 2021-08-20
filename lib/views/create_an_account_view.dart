@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
@@ -7,10 +8,15 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/login_response.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/viewmodel/register_viewmodel.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/custom_text_form.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,8 +34,6 @@ class CreateAnAccountView extends StatefulWidget {
 }
 
 class _CreateAnAccountViewState extends State<CreateAnAccountView> {
-
-
 
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
@@ -52,20 +56,26 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
   var passwordNode = FocusNode();
   var cPasswordNode = FocusNode();
 
+
   String firstName = "";
   String lastName = "";
   String email = "";
   String password = "";
   String cPassword = "";
+  String _loginPlatform;
 
   bool _isEmailValid = false;
   bool obscureText = true;
   bool cPasswordObscureText = true;
+  bool _isInternetAvailable = true;
+
 
   IconData checkIconData = Icons.check;
   IconData iconData = Icons.visibility_off;
   IconData iconData1 = Icons.visibility_off;
   IconData iconData2 = Icons.visibility_off;
+
+  RegisterViewModel _registerViewModel;
 
   @override
   void initState() {
@@ -102,6 +112,8 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
         );
       }
     });
+
+    subscribeToViewModel();
   }
   @override
   Widget build(BuildContext context) {
@@ -188,12 +200,9 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
 
                     GradientButton(
                       onTap: () {
+                        callRegisterApi();
 //                        Navigator.of(context).pop();
-                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-                          'isGuestLogin' : false,
-                          'tab_index' : 1,
-                          'show_tutorial' : true
-                        });
+
                       },
                       text: AppStrings.CREATE,
                     ),
@@ -207,7 +216,6 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
           )),
     );
   }
-
 
 
   Stack firstNameTextField(BuildContext context) {
@@ -272,6 +280,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
       ],
     );
   }
+
   Stack lastNameTextField(BuildContext context) {
     return Stack(
       children: [
@@ -334,7 +343,6 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
       ],
     );
   }
-
 
   Stack customEmailTextField(BuildContext context) {
     return Stack(
@@ -588,6 +596,95 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
       ],
     );
   }
+
+  Future<void> callRegisterApi() async {
+
+    setState(() {
+      _enabled = false;
+      _loginPlatform = "normal";
+    });
+
+    String firstName = firstNameController.text.trim();
+    String lastName = lastNameController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String confirmPassword = cPasswordController.text.toString();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+        //_firebaseMessaging.getToken().then((token) {
+        //  print("Token : $token");
+
+          var map = Map();
+          map['platform'] = _loginPlatform;
+          map['firstName'] = firstName;
+          map['lastName'] = lastName;
+          map['email'] = email;
+          map['password'] = password;
+          map['password_confirmation'] = confirmPassword;
+          map['device_type'] = Util.getDeviceType();
+         // map['device_token'] = token;
+
+          _registerViewModel.register(map);
+        //});
+
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _registerViewModel
+        .getSignUpRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+
+      if(mounted) {
+        setState(() {
+          _enabled = true;
+        });
+      }
+
+      if(response.success) {
+        // ToastUtil.showToast(context, response.msg);
+
+        LoginResponse responseLogin = response.data;
+
+        if(response.data != null && response.userVerified == 1) {
+          App()
+              .getAppPreferences()
+              .isPreferenceReady;
+          App().getAppPreferences().setIsLoggedIn(loggedIn: true);
+          App().getAppPreferences().setLoginPlatform(platform: _loginPlatform);
+
+
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+            'isGuestLogin' : false,
+            'tab_index' : 1,
+            'show_tutorial' : true
+          });
+
+        }else{
+          Map map = Map<String, String>();
+          map['email'] = emailController.text.toString();
+         /* Navigator.of(context).pushNamed(
+              AppRoutes.EMAIL_VERIFY_OTP_VIEW, arguments: map);*/
+        }
+      } else if(response.data is DioError){
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+  }
+
 
 }
 
