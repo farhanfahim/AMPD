@@ -237,7 +237,7 @@ class _SignInViewState extends State<SignInView> {
           ],
         ), (bc2) {
       Navigator.pop(bc2);
-      print("submit");
+      callResetPasswordApi();
     }, AppStrings.UPDATE_PASSWORD, false);
   }
 
@@ -821,16 +821,9 @@ class _SignInViewState extends State<SignInView> {
           _isInternetAvailable = true;
         });
         var map = Map();
-        if(isForgetPasswordFlow){
-          map['phone'] = number;
-          map['code'] = code;
-          map['password'] = password;
-          _loginViewModel.resetPassword(map);
-        }else{
-          map['phone'] = number;
-          map['code'] = code;
-          _loginViewModel.verifyOtp(map);
-        }
+        map['phone'] = number;
+        map['code'] = code;
+        _loginViewModel.verifyOtp(map);
 
 
       } else {
@@ -861,6 +854,27 @@ class _SignInViewState extends State<SignInView> {
     });
   }
 
+  Future<void> callResetPasswordApi() async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map();
+        map['phone'] = phoneNo;
+        map['code'] = code;
+        map['password'] = password;
+        _loginViewModel.resetPassword(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
   void subscribeToViewModel() {
     _loginViewModel
         .getLoginRepository()
