@@ -25,6 +25,11 @@ class NetworkNAO {
       hasHeader: false,
       token: "",
       formData: FormData.fromMap({
+        NetworkConfig.API_KEY_FIRST_NAME: map['first_name'],
+        NetworkConfig.API_KEY_LAST_NAME: map['last_name'],
+        NetworkConfig.API_KEY_PHONE: map['phone'],
+        NetworkConfig.API_KEY_PASSWORD: map['password'],
+        NetworkConfig.API_KEY_DEVICE_TYPE: map['device_type'],
         NetworkConfig.API_KEY_DEVICE_TOKEN: map['device_token'],
         NetworkConfig.API_KEY_EMAIL: map['email'],
       }))
@@ -33,25 +38,24 @@ class NetworkNAO {
     return response;
   });
 
-  static Future<dynamic> login(String phone, String password, String deviceType,
-          String deviceToken) =>
+  static Future<dynamic> login(Map map) =>
       NetworkUtil()
           .post(
               url: NetworkEndpoints.LOGIN,
               hasHeader: false,
               token: "",
               formData: FormData.fromMap({
-                NetworkConfig.API_KEY_PHONE: phone,
-                NetworkConfig.API_KEY_PASSWORD: password,
-                NetworkConfig.API_KEY_DEVICE_TYPE: deviceType,
-                NetworkConfig.API_KEY_DEVICE_TOKEN: deviceToken
+                NetworkConfig.API_KEY_PHONE: map['phone'],
+                NetworkConfig.API_KEY_PASSWORD: map['password'],
+                NetworkConfig.API_KEY_DEVICE_TYPE: map['device_type'],
+                NetworkConfig.API_KEY_DEVICE_TOKEN: map['device_token'],
               }))
           .then((dynamic response) {
         print(response);
         return response;
       });
 
-  static Future<dynamic> forgotPassword(Map<String, String> map) =>
+  static Future<dynamic> forgotPassword(Map map) =>
       NetworkUtil().post(
           url: NetworkEndpoints.FORGOT_PASSWORD,
           hasHeader: false,
@@ -60,12 +64,12 @@ class NetworkNAO {
             NetworkConfig.API_KEY_PHONE: map['phone'],
           })
       ).then((dynamic response) {
-        print(map['email']);
+        print(map['phone']);
         //print(response);
         return response;
       });
 
-  static Future<dynamic> resetPassword(Map<String, String> map) =>
+  static Future<dynamic> resetPassword(Map map) =>
       NetworkUtil().post(
           url: NetworkEndpoints.RESET_PASSWORD,
           hasHeader: false,
@@ -76,12 +80,14 @@ class NetworkNAO {
             NetworkConfig.API_KEY_PASSWORD: map['password'],
           })
       ).then((dynamic response) {
-        print(map['email']);
+        print(map['phone']);
+        print(map['code']);
+        print(map['password']);
         //print(response);
         return response;
       });
 
-  static Future<dynamic> verifyOTP(Map<String, String> map) =>
+  static Future<dynamic> verifyOTP(Map map) =>
       NetworkUtil().post(
           url: NetworkEndpoints.VERIFY_PHONE,
           hasHeader: false,
@@ -92,8 +98,8 @@ class NetworkNAO {
           })
       ).then((dynamic response) {
 
+        print(map['phone']);
         print(map['code']);
-        print(map['email']);
         //print(response);
         return response;
       });

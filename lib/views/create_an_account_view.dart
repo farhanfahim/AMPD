@@ -6,7 +6,8 @@ import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/login_response.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/register_viewmodel.dart';
@@ -21,12 +22,15 @@ import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
 
 class CreateAnAccountView extends StatefulWidget {
+  Map<String, dynamic> map;
+
+  CreateAnAccountView(this.map);
   @override
   _CreateAnAccountViewState createState() => _CreateAnAccountViewState();
 }
 
 class _CreateAnAccountViewState extends State<CreateAnAccountView> {
-
+  FirebaseMessaging _firebaseMessaging;
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
@@ -72,7 +76,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
   @override
   void initState() {
     super.initState();
-
+    _firebaseMessaging = FirebaseMessaging();
     firstNameController.addListener(() {
       if (firstNameController.text.length <= firstNameValidation) {
         firstName = firstNameController.text;
@@ -104,7 +108,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
         );
       }
     });
-
+    _registerViewModel = RegisterViewModel(App());
     subscribeToViewModel();
   }
   @override
@@ -193,7 +197,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                     GradientButton(
                       onTap: () {
                         callRegisterApi();
-//                        Navigator.of(context).pop();
+//
 
                       },
                       text: AppStrings.CREATE,
@@ -608,21 +612,21 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
         setState(() {
           _isInternetAvailable = true;
         });
-        //_firebaseMessaging.getToken().then((token) {
-        //  print("Token : $token");
+        _firebaseMessaging.getToken().then((token) {
+          print("Token : $token");
 
           var map = Map();
-          map['platform'] = _loginPlatform;
-          map['firstName'] = firstName;
-          map['lastName'] = lastName;
-          map['email'] = email;
+          map['first_name'] = firstName;
+          map['last_name'] = lastName;
+          map['phone'] = widget.map['phone'];
           map['password'] = password;
-          map['password_confirmation'] = confirmPassword;
           map['device_type'] = Util.getDeviceType();
-         // map['device_token'] = token;
+          map['device_token'] = token;
+          map['email'] = email;
+
 
           _registerViewModel.register(map);
-        //});
+        });
 
       } else {
         setState(() {
@@ -634,7 +638,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
 
   void subscribeToViewModel() {
     _registerViewModel
-        .getSignUpRepository()
+        .getCompleteRegisterRepository()
         .getRepositoryResponse()
         .listen((response) async {
 
@@ -645,29 +649,17 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
       }
 
       if(response.success) {
-        // ToastUtil.showToast(context, response.msg);
+        ToastUtil.showToast(context, response.msg);
 
-        LoginResponse responseLogin = response.data;
+        RegisterResponseModel responseRegister = response.data;
 
-        if(response.data != null && response.userVerified == 1) {
-          App()
-              .getAppPreferences()
-              .isPreferenceReady;
-          App().getAppPreferences().setIsLoggedIn(loggedIn: true);
-          App().getAppPreferences().setLoginPlatform(platform: _loginPlatform);
+        if(responseRegister != null) {
 
-
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-            'isGuestLogin' : false,
-            'tab_index' : 1,
-            'show_tutorial' : true
-          });
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW, (route) => false);
 
         }else{
           Map map = Map<String, String>();
           map['email'] = emailController.text.toString();
-         /* Navigator.of(context).pushNamed(
-              AppRoutes.EMAIL_VERIFY_OTP_VIEW, arguments: map);*/
         }
       } else if(response.data is DioError){
         _isInternetAvailable = Util.showErrorMsg(context, response.data);

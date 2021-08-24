@@ -161,7 +161,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => CreateAnAccountView(),
+            builder: (BuildContext context) => CreateAnAccountView(routeSettings.arguments),
           );
         }
 

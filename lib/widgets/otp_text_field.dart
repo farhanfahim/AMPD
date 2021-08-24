@@ -7,7 +7,11 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 //import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sizer/sizer.dart';
 class OtpTextField extends StatelessWidget {
+
+  final ValueChanged<String> onOtpCodeChanged;
+
   const OtpTextField({
+    this.onOtpCodeChanged,
     Key key,
   }) : super(key: key);
 
@@ -44,6 +48,12 @@ class OtpTextField extends StatelessWidget {
         cursorColor:  AppColors.ACCENT_COLOR,
         animationDuration: Duration(milliseconds: 300),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        // onSubmitted: (otp){
+        //   onOtpCodeChanged(otp);
+        // },
+        onCompleted: (otp){
+          onOtpCodeChanged(otp);
+        },
         // enableActiveFill: true,
         // errorAnimationController: errorController,
         //controller: otpController,

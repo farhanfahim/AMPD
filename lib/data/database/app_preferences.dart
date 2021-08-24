@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// import 'package:wave_on_the_go/models/login_response.dart';
+// import 'package:wave_on_the_go/models/login_response_model.dart';
 
 class AppPreferences {
   //------------------------------------------------------------- Preference Constants ------------------------------------------------------------

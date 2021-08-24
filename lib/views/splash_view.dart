@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
@@ -19,7 +20,7 @@ class _SplashViewState extends State<SplashView> {
     // TODO: implement initState
     super.initState();
     Timer(Duration(seconds: 3),
-            () =>  Navigator.pushNamed(context, AppRoutes.WELCOME_VIEW));
+            () =>  checkIsLoggedIn());
   }
   @override
   Widget build(BuildContext context) {
@@ -59,5 +60,24 @@ class _SplashViewState extends State<SplashView> {
         ],
       ),
     );
+  }
+
+  Future checkIsLoggedIn() async {
+    await App().getAppPreferences().isPreferenceReady;
+
+    App().getAppPreferences().getIsLoggedIn().then((value) {
+      if(value) {
+        //   ToastUtil.showToast(context, "value: "+value.toString());
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+          'isGuestLogin' : false,
+          'tab_index' : 1,
+          'show_tutorial' : false
+        });
+      }else{
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (route) => false);
+      }
+    }).catchError((onError){
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (route) => false);
+    });
   }
 }

@@ -20,7 +20,7 @@ class RegisterViewModel {
     _registerRepository = registerRepository;
   }
 
-  RegisterRepository getSignUpRepository() => _registerRepository;
+  RegisterRepository getCompleteRegisterRepository() => _registerRepository;
 
   RegisterRepository clearRepositroyResponse() {
     _registerRepository = null;
@@ -28,6 +28,14 @@ class RegisterViewModel {
 
   void register(Map map) {
     _registerRepository.register(map);
+  }
+
+  void registerViaPhone(Map map) {
+    _registerRepository.registerViaPhone(map);
+  }
+
+  void verifyOtp(Map map) {
+    _registerRepository.verifyOtp(map);
   }
 
 }

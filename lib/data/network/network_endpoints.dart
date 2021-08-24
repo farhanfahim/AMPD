@@ -7,7 +7,7 @@ class NetworkEndpoints {
   static const String REGISTER_VIA_PHONE = BASE_URL+"register-via-phone";
   static const String REGISTER = BASE_URL+"register";
   static const String CHANGE_PASSWORD = BASE_URL+"change-password";
-  static const String FORGOT_PASSWORD = BASE_URL+"forget-password";
+  static const String FORGOT_PASSWORD = BASE_URL+"forgot-password";
   static const String SOCIAL_LOGIN = BASE_URL+"social_login";
   static const String VERIFY_EMAIL_API = BASE_URL+"verify/email-confirmation";
 

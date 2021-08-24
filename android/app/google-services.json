@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "395490467923",
+    "project_id": "ampd-d0aee",
+    "storage_bucket": "ampd-d0aee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:395490467923:android:b01ca13c577956fce966a6",
+        "android_client_info": {
+          "package_name": "com.app.ampd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "395490467923-o52fufel5h15bdo2kmucr1b06rb9gpr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqGb1MvrxRSOp6zIIbcEvG4xdhSfiFDT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "395490467923-o52fufel5h15bdo2kmucr1b06rb9gpr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

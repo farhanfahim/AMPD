@@ -5,10 +5,10 @@ import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/login_response.dart';
+import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
-import 'package:ampd/viewmodel/register_via_phone_viewmodel.dart';
+import 'package:ampd/viewmodel/register_viewmodel.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
@@ -20,6 +20,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
 class WelcomeView extends StatefulWidget {
+
   @override
   _WelcomeViewState createState() => _WelcomeViewState();
 }
@@ -28,11 +29,12 @@ class _WelcomeViewState extends State<WelcomeView> {
   TextEditingController numberController = new TextEditingController();
   int numberValidation = AppConstants.PHONE_VALIDATION;
   String phoneNo = "";
+  String code = "";
   bool _enabled = true;
   bool _isInternetAvailable = true;
   String _loginPlatform;
 
-  RegisterViaPhoneViewModel _registerViaPhoneViewModel;
+  RegisterViewModel _registerViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +130,8 @@ class _WelcomeViewState extends State<WelcomeView> {
 
   @override
   void initState() {
+    //throw Exception("This is a crash!");
+    _registerViewModel = RegisterViewModel(App());
     subscribeToViewModel();
   }
 
@@ -141,9 +145,13 @@ class _WelcomeViewState extends State<WelcomeView> {
 
   showOtpBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc1) {
+        AppStrings.OTP_DESC, OtpTextField(
+            onOtpCodeChanged: (otp){
+              code = otp;
+        }),
+            (bc1) {
       Navigator.pop(bc1);
-      Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW);
+      callVerifyOtpApi();
     }, AppStrings.VERIFY_NOW, true);
   }
 
@@ -207,8 +215,8 @@ class _WelcomeViewState extends State<WelcomeView> {
   }
 
   void subscribeToViewModel() {
-    _registerViaPhoneViewModel
-        .getSignUpRepository()
+    _registerViewModel
+        .getCompleteRegisterRepository()
         .getRepositoryResponse()
         .listen((response) async {
       if (mounted) {
@@ -217,26 +225,25 @@ class _WelcomeViewState extends State<WelcomeView> {
         });
       }
 
-      if (response.success) {
-         ToastUtil.showToast(context, response.toString());
+      if (response.msg == "Verified") {
+        Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW,arguments: {
+          'phone' : phoneNo,
+        });
 
-        LoginResponse responseLogin = response.data;
-
-        if (response.data != null) {
-          App().getAppPreferences().isPreferenceReady;
-          App().getAppPreferences().setIsLoggedIn(loggedIn: true);
-          App().getAppPreferences().setLoginPlatform(platform: _loginPlatform);
-
-          showOtpBottomSheet(context);
-        } else {
-          ToastUtil.showToast(context, response.msg);
-        }
-      } else if (response.data is DioError) {
+      }
+      else if(response.msg == "Code has been sent to your phone number") {
+        ToastUtil.showToast(context, response.msg);
+        showOtpBottomSheet(context);
+      }
+      else if (response.data is DioError) {
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
-      } else {
+      }
+      else {
         ToastUtil.showToast(context, response.msg);
       }
     });
+
+
   }
 
   Future<void> callRegisterViaPhoneApi() async {
@@ -256,7 +263,7 @@ class _WelcomeViewState extends State<WelcomeView> {
 
         var map = Map();
         map['phone'] = number;
-        _registerViaPhoneViewModel.registerViaPhone(map);
+        _registerViewModel.registerViaPhone(map);
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -264,4 +271,28 @@ class _WelcomeViewState extends State<WelcomeView> {
       }
     });
   }
+
+  Future<void> callVerifyOtpApi() async {
+
+    String number = numberController.text.trim();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map();
+        map['phone'] = number;
+        map['code'] = code;
+        _registerViewModel.verifyOtp(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
 }

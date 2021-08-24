@@ -1,3 +1,4 @@
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
@@ -5,38 +6,49 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/login_response_model.dart';
+import 'package:ampd/data/model/register_response_model.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/viewmodel/login_viewmodel.dart';
 import 'package:ampd/widgets/button_border.dart';
-import 'package:ampd/widgets/custom_text_form.dart';
-import 'package:ampd/widgets/dialog_view.dart';
-import 'package:ampd/widgets/rating_dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:path/path.dart';
 import 'package:sizer/sizer.dart';
-
-import '../appresources/app_colors.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
 
 class SignInView extends StatefulWidget {
+
+
+
+
   @override
   _SignInViewState createState() => _SignInViewState();
 }
 
 class _SignInViewState extends State<SignInView> {
+  FirebaseMessaging _firebaseMessaging;
+  LoginViewModel _loginViewModel;
+
+  bool isForgetPasswordFlow = false;
+
   TextEditingController emailController = new TextEditingController();
   TextEditingController numberController = new TextEditingController();
+  TextEditingController phoneNumberController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController nPasswordController = new TextEditingController();
   TextEditingController cPasswordController = new TextEditingController();
 
   int numberValidation = AppConstants.PHONE_VALIDATION;
+  int phoneNumberValidation = AppConstants.PHONE_VALIDATION;
   int emailValidation = AppConstants.EMAIL_VALIDATION;
   int passwordValidation = AppConstants.PASSWORD_VALIDATION;
   int nPasswordValidation = AppConstants.PASSWORD_VALIDATION;
@@ -46,6 +58,7 @@ class _SignInViewState extends State<SignInView> {
   bool _enabled1 = true;
   bool _enabled2 = true;
 
+  var phoneNumberFocus = FocusNode();
   var emailFocus = FocusNode();
   var passwordNode = FocusNode();
   var nPasswordNode = FocusNode();
@@ -56,6 +69,8 @@ class _SignInViewState extends State<SignInView> {
   String nPassword = "";
   String cPassword = "";
   String phoneNo = "";
+  String phoneNo2 = "";
+  String code = "";
 
   bool _isEmailValid = false;
   bool obscureText = true;
@@ -66,6 +81,10 @@ class _SignInViewState extends State<SignInView> {
   IconData iconData = Icons.visibility_off;
   IconData iconData1 = Icons.visibility_off;
   IconData iconData2 = Icons.visibility_off;
+
+
+  String _loginPlatform;
+  bool _isInternetAvailable = true;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +138,7 @@ class _SignInViewState extends State<SignInView> {
                     SizedBox(
                       height: 40.0,
                     ),
-                    customEmailTextField(context),
+                    phoneNoWidget(context),
                     SizedBox(
                       height: 20.0,
                     ),
@@ -136,6 +155,9 @@ class _SignInViewState extends State<SignInView> {
                           child: GestureDetector(
                             onTap: () {
                               showForgetBottomSheet(context);
+                              setState(() {
+                                isForgetPasswordFlow =true;
+                              });
                             },
                             child: Text(
                               AppStrings.FORGET_PASSWORD,
@@ -153,25 +175,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-                          'isGuestLogin' : false,
-                          'tab_index' : 1,
-                          'show_tutorial' : true
-                        });
-                        /*  showDialog(
-                            context: context,
-                            builder: (BuildContext context1) {
-                              return CustomRatingDialog(
-                                contex: context,
-                                subTitle: "How was Starbucks?",
-                                //title: "Your feedback will help us improve our services.",
-                                buttonText1: AppStrings.SUBMIT,
-                                onPressed1: () {
-                                  Navigator.pop(context1);
-                                },
-                                showImage: false,
-                              );
-                            });*/
+                        callLoginApi();
                       },
                       text: AppStrings.LOGIN_TO_MY_ACCOUNT,
                     ),
@@ -181,6 +185,9 @@ class _SignInViewState extends State<SignInView> {
                     ButtonBorder(
                       onTap: () {
                         showPhoneNoBottomSheet(context);
+                        setState(() {
+                          isForgetPasswordFlow =false;
+                        });
                       },
                       text: AppStrings.CREATE_AN_ACCOUNT,
                     ),
@@ -195,21 +202,25 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
+
+  @override
+  void initState() {
+    _firebaseMessaging = FirebaseMessaging();
+    _loginViewModel = LoginViewModel(App());
+    subscribeToViewModel();
+
+
+  }
+
   showForgetBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, "Forgot password",
         AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc) {
       Navigator.pop(bc);
-      showOtp2BottomSheet(context);
+      callForgetPasswordApi();
+
     }, AppStrings.RECOVER_NOW, false);
   }
 
-  showOtp2BottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc1) {
-      Navigator.pop(bc1);
-      showResetPasswordBottomSheet(context);
-    }, AppStrings.VERIFY_NOW, true);
-  }
 
   showResetPasswordBottomSheet(BuildContext context) {
     showBottomSheetWidget(
@@ -234,16 +245,20 @@ class _SignInViewState extends State<SignInView> {
     showBottomSheetWidget(context, AppStrings.PHONE_NUMBER_TITLE,
         AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc3) {
       Navigator.pop(bc3);
-      showOtpBottomSheet(context);
+      callRegisterViaPhoneApi();
     }, AppStrings.SUBMIT, false);
   }
 
   showOtpBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc4) {
-      Navigator.pop(bc4);
-      Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW);
-    }, AppStrings.VERIFY_NOW, true);
+        AppStrings.OTP_DESC, OtpTextField(
+            onOtpCodeChanged: (otp){
+              code = otp;
+            }),
+            (bc1) {
+          Navigator.pop(bc1);
+          callVerifyOtpApi();
+        }, AppStrings.VERIFY_NOW, true);
   }
 
   Stack customEmailTextField(BuildContext context) {
@@ -482,6 +497,72 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
+  Stack phoneNoWidget(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          child: Focus(
+            onFocusChange: (value) {
+              if (value) {
+                phoneNumberController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: phoneNumberController.text.length));
+              }
+            },
+            child: TextFormField(
+//                                enableInteractiveSelection: false,
+              enabled: _enabled,
+              cursorColor: AppColors.ACCENT_COLOR,
+              toolbarOptions: ToolbarOptions(
+                copy: true,
+                cut: true,
+                paste: false,
+                selectAll: false,
+              ),
+              onChanged: (String newVal) {
+                if (newVal.length <= phoneNumberValidation) {
+                  phoneNo2 = newVal;
+                } else {
+                  phoneNumberController.value = new TextEditingValue(
+                      text: phoneNo2,
+                      selection: new TextSelection(
+                          baseOffset: phoneNumberValidation,
+                          extentOffset: phoneNumberValidation,
+                          affinity: TextAffinity.downstream,
+                          isDirectional: false),
+                      composing:
+                      new TextRange(start: 0, end: phoneNumberValidation));
+                  //  _emailController.text = text;
+                }
+              },
+              controller: phoneNumberController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(phoneNumberValidation),
+              ],
+
+              onFieldSubmitted: (texttt) {
+                /*final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+                                if (regExp.hasMatch(phoneNo)) {
+                                  _isEmailValid = true;
+                                } else {
+                                  _isEmailValid = false;
+                                }*/
+              },
+              textInputAction: TextInputAction.next,
+              decoration:
+              AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
+              //   , iconData, (){
+              //
+              // }),
+              style: AppStyles.inputTextStyle(context),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget newPasswordTextField(BuildContext context) {
     return StatefulBuilder(
       builder: (ctx, setStates) {
@@ -659,4 +740,191 @@ class _SignInViewState extends State<SignInView> {
       },
     );
   }
+
+
+
+
+// api calling
+
+  Future<void> callLoginApi() async {
+
+    setState(() {
+      _enabled = false;
+      _loginPlatform = "normal";
+    });
+
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+        _firebaseMessaging.getToken().then((token) {
+          print("Token : $token");
+
+          var map = Map();
+
+          map['phone'] = phoneNo2;
+          map['password'] = password;
+          map['device_type'] = Util.getDeviceType();
+          map['device_token'] = token;
+
+
+          _loginViewModel.login(map);
+        });
+
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
+  Future<void> callRegisterViaPhoneApi() async {
+    setState(() {
+      _enabled = false;
+      _loginPlatform = "normal";
+    });
+
+    String number = numberController.text.trim();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map();
+        map['phone'] = number;
+        _loginViewModel.registerViaPhone(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
+  Future<void> callVerifyOtpApi() async {
+
+    String number = numberController.text.trim();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+        var map = Map();
+        if(isForgetPasswordFlow){
+          map['phone'] = number;
+          map['code'] = code;
+          map['password'] = password;
+          _loginViewModel.resetPassword(map);
+        }else{
+          map['phone'] = number;
+          map['code'] = code;
+          _loginViewModel.verifyOtp(map);
+        }
+
+
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
+  Future<void> callForgetPasswordApi() async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map();
+        map['phone'] = phoneNo;
+        _loginViewModel.forgetPassword(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _loginViewModel
+        .getLoginRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+
+      if(mounted) {
+        setState(() {
+          _enabled = true;
+        });
+      }
+
+      if(response.data is LoginResponseModel) {
+        ToastUtil.showToast(context, response.msg);
+
+        LoginResponseModel responseRegister = response.data;
+
+        if(responseRegister != null) {
+
+          App().getAppPreferences().setIsLoggedIn(loggedIn: true);
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+            'isGuestLogin' : false,
+            'tab_index' : 1,
+            'show_tutorial' : true
+          });
+
+        }else{
+          Map map = Map<String, String>();
+          map['email'] = emailController.text.toString();
+          /* Navigator.of(context).pushNamed(
+              AppRoutes.EMAIL_VERIFY_OTP_VIEW, arguments: map);*/
+        }
+      }
+      else if(response.msg == "Code has been sent to your phone number") {
+        showOtpBottomSheet(context);
+
+      }
+      else if(response.msg == "Verification code has been send successfully"){
+        showOtpBottomSheet(context);
+      }
+      else if(response.msg == "Verified"){
+        if(isForgetPasswordFlow){
+          showResetPasswordBottomSheet(context);
+        }else {
+          ToastUtil.showToast(context, response.msg);
+          Navigator.pushNamed(
+              context, AppRoutes.CREATE_AN_ACCOUNT_VIEW, arguments: {
+            'phone': phoneNo,
+          });
+        }
+      }
+      else if(response.msg == "Password Changed Successfully"){
+        ToastUtil.showToast(context, response.msg);
+      }
+      else if(response.data is DioError){
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      }
+      else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+
+
+
+  }
+
 }
