@@ -821,9 +821,14 @@ class _SignInViewState extends State<SignInView> {
           _isInternetAvailable = true;
         });
         var map = Map();
-        map['phone'] = number;
-        map['code'] = code;
-        _loginViewModel.verifyOtp(map);
+        if(isForgetPasswordFlow){
+          showResetPasswordBottomSheet(context);
+        }else{
+          map['phone'] = number;
+          map['code'] = code;
+          _loginViewModel.verifyOtp(map);
+        }
+
 
 
       } else {
@@ -865,7 +870,7 @@ class _SignInViewState extends State<SignInView> {
 
         var map = Map();
         map['phone'] = phoneNo;
-        map['code'] = code;
+        map['verification_code'] = code;
         map['password'] = password;
         _loginViewModel.resetPassword(map);
       } else {
@@ -916,15 +921,11 @@ class _SignInViewState extends State<SignInView> {
         showOtpBottomSheet(context);
       }
       else if(response.msg == "Verified"){
-        if(isForgetPasswordFlow){
-          showResetPasswordBottomSheet(context);
-        }else {
           ToastUtil.showToast(context, response.msg);
           Navigator.pushNamed(
               context, AppRoutes.CREATE_AN_ACCOUNT_VIEW, arguments: {
             'phone': phoneNo,
           });
-        }
       }
       else if(response.msg == "Password Changed Successfully"){
         ToastUtil.showToast(context, response.msg);

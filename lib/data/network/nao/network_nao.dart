@@ -76,12 +76,12 @@ class NetworkNAO {
           token: null,
           formData: FormData.fromMap({
             NetworkConfig.API_KEY_PHONE: map['phone'],
-            NetworkConfig.API_KEY_CODE: map['code'],
+            NetworkConfig.API_KEY_VERIFICATION_CODE: map['verification_code'],
             NetworkConfig.API_KEY_PASSWORD: map['password'],
           })
       ).then((dynamic response) {
         print(map['phone']);
-        print(map['code']);
+        print(map['verification_code']);
         print(map['password']);
         //print(response);
         return response;
@@ -103,5 +103,18 @@ class NetworkNAO {
         //print(response);
         return response;
       });
+
+
+  static Future<dynamic> getOffers(Map map) =>
+      NetworkUtil().get(
+        url: NetworkEndpoints.OFFERS,
+        hasHeader: true,
+        token: map['access_token'],
+        map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
 
 }

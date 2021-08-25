@@ -1,6 +1,7 @@
 
 import 'package:ampd/appresources/theme.dart';
 import 'package:ampd/data/database/app_preferences.dart';
+import 'package:ampd/repo/home_repository.dart';
 import 'package:ampd/repo/register_repository.dart';
 import 'package:ampd/repo/login_repository.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
@@ -92,5 +93,9 @@ class App extends StatelessWidget {
 
   LoginRepository getLoginRepository({@required AppPreferences appPreferences}) {
     return LoginRepository(appPreferences: appPreferences);
+  }
+
+  HomeRepository getHomeRepository({@required AppPreferences appPreferences}) {
+    return HomeRepository(appPreferences: appPreferences);
   }
 }

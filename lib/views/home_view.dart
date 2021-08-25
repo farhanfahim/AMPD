@@ -1,22 +1,32 @@
+import 'dart:async';
+
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/viewmodel/home_viewmodel.dart';
 import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/offer_card_widget.dart';
 import 'package:ampd/widgets/offer_card_widget_2.dart';
 import 'package:ampd/widgets/swipe_cards/swipe_cards.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeView extends StatefulWidget {
+
+
   bool isGuestLogin;
 
   HomeView(this.isGuestLogin);
@@ -26,6 +36,20 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin<HomeView>{
+  int _totalPages = 0;
+  int _currentPage = 1;
+  int _selectedIndex = -1;
+
+  ScrollController _controller;
+
+  StreamController _streamController;
+
+  HomeViewModel _homeViewModel;
+
+  bool _enabled = true;
+  bool _isInternetAvailable = true;
+  final PagingController<int, OfferModel> _pagingController =
+  PagingController(firstPageKey: 1);
 
   String _appBarTitle = 'Home';
   bool _stackFinished = false;
@@ -146,6 +170,43 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
 
+
+  @override
+  void initState() {
+    _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
+
+    _streamController = new StreamController<List<OfferModel>>.broadcast();
+    _streamController.add(null);
+
+    _controller = ScrollController();
+
+    _homeViewModel = HomeViewModel(App());
+    subscribeToViewModel();
+    callOffersApi();
+
+
+  }
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      print('_fetchPage');
+
+      callOffersApi();
+    } catch (error) {
+      print('error1: $error');
+      _pagingController.error = error;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final appBar1 = appBar(
@@ -243,6 +304,59 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
       appBar: appBar1,
       body: body
     );
+  }
+
+  Future<void> callOffersApi() async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map();
+        map['status'] = 20;
+        _homeViewModel.offer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+  void subscribeToViewModel() {
+    _homeViewModel
+        .getLoginRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+
+      if(mounted) {
+        setState(() {
+          _enabled = true;
+        });
+      }
+
+      if(response.data is OfferModel) {
+        ToastUtil.showToast(context, response.data.toString());
+
+        OfferModel responseRegister = response.data;
+
+        if(responseRegister != null) {
+
+
+        }
+      }
+      else if(response.data is DioError){
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      }
+      else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+
+
+
   }
 }
 

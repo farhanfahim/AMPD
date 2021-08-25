@@ -52,4 +52,7 @@ class NetworkEndpoints {
   //EDIT PROFILE /
   static const String EDIT_PROFILE = BASE_URL + "update_profile";
 
+  //OFFERS /
+   static const String OFFERS = BASE_URL + "offers";
+
 }
