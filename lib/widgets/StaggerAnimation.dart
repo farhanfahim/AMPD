@@ -49,22 +49,21 @@ class StaggerAnimation extends StatelessWidget {
       child: Container(
         width: buttonSqueezeanimation.value,
         padding:  const EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.grey,
-          //     offset: Offset(0.0, 1.0), //(x,y)
-          //     blurRadius: 2.0,
-          //   ),
-          // ],
+         decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Color(0xff174EA0), Color(0xff1E70C6), Color(0xff2490E9)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ),
           borderRadius: buttonSqueezeanimation.value < 75.0 ? BorderRadius.circular(40.0) : BorderRadius.circular(10.0),
           color: AppColors.ACCENT_COLOR,
         ),
         child: buttonSqueezeanimation.value > 75.0
             ? Center(
               child: Text(titleButton,
-                style: AppStyles.inputTextStyleWithPoppinsBold().copyWith(
-                  letterSpacing: 0.3
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
                 ),
         ),
             )

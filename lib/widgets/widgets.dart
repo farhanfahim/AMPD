@@ -152,6 +152,112 @@ Widget searchTextField({BuildContext context}) {
 //   );
 // }
 
+showBottomSheetWidgetWithAnimatedBtn(
+    BuildContext context,
+    String title,
+    String desc,
+    Widget widget,widget2,
+    ValueChanged<BuildContext> onTap,
+    String btnText,
+    bool showResendBtn) {
+  showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: AppColors.WHITE_COLOR,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topRight: Radius.circular(30.0),topLeft: Radius.circular(30.0)),
+      ),
+      context: context,
+      builder: (BuildContext bc) {
+        onTap(bc);
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter state) {
+                return SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        SvgPicture.asset(
+                          AppImages.BOTTOM_SHEET,
+                        ),
+                        SizedBox(
+                          height: 40.0,
+                        ),
+                        Text(
+                          title,
+                          style:
+                          AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25.0,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Text(
+                                  desc,
+                                  textAlign: TextAlign.center,
+                                  style:
+                                  AppStyles.detailWithSmallTextSizeTextStyle()
+                                      .copyWith(fontSize: 12.0),
+                                ),
+                              ),
+                            )),
+                        SizedBox(
+                          height: 25.0,
+                        ),
+                        widget,
+                        SizedBox(
+                          height: 25.0,
+                        ),
+                        widget2,
+
+                        showResendBtn
+                            ? Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
+                          child: new Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Text(AppStrings.DIDNT_RECEIVE,
+                                  style: AppStyles
+                                      .detailWithSmallTextSizeTextStyle()
+                                      .copyWith(fontSize: 12)),
+                              SizedBox(
+                                width: 2.0,
+                              ),
+                              InkWell(
+                                onTap: () {},
+                                child: Text(AppStrings.RESEND,
+                                    style: AppStyles
+                                        .detailWithSmallTextSizeTextStyle()
+                                        .copyWith(fontSize: 12)
+                                        .copyWith(
+                                        color: AppColors.BLUE_COLOR)),
+                              ),
+                            ],
+                          ),
+                        )
+                            : SizedBox(
+                          height: 50.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        );
+      });
+}
 showBottomSheetWidget(
     BuildContext context,
     String title,
@@ -225,6 +331,7 @@ showBottomSheetWidget(
                       },
                       text: btnText,
                     ),
+
                     showResendBtn
                         ? Container(
                             margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 20.0),
