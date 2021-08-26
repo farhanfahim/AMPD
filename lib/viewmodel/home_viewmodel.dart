@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:ampd/repo/home_repository.dart';
-import 'package:ampd/repo/login_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/app/app.dart';
-import 'package:ampd/repo/register_repository.dart';
 
 class HomeViewModel {
   HomeRepository _homeRepository;
@@ -22,13 +20,13 @@ class HomeViewModel {
     _homeRepository = homeRepository;
   }
 
-  HomeRepository getLoginRepository() => _homeRepository;
+  HomeRepository getHomeRepository() => _homeRepository;
 
-  RegisterRepository clearRepositroyResponse() {
+  HomeRepository clearRepositroyResponse() {
     _homeRepository = null;
   }
 
-  void offer(Map map) {
+  void offer(Map<String, dynamic> map) {
     _homeRepository.offers(map);
   }
 

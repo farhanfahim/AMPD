@@ -105,16 +105,17 @@ class NetworkNAO {
       });
 
 
-  static Future<dynamic> getOffers(Map map) =>
+  static Future<dynamic> getOffers(String accessToken,Map<String, dynamic> map) =>
       NetworkUtil().get(
         url: NetworkEndpoints.OFFERS,
         hasHeader: true,
-        token: map['access_token'],
+        token: accessToken,
         map: map
       ).then((dynamic response) {
         print(response);
         return response;
       });
+
 
 
 }

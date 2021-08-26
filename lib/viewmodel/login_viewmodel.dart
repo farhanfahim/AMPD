@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:ampd/repo/login_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/app/app.dart';
-import 'package:ampd/repo/register_repository.dart';
 
 class LoginViewModel {
   LoginRepository _loginRepository;
@@ -23,7 +22,7 @@ class LoginViewModel {
 
   LoginRepository getLoginRepository() => _loginRepository;
 
-  RegisterRepository clearRepositroyResponse() {
+  LoginRepository clearRepositroyResponse() {
     _loginRepository = null;
   }
 

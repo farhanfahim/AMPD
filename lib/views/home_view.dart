@@ -54,6 +54,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   String _appBarTitle = 'Home';
   bool _stackFinished = false;
   List<SwipeItem> _swipeItems = <SwipeItem>[];
+  List<Dataclass> dataList = <Dataclass>[];
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
@@ -115,8 +116,8 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     super.didChangeDependencies();
     for (int i = 0; i < _names.length; i++) {
       _swipeItems.add(SwipeItem(
-          content: Content(text: _names[i], offer: _offers[i], offerName: _itemNames[i], time: _times[i], image: _backgrounds[i], coord: _locations[i], locationTitle: _locationTitle[i]),
-          likeAction: () {
+        content: Content(text: _names[i], offer: _offers[i], offerName: _itemNames[i], time: _times[i], image: _backgrounds[i], coord: _locations[i], locationTitle: _locationTitle[i]),
+        likeAction: () {
           if (!widget.isGuestLogin) {
             showDialog(
                 context: context,
@@ -159,12 +160,12 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
             Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
           }
         },
-          nopeAction: () {
-            if(widget.isGuestLogin) {
-              Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-            }
+        nopeAction: () {
+          if(widget.isGuestLogin) {
+            Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+          }
 //            ToastUtil.showToast(context, "Disliked ${_names[i]}");
-          },));
+        },));
     }
 
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
@@ -173,18 +174,22 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
+    super.initState();
+    /*_pagingController.addPageRequestListener((pageKey) {
       _fetchPage(pageKey);
-    });
+    });*/
 
-    _streamController = new StreamController<List<OfferModel>>.broadcast();
-    _streamController.add(null);
 
-    _controller = ScrollController();
+    //_streamController = new StreamController<List<OfferModel>>.broadcast();
+    // _streamController.add(null);
+
+    //_controller = ScrollController();
 
     _homeViewModel = HomeViewModel(App());
     subscribeToViewModel();
+
     callOffersApi();
+
 
 
   }
@@ -266,8 +271,8 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
               children: [
 
                 Opacity(
-                  opacity: 0.3,
-                  child: SvgPicture.asset(AppImages.IC_COUPONS, width: 110.0, height: 110.0,)
+                    opacity: 0.3,
+                    child: SvgPicture.asset(AppImages.IC_COUPONS, width: 110.0, height: 110.0,)
                 ),
 
                 SizedBox(height: 10.0,),
@@ -301,8 +306,8 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     );
 
     return Scaffold(
-      appBar: appBar1,
-      body: body
+        appBar: appBar1,
+        body: body
     );
   }
 
@@ -315,7 +320,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
           _isInternetAvailable = true;
         });
 
-        var map = Map();
+        var map = Map<String, dynamic>();
         map['status'] = 20;
         _homeViewModel.offer(map);
       } else {
@@ -327,7 +332,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   }
   void subscribeToViewModel() {
     _homeViewModel
-        .getLoginRepository()
+        .getHomeRepository()
         .getRepositoryResponse()
         .listen((response) async {
 
@@ -338,14 +343,10 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
       }
 
       if(response.data is OfferModel) {
-        ToastUtil.showToast(context, response.data.toString());
 
         OfferModel responseRegister = response.data;
-
-        if(responseRegister != null) {
-
-
-        }
+        dataList = responseRegister.data.dataclass;
+        ToastUtil.showToast(context, responseRegister.toString());
       }
       else if(response.data is DioError){
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
@@ -371,3 +372,7 @@ class Content {
 
   Content({this.text, this.image, this.time, this.offer, this.offerName, this.coord, this.locationTitle});
 }
+
+
+
+

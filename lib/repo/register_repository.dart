@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:ampd/data/model/login_response_model.dart';
 import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/data/model/repo_response_model.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';

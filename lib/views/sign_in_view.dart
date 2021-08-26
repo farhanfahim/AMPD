@@ -11,6 +11,7 @@ import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/login_viewmodel.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
@@ -24,6 +25,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
+import 'package:ampd/widgets/StaggerAnimation.dart';
 
 class SignInView extends StatefulWidget {
 
@@ -34,7 +36,7 @@ class SignInView extends StatefulWidget {
   _SignInViewState createState() => _SignInViewState();
 }
 
-class _SignInViewState extends State<SignInView> {
+class _SignInViewState extends State<SignInView>  with TickerProviderStateMixin{
   FirebaseMessaging _firebaseMessaging;
   LoginViewModel _loginViewModel;
 
@@ -46,6 +48,7 @@ class _SignInViewState extends State<SignInView> {
   TextEditingController passwordController = new TextEditingController();
   TextEditingController nPasswordController = new TextEditingController();
   TextEditingController cPasswordController = new TextEditingController();
+  AnimationController _loginButtonController;
 
   int numberValidation = AppConstants.PHONE_VALIDATION;
   int phoneNumberValidation = AppConstants.PHONE_VALIDATION;
@@ -81,7 +84,7 @@ class _SignInViewState extends State<SignInView> {
   IconData iconData = Icons.visibility_off;
   IconData iconData1 = Icons.visibility_off;
   IconData iconData2 = Icons.visibility_off;
-
+  bool flag = true;
 
   String _loginPlatform;
   bool _isInternetAvailable = true;
@@ -173,10 +176,33 @@ class _SignInViewState extends State<SignInView> {
                     SizedBox(
                       height: 25.0,
                     ),
-                    GradientButton(
+                    AnimatedGradientButton(
                       onTap: () {
                         callLoginApi();
                       },
+                      onAnimationTap: (){
+                        if(flag){
+
+                          if (validate()) {
+
+                            Util.check().then((value) {
+                              if (value != null && value) {
+                                // Internet Present Case
+                                setState(() {
+                                  _isInternetAvailable = true;
+                                });
+                                callLoginApi();
+
+                              } else {
+                                setState(() {
+                                  _isInternetAvailable = false;
+                                });
+                              }
+                            });
+                          }
+                        }
+                      },
+                      buttonController: _loginButtonController,
                       text: AppStrings.LOGIN_TO_MY_ACCOUNT,
                     ),
                     SizedBox(
@@ -205,11 +231,23 @@ class _SignInViewState extends State<SignInView> {
 
   @override
   void initState() {
+
+    _loginButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
     _firebaseMessaging = FirebaseMessaging();
     _loginViewModel = LoginViewModel(App());
     subscribeToViewModel();
 
 
+  }
+
+  @override
+  void dispose() {
+    _loginButtonController.dispose();
+
+
+    super.dispose();
   }
 
   showForgetBottomSheet(BuildContext context) {
@@ -747,7 +785,7 @@ class _SignInViewState extends State<SignInView> {
 // api calling
 
   Future<void> callLoginApi() async {
-
+    _playAnimation();
     setState(() {
       _enabled = false;
       _loginPlatform = "normal";
@@ -880,14 +918,16 @@ class _SignInViewState extends State<SignInView> {
       }
     });
   }
+
   void subscribeToViewModel() {
     _loginViewModel
         .getLoginRepository()
         .getRepositoryResponse()
         .listen((response) async {
-
+      _stopAnimation();
       if(mounted) {
         setState(() {
+          flag = true;
           _enabled = true;
         });
       }
@@ -941,5 +981,26 @@ class _SignInViewState extends State<SignInView> {
 
 
   }
+  bool validate() {
+    Util.hideKeyBoard(context);
+
+    flag = false;
+    return true;
+  }
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _loginButtonController.forward();
+    } on TickerCanceled {
+    }
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _loginButtonController.reverse();
+    } on TickerCanceled {
+    }
+  }
+
 
 }
