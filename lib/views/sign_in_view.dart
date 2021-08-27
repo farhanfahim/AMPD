@@ -186,12 +186,29 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                               if (value != null && value) {
                                 // Internet Present Case
                                 setState(() {
+                                  flag = true;
                                   _isInternetAvailable = true;
                                 });
-                                callLoginApi();
+                                if(phoneNo2.isNotEmpty) {
+                                  if(password.isNotEmpty) {
+                                    callLoginApi();
+                                  }else{
+                                    setState(() {
+                                      flag = true;
+                                      });
+                                    ToastUtil.showToast(context, "Please enter your password");
+                                  }
+                                }else{
+                                  setState(() {
+                                    flag = true;
+                                  });
+                                  ToastUtil.showToast(context, "Please enter phone number");
+                                }
                               } else {
                                 setState(() {
+                                  flag = true;
                                   _isInternetAvailable = false;
+                                  ToastUtil.showToast(context, "No internet");
                                 });
                               }
                             });
@@ -267,12 +284,23 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   if (value != null && value) {
                     // Internet Present Case
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = true;
                     });
-                    callForgetPasswordApi();
+                    if(phoneNo.isNotEmpty) {
+                      callForgetPasswordApi();
+                    }else{
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Please enter phone number");
+                    }
+
                   } else {
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = false;
+                      ToastUtil.showToast(context, "No internet");
                     });
                   }
                 });
@@ -308,14 +336,50 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   if (value != null && value) {
                     // Internet Present Case
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = true;
                     });
-                    callResetPasswordApi();
+                    if(nPassword.isNotEmpty) {
+                      if(nPassword.length > 7) {
+                        if(cPassword.isNotEmpty) {
+                          if(cPassword.length > 7) {
+                            callResetPasswordApi();
+
+                          }else{
+                            setState(() {
+                              flag = true;
+                            });
+                            ToastUtil.showToast(context, "Confirm password is too short");
+                          }
+                        }else{
+                          setState(() {
+                            flag = true;
+                          });
+                          ToastUtil.showToast(context, "Please enter confirm password");
+                        }
+
+                      }else{
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(context, "New password is too short");
+                      }
+
+                    }else{
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Please enter new password");
+                    }
+
                   } else {
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = false;
+                      ToastUtil.showToast(context, "No internet");
                     });
                   }
+
                 });
               }
             }
@@ -341,12 +405,24 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   if (value != null && value) {
                     // Internet Present Case
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = true;
                     });
-                    callRegisterViaPhoneApi();
+                    if(phoneNo.isNotEmpty) {
+                      callRegisterViaPhoneApi();
+                    }else{
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Please enter phone number");
+                    }
+
+
                   } else {
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = false;
+                      ToastUtil.showToast(context, "No internet");
                     });
                   }
                 });
@@ -368,7 +444,26 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       code = otp;
     }), (bc1) {
     Navigator.pop(bc1);
-    showResetPasswordBottomSheet(context);
+    if(code.isNotEmpty) {
+      if(code.length == 4) {
+        showResetPasswordBottomSheet(context);
+        setState(() {
+          code = "";
+        });
+      }else{
+        setState(() {
+          flag = true;
+        });
+        ToastUtil.showToast(context, "Please enter valid otp code");
+      }
+    }else{
+      setState(() {
+        flag = true;
+      });
+      ToastUtil.showToast(context, "Please enter otp code");
+    }
+
+
     }, AppStrings.VERIFY_NOW, true):showBottomSheetWidgetWithAnimatedBtn(
             context,
             AppStrings.ENTER_OTP_DIGIT,
@@ -384,12 +479,31 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       if (value != null && value) {
                         // Internet Present Case
                         setState(() {
+                          flag = true;
                           _isInternetAvailable = true;
                         });
-                        callVerifyOtpApi();
+                        if(code.isNotEmpty) {
+                          if(code.length == 4) {
+                            callVerifyOtpApi();
+                          }else{
+                            setState(() {
+                              flag = true;
+                            });
+                            ToastUtil.showToast(context, "Please enter valid otp code");
+                          }
+                        }else{
+                          setState(() {
+                            flag = true;
+                          });
+                          ToastUtil.showToast(context, "Please enter otp code");
+                        }
+
+
                       } else {
                         setState(() {
+                          flag = true;
                           _isInternetAvailable = false;
+                          ToastUtil.showToast(context, "No internet");
                         });
                       }
                     });
@@ -901,6 +1015,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          flag = true;
           _isInternetAvailable = true;
         });
         _firebaseMessaging.getToken().then((token) {
@@ -917,7 +1032,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         });
       } else {
         setState(() {
+          flag = true;
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
@@ -936,6 +1053,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          flag = true;
           _isInternetAvailable = true;
         });
 
@@ -944,7 +1062,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         _loginViewModel.registerViaPhone(map);
       } else {
         setState(() {
+          flag = true;
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
@@ -958,6 +1078,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          flag = true;
           _isInternetAvailable = true;
         });
         var map = Map();
@@ -966,7 +1087,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         _loginViewModel.verifyOtp(map);
       } else {
         setState(() {
+          flag = true;
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
@@ -978,6 +1101,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          flag = true;
           _isInternetAvailable = true;
         });
 
@@ -986,7 +1110,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         _loginViewModel.forgetPassword(map);
       } else {
         setState(() {
+          flag = true;
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
@@ -998,6 +1124,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          flag = true;
           _isInternetAvailable = true;
         });
 
@@ -1008,7 +1135,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         _loginViewModel.resetPassword(map);
       } else {
         setState(() {
+          flag = true;
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
@@ -1047,12 +1176,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           map['email'] = emailController.text.toString();
         }
       } else if (response.msg == "Code has been sent to your phone number") {
+       
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
         }
         showOtpBottomSheet(context);
       } else if (response.msg ==
           "Verification code has been send successfully") {
+
         if (forgetPasswordBc != null) {
           Navigator.pop(forgetPasswordBc);
         }
@@ -1066,6 +1197,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               'phone': phoneNo,
             });
       } else if (response.msg == "Password Changed Successfully") {
+
         if (passwordBc != null) {
           Navigator.pop(passwordBc);
         }

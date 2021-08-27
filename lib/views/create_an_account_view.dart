@@ -213,12 +213,67 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
                               if (value != null && value) {
                                 // Internet Present Case
                                 setState(() {
-                                  _isInternetAvailable = true;
+                                  flag = true;
+                                  _isInternetAvailable = false;
                                 });
-                                callRegisterApi();
+                                if(firstName.isNotEmpty){
+                                  if(lastName.isNotEmpty){
+                                    if(email.isNotEmpty){
+                                      if(_isEmailValid){
+                                        if(password.isNotEmpty) {
+                                          if(password.length > 7) {
+                                            if(cPassword.isNotEmpty) {
+                                              if(cPassword.length > 7) {
+                                                callRegisterApi();
+
+                                              }else{
+                                                setState(() {
+                                                  flag = true;
+                                                });
+                                                ToastUtil.showToast(context, "Confirm password is too short");
+                                              }
+                                            }else{
+                                              setState(() {
+                                                flag = true;
+                                              });
+                                              ToastUtil.showToast(context, "Please enter confirm password");
+                                            }
+
+                                          }else{
+                                            setState(() {
+                                              flag = true;
+                                            });
+                                            ToastUtil.showToast(context, "Password is too short");
+                                          }
+
+                                        }else{
+                                          setState(() {
+                                            flag = true;
+                                          });
+                                          ToastUtil.showToast(context, "Please enter password");
+                                        }
+                                      }else{
+                                        flag = true;
+                                        ToastUtil.showToast(context, "Invalid email address");
+                                      }
+                                    }else{
+                                      flag = true;
+                                      ToastUtil.showToast(context, "Please enter your email address");
+                                    }
+                                  }else{
+                                    flag = true;
+                                    ToastUtil.showToast(context, "Please enter your last name");
+                                  }
+                                }else{
+                                  flag = true;
+                                  ToastUtil.showToast(context, "Please enter your first name");
+                                }
+
                               } else {
                                 setState(() {
+                                  flag = true;
                                   _isInternetAvailable = false;
+                                  ToastUtil.showToast(context, "No internet");
                                 });
                               }
                             });
@@ -563,10 +618,10 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               ),
               onChanged: (String newVal) {
                 if (newVal.length <= cPasswordValidation) {
-                  password = newVal;
+                  cPassword = newVal;
                 } else {
                   cPasswordController.value = new TextEditingValue(
-                      text: password,
+                      text: cPassword,
                       selection: new TextSelection(
                           baseOffset: cPasswordValidation,
                           extentOffset: cPasswordValidation,
@@ -582,8 +637,8 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               inputFormatters: [
                 LengthLimitingTextInputFormatter(cPasswordValidation),
               ],
-              /*onEditingComplete: () => FocusScope.of(context).requestFocus(cPasswordNode),
-                          onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(cPasswordNode),*/
+              onEditingComplete: () => FocusScope.of(context).unfocus(),
+              onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
               obscureText: cPasswordObscureText,
               textInputAction: TextInputAction.next,
               decoration: AppStyles.decorationWithBorder(AppStrings.CONFIRM_PASSWORD),
@@ -639,7 +694,9 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          flag = true;
           _isInternetAvailable = true;
+
         });
         _firebaseMessaging.getToken().then((token) {
           print("Token : $token");
@@ -659,7 +716,9 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
 
       } else {
         setState(() {
+          flag = true;
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
