@@ -47,6 +47,7 @@ class StaggerAnimation extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 25.0),
         width: buttonSqueezeanimation.value,
         padding:  const EdgeInsets.all(15.0),
          decoration: BoxDecoration(

@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
+import 'package:toast/toast.dart';
 
 class WelcomeView extends StatefulWidget {
 
@@ -169,12 +170,23 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
                   if (value != null && value) {
                     // Internet Present Case
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = true;
                     });
+                    if(phoneNo.isNotEmpty){
                     callRegisterViaPhoneApi();
+                    }
+                    else{
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Please enter phone number ");
+                    }
                   } else {
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = false;
+                      ToastUtil.showToast(context, "No internet");
                     });
                   }
                 });
@@ -204,12 +216,31 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
                   if (value != null && value) {
                     // Internet Present Case
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = true;
                     });
-                    callVerifyOtpApi();
+                    print(code);
+                    if(code.isNotEmpty) {
+                      if(code.length == 4) {
+                        callVerifyOtpApi();
+                      }else{
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(context, "Please enter valid otp code");
+                      }
+                    }else{
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Please enter otp code");
+                    }
+
                   } else {
                     setState(() {
+                      flag = true;
                       _isInternetAvailable = false;
+                      ToastUtil.showToast(context, "No internet");
                     });
                   }
                 });
@@ -338,6 +369,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          flag = true;
           _isInternetAvailable = true;
         });
 
@@ -346,7 +378,10 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
         _registerViewModel.registerViaPhone(map);
       } else {
         setState(() {
+          flag = true;
           _isInternetAvailable = false;
+
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
@@ -371,6 +406,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
       } else {
         setState(() {
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
