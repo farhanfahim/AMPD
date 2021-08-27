@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:ampd/appresources/app_strings.dart';
-import 'package:ampd/data/model/ReviewModel.dart';
+import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -36,20 +36,20 @@ class _ReviewsViewState extends State<ReviewsView> {
     //_streamController = new StreamController<List<Notifications>>.broadcast();
     //_streamController.add(null);
 
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"MJohn Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"MJohn Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
 

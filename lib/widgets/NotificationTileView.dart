@@ -1,7 +1,7 @@
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/ReviewModel.dart';
+import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -105,7 +105,7 @@ class _NotificationTileViewState extends State<NotificationTileView> {
 //      ),
 
         ReadMoreText(
-          widget.data.description,
+          widget.data.review,
           // "This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text.",
           trimCollapsedText: AppStrings.READ_MORE,
           trimExpandedText: AppStrings.READ_LESS,

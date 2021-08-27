@@ -6,7 +6,6 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/ReviewModel.dart';
 import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/Skeleton.dart';
@@ -22,6 +21,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:ampd/data/model/OfferModel.dart';
 
 class OfferCardWidget2 extends StatefulWidget {
   String text;
@@ -33,8 +33,9 @@ class OfferCardWidget2 extends StatefulWidget {
   Coords coord;
   ValueChanged<bool> changeDetailTitle;
   bool isRedeemNow;
+  Dataclass data;
 
-  OfferCardWidget2({this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.locationTitle, this.changeDetailTitle, this.isRedeemNow});
+  OfferCardWidget2({this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.locationTitle, this.changeDetailTitle, this.isRedeemNow,this.data});
 
   @override
   _OfferCardWidget2State createState() => _OfferCardWidget2State();
@@ -56,11 +57,11 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 
   @override
   void initState() {
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
 
     _time = widget.time;
     if(!TimerUtils.isAheadOrBefore(_time)) {
@@ -259,7 +260,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 //                                Spacer(),
 
                                 Text(
-                                  "4.3",
+                                  widget.data.averageRating != null ? widget.data.averageRating.toString():"0.0",
                                   style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 )
                               ],
@@ -284,7 +285,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 //                                Spacer(),
 
                                 Text(
-                                  "08",
+
+                                  widget.data.numberOfUses != null ? widget.data.numberOfUses.toString():"0.0",
                                   style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 )
                               ],
@@ -352,7 +354,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 
                                 Expanded(
                                   child: Text(
-                                    "99 Balentine 123 Drive, Newark",
+                                    widget.data.user.address != null ?  widget.data.user.address:"-",
                                     style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                     textAlign: TextAlign.end,
                                   ),
@@ -382,12 +384,14 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                   children: [
                                     Text(
                                       _days,
+                                      //widget.data.availTime != null? widget.data.availTime.toString() :"00",
                                       style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
                                     ),
 
 //                                    SizedBox(height: 6.0,),
 
                                     Text(
+                                      //widget.data.availTime > 1? 'Days' : 'Day',
                                       int.parse(_days) > 1? 'Days' : 'Day',
                                       style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                     ),
@@ -399,6 +403,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                 Column(
                                   children: [
                                     Text(
+                                      //widget.data.recurrenceTime != null? widget.data.recurrenceTime.toString() :"00",
                                       _hours,
                                       style: AppStyles.poppinsTextStyle(fontSize: 24.0.sp, weight: FontWeight.w500).copyWith(letterSpacing: 2.0),
                                     ),
@@ -406,6 +411,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 //                                    SizedBox(height: 6.0,),
 
                                     Text(
+                                      //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
                                       int.parse(_hours) > 1? 'Hours' : 'Hour',
                                       style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                     ),
@@ -677,7 +683,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                               children: [
                                                 Flexible(
                                                   child: Text(
-                                                    "Triple Mocha Frappuccino",
+                                                    widget.data.description != null ?widget.data.description:"No Description",
                                                     style: AppStyles.poppinsTextStyle(fontSize: 14.0, weight: FontWeight.w300).copyWith(color: Colors.black),
                                                   ),
                                                 ),
@@ -726,10 +732,10 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 
                                 GestureDetector(
                                   onTap: () {
-                                    launch(('tel:+11234567825'));
+                                    launch(('tel:${widget.data.user.phone}'));
                                   },
                                   child: Text(
-                                    "+1 1234567825",
+                                    widget.data.user.phone != null ? widget.data.user.phone:"-",
                                     style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.GREEN_COLOR),
                                   ),
                                 )
@@ -761,7 +767,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                       }
                                     },
                                     child: Text(
-                                      "4058 Little York Rd, Houston, TX 77093, USA",
+
+                                      widget.data.user.address != null ? widget.data.user.address:"-",
                                       style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.BLUE_COLOR_DARK),
                                     ),
                                   ),
@@ -785,7 +792,9 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 
                                 Expanded(
                                   child: Text(
-                                    "Hours: Opens 11AM - Closed 11PM",
+                                    widget.data.store.openingTime != null && widget.data.store.closingTime != null?
+    "Hours: Opens ${ widget.data.store.openingTime} - Closed ${ widget.data.store.closingTime}":"-",
+
                                     style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.DARK_GREY_COLOR2),
                                   ),
                                 )
@@ -799,7 +808,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                 SizedBox(width: 35.0,),
 
                                 Text(
-                                  "5.0 (8.5K)",
+
+                                  widget.data.averageRating != null ?"5.0 (${widget.data.averageRating})":"5.0 (-)",
                                   style: AppStyles.poppinsTextStyle(fontSize: 14.0, weight: FontWeight.w400).copyWith(color: AppColors.GREEN_BRIGHT_COLOR),
                                 ),
 
@@ -896,7 +906,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                             _selectedTab == 0? Container(
 //                          height: 500.0,
                               child: Text(
-                                "Starbucks' new Triple Mocha Frappuccino was released on May Day 2018, and it's basically and enhanced version of the original MochaCookies are important to the proper functioning of a site. To improve your experience, we use cookies to remember log-in details and provide secure log-in, collect statistics.",
+                                widget.data.store.about != null ?widget.data.store.about:"-",
                                 style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.GREY_COLOR, height: 1.5),
                               ),
                             ) : Container(),

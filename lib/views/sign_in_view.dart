@@ -447,9 +447,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     if(code.isNotEmpty) {
       if(code.length == 4) {
         showResetPasswordBottomSheet(context);
-        setState(() {
-          code = "";
-        });
       }else{
         setState(() {
           flag = true;
@@ -848,10 +845,10 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   ),
                   onChanged: (String newVal) {
                     if (newVal.length <= nPasswordValidation) {
-                      password = newVal;
+                      nPassword = newVal;
                     } else {
                       nPasswordController.value = new TextEditingValue(
-                          text: password,
+                          text: nPassword,
                           selection: new TextSelection(
                               baseOffset: nPasswordValidation,
                               extentOffset: nPasswordValidation,
@@ -938,10 +935,10 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   ),
                   onChanged: (String newVal) {
                     if (newVal.length <= cPasswordValidation) {
-                      password = newVal;
+                      cPassword = newVal;
                     } else {
                       cPasswordController.value = new TextEditingValue(
-                          text: password,
+                          text: cPassword,
                           selection: new TextSelection(
                               baseOffset: cPasswordValidation,
                               extentOffset: cPasswordValidation,
@@ -1131,7 +1128,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         var map = Map();
         map['phone'] = phoneNo;
         map['verification_code'] = code;
-        map['password'] = password;
+        map['password'] = cPassword;
         _loginViewModel.resetPassword(map);
       } else {
         setState(() {
@@ -1176,7 +1173,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           map['email'] = emailController.text.toString();
         }
       } else if (response.msg == "Code has been sent to your phone number") {
-       
+
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
         }

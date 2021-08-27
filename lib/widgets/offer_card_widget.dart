@@ -6,7 +6,7 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/ReviewModel.dart';
+import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/Skeleton.dart';
@@ -51,11 +51,11 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
   @override
   void initState() {
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,description:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
 
     _time = widget.time;
     if(!TimerUtils.isAheadOrBefore(_time)) {

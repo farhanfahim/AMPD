@@ -1,3 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
+
+@JsonSerializable()
 class OfferModel {
   bool status;
   String message;
@@ -27,6 +30,7 @@ class Data {
   int perPage;
   int page;
   int lastPage;
+  @JsonKey(name: 'data')
   List<Dataclass> dataclass;
 
   Data({this.total, this.perPage, this.page, this.lastPage, this.dataclass});
@@ -36,9 +40,9 @@ class Data {
     perPage = json['perPage'];
     page = json['page'];
     lastPage = json['lastPage'];
-    if (json['dataclass'] != null) {
+    if (json['data'] != null) {
       dataclass = new List<Dataclass>();
-      json['dataclass'].forEach((v) {
+      json['data'].forEach((v) {
         dataclass.add(new Dataclass.fromJson(v));
       });
     }
@@ -51,7 +55,7 @@ class Data {
     data['page'] = this.page;
     data['lastPage'] = this.lastPage;
     if (this.dataclass != null) {
-      data['dataclass'] = this.dataclass.map((v) => v.toJson()).toList();
+      data['data'] = this.dataclass.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -292,21 +296,30 @@ class Store {
 class Reviews {
   int id;
   int userId;
+  double rating;
+  String name;
   String review;
+  String image;
 
-  Reviews({this.id, this.userId, this.review});
+  Reviews({this.id, this.userId, this.rating,this.name,this.review,this.image});
 
   Reviews.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
+    rating = json['rating'];
+    name = json['name'];
     review = json['review'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['user_id'] = this.userId;
+    data['rating'] = this.rating;
+    data['name'] = this.name;
     data['review'] = this.review;
+    data['image'] = this.image;
     return data;
   }
 }

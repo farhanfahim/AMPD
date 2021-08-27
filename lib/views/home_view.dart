@@ -114,61 +114,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    for (int i = 0; i < _names.length; i++) {
-      _swipeItems.add(SwipeItem(
-        content: Content(text: _names[i], offer: _offers[i], offerName: _itemNames[i], time: _times[i], image: _backgrounds[i], coord: _locations[i], locationTitle: _locationTitle[i]),
-        likeAction: () {
-          if (!widget.isGuestLogin) {
-            showDialog(
-                context: context,
-                builder: (BuildContext context1) {
-                  return CustomDialog(
-                    contex: context,
-                    subTitle: "This offer has been marked Favorite!",
-                    child: SvgPicture.asset(AppImages.FAV_ICON),
-                    //title: "Your feedback will help us improve our services.",
-                    buttonText1: AppStrings.REDEEM_NOW,
-                    buttonText2: AppStrings.GO_BACK_TO_OFFER,
-                    onPressed1: () {
-                      Navigator.pop(context1);
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context1) {
-                            return CustomDialog(
-                              contex: context,
-                              subTitle: "Are you sure?",
-                              //title: "Your feedback will help us improve our services.",
-                              buttonText1: AppStrings.YES,
-                              buttonText2: AppStrings.NO,
-                              onPressed1: () {
-                                Navigator.pop(context1);
-                                Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: false);
-                              },
-                              onPressed2: () {
-                                Navigator.pop(context1);
-                              },
-                              showImage: false,
-                            );
-                          });                  },
-                    onPressed2: () {
-                      Navigator.pop(context1);
-                    },
-                    showImage: true,
-                  );
-                });
-          } else {
-            Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-          }
-        },
-        nopeAction: () {
-          if(widget.isGuestLogin) {
-            Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-          }
-//            ToastUtil.showToast(context, "Disliked ${_names[i]}");
-        },));
-    }
 
-    _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
 
 
@@ -245,6 +191,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                   time: _swipeItems[index].content.time,
                   coord: _swipeItems[index].content.coord,
                   locationTitle: _swipeItems[index].content.locationTitle,
+                  data: _swipeItems[index].content.data,
                   changeDetailTitle: (value) {
                     setState(() {
                       if(value) {
@@ -346,7 +293,62 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
 
         OfferModel responseRegister = response.data;
         dataList = responseRegister.data.dataclass;
-        ToastUtil.showToast(context, responseRegister.toString());
+
+        for (int i = 0; i < dataList.length; i++) {
+          _swipeItems.add(SwipeItem(
+            content: Content(text: dataList[i].title, offer: dataList[i].imageUrl, offerName: dataList[i].productName, time: _times[i], image: dataList[i].imageUrl, coord: Coords(double.parse(dataList[i].user.latitude),double.parse(dataList[i].user.longitude)), locationTitle: dataList[i].store.name,data:dataList[i]),
+            likeAction: () {
+              if (!widget.isGuestLogin) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context1) {
+                      return CustomDialog(
+                        contex: context,
+                        subTitle: "This offer has been marked Favorite!",
+                        child: SvgPicture.asset(AppImages.FAV_ICON),
+                        //title: "Your feedback will help us improve our services.",
+                        buttonText1: AppStrings.REDEEM_NOW,
+                        buttonText2: AppStrings.GO_BACK_TO_OFFER,
+                        onPressed1: () {
+                          Navigator.pop(context1);
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context1) {
+                                return CustomDialog(
+                                  contex: context,
+                                  subTitle: "Are you sure?",
+                                  //title: "Your feedback will help us improve our services.",
+                                  buttonText1: AppStrings.YES,
+                                  buttonText2: AppStrings.NO,
+                                  onPressed1: () {
+                                    Navigator.pop(context1);
+                                    Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: false);
+                                  },
+                                  onPressed2: () {
+                                    Navigator.pop(context1);
+                                  },
+                                  showImage: false,
+                                );
+                              });                  },
+                        onPressed2: () {
+                          Navigator.pop(context1);
+                        },
+                        showImage: true,
+                      );
+                    });
+              } else {
+                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+              }
+            },
+            nopeAction: () {
+              if(widget.isGuestLogin) {
+                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+              }
+//            ToastUtil.showToast(context, "Disliked ${_names[i]}");
+            },));
+        }
+
+        _matchEngine = MatchEngine(swipeItems: _swipeItems);
       }
       else if(response.data is DioError){
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
@@ -369,8 +371,9 @@ class Content {
   final String time;
   final String locationTitle;
   final Coords coord;
+  final Dataclass data;
 
-  Content({this.text, this.image, this.time, this.offer, this.offerName, this.coord, this.locationTitle});
+  Content({this.text, this.image, this.time, this.offer, this.offerName, this.coord, this.locationTitle,this.data});
 }
 
 
