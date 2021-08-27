@@ -6,6 +6,7 @@ import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/utils/ToastUtil.dart';
@@ -29,14 +30,14 @@ class CreateAnAccountView extends StatefulWidget {
   _CreateAnAccountViewState createState() => _CreateAnAccountViewState();
 }
 
-class _CreateAnAccountViewState extends State<CreateAnAccountView> {
+class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerProviderStateMixin {
   FirebaseMessaging _firebaseMessaging;
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController cPasswordController = new TextEditingController();
-
+  AnimationController _loginButtonController;
   int firstNameValidation = AppConstants.NAME_VALIDATION;
   int lastNameValidation = AppConstants.NAME_VALIDATION;
   int emailValidation = AppConstants.EMAIL_VALIDATION;
@@ -45,7 +46,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
 
   bool _enabled = true;
   bool _enabled2 = true;
-
+  bool flag = true;
   var firstNameFocus = FocusNode();
   var lastNameFocus = FocusNode();
   var emailFocus = FocusNode();
@@ -73,9 +74,20 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
 
   RegisterViewModel _registerViewModel;
 
+
+  @override
+  void dispose() {
+    _loginButtonController.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _loginButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
     _firebaseMessaging = FirebaseMessaging();
     firstNameController.addListener(() {
       if (firstNameController.text.length <= firstNameValidation) {
@@ -193,13 +205,27 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                     SizedBox(
                       height: 30.0,
                     ),
-
-                    GradientButton(
-                      onTap: () {
-                        callRegisterApi();
-//
-
+                    AnimatedGradientButton(
+                      onAnimationTap: () {
+                        if (flag) {
+                          if (validate()) {
+                            Util.check().then((value) {
+                              if (value != null && value) {
+                                // Internet Present Case
+                                setState(() {
+                                  _isInternetAvailable = true;
+                                });
+                                callRegisterApi();
+                              } else {
+                                setState(() {
+                                  _isInternetAvailable = false;
+                                });
+                              }
+                            });
+                          }
+                        }
                       },
+                      buttonController: _loginButtonController,
                       text: AppStrings.CREATE,
                     ),
                     SizedBox(
@@ -366,6 +392,20 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
               onChanged: (String newVal) {
                 if (newVal.length <= emailValidation) {
                   email = newVal;
+
+                  bool emailValid = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(email);
+                  if (emailValid) {
+
+                    setState(() {
+                      _isEmailValid = true;
+                    });
+                  } else {
+                    setState(() {
+                      _isEmailValid = false;
+                    });
+                  }
                 } else {
                   emailController.value = new TextEditingValue(
                       text: email,
@@ -387,19 +427,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
                   FocusScope.of(context).requestFocus(passwordNode),
 
               onFieldSubmitted: (texttt) {
-                bool emailValid = RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(email);
-                if (emailValid) {
 
-                  setState(() {
-                    _isEmailValid = true;
-                  });
-                } else {
-                  setState(() {
-                    _isEmailValid = false;
-                  });
-                }
                 FocusScope.of(context).requestFocus(passwordNode);
               },
               textInputAction: TextInputAction.next,
@@ -595,6 +623,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
 
   Future<void> callRegisterApi() async {
 
+    _playAnimation();
     setState(() {
       _enabled = false;
       _loginPlatform = "normal";
@@ -637,6 +666,9 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
   }
 
   void subscribeToViewModel() {
+    _stopAnimation();
+
+
     _registerViewModel
         .getCompleteRegisterRepository()
         .getRepositoryResponse()
@@ -644,6 +676,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
 
       if(mounted) {
         setState(() {
+          flag = true;
           _enabled = true;
         });
       }
@@ -665,10 +698,29 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> {
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
       } else {
         ToastUtil.showToast(context, response.msg);
+        _stopAnimation();
       }
     });
+
   }
 
 
+  bool validate() {
+    Util.hideKeyBoard(context);
+
+    flag = false;
+    return true;
+  }
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _loginButtonController.forward();
+    } on TickerCanceled {}
+  }
+  Future<Null> _stopAnimation() async {
+    try {
+      await _loginButtonController.reverse();
+    } on TickerCanceled {}
+  }
 }
 

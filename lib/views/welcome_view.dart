@@ -9,6 +9,7 @@ import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/register_viewmodel.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
@@ -25,7 +26,7 @@ class WelcomeView extends StatefulWidget {
   _WelcomeViewState createState() => _WelcomeViewState();
 }
 
-class _WelcomeViewState extends State<WelcomeView> {
+class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixin{
   TextEditingController numberController = new TextEditingController();
   int numberValidation = AppConstants.PHONE_VALIDATION;
   String phoneNo = "";
@@ -34,6 +35,12 @@ class _WelcomeViewState extends State<WelcomeView> {
   bool _isInternetAvailable = true;
   String _loginPlatform;
 
+  BuildContext otpPasswordBc;
+  BuildContext submitPhoneBc;
+  AnimationController _submitButtonController;
+  AnimationController _verifyButtonController;
+
+  bool flag = true;
   RegisterViewModel _registerViewModel;
 
   @override
@@ -131,28 +138,92 @@ class _WelcomeViewState extends State<WelcomeView> {
   @override
   void initState() {
     //throw Exception("This is a crash!");
+    _submitButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _verifyButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
     _registerViewModel = RegisterViewModel(App());
     subscribeToViewModel();
   }
 
+  @override
+  void dispose() {
+    _verifyButtonController.dispose();
+    _submitButtonController.dispose();
+
+    super.dispose();
+  }
+
   showPhoneNoBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.PHONE_NUMBER_TITLE,
-        AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc) {
-      Navigator.pop(bc);
-      callRegisterViaPhoneApi();
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.PHONE_NUMBER_TITLE,
+        AppStrings.PHONE_NUMBER_DESC,
+        customWidget(context),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (flag) {
+              if (validate()) {
+                Util.check().then((value) {
+                  if (value != null && value) {
+                    // Internet Present Case
+                    setState(() {
+                      _isInternetAvailable = true;
+                    });
+                    callRegisterViaPhoneApi();
+                  } else {
+                    setState(() {
+                      _isInternetAvailable = false;
+                    });
+                  }
+                });
+              }
+            }
+          },
+          buttonController: _submitButtonController,
+          text: AppStrings.SUBMIT,
+        ), (bc) {
+      submitPhoneBc = bc;
     }, AppStrings.SUBMIT, false);
   }
 
   showOtpBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(
-            onOtpCodeChanged: (otp){
-              code = otp;
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC,
+        OtpTextField(onOtpCodeChanged: (otp) {
+          code = otp;
         }),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (flag) {
+              if (validate()) {
+                Util.check().then((value) {
+                  if (value != null && value) {
+                    // Internet Present Case
+                    setState(() {
+                      _isInternetAvailable = true;
+                    });
+                    callVerifyOtpApi();
+                  } else {
+                    setState(() {
+                      _isInternetAvailable = false;
+                    });
+                  }
+                });
+              }
+            }
+          },
+          buttonController: _verifyButtonController,
+          text: AppStrings.VERIFY_NOW,
+        ),
             (bc1) {
-      Navigator.pop(bc1);
-      callVerifyOtpApi();
-    }, AppStrings.VERIFY_NOW, true);
+          otpPasswordBc = bc1;
+        },
+        AppStrings.VERIFY_NOW,
+        true);
   }
 
   Stack customWidget(BuildContext context) {
@@ -215,24 +286,34 @@ class _WelcomeViewState extends State<WelcomeView> {
   }
 
   void subscribeToViewModel() {
+    _stopSubmitBtnAnimation();
+    _stopVerifyBtnAnimation();
     _registerViewModel
         .getCompleteRegisterRepository()
         .getRepositoryResponse()
         .listen((response) async {
       if (mounted) {
         setState(() {
+          flag = true;
           _enabled = true;
         });
       }
 
       if (response.msg == "Verified") {
+        if (otpPasswordBc != null) {
+          Navigator.pop(otpPasswordBc);
+        }
         Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW,arguments: {
           'phone' : phoneNo,
         });
 
       }
       else if(response.msg == "Code has been sent to your phone number") {
-        ToastUtil.showToast(context, response.msg);
+
+        if (submitPhoneBc != null) {
+          Navigator.pop(submitPhoneBc);
+        }
+
         showOtpBottomSheet(context);
       }
       else if (response.data is DioError) {
@@ -240,6 +321,8 @@ class _WelcomeViewState extends State<WelcomeView> {
       }
       else {
         ToastUtil.showToast(context, response.msg);
+        _stopVerifyBtnAnimation();
+        _stopSubmitBtnAnimation();
       }
     });
 
@@ -247,10 +330,7 @@ class _WelcomeViewState extends State<WelcomeView> {
   }
 
   Future<void> callRegisterViaPhoneApi() async {
-    setState(() {
-      _enabled = false;
-      _loginPlatform = "normal";
-    });
+    _playSubmitBtnAnimation();
 
     String number = numberController.text.trim();
 
@@ -274,6 +354,7 @@ class _WelcomeViewState extends State<WelcomeView> {
 
   Future<void> callVerifyOtpApi() async {
 
+    _playVerifyBtnAnimation();
     String number = numberController.text.trim();
 
     Util.check().then((value) {
@@ -293,6 +374,37 @@ class _WelcomeViewState extends State<WelcomeView> {
         });
       }
     });
+  }
+
+  bool validate() {
+    Util.hideKeyBoard(context);
+
+    flag = false;
+    return true;
+  }
+
+  Future<Null> _playVerifyBtnAnimation() async {
+    try {
+      await _verifyButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playSubmitBtnAnimation() async {
+    try {
+      await _submitButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopVerifyBtnAnimation() async {
+    try {
+      await _verifyButtonController.reverse();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopSubmitBtnAnimation() async {
+    try {
+      await _submitButtonController.reverse();
+    } on TickerCanceled {}
   }
 
 }

@@ -34,6 +34,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   BuildContext forgetPasswordBc;
   BuildContext otpPasswordBc;
   BuildContext passwordBc;
+  BuildContext submitPhoneBc;
   LoginViewModel _loginViewModel;
 
   bool isForgetPasswordFlow = false;
@@ -49,6 +50,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   AnimationController _recoverButtonController;
   AnimationController _verifyButtonController;
   AnimationController _updatePasswordButtonController;
+  AnimationController _submitButtonController;
 
   int numberValidation = AppConstants.PHONE_VALIDATION;
   int phoneNumberValidation = AppConstants.PHONE_VALIDATION;
@@ -232,6 +234,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 3000), vsync: this);
     _updatePasswordButtonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
+    _submitButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
 
     _firebaseMessaging = FirebaseMessaging();
     _loginViewModel = LoginViewModel(App());
@@ -244,6 +248,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     _recoverButtonController.dispose();
     _verifyButtonController.dispose();
     _updatePasswordButtonController.dispose();
+    _submitButtonController.dispose();
 
     super.dispose();
   }
@@ -323,21 +328,11 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.PHONE_NUMBER_TITLE,
-        AppStrings.PHONE_NUMBER_DESC, customWidget(context), (bc3) {
-      Navigator.pop(bc3);
-      callRegisterViaPhoneApi();
-    }, AppStrings.SUBMIT, false);
-  }
-
-  showOtpBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
         context,
-        AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC,
-        OtpTextField(onOtpCodeChanged: (otp) {
-          code = otp;
-        }),
+        AppStrings.PHONE_NUMBER_TITLE,
+        AppStrings.PHONE_NUMBER_DESC,
+        customWidget(context),
         AnimatedGradientButton(
           onAnimationTap: () {
             if (flag) {
@@ -348,7 +343,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     setState(() {
                       _isInternetAvailable = true;
                     });
-                    callVerifyOtpApi();
+                    callRegisterViaPhoneApi();
                   } else {
                     setState(() {
                       _isInternetAvailable = false;
@@ -358,14 +353,57 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               }
             }
           },
-          buttonController: _verifyButtonController,
-          text: AppStrings.VERIFY_NOW,
-        ),
-        (bc1) {
-          otpPasswordBc = bc1;
-        },
-        AppStrings.VERIFY_NOW,
-        true);
+          buttonController: _submitButtonController,
+          text: AppStrings.SUBMIT,
+        ), (bc3) {
+      submitPhoneBc = bc3;
+    }, AppStrings.SUBMIT, false);
+  }
+
+  showOtpBottomSheet(BuildContext context) {
+    isForgetPasswordFlow
+        ? showBottomSheetWidget(
+        context, AppStrings.ENTER_OTP_DIGIT, AppStrings.OTP_DESC,
+        OtpTextField(onOtpCodeChanged: (otp) {
+      code = otp;
+    }), (bc1) {
+    Navigator.pop(bc1);
+    showResetPasswordBottomSheet(context);
+    }, AppStrings.VERIFY_NOW, true):showBottomSheetWidgetWithAnimatedBtn(
+            context,
+            AppStrings.ENTER_OTP_DIGIT,
+            AppStrings.OTP_DESC,
+            OtpTextField(onOtpCodeChanged: (otp) {
+              code = otp;
+            }),
+            AnimatedGradientButton(
+              onAnimationTap: () {
+                if (flag) {
+                  if (validate()) {
+                    Util.check().then((value) {
+                      if (value != null && value) {
+                        // Internet Present Case
+                        setState(() {
+                          _isInternetAvailable = true;
+                        });
+                        callVerifyOtpApi();
+                      } else {
+                        setState(() {
+                          _isInternetAvailable = false;
+                        });
+                      }
+                    });
+                  }
+                }
+              },
+              buttonController: _verifyButtonController,
+              text: AppStrings.VERIFY_NOW,
+            ),
+            (bc1) {
+              otpPasswordBc = bc1;
+            },
+            AppStrings.VERIFY_NOW,
+            true);
   }
 
   Stack customEmailTextField(BuildContext context) {
@@ -886,7 +924,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   }
 
   Future<void> callRegisterViaPhoneApi() async {
-    _playAnimation();
+    _playSubmitBtnAnimation();
     setState(() {
       _enabled = false;
       _loginPlatform = "normal";
@@ -923,17 +961,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           _isInternetAvailable = true;
         });
         var map = Map();
-        if (isForgetPasswordFlow) {
-          _stopVerifyBtnAnimation();
-          if (otpPasswordBc != null) {
-            Navigator.pop(otpPasswordBc);
-          }
-          showResetPasswordBottomSheet(context);
-        } else {
-          map['phone'] = number;
-          map['code'] = code;
-          _loginViewModel.verifyOtp(map);
-        }
+        map['phone'] = number;
+        map['code'] = code;
+        _loginViewModel.verifyOtp(map);
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -992,6 +1022,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       _stopAnimation();
       _stopRecoverBtnAnimation();
       _stopUpdatePasswordBtnAnimation();
+      _stopSubmitBtnAnimation();
+      _stopVerifyBtnAnimation();
       if (mounted) {
         setState(() {
           flag = true;
@@ -1000,8 +1032,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       }
 
       if (response.data is LoginResponseModel) {
-        ToastUtil.showToast(context, response.msg);
-
         LoginResponseModel responseRegister = response.data;
 
         if (responseRegister != null) {
@@ -1017,6 +1047,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           map['email'] = emailController.text.toString();
         }
       } else if (response.msg == "Code has been sent to your phone number") {
+        if (submitPhoneBc != null) {
+          Navigator.pop(submitPhoneBc);
+        }
         showOtpBottomSheet(context);
       } else if (response.msg ==
           "Verification code has been send successfully") {
@@ -1025,13 +1058,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         }
         showOtpBottomSheet(context);
       } else if (response.msg == "Verified") {
-        ToastUtil.showToast(context, response.msg);
+        if (otpPasswordBc != null) {
+          Navigator.pop(otpPasswordBc);
+        }
         Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW,
             arguments: {
               'phone': phoneNo,
             });
       } else if (response.msg == "Password Changed Successfully") {
-
         if (passwordBc != null) {
           Navigator.pop(passwordBc);
         }
@@ -1040,6 +1074,11 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
       } else {
         ToastUtil.showToast(context, response.msg);
+        _stopAnimation();
+        _stopRecoverBtnAnimation();
+        _stopUpdatePasswordBtnAnimation();
+        _stopSubmitBtnAnimation();
+        _stopVerifyBtnAnimation();
       }
     });
   }
@@ -1075,6 +1114,12 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     } on TickerCanceled {}
   }
 
+  Future<Null> _playSubmitBtnAnimation() async {
+    try {
+      await _submitButtonController.forward();
+    } on TickerCanceled {}
+  }
+
   Future<Null> _stopAnimation() async {
     try {
       await _loginButtonController.reverse();
@@ -1096,6 +1141,12 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   Future<Null> _stopUpdatePasswordBtnAnimation() async {
     try {
       await _updatePasswordButtonController.reverse();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopSubmitBtnAnimation() async {
+    try {
+      await _submitButtonController.reverse();
     } on TickerCanceled {}
   }
 }
