@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-
+import 'package:intl/intl.dart';
 import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_images.dart';
@@ -357,7 +357,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                         height: 3.0,
                       ),
                       Text(
-                        data.expireAt,
+                        formatUTCTime(data.expireAt),
                         style: AppStyles.blackWithDifferentFontTextStyle(
                                 context, 11.0)
                             .copyWith(
@@ -433,7 +433,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                       height: 3.0,
                     ),
                     Text(
-                      data.expireAt,
+                      formatUTCTime(data.expireAt),
                       style: AppStyles.blackWithDifferentFontTextStyle(
                           context, 11.0)
                           .copyWith(
@@ -530,6 +530,11 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
     });
   }
 
+  static String formatUTCTime(String time) {
+    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
+        time);
+    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
+  }
 
   Future<void> callSavedCouponApi() async {
 
