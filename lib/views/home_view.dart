@@ -240,10 +240,7 @@ class _HomeViewState extends State<HomeView>
                 margin: EdgeInsets.symmetric(horizontal: 25.0.w),
                 child: GradientButton(
                   onTap: () {
-//                      print('length ${_swipeItems.length}');
-                    _matchEngine = MatchEngine(swipeItems: _swipeItems);
-//                      print('length ${_matchEngine.currentItem}');
-                    _matchEngine.rewindMatch();
+                    callOffersApi();
                     setState(() {
                       _stackFinished = false;
                     });
