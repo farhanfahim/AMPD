@@ -62,6 +62,7 @@ class _HomeViewState extends State<HomeView>
 
   bool _enabled = true;
   bool _openSetting = false;
+  bool permissionGranted = false;
   bool _isInternetAvailable = true;
   final PagingController<int, OfferModel> _pagingController =
       PagingController(firstPageKey: 1);
@@ -113,6 +114,7 @@ class _HomeViewState extends State<HomeView>
             UserLocation(
                 latitude: position.latitude, longitude: position.longitude);
             callOffersApi();
+            permissionGranted = true;
 
           });
         });
@@ -121,7 +123,28 @@ class _HomeViewState extends State<HomeView>
           permission == locationPermission.PermissionStatus.denied || permission == locationPermission.PermissionStatus.restricted) {
         print('HEEEEEEEE');
         try {
-          LocationPermissionHandler.requestPermissoin();
+          LocationPermissionHandler.requestPermissoin().then((value) {
+            if (permission == locationPermission.PermissionStatus.granted) {
+              setState(() {
+                _openSetting = true;
+                gcl.Geolocator.getCurrentPosition(
+                    desiredAccuracy: gcl.LocationAccuracy.medium)
+                    .then((value) {
+                  position = value;
+
+                  UserLocation(
+                      latitude: position.latitude, longitude: position.longitude);
+                  callOffersApi();
+                  permissionGranted = true;
+                });
+              });
+
+            }else{
+              setState(() {
+                _openSetting = false;
+              });
+            }
+          });
         } on PlatformException catch (err) {
           print(err);
         } catch (err) {
@@ -147,7 +170,35 @@ class _HomeViewState extends State<HomeView>
   @override
   Widget build(BuildContext context) {
 
+    LocationPermissionHandler.checkLocationPermission().then((permission) {
+      if (permission == locationPermission.PermissionStatus.granted && permissionGranted) {
 
+        setState(() {
+          _openSetting = true;
+          gcl.Geolocator.getCurrentPosition(
+              desiredAccuracy: gcl.LocationAccuracy.medium)
+              .then((value) {
+            position = value;
+
+            UserLocation(
+                latitude: position.latitude, longitude: position.longitude);
+
+              callOffersApi();
+              permissionGranted = false;
+
+
+
+          });
+
+        });
+      }else {
+
+        setState(() {
+          _openSetting = false;
+        });
+
+      }
+    });
     final appBar1 = appBar(
         title: _appBarTitle,
         onBackClick: () {
