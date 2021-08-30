@@ -31,7 +31,8 @@ class SavedCouponRepository {
           repositoryResponse.data = null;
           _repositoryResponse.add(repositoryResponse);
         } else {
-          var savedCouponResponse = SavedCouponModel.fromJson(data);
+          var savedCouponResponse = SavedCouponModel.fromJson(data['data']);
+          print("saved ${savedCouponResponse.toJson()}");
           repositoryResponse.success = true;
           repositoryResponse.msg = data['message'];
           repositoryResponse.data = savedCouponResponse;

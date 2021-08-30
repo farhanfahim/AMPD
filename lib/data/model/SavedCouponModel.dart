@@ -2,30 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class SavedCouponModel {
-  bool status;
-  String message;
-  Data data;
-
-  SavedCouponModel({this.status, this.message, this.data});
-
-  SavedCouponModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data.toJson();
-    }
-    return data;
-  }
-}
-
-class Data {
   int total;
   int perPage;
   int page;
@@ -33,9 +9,9 @@ class Data {
   @JsonKey(name: 'data')
   List<DataClass> dataClass;
 
-  Data({this.total, this.perPage, this.page, this.lastPage, this.dataClass});
+  SavedCouponModel({this.total, this.perPage, this.page, this.lastPage, this.dataClass});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  SavedCouponModel.fromJson(Map<String, dynamic> json) {
     total = json['total'];
     perPage = json['perPage'];
     page = json['page'];

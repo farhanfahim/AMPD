@@ -8,9 +8,10 @@ import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/loader.dart';
 import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
-import 'package:ampd/widgets/MD2Indicator.dart';
+import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/flat_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
@@ -18,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sizer/sizer.dart';
 
 class SavedCoupons1View extends StatefulWidget {
@@ -30,13 +30,12 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   int _totalPages = 0;
   int _currentPage = 1;
   int _selectedIndex = 0;
-  int _pageSize = 10;
   ScrollController _controller;
   StreamController _streamController;
 
-  List<DataClass> dataList = <DataClass>[];
-  List<DataClass> expiredCouponList = <DataClass>[];
-  List<DataClass> activeCouponList = <DataClass>[];
+  List<DataClass> dataList = List<DataClass>();
+  List<DataClass> expiredCouponList = List<DataClass>();
+  List<DataClass> activeCouponList =  List<DataClass>();
   bool _enabled = true;
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
@@ -44,8 +43,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   SavedCouponViewModel _savedCouponViewModel;
   TabController tabController;
 
-  final PagingController<int, DataClass> _pagingController =
-  PagingController(firstPageKey: 1);
 
   final TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
@@ -73,12 +70,12 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   @override
   void initState()  {
 
-   /* _pagingController.addPageRequestListener((pageKey) {
-      _fetchPage(pageKey);
-    });*/
 
-    //_streamController = new StreamController<List<Notifications>>.broadcast();
-    //_streamController.add(null);
+    _streamController = new StreamController<List<DataClass>>.broadcast();
+    _streamController.add(null);
+
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
 
     tabController = new TabController(vsync:this,length: 2);
     tabController.addListener(() {
@@ -100,17 +97,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
 
 
 
-  Future<void> _fetchPage(int pageKey) async {
-    try {
-      print('_fetchPage');
-
-      callSavedCouponApi();
-    } catch (error) {
-      print('error1: $error');
-      _pagingController.error = error;
-    }
-  }
-
   void _scrollListener() {
     print(_controller.position.extentAfter);
     if (_controller.position.extentAfter < 500) {
@@ -121,6 +107,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
         _currentPage = _currentPage + 1;
 
         print('TOTAL PAGES --- $_currentPage');
+        callSavedCouponApi();
       }
     }
   }
@@ -128,24 +115,32 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-
-
     final tabBar = TabBar(
-      unselectedLabelColor: Theme.of(context)
+      unselectedLabelColor: Theme
+          .of(context)
           .appBarTheme
           .textTheme
           .headline1
           .color
           .withOpacity(.54),
-      labelColor: Theme.of(context).appBarTheme.textTheme.headline1.color,
+      labelColor: Theme
+          .of(context)
+          .appBarTheme
+          .textTheme
+          .headline1
+          .color,
       // indicatorColor: AppColors.ACCENT_COLOR,
       indicatorSize: TabBarIndicatorSize.tab,
       // indicator: UnderlineTabIndicator(),
       indicator: ShapeDecoration(
           color: AppColors.BLUE_COLOR,
           shape: RoundedRectangleBorder(
-            borderRadius: (_selectedIndex == 1) ? BorderRadius.only(topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0)) :BorderRadius.only(topLeft: Radius.circular(5.0), bottomLeft: Radius.circular(5.0))
-              )),
+              borderRadius: (_selectedIndex == 1) ? BorderRadius.only(
+                  topRight: Radius.circular(5.0),
+                  bottomRight: Radius.circular(5.0)) : BorderRadius.only(
+                  topLeft: Radius.circular(5.0),
+                  bottomLeft: Radius.circular(5.0))
+          )),
       labelStyle: AppStyles.selectedTabTextStyle(),
       unselectedLabelStyle: AppStyles.unselectedTabTextStyle(),
       tabs: [
@@ -153,7 +148,9 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
           child: Text(AppStrings.ACTIVE,
               style:
               AppStyles.blackWithBoldFontTextStyle(context, 9.0.sp)
-                  .copyWith(color: (_selectedIndex == 0) ? AppColors.WHITE_COLOR : AppColors.APP__DETAILS_TEXT_COLOR_LIGHT)
+                  .copyWith(color: (_selectedIndex == 0)
+                  ? AppColors.WHITE_COLOR
+                  : AppColors.APP__DETAILS_TEXT_COLOR_LIGHT)
                   .copyWith(fontWeight: FontWeight.w600)),
 
         ),
@@ -161,7 +158,9 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
           child: Text(AppStrings.EXPIRED,
               style:
               AppStyles.blackWithBoldFontTextStyle(context, 9.0.sp)
-                  .copyWith(color: (_selectedIndex == 1) ? AppColors.WHITE_COLOR : AppColors.APP__DETAILS_TEXT_COLOR_LIGHT)
+                  .copyWith(color: (_selectedIndex == 1)
+                  ? AppColors.WHITE_COLOR
+                  : AppColors.APP__DETAILS_TEXT_COLOR_LIGHT)
                   .copyWith(fontWeight: FontWeight.w600)),
         ),
       ],
@@ -169,21 +168,17 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
     );
 
 
-
-    final body =  SafeArea(
-
-          child: Padding(
+    final body = Container(
+        child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-
                 Header(
                     heading1: AppStrings.SAVED_COUPONS,
                     heading2: AppStrings.SHOW_ALL_COUPONS),
                 SizedBox(
                   height: 20.0,
                 ),
-
                 Container(
                     decoration: ShapeDecoration(
                         color: AppColors.WHITE_COLOR,
@@ -192,65 +187,113 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 1,
                             blurRadius: 2,
-                            offset: Offset(0, 2), // changes position of shadow
+                            offset: Offset(
+                                0, 2), // changes position of shadow
                           ),
                         ],
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            ))
-                    ,child: tabBar),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ))
+                    , child: tabBar),
                 SizedBox(
                   height: 10.0,
                 ),
-                Expanded(
-                  child: Container(
-                    child: TabBarView(
-                      physics: NeverScrollableScrollPhysics(),
-                      controller: tabController,
-                      children: [
+                StreamBuilder<List<DataClass>>(
+                    stream: _streamController.stream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container(
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height * 0.6,
+                          child: Center(
+                            child: Loader(
+                                isLoading: true,
+                                color: AppColors.ACCENT_COLOR
+                            ),
+                          ),
+                        );
+                      } else {
+                        return snapshot.data.length > 0 ? Expanded(
+                          child: Container(
+                            child: TabBarView(
+                              physics: NeverScrollableScrollPhysics(),
+                              controller: tabController,
+                              children: [
+                                ListView(
+                                  shrinkWrap: true,
+                                  controller: _controller,
+                                  children: [
+                                    activeCouponList.length > 0? ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: activeCouponList.length,
+                                        itemBuilder: (context, index) {
+                                          print(" list length ${activeCouponList.length}");
+                                          return SavedCouponActiveTileView(activeCouponList[index]);
+                                        }):Center(
+                                      child: Container(
+                                        child:  Center(
+                                            child: NoRecordFound("No Active Coupons Found",
+                                                AppImages.NO_NOTIFICATIONS_IMAGE)
+                                        ),
+                                      ),
+                                    ),
 
+                                    Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Loader(
+                                        isLoading: _isPaginationLoading,
+                                        color: AppColors.APP_PRIMARY_COLOR,
+                                      ),
+                                    ),
+                                  ],
 
-                        ListView.builder(
-                            physics: ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: dataList.length,
-                            itemBuilder: (context, index) {
-                              return activeCouponList.isNotEmpty?SavedCouponActiveTileView(activeCouponList[index]):Container(
-                                child:  Text(
-                                  "No Active Coupons",
-                                  style: AppStyles.blackWithDifferentFontTextStyle(
-                                      context, 12.0)
-                                      .copyWith(
-                                      color:
-                                      AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                                 ),
-                              );
-                            }),
-                        ListView.builder(
-                            physics: ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: dataList.length,
-                            itemBuilder: (context, index) {
-                              return expiredCouponList.isNotEmpty?SavedCouponExpiredTileView(expiredCouponList[index]):Container(
-                                child:  Text(
-                                  "No Expired Coupons",
-                                  style: AppStyles.blackWithDifferentFontTextStyle(
-                                      context, 12.0)
-                                      .copyWith(
-                                      color:
-                                      AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                ListView(
+                                  shrinkWrap: true,
+                                  controller: _controller,
+                                  children: [
+                                    expiredCouponList.length > 0? ListView.builder(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: expiredCouponList.length,
+                                        itemBuilder: (context, index) {
+                                          print(" list length ${expiredCouponList.length}");
+                                          return SavedCouponExpiredTileView(expiredCouponList[index]);
+                                        }):Center(
+                                      child: Container(
+                                          child: Center(
+                                              child: NoRecordFound("No Expired Coupons Found",
+                                                  AppImages.NO_NOTIFICATIONS_IMAGE)
+                                          ),
+                                      ),
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Loader(
+                                        isLoading: _isPaginationLoading,
+                                        color: AppColors.APP_PRIMARY_COLOR,
+                                      ),
+                                    ),
+                                  ],
+
                                 ),
-                              );
-                            }),
-                      ],
-                    ),
-                  ),
-                ),
+
+                              ],
+                            ),
+                          ),
+                        ) : Center(
+                            child: NoRecordFound("No Saved Coupons Found",
+                                AppImages.NO_NOTIFICATIONS_IMAGE)
+                        );
+                      }
+                    })
 
               ],
-            ),
-          ),
-        );
+            )));
 
     return DefaultTabController(
       length: 2,
@@ -270,7 +313,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   @override
   void dispose() {
     tabController.dispose();
-    _pagingController.dispose();
     super.dispose();
   }
 
@@ -500,6 +542,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
 
         var map = Map<String, dynamic>();
         map['status'] = 10;
+        map['page'] = _currentPage;
         _savedCouponViewModel.savedCoupons(map);
       } else {
         setState(() {
@@ -510,19 +553,22 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   }
   void subscribeToViewModel() {
     _savedCouponViewModel
-        .getHomeRepository()
+        .getSavedCouponRepository()
         .getRepositoryResponse()
         .listen((response) async {
 
       if(mounted) {
         setState(() {
           _enabled = true;
+          _isPaginationLoading = false;
         });
       }
 
       if(response.data is SavedCouponModel) {
-        SavedCouponModel responseRegister = response.data;
-        dataList = responseRegister.data.dataClass;
+
+        // SavedCouponModel responseRegister = responseRegister;
+        dataList.addAll(response.data.dataClass);
+        _streamController.add(dataList);
         DateTime now = DateTime.now();
 
 
@@ -549,3 +595,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   }
 
 }
+
+/*
+
+ */

@@ -7,7 +7,6 @@ import 'package:ampd/repo/redeem_now_repository.dart';
 import 'package:ampd/repo/register_repository.dart';
 import 'package:ampd/repo/login_repository.dart';
 import 'package:ampd/repo/saved_coupon_repository.dart';
-import 'package:ampd/service/location_service.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,32 +43,29 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return StreamProvider<UserLocation>(
-      builder: (context) => LocationService().locationStream,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return OrientationBuilder(
-            builder: (context, orientation) {
-              SizerUtil().init(constraints, orientation);
-              return MaterialApp(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            SizerUtil().init(constraints, orientation);
+            return MaterialApp(
 
-                navigatorKey: GlobalVariable.navState,
-                debugShowCheckedModeBanner: false,
-                 darkTheme: light,
-                onGenerateRoute: getAppRoutes().getRoutes,
-                // routes: getAppRoutes().getRoutes,
-                theme:  light,
-                builder: (BuildContext context, Widget child) {
-                  return MediaQuery(
-                    data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0, boldText: false),
-                    child: child,
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
+              navigatorKey: GlobalVariable.navState,
+              debugShowCheckedModeBanner: false,
+               darkTheme: light,
+              onGenerateRoute: getAppRoutes().getRoutes,
+              // routes: getAppRoutes().getRoutes,
+              theme:  light,
+              builder: (BuildContext context, Widget child) {
+                return MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0, boldText: false),
+                  child: child,
+                );
+              },
+            );
+          },
+        );
+      },
     );
 
   }

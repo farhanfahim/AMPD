@@ -20,7 +20,7 @@ class SavedCouponViewModel {
     _savedCouponRepository = savedCouponRepository;
   }
 
-  SavedCouponRepository getHomeRepository() => _savedCouponRepository;
+  SavedCouponRepository getSavedCouponRepository() => _savedCouponRepository;
 
   SavedCouponRepository clearRepositroyResponse() {
     _savedCouponRepository = null;
