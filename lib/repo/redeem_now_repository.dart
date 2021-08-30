@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ampd/data/model/OfferDataClassModel.dart';
 import 'package:ampd/data/model/SingleOfferModel.dart';
 import 'package:ampd/data/model/repo_response_model.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
@@ -30,7 +31,7 @@ class RedeemNowRepository {
           repositoryResponse.data = null;
           _repositoryResponse.add(repositoryResponse);
         } else {
-          var singleOfferResponse = SingleOfferModel.fromJson(data);
+          var singleOfferResponse = Dataclass.fromJson(data['data']);
           repositoryResponse.success = true;
           repositoryResponse.msg = data['message'];
           repositoryResponse.data = singleOfferResponse;

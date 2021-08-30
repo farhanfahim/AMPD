@@ -977,4 +977,12 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
     //double convertKmToMile = _distanceInMeters/0.6213;
     return _distanceInMeters.roundToDouble();
   }
+
+
+  static String formatUTCTime(String time) {
+    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
+        time);
+    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
+  }
+
 }

@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:ampd/app/app.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/model/OfferDataClassModel.dart';
+import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/redeem_now_viewmodel.dart';
+import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/offer_card_widget_2.dart';
 import 'package:ampd/widgets/widgets.dart';
@@ -27,6 +31,7 @@ class RedeemNowView extends StatefulWidget {
 
   Map<String, dynamic> map;
 
+
   RedeemNowView(this.map);
   @override
   _RedeemNowViewState createState() => _RedeemNowViewState();
@@ -39,16 +44,20 @@ class _RedeemNowViewState extends State<RedeemNowView> {
   Dataclass singleOfferModel;
   gcl.Position position;
   bool _enabled = true;
+  bool isDataLoad = true;
   bool _isInternetAvailable = true;
+  StreamController _streamController;
   UserLocation userLocation = UserLocation();
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
-    getCurrentLocation();
+    _streamController = new StreamController<Dataclass>.broadcast();
+    _streamController.add(null);
+
     _redeemNowViewModel = RedeemNowViewModel(App());
     subscribeToViewModel();
-
+    getCurrentLocation();
   }
 
   void getCurrentLocation(){
@@ -63,6 +72,7 @@ class _RedeemNowViewState extends State<RedeemNowView> {
 
             UserLocation(
                 latitude: position.latitude, longitude: position.longitude);
+
             callRedeemOfferApi(widget.map['offer_id']);
 
           });
@@ -99,27 +109,53 @@ class _RedeemNowViewState extends State<RedeemNowView> {
     );
 
     final body = SafeArea(
-        child: _openSetting? singleOfferModel != null ? OfferCardWidget2(
-          isRedeemNow: true,
-          image: singleOfferModel.imageUrl,
-          offer: AppImages.STARBUCKS_OFFER,
-          offerName: "Starbucks Triple Mocha",
-          text: singleOfferModel.title,
-          time: "2021-07-03 09:00:00",
-          coord: Coords(double.parse(singleOfferModel.user.latitude), double.parse(singleOfferModel.user.longitude)),
-          currentCoords: userLocation,
-          locationTitle: singleOfferModel.user.address,
-          data: singleOfferModel,
-          changeDetailTitle: (value) {
-            setState(() {
-              if(value) {
-                _appBarTitle = 'Offer Details';
-              } else {
-                _appBarTitle = 'Offer';
-              }
-            });
-          },
-        ):Container():Center(
+
+        child: _openSetting? StreamBuilder<Dataclass>(
+    stream: _streamController.stream,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.6,
+              child: Center(
+                child: Loader(
+                    isLoading: isDataLoad,
+                    color: AppColors.ACCENT_COLOR
+                ),
+              ),
+            );
+          } else {
+
+            return snapshot.data!= null ? OfferCardWidget2(
+              isRedeemNow: true,
+              image: singleOfferModel.imageUrl,
+              offer: AppImages.STARBUCKS_OFFER,
+              offerName: "Starbucks Triple Mocha",
+              text: singleOfferModel.title,
+              time: "2021-07-03 09:00:00",
+              coord: Coords(double.parse(singleOfferModel.user.latitude), double.parse(singleOfferModel.user.longitude)),
+              currentCoords:UserLocation(
+                  latitude: position.latitude,
+                  longitude: position.longitude),
+              locationTitle: singleOfferModel.user.address,
+              data: singleOfferModel,
+              changeDetailTitle: (value) {
+                setState(() {
+                  if(value) {
+                    _appBarTitle = 'Offer Details';
+                  } else {
+                    _appBarTitle = 'Offer';
+                  }
+                });
+              },
+            ): Center(
+                child: NoRecordFound("No Offer Found",
+                    AppImages.NO_NOTIFICATIONS_IMAGE)
+            );
+          }
+        }):Center(
           child: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -187,12 +223,14 @@ class _RedeemNowViewState extends State<RedeemNowView> {
       if(mounted) {
         setState(() {
           _enabled = true;
+          isDataLoad= false;
         });
       }
 
       if(response.data is Dataclass) {
 
         singleOfferModel = response.data;
+        _streamController.add(singleOfferModel);
       }
       else if(response.data is DioError){
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
