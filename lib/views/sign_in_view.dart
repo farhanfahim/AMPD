@@ -159,6 +159,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           ),
                           child: GestureDetector(
                             onTap: () {
+                              numberController.clear();
                               showForgetBottomSheet(context);
                               setState(() {
                                 isForgetPasswordFlow = true;
@@ -223,6 +224,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     ),
                     ButtonBorder(
                       onTap: () {
+                        numberController.clear();
                         showPhoneNoBottomSheet(context);
                         setState(() {
                           isForgetPasswordFlow = false;
@@ -479,22 +481,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           flag = true;
                           _isInternetAvailable = true;
                         });
-                        if(code.isNotEmpty) {
-                          if(code.length == 4) {
-                            callVerifyOtpApi();
-                          }else{
-                            setState(() {
-                              flag = true;
-                            });
-                            ToastUtil.showToast(context, "Please enter valid otp code");
-                          }
-                        }else{
-                          setState(() {
-                            flag = true;
-                          });
-                          ToastUtil.showToast(context, "Please enter otp code");
-                        }
-
+                        callVerifyOtpApi();
 
                       } else {
                         setState(() {

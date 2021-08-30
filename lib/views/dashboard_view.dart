@@ -3,12 +3,14 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/views/home_view.dart';
 import 'package:ampd/views/saved_coupon_1_view.dart';
 import 'package:ampd/views/side_menu_view.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class DashboardView extends StatefulWidget {
   bool isGuestLogin;
@@ -60,6 +62,7 @@ class _DashboardViewState extends State<DashboardView> {
   }
   @override
   Widget build(BuildContext context) {
+
     final appBar2 = AppBar(
 //      elevation: 0.6,
       brightness: Theme
@@ -71,7 +74,7 @@ class _DashboardViewState extends State<DashboardView> {
           .appBarTheme
           .color,
       title: Text(
-        _selectedPageIndex == 1? AppStrings.HOME : "",
+        _selectedPageIndex == 1? "Home" : "",
           style: AppStyles.poppinsTextStyle(fontSize: 20.0, weight: FontWeight.w500).copyWith(color: Colors.black)
       ),
       centerTitle: true,

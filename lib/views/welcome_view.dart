@@ -99,6 +99,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
                 ),
                 GradientButton(
                   onTap: () {
+                    numberController.clear();
                     showPhoneNoBottomSheet(context);
                   },
                   text: AppStrings.CREATE_AN_ACCOUNT,
@@ -219,22 +220,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
                       flag = true;
                       _isInternetAvailable = true;
                     });
-                    print(code);
-                    if(code.isNotEmpty) {
-                      if(code.length == 4) {
                         callVerifyOtpApi();
-                      }else{
-                        setState(() {
-                          flag = true;
-                        });
-                        ToastUtil.showToast(context, "Please enter valid otp code");
-                      }
-                    }else{
-                      setState(() {
-                        flag = true;
-                      });
-                      ToastUtil.showToast(context, "Please enter otp code");
-                    }
 
                   } else {
                     setState(() {
@@ -317,8 +303,6 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
   }
 
   void subscribeToViewModel() {
-    _stopSubmitBtnAnimation();
-    _stopVerifyBtnAnimation();
     _registerViewModel
         .getCompleteRegisterRepository()
         .getRepositoryResponse()
@@ -331,6 +315,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
       }
 
       if (response.msg == "Verified") {
+        _stopVerifyBtnAnimation();
         if (otpPasswordBc != null) {
           Navigator.pop(otpPasswordBc);
         }
@@ -340,11 +325,12 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
 
       }
       else if(response.msg == "Code has been sent to your phone number") {
-
+        _stopSubmitBtnAnimation();
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
         }
 
+        code = "";
         showOtpBottomSheet(context);
       }
       else if (response.data is DioError) {

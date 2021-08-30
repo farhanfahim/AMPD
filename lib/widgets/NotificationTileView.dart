@@ -1,7 +1,7 @@
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/OfferModel.dart';
+import 'package:ampd/data/model/OffeReviewsModel.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

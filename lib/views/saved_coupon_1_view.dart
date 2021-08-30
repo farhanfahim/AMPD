@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
-import 'package:ampd/data/model/SavedCouponsModel.dart';
+import 'package:ampd/data/model/SavedCouponModel.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/MD2Indicator.dart';
 import 'package:ampd/widgets/flat_button.dart';
@@ -14,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sizer/sizer.dart';
 
 class SavedCoupons1View extends StatefulWidget {
@@ -24,17 +29,23 @@ class SavedCoupons1View extends StatefulWidget {
 class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTickerProviderStateMixin {
   int _totalPages = 0;
   int _currentPage = 1;
-
-  bool _isEnabled = true;
-  bool _isInternetAvailable = true;
-  bool _isPaginationLoading = false;
-
+  int _selectedIndex = 0;
+  int _pageSize = 10;
   ScrollController _controller;
-
   StreamController _streamController;
 
-  List<SavedCoupons> _listOfSavedCoupons = [];
+  List<DataClass> dataList = <DataClass>[];
+  List<DataClass> expiredCouponList = <DataClass>[];
+  List<DataClass> activeCouponList = <DataClass>[];
+  bool _enabled = true;
+  bool _isPaginationLoading = false;
+  bool _isInternetAvailable = false;
+
+  SavedCouponViewModel _savedCouponViewModel;
   TabController tabController;
+
+  final PagingController<int, DataClass> _pagingController =
+  PagingController(firstPageKey: 1);
 
   final TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
@@ -44,7 +55,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   Icon _searchIcon = new Icon(Icons.search_rounded, color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,);
   Widget _appBarTitle = new Text( '' );
 
-  int _selectedIndex = 0;
   _SavedCoupons1ViewState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
@@ -62,6 +72,11 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
 
   @override
   void initState()  {
+
+   /* _pagingController.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });*/
+
     //_streamController = new StreamController<List<Notifications>>.broadcast();
     //_streamController.add(null);
 
@@ -72,53 +87,28 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
         print(_selectedIndex);
       });
     });
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
+
+    _savedCouponViewModel = SavedCouponViewModel(App());
+    subscribeToViewModel();
+    callSavedCouponApi();
 
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
 
     super.initState();
+  }
+
+
+
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      print('_fetchPage');
+
+      callSavedCouponApi();
+    } catch (error) {
+      print('error1: $error');
+      _pagingController.error = error;
+    }
   }
 
   void _scrollListener() {
@@ -218,19 +208,39 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                       physics: NeverScrollableScrollPhysics(),
                       controller: tabController,
                       children: [
+
+
                         ListView.builder(
                             physics: ClampingScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: _listOfSavedCoupons.length,
+                            itemCount: dataList.length,
                             itemBuilder: (context, index) {
-                              return SavedCouponActiveTileView(_listOfSavedCoupons[index]);
+                              return activeCouponList.isNotEmpty?SavedCouponActiveTileView(activeCouponList[index]):Container(
+                                child:  Text(
+                                  "No Active Coupons",
+                                  style: AppStyles.blackWithDifferentFontTextStyle(
+                                      context, 12.0)
+                                      .copyWith(
+                                      color:
+                                      AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                ),
+                              );
                             }),
                         ListView.builder(
                             physics: ClampingScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: _listOfSavedCoupons.length,
+                            itemCount: dataList.length,
                             itemBuilder: (context, index) {
-                              return SavedCouponExpiredTileView(_listOfSavedCoupons[index]);
+                              return expiredCouponList.isNotEmpty?SavedCouponExpiredTileView(expiredCouponList[index]):Container(
+                                child:  Text(
+                                  "No Expired Coupons",
+                                  style: AppStyles.blackWithDifferentFontTextStyle(
+                                      context, 12.0)
+                                      .copyWith(
+                                      color:
+                                      AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                ),
+                              );
                             }),
                       ],
                     ),
@@ -260,10 +270,11 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   @override
   void dispose() {
     tabController.dispose();
+    _pagingController.dispose();
     super.dispose();
   }
 
-  Widget SavedCouponActiveTileView(SavedCoupons data) {
+  Widget SavedCouponActiveTileView(DataClass data) {
     return Column(
       children: [
         SizedBox(
@@ -283,7 +294,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     child: Image.network(
-                      data.image,
+                      data.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -295,7 +306,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(data.name,
+                      Text(data.productName,
                           style:
                               AppStyles.blackWithBoldFontTextStyle(context, 16.0)
                                   .copyWith(color: AppColors.COLOR_BLACK)
@@ -304,7 +315,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                         height: 3.0,
                       ),
                       Text(
-                        data.dateTime,
+                        data.expireAt,
                         style: AppStyles.blackWithDifferentFontTextStyle(
                                 context, 11.0)
                             .copyWith(
@@ -315,7 +326,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            data.timeToAvail,
+                            "Time to Avail:(${data.availTime } hour)",
                             style: AppStyles.blackWithDifferentFontTextStyle(
                                     context, 12.0)
                                 .copyWith(
@@ -324,7 +335,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                           ),
                           FlatButtonWidget(
                               onTap: () {
-                                Navigator.pushNamed(context, AppRoutes.REDEEM_NOW);
+                                Navigator.pushNamed(context, AppRoutes.REDEEM_NOW,arguments: {'offer_id': data.id,});
                               }, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
                         ],
                       ),
@@ -343,7 +354,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
       ],
     );
   }
-  Widget SavedCouponExpiredTileView(SavedCoupons data) {
+  Widget SavedCouponExpiredTileView(DataClass data) {
     return Column(
       children: [
         SizedBox(
@@ -359,7 +370,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   child: Image.network(
-                    data.image,
+                    data.imageUrl,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -371,7 +382,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(data.name,
+                    Text(data.productName,
                         style:
                         AppStyles.blackWithBoldFontTextStyle(context, 16.0)
                             .copyWith(color: AppColors.COLOR_BLACK)
@@ -380,7 +391,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                       height: 3.0,
                     ),
                     Text(
-                      data.dateTime,
+                      data.expireAt,
                       style: AppStyles.blackWithDifferentFontTextStyle(
                           context, 11.0)
                           .copyWith(
@@ -391,7 +402,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          data.timeToAvail,
+                          "Time to Avail:(${data.availTime } hour)",
                           style: AppStyles.blackWithDifferentFontTextStyle(
                               context, 12.0)
                               .copyWith(
@@ -476,4 +487,65 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
       }
     });
   }
+
+
+  Future<void> callSavedCouponApi() async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['status'] = 10;
+        _savedCouponViewModel.savedCoupons(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+  void subscribeToViewModel() {
+    _savedCouponViewModel
+        .getHomeRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+
+      if(mounted) {
+        setState(() {
+          _enabled = true;
+        });
+      }
+
+      if(response.data is SavedCouponModel) {
+        SavedCouponModel responseRegister = response.data;
+        dataList = responseRegister.data.dataClass;
+        DateTime now = DateTime.now();
+
+
+        for(var coupon in dataList){
+          String date = coupon.expireAt;
+          DateTime dateTime = DateTime.parse(date);
+          if(dateTime.isAfter(now)){
+            activeCouponList.add(coupon);
+          }else{
+            expiredCouponList.add(coupon);
+          }
+        }
+      }
+      else if(response.data is DioError){
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      }
+      else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+
+
+
+  }
+
 }

@@ -30,6 +30,10 @@ class HomeViewModel {
     _homeRepository.offers(map);
   }
 
+  void likeDislikeOffer(Map<String, dynamic> map) {
+    _homeRepository.offersLikeDislike(map);
+  }
+
 
 
 }

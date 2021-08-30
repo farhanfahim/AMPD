@@ -1,21 +1,21 @@
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
+import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class NoInternetFound extends StatelessWidget {
-
-  Function onPressed;
   BuildContext context;
-
+  ValueChanged<BuildContext> onPressed;
   NoInternetFound(this. context, this.onPressed);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext bc) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(bc).size.width,
       padding: EdgeInsets.symmetric(vertical: 15.0),
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -38,24 +38,20 @@ class NoInternetFound extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-             "No Internet Connectivity! \nPlease check your internet connection and Try Again.",
+              "No Internet Connectivity! \nPlease check your internet connection and Try Again.",
+              style: AppStyles.detailWithSmallTextSizeTextStyle(),
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: AppFonts.SF_PRO_FONT_BOLD,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: AppColors.ACCENT_COLOR,
-              ),
-            ),
+            )
           ),
 
           SizedBox(
             height: 20,
           ),
+          GradientButton(
+            onTap: (){onPressed(bc);},
+            text: "Try Again",
 
-          Container(
-            width: 150.0,
-              child: button(context: context,title: "Try Again", onTap: onPressed))
+          ),
         ],
       ),
     );

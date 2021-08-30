@@ -6,6 +6,8 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/OffeReviewsModel.dart';
+import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/Skeleton.dart';
@@ -18,10 +20,12 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:ampd/data/model/OfferModel.dart';
+import 'package:ampd/data/model/OfferDataClassModel.dart';
 
 class OfferCardWidget2 extends StatefulWidget {
   String text;
@@ -31,11 +35,12 @@ class OfferCardWidget2 extends StatefulWidget {
   String time;
   String locationTitle;
   Coords coord;
+  UserLocation currentCoords;
   ValueChanged<bool> changeDetailTitle;
   bool isRedeemNow;
   Dataclass data;
 
-  OfferCardWidget2({this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.locationTitle, this.changeDetailTitle, this.isRedeemNow,this.data});
+  OfferCardWidget2({this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.currentCoords,this.locationTitle, this.changeDetailTitle, this.isRedeemNow,this.data});
 
   @override
   _OfferCardWidget2State createState() => _OfferCardWidget2State();
@@ -235,7 +240,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                   )
                               ),
                               itemSize: 15.0,
-                              initialRating: 4.0,
+                              initialRating:  widget.data.averageRating != null ? widget.data.averageRating:0,
                               allowHalfRating: true,
                               glow: false,
                               itemPadding: EdgeInsets.only(left: 5.0),
@@ -325,7 +330,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                   ),
                                   padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
                                   child: Text(
-                                    "4.5 miles",
+                                    "${calculateDistance()} km",
                                     style: AppStyles.poppinsTextStyle(fontSize: 11.0.sp, weight: FontWeight.w400).copyWith(color: Colors.black),
                                   ),
                                 )
@@ -699,7 +704,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                               ),
                                               padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
                                               child: Text(
-                                                "4.5 Km",
+                                                "${calculateDistance()} km",
                                                 style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: Colors.black),
                                               ),
                                             ),
@@ -793,7 +798,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                 Expanded(
                                   child: Text(
                                     widget.data.store.openingTime != null && widget.data.store.closingTime != null?
-    "Hours: Opens ${ widget.data.store.openingTime} - Closed ${ widget.data.store.closingTime}":"-",
+    "Hours: Opens ${ DateFormat.jm().format(DateFormat("hh:mm:ss").parse(widget.data.store.openingTime))} - Closed ${ DateFormat.jm().format(DateFormat("hh:mm:ss").parse(widget.data.store.closingTime))}":"-",
 
                                     style: AppStyles.poppinsTextStyle(fontSize: 13.0, weight: FontWeight.w400).copyWith(color: AppColors.DARK_GREY_COLOR2),
                                   ),
@@ -809,7 +814,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 
                                 Text(
 
-                                  widget.data.averageRating != null ?"5.0 (${widget.data.averageRating})":"5.0 (-)",
+                                  widget.data.averageRating != null ?"5.0 (${widget.data.averageRating})":"5.0 (0.0)",
                                   style: AppStyles.poppinsTextStyle(fontSize: 14.0, weight: FontWeight.w400).copyWith(color: AppColors.GREEN_BRIGHT_COLOR),
                                 ),
 
@@ -830,7 +835,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                       )
                                   ),
                                   itemSize: 13.0,
-                                  initialRating: 5.0,
+                                  initialRating: widget.data.averageRating != null ? widget.data.averageRating:0,
                                   allowHalfRating: true,
                                   glow: false,
                                   itemPadding: EdgeInsets.only(left: 5.0),
@@ -964,5 +969,12 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
         ),
       ),
     );
+  }
+
+  double calculateDistance()  {
+    double _distanceInMeters = Geolocator.distanceBetween(widget.coord.latitude, widget.coord.longitude, widget.currentCoords.latitude, widget.currentCoords.longitude)/1000;
+
+    //double convertKmToMile = _distanceInMeters/0.6213;
+    return _distanceInMeters.roundToDouble();
   }
 }

@@ -116,6 +116,48 @@ class NetworkNAO {
         return response;
       });
 
+  static Future<dynamic> getRedeemOffers(String accessToken,Map<String, dynamic> map,int id) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.OFFERS+"/"+id.toString(),
+          hasHeader: true,
+          token: accessToken,
+          map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
+
+  static Future<dynamic> getSavedOffers(String accessToken,Map<String, dynamic> map) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.SAVED_OFFERS,
+          hasHeader: true,
+          token: accessToken,
+          map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
+
+
+  static Future<dynamic> likeDislikeApi(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.OFFERS_LIKE_DISLIKE,
+          hasHeader: false,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_OFFER_ID: map['offer_id'],
+            NetworkConfig.API_OFFER_STATUS: map['status'],
+          })
+      ).then((dynamic response) {
+
+        print(map['offer_id']);
+        print(map['status']);
+        //print(response);
+        return response;
+      });
+
 
 
 }

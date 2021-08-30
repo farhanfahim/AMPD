@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:ampd/appresources/app_strings.dart';
-import 'package:ampd/data/model/OfferModel.dart';
+import 'package:ampd/data/model/OffeReviewsModel.dart';
+import 'package:ampd/data/model/OfferDataClassModel.dart';
 import 'package:ampd/widgets/NotificationTileView.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';

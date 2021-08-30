@@ -54,5 +54,9 @@ class NetworkEndpoints {
 
   //OFFERS /
    static const String OFFERS = BASE_URL + "offers";
+   static const String OFFERS_LIKE_DISLIKE = BASE_URL + "user-offers";
+
+   //SAVED OFFERS /
+   static const String SAVED_OFFERS = BASE_URL + "user-offers?";
 
 }

@@ -6,10 +6,13 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/OfferDataClassModel.dart';
 import 'package:ampd/data/model/OfferModel.dart';
+import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/home_viewmodel.dart';
+import 'package:ampd/widgets/NoInternetFound.dart';
 import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/offer_card_widget.dart';
@@ -21,7 +24,9 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:location/location.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeView extends StatefulWidget {
@@ -41,7 +46,6 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   int _selectedIndex = -1;
 
   ScrollController _controller;
-
   StreamController _streamController;
 
   HomeViewModel _homeViewModel;
@@ -58,30 +62,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  List<String> _names = ["Offer 25% Off", "Offer 15% Off", "\$5 Off", "Offer 20% Off", "\$10 Off"];
-  List<String> _itemNames = [
-    "Starbucks Triple Mocha",
-    "Double Scoop Brownie Sundae",
-    "Crispy Chicken Family Bucket",
-    "Original's 6 Juice Packs",
-    "Red Bull Half Pack"
-  ];
 
-  List<String> _backgrounds = [
-    "https://papers.co/wallpaper/papers.co-ax29-starbucks-logo-green-illustration-art-40-wallpaper.jpg?download=true",
-    "https://1000logos.net/wp-content/uploads/2016/10/Baskin-Robbins-emblem.jpg",
-    "https://fsa.zobj.net/crop.php?r=uGpNyI_vMtmX0Dj-46X9O1IF5Sc4TrgIL5X2xYQqXkCO-QfpA6fMZhog9EZe0nkocECPSP7mXs3DQZHJYjmgsdxE2T0EZnDw2xc64kvCCuxBJLoyDo9XQCAD95mgYsf91cMKBUQTxBdJgtW8",
-    "https://media.designrush.com/inspiration_images/134933/conversions/_1511456189_555_McDonald's-mobile.jpg",
-    "https://wallpaperaccess.com/full/3188912.png"
-  ];
-
-  List<String> _offers = [
-    AppImages.STARBUCKS_OFFER,
-    AppImages.BR_OFFER,
-    AppImages.KFC_OFFER,
-    AppImages.JUICE_OFFER,
-    AppImages.REDBULL_OFFER,
-  ];
 
   List<String> _times = [
     "2021-07-03 09:00:00",
@@ -91,21 +72,6 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
     "2021-07-29 09:00:00",
   ];
 
-  List<Coords> _locations = [
-    Coords(40.7565007, -73.986803),
-    Coords(24.3035846, 54.1169487),
-    Coords(24.8328199, 66.9334615),
-    Coords(24.8326894, 66.9334608),
-    Coords(24.8325588, 66.9334601),
-  ];
-
-  List<String> _locationTitle = [
-    "Starbucks",
-    "Baskin-Robbins",
-    "KFC",
-    "Mc Donalds",
-    "Pizza Hut",
-  ];
 
 
   @override
@@ -160,6 +126,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
 
   @override
   Widget build(BuildContext context) {
+    var userLocation = Provider.of<UserLocation>(context);
     final appBar1 = appBar(
         title: _appBarTitle, onBackClick: (){
       Navigator.of(context).pop();
@@ -176,7 +143,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
           height: double.maxFinite,
           width: double.infinity,
 
-          child: SwipeCards(
+          child: _swipeItems.isNotEmpty?SwipeCards(
             matchEngine: _matchEngine,
             itemBuilder: (BuildContext context, int index) {
               return Container(
@@ -190,6 +157,7 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                   text: _swipeItems[index].content.text,
                   time: _swipeItems[index].content.time,
                   coord: _swipeItems[index].content.coord,
+                  currentCoords: userLocation,
                   locationTitle: _swipeItems[index].content.locationTitle,
                   data: _swipeItems[index].content.data,
                   changeDetailTitle: (value) {
@@ -210,6 +178,24 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
                 _appBarTitle = 'Home';
               });
             },
+          ):Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+
+                Opacity(
+                    opacity: 0.3,
+                    child: SvgPicture.asset(AppImages.IC_COUPONS, width: 110.0, height: 110.0,)
+                ),
+
+                SizedBox(height: 10.0,),
+
+                Text(
+                  _isInternetAvailable? 'Loading Offers...':"No Internet Connection",
+                  style: AppStyles.poppinsTextStyle(fontSize: 18.0, weight: FontWeight.w500).copyWith(color: AppColors.UNSELECTED_COLOR),
+                ),
+              ],
+            ),
           ),
         ) : Center(
           child: Container(
@@ -273,10 +259,55 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
       } else {
         setState(() {
           _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
         });
       }
     });
   }
+  Future<void> callLikeOffersApi(int offerId) async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        map['status'] = 10;
+        _homeViewModel.likeDislikeOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callDisLikeOffersApi(int offerId) async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        map['status'] = 20;
+        _homeViewModel.likeDislikeOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
   void subscribeToViewModel() {
     _homeViewModel
         .getHomeRepository()
@@ -290,65 +321,83 @@ class _HomeViewState extends State<HomeView>  with AutomaticKeepAliveClientMixin
       }
 
       if(response.data is OfferModel) {
-
         OfferModel responseRegister = response.data;
         dataList = responseRegister.data.dataclass;
 
-        for (int i = 0; i < dataList.length; i++) {
-          _swipeItems.add(SwipeItem(
-            content: Content(text: dataList[i].title, offer: dataList[i].imageUrl, offerName: dataList[i].productName, time: _times[i], image: dataList[i].imageUrl, coord: Coords(double.parse(dataList[i].user.latitude),double.parse(dataList[i].user.longitude)), locationTitle: dataList[i].store.name,data:dataList[i]),
-            likeAction: () {
-              if (!widget.isGuestLogin) {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context1) {
-                      return CustomDialog(
-                        contex: context,
-                        subTitle: "This offer has been marked Favorite!",
-                        child: SvgPicture.asset(AppImages.FAV_ICON),
-                        //title: "Your feedback will help us improve our services.",
-                        buttonText1: AppStrings.REDEEM_NOW,
-                        buttonText2: AppStrings.GO_BACK_TO_OFFER,
-                        onPressed1: () {
-                          Navigator.pop(context1);
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context1) {
-                                return CustomDialog(
-                                  contex: context,
-                                  subTitle: "Are you sure?",
-                                  //title: "Your feedback will help us improve our services.",
-                                  buttonText1: AppStrings.YES,
-                                  buttonText2: AppStrings.NO,
-                                  onPressed1: () {
-                                    Navigator.pop(context1);
-                                    Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: false);
-                                  },
-                                  onPressed2: () {
-                                    Navigator.pop(context1);
-                                  },
-                                  showImage: false,
-                                );
-                              });                  },
-                        onPressed2: () {
-                          Navigator.pop(context1);
-                        },
-                        showImage: true,
-                      );
-                    });
-              } else {
-                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-              }
-            },
-            nopeAction: () {
-              if(widget.isGuestLogin) {
-                Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
-              }
+        if (dataList.isNotEmpty) {
+          for (int i = 0; i < dataList.length; i++) {
+            _swipeItems.add(SwipeItem(
+              content: Content(text: dataList[i].title,
+                  offer: dataList[i].imageUrl,
+                  offerName: dataList[i].productName,
+                  time: _times[i],
+                  image: dataList[i].imageUrl,
+                  coord: Coords(double.parse(dataList[i].user.latitude),
+                      double.parse(dataList[i].user.longitude)),
+                  locationTitle: dataList[i].store.name,
+                  data: dataList[i]),
+              likeAction: () {
+                if (!widget.isGuestLogin) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context1) {
+                        return CustomDialog(
+                          contex: context,
+                          subTitle: "This offer has been marked Favorite!",
+                          child: SvgPicture.asset(AppImages.FAV_ICON),
+                          //title: "Your feedback will help us improve our services.",
+                          buttonText1: AppStrings.REDEEM_NOW,
+                          buttonText2: AppStrings.GO_BACK_TO_OFFER,
+                          onPressed1: () {
+                            Navigator.pop(context1);
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context1) {
+                                  return CustomDialog(
+                                    contex: context,
+                                    subTitle: "Are you sure?",
+                                    //title: "Your feedback will help us improve our services.",
+                                    buttonText1: AppStrings.YES,
+                                    buttonText2: AppStrings.NO,
+                                    onPressed1: () {
+                                      Navigator.pop(context1);
+                                      Navigator.pushNamed(
+                                          context, AppRoutes.QR_SCAN_VIEW,
+                                          arguments: false);
+                                    },
+                                    onPressed2: () {
+                                      Navigator.pop(context1);
+                                    },
+                                    showImage: false,
+                                  );
+                                });
+                          },
+                          onPressed2: () {
+                            Navigator.pop(context1);
+                          },
+                          showImage: true,
+                        );
+                      });
+                } else {
+                  Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                }
+                callLikeOffersApi(dataList[i].id);
+              },
+              nopeAction: () {
+                if (widget.isGuestLogin) {
+                  Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                }
+                callDisLikeOffersApi(dataList[i].id);
 //            ToastUtil.showToast(context, "Disliked ${_names[i]}");
-            },));
-        }
+              },));
+          }
 
-        _matchEngine = MatchEngine(swipeItems: _swipeItems);
+          _matchEngine = MatchEngine(swipeItems: _swipeItems);
+        }else{
+          setState(() {
+            _stackFinished = true;
+          });
+        }
       }
       else if(response.data is DioError){
         _isInternetAvailable = Util.showErrorMsg(context, response.data);

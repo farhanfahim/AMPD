@@ -11,7 +11,7 @@ class ToastUtil {
     }
    // _failMessage(msg, context);
     Toast.show(msg, context,
-        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
   }
 
   static void showSnackBar(BuildContext context,String msg){

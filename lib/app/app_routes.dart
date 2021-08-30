@@ -60,7 +60,7 @@ class AppRoutes {
        {
          return MaterialPageRoute<void>(
            settings: routeSettings,
-           builder: (BuildContext context) => RedeemNowView(),
+           builder: (BuildContext context) => RedeemNowView(routeSettings.arguments),
          );
        }
 
