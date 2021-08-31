@@ -15,14 +15,14 @@ class Dataclass {
   int recurrenceTime;
   int availTime;
   String qrCode;
-  Null redeemMessage;
+  String redeemMessage;
   String image;
   String backgroundColor;
-  Null description;
+  String description;
   int status;
   String createdAt;
   String updatedAt;
-  Null averageRating;
+  String averageRating;
   int totalReviews;
   String imageUrl;
   String mediumImageUrl;

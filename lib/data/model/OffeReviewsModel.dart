@@ -2,7 +2,7 @@
 class Reviews {
   int id;
   int userId;
-  double rating;
+  String rating;
   String name;
   String review;
   String image;

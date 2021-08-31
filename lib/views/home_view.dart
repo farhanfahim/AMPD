@@ -12,6 +12,7 @@ import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/viewmodel/home_viewmodel.dart';
 import 'package:ampd/widgets/NoInternetFound.dart';
 import 'package:ampd/widgets/dialog_view.dart';
@@ -61,6 +62,8 @@ class _HomeViewState extends State<HomeView>
   HomeViewModel _homeViewModel;
 
   bool _enabled = true;
+  bool _isInAsyncCall = true;
+  bool _initialCall = false;
   bool _openSetting = false;
   bool permissionGranted = false;
   bool _isInternetAvailable = true;
@@ -187,8 +190,10 @@ class _HomeViewState extends State<HomeView>
               height: double.maxFinite,
               width: double.infinity,
 
-              child: _swipeItems.length > 0
-                  ? SwipeCards(
+              child: !_isInAsyncCall || _initialCall?
+              _swipeItems.length > 0
+                  ?
+              SwipeCards(
                       matchEngine: _matchEngine,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
@@ -221,16 +226,30 @@ class _HomeViewState extends State<HomeView>
                         );
                       },
                       onStackFinished: () {
-                        setState(() {
-                          _stackFinished = true;
-                          _appBarTitle = 'Home';
-                        });
+                        print('stack finished');
+                        if(_currentPage < _totalPages) {
+                          _currentPage++;
+
+                          callOffersApi();
+                        } else {
+                          setState(() {
+                            _stackFinished = true;
+                            _appBarTitle = 'Home';
+                          });
+                        }
                       },
                     )
+                  : Text(
+                'No coupons available right  now',
+                style: AppStyles.poppinsTextStyle(
+                    fontSize: 18.0, weight: FontWeight.w500)
+                    .copyWith(color: AppColors.UNSELECTED_COLOR),
+                )
                   : Padding(
                 padding: EdgeInsets.all(5),
                 child: Loader(
-                   isLoading: _swipeItems.length > 0 ? false:true,
+                   isLoading: _isInAsyncCall || _initialCall,
+//                   isLoading: _swipeItems.length > 0 ? false:true,
                   color: AppColors.APP_PRIMARY_COLOR,
                 ),
               ),
@@ -263,10 +282,15 @@ class _HomeViewState extends State<HomeView>
                 margin: EdgeInsets.symmetric(horizontal: 25.0.w),
                 child: GradientButton(
                   onTap: () {
-                    callOffersApi();
-                    setState(() {
-                      _stackFinished = false;
-                    });
+//                    callOffersApi();
+//                    setState(() {
+//                      _stackFinished = false;
+//                    });
+
+//                    _matchEngine = MatchEngine(swipeItems: _swipeItems);
+////                      print('length ${_matchEngine.currentItem}');
+//                    _matchEngine.rewindMatch();
+
                   },
                   text: "Fetch More",
                 ),
@@ -323,10 +347,12 @@ class _HomeViewState extends State<HomeView>
         // Internet Present Case
         setState(() {
           _isInternetAvailable = true;
+          _isInAsyncCall = true;
         });
 
         var map = Map<String, dynamic>();
         map['status'] = 20;
+        map['offset'] = _currentPage;
         _homeViewModel.offer(map);
       } else {
         setState(() {
@@ -338,45 +364,47 @@ class _HomeViewState extends State<HomeView>
   }
 
   Future<void> callLikeOffersApi(int offerId) async {
-    Util.check().then((value) {
-      if (value != null && value) {
-        // Internet Present Case
-        setState(() {
-          _isInternetAvailable = true;
-        });
-
-        var map = Map<String, dynamic>();
-        map['offer_id'] = offerId;
-        map['status'] = 10;
-        _homeViewModel.likeDislikeOffer(map);
-      } else {
-        setState(() {
-          _isInternetAvailable = false;
-          ToastUtil.showToast(context, "No internet");
-        });
-      }
-    });
+//    Util.check().then((value) {
+//      if (value != null && value) {
+//        // Internet Present Case
+//        setState(() {
+//          _isInternetAvailable = true;
+//            _isInAsyncCall = true;
+//        });
+//
+//        var map = Map<String, dynamic>();
+//        map['offer_id'] = offerId;
+//        map['status'] = 10;
+//        _homeViewModel.likeDislikeOffer(map);
+//      } else {
+//        setState(() {
+//          _isInternetAvailable = false;
+//          ToastUtil.showToast(context, "No internet");
+//        });
+//      }
+//    });
   }
 
   Future<void> callDisLikeOffersApi(int offerId) async {
-    Util.check().then((value) {
-      if (value != null && value) {
-        // Internet Present Case
-        setState(() {
-          _isInternetAvailable = true;
-        });
-
-        var map = Map<String, dynamic>();
-        map['offer_id'] = offerId;
-        map['status'] = 20;
-        _homeViewModel.likeDislikeOffer(map);
-      } else {
-        setState(() {
-          _isInternetAvailable = false;
-          ToastUtil.showToast(context, "No internet");
-        });
-      }
-    });
+//    Util.check().then((value) {
+//      if (value != null && value) {
+//        // Internet Present Case
+//        setState(() {
+//          _isInternetAvailable = true;
+//            _isInAsyncCall = true;
+//        });
+//
+//        var map = Map<String, dynamic>();
+//        map['offer_id'] = offerId;
+//        map['status'] = 20;
+//        _homeViewModel.likeDislikeOffer(map);
+//      } else {
+//        setState(() {
+//          _isInternetAvailable = false;
+//          ToastUtil.showToast(context, "No internet");
+//        });
+//      }
+//    });
   }
 
   void subscribeToViewModel() {
@@ -387,13 +415,21 @@ class _HomeViewState extends State<HomeView>
       if (mounted) {
         setState(() {
           _enabled = true;
+          _isInAsyncCall = false;
+          _initialCall = false;
         });
       }
 
       if (response.data is OfferModel) {
         OfferModel responseRegister = response.data;
+
+        print('total ${responseRegister.data.lastPage}');
+        _totalPages = responseRegister.data.lastPage;
+
         dataList.clear();
-        dataList.addAll(responseRegister.data.dataclass);
+//        dataList.addAll(responseRegister.data.dataclass);
+        dataList.addAll(responseRegister.data.dataclass.where((a) => dataList.every((b) => a.id != b.id)));
+
 
         if (dataList.isNotEmpty) {
           for (int i = 0; i < dataList.length; i++) {
@@ -403,9 +439,10 @@ class _HomeViewState extends State<HomeView>
                   text: dataList[i].title,
                   offer: dataList[i].imageUrl,
                   offerName: dataList[i].productName,
-                  time: _times[i],
+                  time: TimerUtils.formatUTCTime(dataList[i].expireAt),
                   image: dataList[i].imageUrl,
-                  coord: Coords(double.parse(dataList[i].user.latitude),
+                  coord: dataList[i].user.latitude == null ? Coords(position.latitude,
+                      position.longitude) : Coords(double.parse(dataList[i].user.latitude),
                       double.parse(dataList[i].user.longitude)),
                   locationTitle: dataList[i].store.name,
                   data: dataList[i]),
@@ -466,7 +503,13 @@ class _HomeViewState extends State<HomeView>
             ));
           }
 
-          _matchEngine = MatchEngine(swipeItems: _swipeItems);
+          if (_currentPage > 1) {
+            setState(() {
+
+            });
+          } else {
+            _matchEngine = MatchEngine(swipeItems: _swipeItems);
+          }
         }
       } else if (response.data is DioError) {
         _isInternetAvailable = Util.showErrorMsg(context, response.data);

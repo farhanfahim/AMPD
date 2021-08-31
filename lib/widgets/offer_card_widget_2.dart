@@ -62,13 +62,15 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 
   @override
   void initState() {
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"Mark Smith",rating:"4.8",review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:"4.8",review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:"4.8",review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:"4.8",review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
+    _listOfReviews.add(Reviews(name:"John Doe",rating:"4.8",review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
 
     _time = widget.time;
+
+    print('expire at $_time');
     if(!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1),(timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
@@ -171,12 +173,33 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
 
                             SizedBox(height: 20.0,),
 
-                            Image.asset(
-                              widget.offer,
-//                              width: 45.0.w,
-                              height: 300.0,
-//                              width: 45.0.w,
-//                              height: 80.0.w,
+//                            Image.asset(
+//                              widget.offer,
+////                              width: 45.0.w,
+//                              height: 300.0,
+////                              width: 45.0.w,
+////                              height: 80.0.w,
+//                            ),
+
+                            CachedNetworkImage(
+                              imageUrl: widget.offer,
+                              fit: BoxFit.cover,
+                              // fadeInCurve: Curves.easeIn,
+//                              height: 300.0,
+                              imageBuilder: (BuildContext context,
+                                  ImageProvider<dynamic> imageProvider) {
+                                return Image(
+                                  // width: constraints.maxWidth,
+                                  image: imageProvider,
+                                  color: Colors.black38,
+                                  colorBlendMode: BlendMode.srcATop,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                              placeholder: (context, url) => Skeleton(),
+//              errorWidget: (context, url, error){
+//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
+//              },
                             ),
                           ],
                         ),
@@ -240,7 +263,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                   )
                               ),
                               itemSize: 15.0,
-                              initialRating:  widget.data.averageRating != null ? widget.data.averageRating:0,
+                              initialRating:  widget.data.averageRating != null ? double.parse(widget.data.averageRating):0,
                               allowHalfRating: true,
                               glow: false,
                               itemPadding: EdgeInsets.only(left: 5.0),
@@ -835,7 +858,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                                       )
                                   ),
                                   itemSize: 13.0,
-                                  initialRating: widget.data.averageRating != null ? widget.data.averageRating:0,
+                                  initialRating: widget.data.averageRating != null ? double.parse(widget.data.averageRating) :0,
                                   allowHalfRating: true,
                                   glow: false,
                                   itemPadding: EdgeInsets.only(left: 5.0),
