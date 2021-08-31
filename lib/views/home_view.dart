@@ -94,14 +94,13 @@ class _HomeViewState extends State<HomeView>
   void initState() {
     super.initState();
     getCurrentLocation();
-
     _homeViewModel = HomeViewModel(App());
     subscribeToViewModel();
 
   }
 
 
-  void getCurrentLocation(){
+  bool getCurrentLocation(){
     LocationPermissionHandler.checkLocationPermission().then((permission) {
       if (permission == locationPermission.PermissionStatus.granted) {
         setState(() {
@@ -115,13 +114,14 @@ class _HomeViewState extends State<HomeView>
                 latitude: position.latitude, longitude: position.longitude);
             callOffersApi();
             permissionGranted = true;
-
+            return permissionGranted;
           });
         });
 
       }else if (permission == locationPermission.PermissionStatus.unknown ||
-          permission == locationPermission.PermissionStatus.denied || permission == locationPermission.PermissionStatus.restricted) {
-        print('HEEEEEEEE');
+          permission == locationPermission.PermissionStatus.denied ||
+          permission == locationPermission.PermissionStatus.restricted) {
+
         try {
           LocationPermissionHandler.requestPermissoin().then((value) {
             if (permission == locationPermission.PermissionStatus.granted) {
@@ -136,6 +136,7 @@ class _HomeViewState extends State<HomeView>
                       latitude: position.latitude, longitude: position.longitude);
                   callOffersApi();
                   permissionGranted = true;
+                  return permissionGranted;
                 });
               });
 
@@ -170,35 +171,6 @@ class _HomeViewState extends State<HomeView>
   @override
   Widget build(BuildContext context) {
 
-    LocationPermissionHandler.checkLocationPermission().then((permission) {
-      if (permission == locationPermission.PermissionStatus.granted && permissionGranted) {
-
-        setState(() {
-          _openSetting = true;
-          gcl.Geolocator.getCurrentPosition(
-              desiredAccuracy: gcl.LocationAccuracy.medium)
-              .then((value) {
-            position = value;
-
-            UserLocation(
-                latitude: position.latitude, longitude: position.longitude);
-
-              callOffersApi();
-              permissionGranted = false;
-
-
-
-          });
-
-        });
-      }else {
-
-        setState(() {
-          _openSetting = false;
-        });
-
-      }
-    });
     final appBar1 = appBar(
         title: _appBarTitle,
         onBackClick: () {
@@ -324,6 +296,8 @@ class _HomeViewState extends State<HomeView>
                 margin: EdgeInsets.symmetric(horizontal: 5.0.w),
                 child: GradientButton(
                   onTap: () {
+
+
                     AppSettings.openAppSettings();
                   },
                   text: "Please enable location",
@@ -493,10 +467,6 @@ class _HomeViewState extends State<HomeView>
           }
 
           _matchEngine = MatchEngine(swipeItems: _swipeItems);
-        } else {
-          setState(() {
-            _stackFinished = true;
-          });
         }
       } else if (response.data is DioError) {
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
