@@ -1,17 +1,22 @@
 import 'dart:math';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/viewmodel/qr_scan_viewmodel.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
 import 'package:ampd/widgets/rating_dialog_view.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -19,16 +24,37 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 
-class QrScanView extends StatefulWidget {
-  bool fromSavedCoupons;
+double offerRating = 4.0;
 
-  QrScanView(this.fromSavedCoupons);
+class QrScanView extends StatefulWidget {
+  Map<String, dynamic> map;
+  QrScanView(this.map);
 
   @override
   _QrScanState createState() => _QrScanState();
 }
 
-class _QrScanState extends State<QrScanView> {
+class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
+  AnimationController _buttonController;
+  QrScanViewModel _qrScanViewModel;
+  bool _enabled = true;
+  bool _isInternetAvailable = true;
+  BuildContext customDialogBoxContext;
+  String reviewMessage = "";
+  @override
+  void initState() {
+    super.initState();
+
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
+    _qrScanViewModel = QrScanViewModel(App());
+    subscribeToViewModel();
+
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,30 +148,35 @@ class _QrScanState extends State<QrScanView> {
                     ),
                     GradientButton(
                       onTap: () {
-                        if (!widget.fromSavedCoupons) {
+                        if (!widget.map['fromSavedCoupon']) {
                           Navigator.pop(context);
                         }
                         showDialog(
                             context: context,
                             builder: (BuildContext context1) {
+                              customDialogBoxContext = context1;
                               return CustomRatingDialog(
                                 contex: context,
                                 subTitle: "How was Starbucks?",
                                 title: "Your feedback will help us improve our services.",
                                 ratingBar: RatingBarWidget(),
                                 buttonText1: AppStrings.SUBMIT,
-                                onPressed1: () {
-                                  if(widget.fromSavedCoupons) {
-                                    Navigator.pop(context1);
-                                    Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-                                      'isGuestLogin' : false,
-                                      'tab_index' : 0,
-                                      'show_tutorial' : false
-                                    });
-                                  } else {
-                                    Navigator.pop(context1);
-                                  }
+                                onPressed1: (message) {
+                                  reviewMessage = message;
                                 },
+                                btnWidget:AnimatedGradientButton(
+                                  onAnimationTap: () {
+                                    if(reviewMessage.isNotEmpty) {
+                                      callOfferReview(
+                                          widget.map['offer_id'], reviewMessage,
+                                          offerRating.toString());
+                                    }else{
+                                      ToastUtil.showToast(context, "Your review is empty");
+                                    }
+                                  },
+                                  buttonController: _buttonController,
+                                  text: AppStrings.LOGIN_TO_MY_ACCOUNT,
+                                ),
                                 showImage: false,
                               );
                             });
@@ -163,17 +194,101 @@ class _QrScanState extends State<QrScanView> {
           ),
         ));
   }
+
+  Future<void> callOfferReview(int offerId,String review,String rating) async {
+    _playAnimation();
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        if (mounted) {
+          setState(() {
+            _isInternetAvailable = true;
+          });
+        }
+
+        var map = Map();
+        map['offer_id'] = offerId;
+        map['review'] = review;
+        map['rating'] = rating;
+        _qrScanViewModel.offerReview(map);
+      } else {
+        if (mounted) {
+          setState(() {
+            _isInternetAvailable = false;
+            ToastUtil.showToast(context, "No internet");
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _buttonController.dispose();
+    super.dispose();
+  }
+
+  void subscribeToViewModel() {
+    _stopAnimation();
+    _qrScanViewModel
+        .getQrScanRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+      if (mounted) {
+        setState(() {
+          _enabled = true;
+        });
+      }
+
+      if (response.msg == "Review created successfully!") {
+        ToastUtil.showToast(context, response.msg);
+        if(widget.map['fromSavedCoupon']){
+          Navigator.pop( customDialogBoxContext);
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+            'isGuestLogin' : false,
+            'tab_index' : 0,
+            'show_tutorial' : false
+          });
+        }else{
+          Navigator.pop( customDialogBoxContext);
+        }
+
+      } else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+  }
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+  Future<Null> _stopAnimation() async {
+    try {
+      await _buttonController.reverse();
+    } on TickerCanceled {}
+  }
 }
 
-class RatingBarWidget extends StatelessWidget {
-  const RatingBarWidget({
-    Key key,
-  }) : super(key: key);
 
+
+class RatingBarWidget extends StatefulWidget {
+  const RatingBarWidget({Key key}) : super(key: key);
+
+  @override
+  _RatingBarWidgetState createState() => _RatingBarWidgetState();
+}
+
+class _RatingBarWidgetState extends State<RatingBarWidget> {
   @override
   Widget build(BuildContext context) {
     return RatingBar(
-      onRatingUpdate: null,
+      onRatingUpdate: (rating) {
+        offerRating = rating;
+      },
       ratingWidget: RatingWidget(
           full: Icon(
             FontAwesomeIcons.solidStar,
@@ -190,13 +305,14 @@ class RatingBarWidget extends StatelessWidget {
           )
       ),
       itemSize: 22.0,
-      initialRating: 4.0,
+      initialRating: offerRating,
       allowHalfRating: true,
       glow: false,
       itemPadding: EdgeInsets.only(left: 5.0),
     );
   }
 }
+
 
 class CountDownWidget extends StatelessWidget {
   const CountDownWidget({
@@ -254,4 +370,10 @@ class CountDownWidget extends StatelessWidget {
       ),
     );
   }
+
+
+
+
+
+
 }

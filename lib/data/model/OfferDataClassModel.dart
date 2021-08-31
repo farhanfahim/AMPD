@@ -15,14 +15,14 @@ class Dataclass {
   int recurrenceTime;
   int availTime;
   String qrCode;
-  Null redeemMessage;
+  String redeemMessage;
   String image;
   String backgroundColor;
-  Null description;
+  String description;
   int status;
   String createdAt;
   String updatedAt;
-  Null averageRating;
+  String averageRating;
   int totalReviews;
   String imageUrl;
   String mediumImageUrl;
@@ -30,7 +30,7 @@ class Dataclass {
   String qrUrl;
   User user;
   Store store;
-  List<Reviews> reviews;
+  List<ReviewsData> reviews;
   Meta mMeta;
 
   Dataclass(
@@ -93,9 +93,9 @@ class Dataclass {
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
     store = json['store'] != null ? new Store.fromJson(json['store']) : null;
     if (json['reviews'] != null) {
-      reviews = new List<Reviews>();
+      reviews = new List<ReviewsData>();
       json['reviews'].forEach((v) {
-        reviews.add(new Reviews.fromJson(v));
+        reviews.add(new ReviewsData.fromJson(v));
       });
     }
     mMeta =

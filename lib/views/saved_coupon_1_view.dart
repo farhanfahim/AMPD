@@ -322,71 +322,66 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
         SizedBox(
           height: 10.0,
         ),
-        InkWell(
-          onTap: (){
-
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0),
-            child: Row(
-              children: [
-                Container(
-                  width: 70.0,
-                  height: 70.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    child: Image.network(
-                      data.imageUrl,
-                      fit: BoxFit.cover,
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 10.0),
+          child: Row(
+            children: [
+              Container(
+                width: 70.0,
+                height: 70.0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  child: Image.network(
+                    data.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(data.productName,
+                        style:
+                            AppStyles.blackWithBoldFontTextStyle(context, 16.0)
+                                .copyWith(color: AppColors.COLOR_BLACK)
+                                .copyWith(fontWeight: FontWeight.w600)),
+                    SizedBox(
+                      height: 3.0,
                     ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(data.productName,
-                          style:
-                              AppStyles.blackWithBoldFontTextStyle(context, 16.0)
-                                  .copyWith(color: AppColors.COLOR_BLACK)
-                                  .copyWith(fontWeight: FontWeight.w600)),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text(
-                        formatUTCTime(data.expireAt),
-                        style: AppStyles.blackWithDifferentFontTextStyle(
-                                context, 11.0)
-                            .copyWith(
-                                color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                      ),
+                    Text(
+                      formatUTCTime(data.expireAt),
+                      style: AppStyles.blackWithDifferentFontTextStyle(
+                              context, 11.0)
+                          .copyWith(
+                              color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                    ),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Time to Avail:(${data.availTime } hour)",
-                            style: AppStyles.blackWithDifferentFontTextStyle(
-                                    context, 12.0)
-                                .copyWith(
-                                    color:
-                                        AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                          ),
-                          FlatButtonWidget(
-                              onTap: () {
-                                Navigator.pushNamed(context, AppRoutes.REDEEM_NOW,arguments: {'offer_id': data.id,});
-                              }, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Time to Avail:(${data.availTime } hour)",
+                          style: AppStyles.blackWithDifferentFontTextStyle(
+                                  context, 12.0)
+                              .copyWith(
+                                  color:
+                                      AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                        ),
+                        FlatButtonWidget(
+                            onTap: () {
+                              Navigator.pushNamed(context, AppRoutes.REDEEM_NOW,arguments: {'offer_id': data.id,});
+                            }, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
+                      ],
+                    ),
 
-                    ],
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         SizedBox(

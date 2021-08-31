@@ -48,15 +48,10 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
   String _min = "00";
   String _sec = "00";
   Timer _timer;
-  List<Reviews> _listOfReviews = [];
+  List<ReviewsData> _listOfReviews = [];
 
   @override
   void initState() {
-    _listOfReviews.add(Reviews(name:"Mark Smith",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
-    _listOfReviews.add(Reviews(name:"John Doe",rating:4.8,review:AppStrings.REDEEM_MESSAGE_TEXT,image:"https://iconape.com/wp-content/png_logo_vector/avatar-4.png"));
 
     _time = widget.time;
     if(!TimerUtils.isAheadOrBefore(_time)) {

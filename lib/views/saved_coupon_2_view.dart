@@ -4,8 +4,6 @@ import 'dart:math';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
-import 'package:ampd/data/model/NotificationsModel.dart';
-import 'package:ampd/data/model/ReviewModel.dart';
 import 'package:ampd/data/model/SavedCouponsModel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/flat_button.dart';

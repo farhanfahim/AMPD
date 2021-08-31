@@ -104,6 +104,24 @@ class NetworkNAO {
         return response;
       });
 
+  static Future<dynamic> offerReview(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.OFFER_REVIEW,
+          hasHeader: false,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_OFFER_ID: map['offer_id'],
+            NetworkConfig.API_OFFER_REVIEW: map['review'],
+            NetworkConfig.API_OFFER_RATING: map['rating'],
+          })
+      ).then((dynamic response) {
+
+        print(map['offer_id']);
+        print(map['review']);
+        print(map['rating']);
+        return response;
+      });
+
 
   static Future<dynamic> getOffers(String accessToken,Map<String, dynamic> map) =>
       NetworkUtil().get(
@@ -111,6 +129,17 @@ class NetworkNAO {
         hasHeader: true,
         token: accessToken,
         map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
+  static Future<dynamic> getOffersReviews(String accessToken,Map<String, dynamic> map) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.OFFER_REVIEW+"?",
+          hasHeader: true,
+          token: accessToken,
+          map: map
       ).then((dynamic response) {
         print(response);
         return response;

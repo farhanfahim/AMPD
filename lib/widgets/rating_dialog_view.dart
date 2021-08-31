@@ -13,8 +13,8 @@ class CustomRatingDialog extends StatefulWidget {
   String subTitle;
   bool showImage;
   String buttonText1;
-  Function onPressed1;
-  Widget child;
+  ValueChanged<String> onPressed1;
+  Widget child,btnWidget;
   Widget ratingBar;
   BuildContext contex;
 
@@ -23,6 +23,7 @@ class CustomRatingDialog extends StatefulWidget {
         this.buttonText1 = "",
         this.onPressed1,
         this.child,
+        this.btnWidget,
         this.contex,
         this.subTitle = "",
         this.ratingBar,
@@ -38,7 +39,7 @@ class _CustomRatingState extends State<CustomRatingDialog> {
     double height = MediaQuery.of(context).size.height * 0.48;
     double width = MediaQuery.of(context).size.width * 0.4;
     double height1 = MediaQuery.of(context).size.height * 0.5;
-
+    String message ="";
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 0.0),
       backgroundColor: Colors.transparent,
@@ -122,6 +123,10 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                                         width: 0.5,
                                         color: AppColors.LIGHT_GREY_ARROW_COLOR))),
                             child: TextField(
+                              onChanged: (value){
+                                message = value;
+                                widget.onPressed1(message);
+                              },
                               keyboardType: TextInputType.multiline,
                               maxLength: 150,
                               maxLines: 3,
@@ -133,12 +138,8 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                           SizedBox(
                             height: 35.0,
                           ),
-                          GradientButton(
-                            onTap: () {
-                              widget.onPressed1();
-                            },
-                            text: widget.buttonText1,
-                          ),
+                          widget.btnWidget,
+
                           SizedBox(
                             height: 45.0,
                           ),

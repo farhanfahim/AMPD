@@ -3,9 +3,11 @@ import 'package:ampd/appresources/theme.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/repo/home_repository.dart';
+import 'package:ampd/repo/qr_scan_repository.dart';
 import 'package:ampd/repo/redeem_now_repository.dart';
 import 'package:ampd/repo/register_repository.dart';
 import 'package:ampd/repo/login_repository.dart';
+import 'package:ampd/repo/reviews_repository.dart';
 import 'package:ampd/repo/saved_coupon_repository.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
 import 'package:flutter/material.dart';
@@ -107,6 +109,14 @@ class App extends StatelessWidget {
   }
   RedeemNowRepository getRedeemNowRepository({@required AppPreferences appPreferences}) {
     return RedeemNowRepository(appPreferences: appPreferences);
+  }
+
+  QrScanRepository getQrScanRepository({@required AppPreferences appPreferences}) {
+    return QrScanRepository(appPreferences: appPreferences);
+  }
+
+  ReviewsRepository getReviewsRepository({@required AppPreferences appPreferences}) {
+    return ReviewsRepository(appPreferences: appPreferences);
   }
 
 }

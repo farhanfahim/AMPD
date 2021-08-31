@@ -9,7 +9,7 @@ import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
 
 class NotificationTileView extends StatefulWidget {
-  Reviews data;
+  ReviewsData data;
   bool hasTopDivider;
 
   NotificationTileView({this.data, this.hasTopDivider = true});
@@ -38,11 +38,10 @@ class _NotificationTileViewState extends State<NotificationTileView> {
         InkWell(
           onTap: () {},
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-//          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
             child: Row(
               children: [
-                circularAvatar(55.0, 55.0, widget.data.image, 30.0),
+                circularAvatar(55.0, 55.0, widget.data.user.imageUrl, 30.0),
                 SizedBox(
                   width: 10.0,
                 ),
@@ -50,7 +49,7 @@ class _NotificationTileViewState extends State<NotificationTileView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.data.name,
+                      Text("${widget.data.user.firstName} ${widget.data.user.lastName}",
                           style:
                           AppStyles.blackWithBoldFontTextStyle(context, 15.0)
                               .copyWith(color: AppColors.COLOR_BLACK)
@@ -80,7 +79,7 @@ class _NotificationTileViewState extends State<NotificationTileView> {
                           Padding(
                             padding: const EdgeInsets.only(left: 5.0),
                             child: Text(
-                              widget.data.rating.toString(),
+                              widget.data.rating,
                               style: AppStyles.blackWithBoldFontTextStyle(
                                   context, 13.0)
                                   .copyWith(color: AppColors.COLOR_GREEN_RATING),
@@ -104,17 +103,23 @@ class _NotificationTileViewState extends State<NotificationTileView> {
 //        ),
 //      ),
 
-        ReadMoreText(
-          widget.data.review,
-          // "This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text.",
-          trimCollapsedText: AppStrings.READ_MORE,
-          trimExpandedText: AppStrings.READ_LESS,
-          trimLines: 2,
-          textAlign: TextAlign.start,
-          trimMode: TrimMode.Line,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: ReadMoreText(
+              widget.data.review,
+              // "This is dummy copy. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text. It is not meant to be read. It has been placed here solely to demonstrate the look and feel of finished, typeset text.",
+              trimCollapsedText: AppStrings.READ_MORE,
+              trimExpandedText: AppStrings.READ_LESS,
+              trimLines: 2,
+              textAlign: TextAlign.start,
+              trimMode: TrimMode.Line,
 //        delimiter: ".",
-          style: AppStyles.blackWithDifferentFontTextStyle(context, 10.0.sp)
-              .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+              style: AppStyles.blackWithDifferentFontTextStyle(context, 10.0.sp)
+                  .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+            ),
+          ),
         ),
 
         SizedBox(

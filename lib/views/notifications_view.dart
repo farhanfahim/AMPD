@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/data/model/NotificationsModel.dart';
-import 'package:ampd/data/model/ReviewModel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';

@@ -202,7 +202,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => ReviewsView(),
+            builder: (BuildContext context) => ReviewsView(routeSettings.arguments),
           );
         }
 

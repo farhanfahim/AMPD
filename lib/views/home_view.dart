@@ -79,6 +79,11 @@ class _HomeViewState extends State<HomeView>
     "2021-07-05 09:00:00",
     "2021-07-10 09:00:00",
     "2021-06-29 09:00:00",
+    "2021-06-29 09:00:00",
+    "2021-06-29 09:00:00",
+    "2021-06-29 09:00:00",
+    "2021-06-29 09:00:00",
+    "2021-06-29 09:00:00",
     "2021-07-29 09:00:00",
   ];
 
@@ -405,8 +410,7 @@ class _HomeViewState extends State<HomeView>
                   offerName: dataList[i].productName,
                   time: _times[i],
                   image: dataList[i].imageUrl,
-                  coord: Coords(double.parse(dataList[i].user.latitude),
-                      double.parse(dataList[i].user.longitude)),
+                  coord: Coords(double.parse(dataList[i].user.latitude), double.parse(dataList[i].user.longitude)),
                   locationTitle: dataList[i].store.name,
                   data: dataList[i]),
               likeAction: () {
@@ -436,7 +440,7 @@ class _HomeViewState extends State<HomeView>
                                       Navigator.pop(context1);
                                       Navigator.pushNamed(
                                           context, AppRoutes.QR_SCAN_VIEW,
-                                          arguments: false);
+                                          arguments: {'fromSavedCoupon':false,'offer_id': dataList[i].id,});
                                     },
                                     onPressed2: () {
                                       Navigator.pop(context1);

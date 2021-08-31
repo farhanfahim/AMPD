@@ -73,5 +73,8 @@ class NetworkConfig {
   static const String API_OFFER_ID = "offer_id";
   static const String API_OFFER_STATUS = "status";
 
+  //REVIEW
+  static const String API_OFFER_REVIEW = "review";
+  static const String API_OFFER_RATING = "rating";
 
 }

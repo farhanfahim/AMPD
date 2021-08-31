@@ -5,7 +5,6 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/model/OfferDataClassModel.dart';
-import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
