@@ -233,9 +233,12 @@ class _HomeViewState extends State<HomeView>
                         )
                       : Padding(
                           padding: EdgeInsets.all(5),
-                          child: Loader(
-                            isLoading: _swipeItems.length > 0 ? false : true,
-                            color: AppColors.APP_PRIMARY_COLOR,
+                          child: Container(
+                            height: 60.0,
+                            child: Loader(
+                              isLoading: _swipeItems.length > 0 ? false : true,
+                              color: AppColors.APP_PRIMARY_COLOR,
+                            ),
                           ),
                         ),
                 )

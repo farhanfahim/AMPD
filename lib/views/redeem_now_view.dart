@@ -137,9 +137,12 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
                   .size
                   .height * 0.9,
               child: Center(
-                child: Loader(
-                    isLoading: isDataLoad,
-                    color: AppColors.ACCENT_COLOR
+                child: Container(
+                  height: 60.0,
+                  child: Loader(
+                      isLoading: isDataLoad,
+                      color: AppColors.ACCENT_COLOR
+                  ),
                 ),
               ),
             );

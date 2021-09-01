@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:ampd/app/app.dart';
@@ -41,10 +42,15 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
   bool _isInternetAvailable = true;
   BuildContext customDialogBoxContext;
   String reviewMessage = "";
+  Timer _timer1,_timer2;
+  int _min = 2;
+  int _sec = 9;
+
   @override
   void initState() {
     super.initState();
 
+    startTimer();
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
 
@@ -54,6 +60,45 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
   }
 
 
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    const oneMin = const Duration(seconds: 9);
+    _timer1 = new Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (_min == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _sec--;
+            if(_sec == 0){
+              _sec = 9;
+            }
+          });
+
+          print(_sec);
+        }
+      },
+    );
+    _timer2 = new Timer.periodic(
+      oneMin,
+          (Timer timer) {
+        if (_min == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _min--;
+          });
+
+          print(_min);
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +174,12 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CountDownWidget(),
+                        CountDownWidget(counter: _min.toString().substring(0),),
                         SizedBox(
                           width: 8.0,
 
                         ),
-                        CountDownWidget(),
+                        CountDownWidget(counter: _sec.toString().substring(0)),
                       ],
                     ),
 
@@ -320,11 +365,15 @@ class _RatingBarWidgetState extends State<RatingBarWidget> {
 }
 
 
-class CountDownWidget extends StatelessWidget {
-  const CountDownWidget({
-    Key key,
-  }) : super(key: key);
+class CountDownWidget extends StatefulWidget {
+  final String counter;
+  const CountDownWidget({Key key,this.counter}) : super(key: key);
 
+  @override
+  _CountDownWidgetState createState() => _CountDownWidgetState();
+}
+
+class _CountDownWidgetState extends State<CountDownWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -363,7 +412,7 @@ class CountDownWidget extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "3",
+                    widget.counter,
                     style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
                     ,
                   ),
@@ -376,10 +425,4 @@ class CountDownWidget extends StatelessWidget {
       ),
     );
   }
-
-
-
-
-
-
 }

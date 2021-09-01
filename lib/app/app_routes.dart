@@ -20,6 +20,8 @@ import 'package:ampd/views/sign_in_view.dart';
 import 'package:ampd/views/splash_view.dart';
 import 'package:ampd/views/terms_conditions.dart';
 import 'package:ampd/views/welcome_view.dart';
+import 'package:ampd/views/active_coupons_view.dart';
+import 'package:ampd/views/expire_coupons_view.dart';
 import 'package:flutter/material.dart';
 
 
@@ -46,6 +48,8 @@ class AppRoutes {
   static const String TERMS_CONDITIONS = "/terms_conditions_view";
   static const String ABOUT = "/about_view";
   static const String REDEEM_NOW = "/redeem_now_view";
+  static const String ACTIVE_COUPONS_VIEW = "/active_coupons_view";
+  static const String EXPIRE_COUPONS_VIEW = "/expire_coupons_view";
 
 
   //--------------------------------------------------------------- Methods --------------------------------------------------------------------------
@@ -71,6 +75,22 @@ class AppRoutes {
            builder: (BuildContext context) => DashboardView(routeSettings.arguments),
          );
        }
+
+      case ACTIVE_COUPONS_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => ActiveCouponsView(),
+          );
+        }
+
+      case EXPIRE_COUPONS_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => ExpireCouponsView(),
+          );
+        }
 
      case HOME_VIEW:
        {
