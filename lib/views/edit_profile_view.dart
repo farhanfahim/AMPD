@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
@@ -8,14 +9,20 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/database/app_preferences.dart';
+import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
 import 'package:ampd/utils/MediaPermissionHandler.dart';
+import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/loader.dart';
+import 'package:ampd/viewmodel/edit_profile_viewmodel.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/custom_text_form.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +30,7 @@ import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 // import 'package:images_picker/images_picker.dart';
 import 'package:sizer/sizer.dart';
@@ -52,6 +60,8 @@ class _EditProfileViewState extends State<EditProfileView> {
   int numberValidation = AppConstants.PHONE_VALIDATION;
 
   bool _enabled = true;
+  bool _isInAsyncCall = false;
+  bool _isInternetAvailable = true;
 
   var firstNameFocus = FocusNode();
   var lastNameFocus = FocusNode();
@@ -67,17 +77,39 @@ class _EditProfileViewState extends State<EditProfileView> {
   String email = "";
   String address = "";
   String phoneNo = "";
+  String imageUrl = "";
 
   bool _isEmailValid = false;
   IconData checkIconData = Icons.check;
 
   File _image = null;
 
+  AppPreferences _appPreferences = new AppPreferences();
+
+  String _fullName = "";
+
+  EditProfileViewModel _editProfileViewModel;
+
   @override
   void initState() {
     super.initState();
-    emailController.text = "YusufNahass@email.com";
-    numberController.text = "(800) 362-9239";
+
+    _appPreferences.isPreferenceReady;
+    _appPreferences.getUserDetails().then((userData) {
+      print(userData.toJson());
+
+      setState(() {
+        emailController.text = userData.data.email;
+        numberController.text = userData.data.phone;
+        firstNameController.text = userData.data.firstName;
+        lastNameController.text = userData.data.lastName;
+        imageUrl = userData.data.imageUrl;
+        _fullName = "${userData.data.firstName} ${userData.data.lastName}";
+      });
+    });
+
+    _editProfileViewModel = EditProfileViewModel(App());
+    subscribeToViewModel();
 
     firstNameController.addListener(() {
       if (firstNameController.text.length <= firstNameValidation) {
@@ -119,163 +151,182 @@ class _EditProfileViewState extends State<EditProfileView> {
         // call this method here to hide soft keyboard
         FocusScope.of(context).requestFocus(new FocusNode());
       },
-      child: Scaffold(
-          appBar: appBar(
-              title: "",
-              onBackClick: () {
-                Navigator.of(context).pop();
-              },
-              iconColor: AppColors.COLOR_BLACK),
-          backgroundColor: AppColors.WHITE_COLOR,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Stack(
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                          child: Container(
-                            decoration: ShapeDecoration(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(80.0),
-                                    side: BorderSide(
-                                        width: 10,
-                                        color: AppColors.AVATAR_BORDER_COLOR))),
-                            child: CircleAvatar(
-                              radius: 60.0,
-                              backgroundColor: AppColors.WHITE_COLOR,
-                              child: _image != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(80),
-                                      child: Image.file(
-                                        _image,
-                                        width: 120,
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                      ),
+      child: ModalProgressHUD(
+        inAsyncCall: _isInAsyncCall,
+        progressIndicator:  Padding(
+          padding: EdgeInsets.all(5),
+          child: Loader(
+            isLoading: _isInAsyncCall,
+//                   isLoading: _swipeItems.length > 0 ? false:true,
+            color: AppColors.APP_PRIMARY_COLOR,
+          ),
+        ),
+        child: Scaffold(
+            appBar: appBar(
+                title: "",
+                onBackClick: () {
+                  Navigator.of(context).pop();
+                },
+                iconColor: AppColors.COLOR_BLACK),
+            backgroundColor: AppColors.WHITE_COLOR,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Stack(
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(80.0),
+                                      side: BorderSide(
+                                          width: 10,
+                                          color: AppColors.AVATAR_BORDER_COLOR))),
+                              child: CircleAvatar(
+                                radius: 60.0,
+                                backgroundColor: AppColors.WHITE_COLOR,
+                                child: imageUrl.isNotEmpty? ClipRRect(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(80.0)),
+                                    child: circularNetworkCacheImageWithShimmerWithHeightWidth(
+                                        imagePath: imageUrl,
+                                      radius: 120.0,
+                                      boxFit: BoxFit.cover
                                     )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(80.0)),
-                                      child: Image.asset(
-                                        "assets/images/user.png",
-                                        fit: BoxFit.cover,
+                                  ) : _image != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(80),
+                                        child: Image.file(
+                                          _image,
+                                          width: 120,
+                                          height: 120,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(80.0)),
+                                        child: Image.asset(
+                                          "assets/images/user.png",
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
                           ),
+                          Positioned.fill(
+                            right: 5,
+                            bottom: 20,
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  child: FloatingActionButton(
+                                    heroTag: "tag",
+                                    backgroundColor: AppColors.BLUE_COLOR,
+                                    // backgroundColor:
+                                    // AppColors.PRIMARY_COLORTWO,
+                                    elevation: 2,
+                                    child: Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Colors.white,
+                                      size: 20.0,
+                                    ),
+                                    onPressed: () {
+                                      profilePictureOptionsBottomSheet();
+                                      // showBottomSheet(context);
+                                    },
+                                    // onPressed: widget.addClickListner
+                                  )),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Text(
+                        _fullName,
+                        style:
+                            AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: MediaQuery.of(context).size.width * .09),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                                child: Text(
+                              "Bucharest Romania",
+                              style: AppStyles.detailWithSmallTextSizeTextStyle(),
+                              textAlign: TextAlign.center,
+                            )),
+                          ],
                         ),
-                        Positioned.fill(
-                          right: 5,
-                          bottom: 20,
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Container(
-                                width: 40,
-                                height: 40,
-                                child: FloatingActionButton(
-                                  heroTag: "tag",
-                                  backgroundColor: AppColors.BLUE_COLOR,
-                                  // backgroundColor:
-                                  // AppColors.PRIMARY_COLORTWO,
-                                  elevation: 2,
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.white,
-                                    size: 20.0,
-                                  ),
-                                  onPressed: () {
-                                    profilePictureOptionsBottomSheet();
-                                    // showBottomSheet(context);
-                                  },
-                                  // onPressed: widget.addClickListner
-                                )),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Text(
-                      "Yusuf Nahass",
-                      style:
-                          AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * .09),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            "Bucharest Romania",
-                            style: AppStyles.detailWithSmallTextSizeTextStyle(),
-                            textAlign: TextAlign.center,
-                          )),
-                        ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 25.0),
-                      child: new Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Flexible(
-                            child: firstNameTextField(context),
-                            flex: 1,
-                          ),
-                          SizedBox(
-                            width: 17.0,
-                          ),
-                          Flexible(
-                            child: lastNameTextField(context),
-                            flex: 1,
-                          ),
-                        ],
+                      SizedBox(
+                        height: 20.0,
                       ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    customEmailTextField(context),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    customPhoneNoWidget(context),
-                    SizedBox(
-                      height: 25.0,
-                    ),
-                    GradientButton(
-                      onTap: () {
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 25.0),
+                        child: new Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Flexible(
+                              child: firstNameTextField(context),
+                              flex: 1,
+                            ),
+                            SizedBox(
+                              width: 17.0,
+                            ),
+                            Flexible(
+                              child: lastNameTextField(context),
+                              flex: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      customEmailTextField(context),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      customPhoneNoWidget(context),
+                      SizedBox(
+                        height: 25.0,
+                      ),
+                      GradientButton(
+                        onTap: () {
 //                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      text: AppStrings.UPDATE_PROFILE,
-                    ),
-                    SizedBox(
-                      height: 50.0,
-                    ),
-                  ],
+                          Navigator.of(context).pop();
+                        },
+                        text: AppStrings.UPDATE_PROFILE,
+                      ),
+                      SizedBox(
+                        height: 50.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 
@@ -937,8 +988,9 @@ class _EditProfileViewState extends State<EditProfileView> {
   showEmailBottomSheet(BuildContext context) {
     showBottomSheetWidget(context, AppStrings.REQUEST_TO_EMAIL_TITLE,
         AppStrings.EMAIL_DESC, emailWidget(context), (bc5) {
-          Navigator.pop(bc5);
-          showEmailOtpBottomSheet(context);
+          // Navigator.pop(bc5);
+          // showEmailOtpBottomSheet(context);
+          callVerificationCodeToEmailApi();
         }, AppStrings.CHANGE, false);
   }
 
@@ -1090,7 +1142,55 @@ class _EditProfileViewState extends State<EditProfileView> {
         });
   }
 
+  Future<void> callVerificationCodeToEmailApi() async {
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _isInAsyncCall = true;
+        });
 
+        print('email ${emailController.text}');
+
+        var map = Map<String, dynamic>();
+        map['email'] = emailController.text.trim().toString();
+        _editProfileViewModel.verificationCodeToEmail(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _editProfileViewModel
+        .getEditProfileRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+      if (mounted) {
+        setState(() {
+          _enabled = true;
+          _isInAsyncCall = false;
+        });
+      }
+
+      if (response.data is VerficationCodeToEmailModel) {
+        VerficationCodeToEmailModel model = response.data;
+
+        print('field ${model.data[0].field}');
+        ToastUtil.showToast(context, response.msg);
+        // Navigator.of(context).pop();
+
+      } else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+  }
 }
 
 class customEditableEmailWidget extends StatefulWidget {

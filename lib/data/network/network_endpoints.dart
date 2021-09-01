@@ -40,6 +40,10 @@ class NetworkEndpoints {
   static const String NOTIFICATION = BASE_URL + "get_all_notifications";
   static const String READ_NOTIFICATION = BASE_URL + "read_notification";
 
+  //EDIT PROFILE
+  static const String VERIFIFCATION_CODE_TO_EMAIL = BASE_URL + "verification-code-to-email";
+  static const String VERIFIFCATION_CODE_TO_PHONE = BASE_URL + "verification-code-to-phone";
+
   //VERIFY_OTP /
   static const String VERIFY_OTP_CODE = BASE_URL + "verify-reset-code";
   static const String RESEND_CODE = BASE_URL + "resend-code";

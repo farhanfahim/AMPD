@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ampd/data/model/login_response_model.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -183,6 +184,15 @@ class AppPreferences {
       prefValue: data,
       prefType: PREF_TYPE_STRING
   );
+
+  Future<LoginResponseModel> getUserDetails() async {
+    if (_preferences.getString(PREF_USER_DETAILS) == null) return null;
+
+    Map userMap = jsonDecode(_preferences.getString(PREF_USER_DETAILS));
+    var userDetails = LoginResponseModel.fromJson(userMap);
+
+    return userDetails;
+  }
 
 
   void setUserId({@required String id}) => _setPreference(

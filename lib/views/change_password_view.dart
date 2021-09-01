@@ -1,20 +1,28 @@
 import 'dart:math';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/changePasswordModel.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/loader.dart';
+import 'package:ampd/viewmodel/change_password_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class ChangePasswordView extends StatefulWidget {
   @override
@@ -51,88 +59,121 @@ class _ChangePasswordState extends State<ChangePasswordView> {
   IconData iconData1 = Icons.visibility_off;
   IconData iconData2 = Icons.visibility_off;
 
+  ChangePasswordViewModel _changePasswordViewModel;
+
+  bool _isInAsyncCall = false;
+  bool _isInternetAvailable = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _changePasswordViewModel = ChangePasswordViewModel(App());
+    subscribeToViewModel();
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    nPasswordController.dispose();
+    cPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     bool pushNotificationSwitch = false;
 
 
-    return Scaffold(
-        appBar: appBar(title:"",onBackClick: (){
-          Navigator.of(context).pop();
-        },iconColor:AppColors.COLOR_BLACK),
-        backgroundColor: AppColors.WHITE_COLOR,
-        body: SafeArea(
-          child: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  children: [
-                    Header(heading1:AppStrings.CHANGE_PASSWORD,heading2:AppStrings.UPDATE_YOUR_PASSWORD),
+    return ModalProgressHUD(
+      inAsyncCall: _isInAsyncCall,
+      progressIndicator:  Padding(
+        padding: EdgeInsets.all(5),
+        child: Loader(
+          isLoading: _isInAsyncCall,
+//                   isLoading: _swipeItems.length > 0 ? false:true,
+          color: AppColors.APP_PRIMARY_COLOR,
+        ),
+      ),
+      child: Scaffold(
+          appBar: appBar(title:"",onBackClick: (){
+            Navigator.of(context).pop();
+          },iconColor:AppColors.COLOR_BLACK),
+          backgroundColor: AppColors.WHITE_COLOR,
+          body: SafeArea(
+            child: SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    children: [
+                      Header(heading1:AppStrings.CHANGE_PASSWORD,heading2:AppStrings.UPDATE_YOUR_PASSWORD),
 
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Column(
-                      children: [
-                        customPasswordTextField(context),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Column(
+                        children: [
+                          customPasswordTextField(context),
 
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        newPasswordTextField(context),
-                        SizedBox(
-                          height: 20.0,
-                        ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          newPasswordTextField(context),
+                          SizedBox(
+                            height: 20.0,
+                          ),
 
-                        confirmPasswordTextField(context),
-                        SizedBox(
-                          height: 50.0,
-                        ),
-                        Container(
-                          child:
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.of(context).pop();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 10.0),
-                              height: 50.0,
-                              width: double.maxFinite,
-                              decoration: BoxDecoration(
-                                  gradient: LinearGradient(colors: [Color(0xff174EA0), Color(0xff1E70C6), Color(0xff2490E9)],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10.0)
-                              ),
+                          confirmPasswordTextField(context),
+                          SizedBox(
+                            height: 50.0,
+                          ),
+                          Container(
+                            child:
+                            GestureDetector(
+                              onTap: (){
+                                if(validate()) {
+                                  callChangePasswordApi();
+                                }
+                               },
                               child: Container(
-                                constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  AppStrings.UPDATE_PASSWORD,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
+                                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                                height: 50.0,
+                                width: double.maxFinite,
+                                decoration: BoxDecoration(
+                                    gradient: LinearGradient(colors: [Color(0xff174EA0), Color(0xff1E70C6), Color(0xff2490E9)],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0)
+                                ),
+                                child: Container(
+                                  constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    AppStrings.UPDATE_PASSWORD,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
 
-                  ],
+                    ],
+
+                  ),
 
                 ),
 
-              ),
-
-          ),
-        ));
+            ),
+          )),
+    );
   }
 
   Stack customPasswordTextField(BuildContext context) {
@@ -217,6 +258,7 @@ class _ChangePasswordState extends State<ChangePasswordView> {
       ],
     );
   }
+
   Stack newPasswordTextField(BuildContext context) {
     return Stack(
       children: [
@@ -299,6 +341,7 @@ class _ChangePasswordState extends State<ChangePasswordView> {
       ],
     );
   }
+
   Stack confirmPasswordTextField(BuildContext context) {
     return Stack(
       children: [
@@ -346,7 +389,7 @@ class _ChangePasswordState extends State<ChangePasswordView> {
               /*onEditingComplete: () => FocusScope.of(context).requestFocus(cPasswordNode),
                           onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(cPasswordNode),*/
               obscureText: cPasswordObscureText,
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               decoration: AppStyles.decorationWithBorder(AppStrings.RE_ENTER_PASSWORD),
               //   , iconData, (){
               //
@@ -380,5 +423,101 @@ class _ChangePasswordState extends State<ChangePasswordView> {
         ),
       ],
     );
+  }
+
+  bool validate() {
+    Util.hideKeyBoard(context);
+
+    var currentPassword = passwordController.text.trim().toString();
+    var newPassword = nPasswordController.text.trim().toString();
+    var passwordConfirmation = cPasswordController.text.trim().toString();
+
+    if(currentPassword.isEmpty || currentPassword == "") {
+      ToastUtil.showToast(context, "Please provide your current password");
+      return false;
+    }
+
+    // if(currentPassword.length < 6) {
+    //   ToastUtil.showToast(context, "Current Password is really short please enter atleast 6 characters.");
+    //   return false;
+    // }
+
+    if(newPassword.isEmpty || newPassword == "") {
+      ToastUtil.showToast(context, "Please provide your new password");
+      return false;
+    }
+
+    if(newPassword.length < 6) {
+      ToastUtil.showToast(context, "Your password must be 6 characters or more");
+      return false;
+    }
+
+    // if(!Util.isPasswordCompliant(context, newPassword, "Password")){
+    //   return false;
+    // }
+
+    if(passwordConfirmation.isEmpty || passwordConfirmation == "") {
+      ToastUtil.showToast(context, "Please provide your confirm password");
+      return false;
+    }
+
+    // if(passwordConfirmation.length < 6) {
+    //   ToastUtil.showToast(context, "Please provide");
+    //   return false;
+    // }
+
+    if(newPassword != passwordConfirmation){
+      ToastUtil.showToast(context, "Password and password confirmation values don't match");
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<void> callChangePasswordApi() async {
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _isInAsyncCall = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['current_password'] = passwordController.text.trim().toString();
+        map['password'] = nPasswordController.text.trim().toString();
+        _changePasswordViewModel.changePassword(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _changePasswordViewModel
+        .getChangePasswordRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+      if (mounted) {
+        setState(() {
+          _enabled = true;
+          _isInAsyncCall = false;
+        });
+      }
+
+      if (response.data is ChangePasswordModel) {
+
+        ToastUtil.showToast(context, response.msg);
+        Navigator.of(context).pop();
+
+      } else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
   }
 }

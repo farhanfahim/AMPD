@@ -2,6 +2,8 @@
 import 'package:ampd/appresources/theme.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/UserLocation.dart';
+import 'package:ampd/repo/change_password_repository.dart';
+import 'package:ampd/repo/edit_profile_repository.dart';
 import 'package:ampd/repo/home_repository.dart';
 import 'package:ampd/repo/redeem_now_repository.dart';
 import 'package:ampd/repo/register_repository.dart';
@@ -108,5 +110,10 @@ class App extends StatelessWidget {
   RedeemNowRepository getRedeemNowRepository({@required AppPreferences appPreferences}) {
     return RedeemNowRepository(appPreferences: appPreferences);
   }
-
+  ChangePasswordRepository getChangePasswordRepository({@required AppPreferences appPreferences}) {
+    return ChangePasswordRepository(appPreferences: appPreferences);
+  }
+  EditProfileRepository getEditProfileRepository({@required AppPreferences appPreferences}) {
+    return EditProfileRepository(appPreferences: appPreferences);
+  }
 }

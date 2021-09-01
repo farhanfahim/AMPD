@@ -158,6 +158,44 @@ class NetworkNAO {
         return response;
       });
 
+  static Future<dynamic> changePassword(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.CHANGE_PASSWORD,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_CURRENT_PASSWORD: map['current_password'],
+            NetworkConfig.API_KEY_PASSWORD: map['password'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
 
+  static Future<dynamic> verificationCodeToEmail(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.VERIFIFCATION_CODE_TO_EMAIL,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_CURRENT_PASSWORD: map['email'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
+
+  static Future<dynamic> verificationCodeToPhone(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.VERIFIFCATION_CODE_TO_PHONE,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_CURRENT_PASSWORD: map['phone'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
 
 }
