@@ -153,6 +153,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                         }
                         showDialog(
                             context: context,
+                            barrierDismissible: false,
                             builder: (BuildContext context1) {
                               customDialogBoxContext = context1;
                               return CustomRatingDialog(
@@ -171,11 +172,11 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                                           widget.map['offer_id'], reviewMessage,
                                           offerRating.toString());
                                     }else{
-                                      ToastUtil.showToast(context, "Your review is empty");
+                                      ToastUtil.showToast(customDialogBoxContext, "Your review is empty");
                                     }
                                   },
                                   buttonController: _buttonController,
-                                  text: AppStrings.LOGIN_TO_MY_ACCOUNT,
+                                  text: AppStrings.SUBMIT,
                                 ),
                                 showImage: false,
                               );
@@ -206,6 +207,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
           });
         }
 
+
         var map = Map();
         map['offer_id'] = offerId;
         map['review'] = review;
@@ -218,22 +220,26 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
             ToastUtil.showToast(context, "No internet");
           });
         }
+
       }
     });
   }
 
-  @override
+ /* @override
   void dispose() {
     _buttonController.dispose();
     super.dispose();
-  }
+  }*/
 
   void subscribeToViewModel() {
-    _stopAnimation();
+
     _qrScanViewModel
         .getQrScanRepository()
         .getRepositoryResponse()
         .listen((response) async {
+
+      _stopAnimation();
+
       if (mounted) {
         setState(() {
           _enabled = true;
@@ -241,10 +247,10 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
       }
 
       if (response.msg == "Review created successfully!") {
-        ToastUtil.showToast(context, response.msg);
+        ToastUtil.showToast(customDialogBoxContext, response.msg);
         if(widget.map['fromSavedCoupon']){
           Navigator.pop( customDialogBoxContext);
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+          Navigator.pushNamedAndRemoveUntil(customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
             'isGuestLogin' : false,
             'tab_index' : 0,
             'show_tutorial' : false

@@ -38,10 +38,11 @@ class OfferCardWidget2 extends StatefulWidget {
   UserLocation currentCoords;
   ValueChanged<bool> changeDetailTitle;
   bool isRedeemNow;
+  Function onRedeemTap;
   Dataclass data;
 
   OfferCardWidget2(
-      {this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.currentCoords, this.locationTitle, this.changeDetailTitle, this.isRedeemNow, this.data});
+      {this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.currentCoords, this.locationTitle, this.changeDetailTitle, this.isRedeemNow, this.data,this.onRedeemTap});
 
   @override
   _OfferCardWidget2State createState() => _OfferCardWidget2State();
@@ -630,46 +631,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                                         height: 25.0,
                                                       ),
                                                       GradientButton(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context1);
-                                                          showDialog(
-                                                              context: context,
-                                                              builder: (
-                                                                  BuildContext context1) {
-                                                                return CustomDialog(
-                                                                  contex: context,
-                                                                  subTitle: "Are you sure?",
-                                                                  //title: "Your feedback will help us improve our services.",
-                                                                  buttonText1: AppStrings
-                                                                      .YES,
-                                                                  buttonText2: AppStrings
-                                                                      .NO,
-                                                                  onPressed1: () {
-                                                                    Navigator
-                                                                        .pop(
-                                                                        context1);
-                                                                    Navigator
-                                                                        .pushNamed(
-                                                                        context,
-                                                                        AppRoutes
-                                                                            .QR_SCAN_VIEW,
-                                                                        arguments: {
-                                                                          'fromSavedCoupon': true,
-                                                                          'offer_id': widget
-                                                                              .data
-                                                                              .id,
-                                                                        });
-                                                                  },
-                                                                  onPressed2: () {
-                                                                    Navigator
-                                                                        .pop(
-                                                                        context1);
-                                                                  },
-                                                                  showImage: false,
-                                                                );
-                                                              });
-                                                        },
+                                                        onTap: widget.onRedeemTap,
                                                         text: AppStrings
                                                             .REDEEM_NOW,
                                                       ),

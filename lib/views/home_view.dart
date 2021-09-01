@@ -7,13 +7,16 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/LikeDislikeModel.dart';
 import 'package:ampd/data/model/OfferDataClassModel.dart';
 import 'package:ampd/data/model/OfferModel.dart';
+import 'package:ampd/data/model/RedeemOfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/home_viewmodel.dart';
 import 'package:ampd/widgets/NoInternetFound.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/offer_card_widget.dart';
@@ -48,7 +51,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView>
-    with AutomaticKeepAliveClientMixin<HomeView> {
+    with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin {
   gcl.Position position;
   int _totalPages = 0;
   int _currentPage = 1;
@@ -56,7 +59,7 @@ class _HomeViewState extends State<HomeView>
 
   ScrollController _controller;
   StreamController _streamController;
-
+  AnimationController _buttonController;
   UserLocation userLocation = UserLocation();
   HomeViewModel _homeViewModel;
 
@@ -98,20 +101,20 @@ class _HomeViewState extends State<HomeView>
   @override
   void initState() {
     super.initState();
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
     getCurrentLocation();
     _homeViewModel = HomeViewModel(App());
     subscribeToViewModel();
-
   }
 
-
-  bool getCurrentLocation(){
+  bool getCurrentLocation() {
     LocationPermissionHandler.checkLocationPermission().then((permission) {
       if (permission == locationPermission.PermissionStatus.granted) {
         setState(() {
           _openSetting = true;
           gcl.Geolocator.getCurrentPosition(
-              desiredAccuracy: gcl.LocationAccuracy.medium)
+                  desiredAccuracy: gcl.LocationAccuracy.medium)
               .then((value) {
             position = value;
 
@@ -122,30 +125,28 @@ class _HomeViewState extends State<HomeView>
             return permissionGranted;
           });
         });
-
-      }else if (permission == locationPermission.PermissionStatus.unknown ||
+      } else if (permission == locationPermission.PermissionStatus.unknown ||
           permission == locationPermission.PermissionStatus.denied ||
           permission == locationPermission.PermissionStatus.restricted) {
-
         try {
           LocationPermissionHandler.requestPermissoin().then((value) {
             if (permission == locationPermission.PermissionStatus.granted) {
               setState(() {
                 _openSetting = true;
                 gcl.Geolocator.getCurrentPosition(
-                    desiredAccuracy: gcl.LocationAccuracy.medium)
+                        desiredAccuracy: gcl.LocationAccuracy.medium)
                     .then((value) {
                   position = value;
 
                   UserLocation(
-                      latitude: position.latitude, longitude: position.longitude);
+                      latitude: position.latitude,
+                      longitude: position.longitude);
                   callOffersApi();
                   permissionGranted = true;
                   return permissionGranted;
                 });
               });
-
-            }else{
+            } else {
               setState(() {
                 _openSetting = false;
               });
@@ -156,13 +157,10 @@ class _HomeViewState extends State<HomeView>
         } catch (err) {
           print(err);
         }
-      }
-      else {
-
+      } else {
         setState(() {
           _openSetting = false;
         });
-
       }
     });
   }
@@ -170,12 +168,12 @@ class _HomeViewState extends State<HomeView>
   @override
   void dispose() {
     _pagingController.dispose();
+    _buttonController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     final appBar1 = appBar(
         title: _appBarTitle,
         onBackClick: () {
@@ -185,139 +183,136 @@ class _HomeViewState extends State<HomeView>
         hasLeading: false);
 
     final body = SafeArea(
-      child: _openSetting? !_stackFinished
-          ? Container(
+      child: _openSetting
+          ? !_stackFinished
+              ? Container(
 //          height: 550,
 //        color: Colors.yellow,
-              height: double.maxFinite,
-              width: double.infinity,
+                  height: double.maxFinite,
+                  width: double.infinity,
 
-              child: _swipeItems.length > 0
-                  ? SwipeCards(
-                      matchEngine: _matchEngine,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
+                  child: _swipeItems.length > 0
+                      ? SwipeCards(
+                          matchEngine: _matchEngine,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
 //                height: 550.0,
 //                height: double.maxFinite,
-                          child: OfferCardWidget2(
-                            isRedeemNow: false,
-                            image: _swipeItems[index].content.image,
-                            offer: _swipeItems[index].content.offer,
-                            offerName: _swipeItems[index].content.offerName,
-                            text: _swipeItems[index].content.text,
-                            time: _swipeItems[index].content.time,
-                            coord: _swipeItems[index].content.coord,
-                            currentCoords: UserLocation(
-                                latitude: position.latitude,
-                                longitude: position.longitude),
-                            locationTitle:
-                                _swipeItems[index].content.locationTitle,
-                            data: _swipeItems[index].content.data,
-                            changeDetailTitle: (value) {
+                              child: OfferCardWidget2(
+                                isRedeemNow: false,
+                                image: _swipeItems[index].content.image,
+                                offer: _swipeItems[index].content.offer,
+                                offerName: _swipeItems[index].content.offerName,
+                                text: _swipeItems[index].content.text,
+                                time: _swipeItems[index].content.time,
+                                coord: _swipeItems[index].content.coord,
+                                currentCoords: UserLocation(
+                                    latitude: position.latitude,
+                                    longitude: position.longitude),
+                                locationTitle:
+                                    _swipeItems[index].content.locationTitle,
+                                data: _swipeItems[index].content.data,
+                                changeDetailTitle: (value) {
+                                  setState(() {
+                                    if (value) {
+                                      _appBarTitle = 'Offer Details';
+                                    } else {
+                                      _appBarTitle = 'Home';
+                                    }
+                                  });
+                                },
+                              ),
+                            );
+                          },
+                          onStackFinished: () {
+                            setState(() {
+                              _stackFinished = true;
+                              _appBarTitle = 'Home';
+                            });
+                          },
+                        )
+                      : Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Loader(
+                            isLoading: _swipeItems.length > 0 ? false : true,
+                            color: AppColors.APP_PRIMARY_COLOR,
+                          ),
+                        ),
+                )
+              : Center(
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Opacity(
+                            opacity: 0.3,
+                            child: SvgPicture.asset(
+                              AppImages.IC_COUPONS,
+                              width: 110.0,
+                              height: 110.0,
+                            )),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          'No more coupons left',
+                          style: AppStyles.poppinsTextStyle(
+                                  fontSize: 18.0, weight: FontWeight.w500)
+                              .copyWith(color: AppColors.UNSELECTED_COLOR),
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 25.0.w),
+                          child: GradientButton(
+                            onTap: () {
+                              callOffersApi();
                               setState(() {
-                                if (value) {
-                                  _appBarTitle = 'Offer Details';
-                                } else {
-                                  _appBarTitle = 'Home';
-                                }
+                                _stackFinished = false;
                               });
                             },
+                            text: "Fetch More",
                           ),
-                        );
-                      },
-                      onStackFinished: () {
-                        setState(() {
-                          _stackFinished = true;
-                          _appBarTitle = 'Home';
-                        });
-                      },
+                        )
+                      ],
+                    ),
+                  ),
+                )
+          : Center(
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      'Location permission is required to access nearby offers.',
+                      style: AppStyles.poppinsTextStyle(
+                              fontSize: 12.0, weight: FontWeight.w500)
+                          .copyWith(color: AppColors.UNSELECTED_COLOR),
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.0.w),
+                      child: GradientButton(
+                        onTap: () {
+                          AppSettings.openAppSettings();
+                        },
+                        text: "Please enable location",
+                      ),
                     )
-                  : Padding(
-                padding: EdgeInsets.all(5),
-                child: Loader(
-                   isLoading: _swipeItems.length > 0 ? false:true,
-                  color: AppColors.APP_PRIMARY_COLOR,
+                  ],
                 ),
               ),
-            )
-          :Center(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Opacity(
-                  opacity: 0.3,
-                  child: SvgPicture.asset(
-                    AppImages.IC_COUPONS,
-                    width: 110.0,
-                    height: 110.0,
-                  )),
-              SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                'No more coupons left',
-                style: AppStyles.poppinsTextStyle(
-                    fontSize: 18.0, weight: FontWeight.w500)
-                    .copyWith(color: AppColors.UNSELECTED_COLOR),
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 25.0.w),
-                child: GradientButton(
-                  onTap: () {
-                    callOffersApi();
-                    setState(() {
-                      _stackFinished = false;
-                    });
-                  },
-                  text: "Fetch More",
-                ),
-              )
-            ],
-          ),
-        ),
-      ):Center(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-              SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                'Location permission is required to access nearby offers.',
-                style: AppStyles.poppinsTextStyle(
-                    fontSize: 12.0, weight: FontWeight.w500)
-                    .copyWith(color: AppColors.UNSELECTED_COLOR),
-              ),
-              SizedBox(
-                height: 30.0,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 5.0.w),
-                child: GradientButton(
-                  onTap: () {
-
-
-                    AppSettings.openAppSettings();
-                  },
-                  text: "Please enable location",
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
     );
 
     return RefreshIndicator(
-      onRefresh: () async {
-
-      },
+      onRefresh: () async {},
       child: Scaffold(appBar: appBar1, body: body),
     );
   }
@@ -384,11 +379,33 @@ class _HomeViewState extends State<HomeView>
     });
   }
 
+  Future<void> redeemOffersApi(int offerId) async {
+    _playAnimation();
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        _homeViewModel.redeemOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
   void subscribeToViewModel() {
     _homeViewModel
         .getHomeRepository()
         .getRepositoryResponse()
         .listen((response) async {
+      _stopAnimation();
       if (mounted) {
         setState(() {
           _enabled = true;
@@ -410,7 +427,8 @@ class _HomeViewState extends State<HomeView>
                   offerName: dataList[i].productName,
                   time: _times[i],
                   image: dataList[i].imageUrl,
-                  coord: Coords(double.parse(dataList[i].user.latitude), double.parse(dataList[i].user.longitude)),
+                  coord: Coords(double.parse(dataList[i].user.latitude),
+                      double.parse(dataList[i].user.longitude)),
                   locationTitle: dataList[i].store.name,
                   data: dataList[i]),
               likeAction: () {
@@ -419,6 +437,7 @@ class _HomeViewState extends State<HomeView>
                       context: context,
                       builder: (BuildContext context1) {
                         return CustomDialog(
+                          showAnimatedBtn: false,
                           contex: context,
                           subTitle: "This offer has been marked Favorite!",
                           child: SvgPicture.asset(AppImages.FAV_ICON),
@@ -431,17 +450,19 @@ class _HomeViewState extends State<HomeView>
                                 context: context,
                                 builder: (BuildContext context1) {
                                   return CustomDialog(
+                                    showAnimatedBtn: true,
                                     contex: context,
                                     subTitle: "Are you sure?",
                                     //title: "Your feedback will help us improve our services.",
-                                    buttonText1: AppStrings.YES,
+
+                                    btnWidget: AnimatedGradientButton(
+                                      onAnimationTap: () {
+                                        redeemOffersApi(dataList[i].id);
+                                      },
+                                      buttonController: _buttonController,
+                                      text: AppStrings.YES,
+                                    ),
                                     buttonText2: AppStrings.NO,
-                                    onPressed1: () {
-                                      Navigator.pop(context1);
-                                      Navigator.pushNamed(
-                                          context, AppRoutes.QR_SCAN_VIEW,
-                                          arguments: {'fromSavedCoupon':false,'offer_id': dataList[i].id,});
-                                    },
                                     onPressed2: () {
                                       Navigator.pop(context1);
                                     },
@@ -472,12 +493,33 @@ class _HomeViewState extends State<HomeView>
 
           _matchEngine = MatchEngine(swipeItems: _swipeItems);
         }
+      } else if (response.data is RedeemOfferModel) {
+        ToastUtil.showToast(context, response.msg);
+        Navigator.pop(context);
+        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: {
+          'fromSavedCoupon': false,
+          'offer_id': response.data.offerId,
+        });
+      } else if (response.data is LikeDislikeModel) {
+        ToastUtil.showToast(context, response.msg);
       } else if (response.data is DioError) {
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
       } else {
         ToastUtil.showToast(context, response.msg);
       }
     });
+  }
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _buttonController.reverse();
+    } on TickerCanceled {}
   }
 }
 

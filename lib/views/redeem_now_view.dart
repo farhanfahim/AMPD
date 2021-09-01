@@ -1,15 +1,20 @@
 import 'dart:async';
 
 import 'package:ampd/app/app.dart';
+import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_images.dart';
+import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/model/OfferDataClassModel.dart';
+import 'package:ampd/data/model/RedeemOfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/redeem_now_viewmodel.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
+import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/offer_card_widget_2.dart';
 import 'package:ampd/widgets/widgets.dart';
@@ -36,7 +41,9 @@ class RedeemNowView extends StatefulWidget {
   _RedeemNowViewState createState() => _RedeemNowViewState();
 }
 
-class _RedeemNowViewState extends State<RedeemNowView> {
+class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateMixin{
+
+  AnimationController _buttonController;
   bool _openSetting = false;
   String _appBarTitle = 'Offer';
   RedeemNowViewModel _redeemNowViewModel;
@@ -51,12 +58,23 @@ class _RedeemNowViewState extends State<RedeemNowView> {
   void initState() {
 
     super.initState();
+
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
     _streamController = new StreamController<Dataclass>.broadcast();
     _streamController.add(null);
 
     _redeemNowViewModel = RedeemNowViewModel(App());
     subscribeToViewModel();
     getCurrentLocation();
+  }
+
+
+  @override
+  void dispose() {
+    _buttonController.dispose();
+    super.dispose();
   }
 
   void getCurrentLocation(){
@@ -72,7 +90,7 @@ class _RedeemNowViewState extends State<RedeemNowView> {
             UserLocation(
                 latitude: position.latitude, longitude: position.longitude);
 
-            callRedeemOfferApi(widget.map['offer_id']);
+            callOfferApi(widget.map['offer_id']);
 
           });
         });
@@ -117,7 +135,7 @@ class _RedeemNowViewState extends State<RedeemNowView> {
               height: MediaQuery
                   .of(context)
                   .size
-                  .height * 0.6,
+                  .height * 0.9,
               child: Center(
                 child: Loader(
                     isLoading: isDataLoad,
@@ -140,6 +158,39 @@ class _RedeemNowViewState extends State<RedeemNowView> {
                   longitude: position.longitude),
               locationTitle: singleOfferModel.user.address,
               data: singleOfferModel,
+              onRedeemTap: (){
+                //
+                Navigator.pop(
+                    context);
+                showDialog(
+                    context: context,
+                    builder: (
+                        BuildContext context1) {
+                      return CustomDialog(
+                        showAnimatedBtn: true,
+                        contex: context,
+                        subTitle: "Are you sure?",
+                        //title: "Your feedback will help us improve our services.",
+
+                        buttonText2: AppStrings
+                            .NO,
+                        btnWidget: AnimatedGradientButton(
+                          onAnimationTap: () {
+                            redeemOffersApi(singleOfferModel.id);
+                          },
+                          buttonController: _buttonController,
+                          text: AppStrings.YES,
+                        ),
+
+                        onPressed2: () {
+                          Navigator
+                              .pop(
+                              context1);
+                        },
+                        showImage: false,
+                      );
+                    });
+              },
               changeDetailTitle: (value) {
                 setState(() {
                   if(value) {
@@ -193,7 +244,7 @@ class _RedeemNowViewState extends State<RedeemNowView> {
     );
   }
 
-  Future<void> callRedeemOfferApi(int id) async {
+  Future<void> callOfferApi(int id) async {
 
     Util.check().then((value) {
       if (value != null && value) {
@@ -213,11 +264,47 @@ class _RedeemNowViewState extends State<RedeemNowView> {
     });
   }
 
+  Future<void> redeemOffersApi(int offerId) async {
+    _playAnimation();
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        _redeemNowViewModel.redeemOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _buttonController.reverse();
+    } on TickerCanceled {}
+  }
+
+
+
   void subscribeToViewModel() {
     _redeemNowViewModel
         .getRedeemRepository()
         .getRepositoryResponse()
         .listen((response) async {
+          _stopAnimation();
 
       if(mounted) {
         setState(() {
@@ -230,6 +317,14 @@ class _RedeemNowViewState extends State<RedeemNowView> {
 
         singleOfferModel = response.data;
         _streamController.add(singleOfferModel);
+      }
+
+      else if (response.data is RedeemOfferModel) {
+        ToastUtil.showToast(context, response.msg);
+        Navigator.pop(context);
+        Navigator.pushNamed(
+            context, AppRoutes.QR_SCAN_VIEW,
+            arguments: {'fromSavedCoupon':true,'offer_id': response.data.offerId,});
       }
       else if(response.data is DioError){
         _isInternetAvailable = Util.showErrorMsg(context, response.data);

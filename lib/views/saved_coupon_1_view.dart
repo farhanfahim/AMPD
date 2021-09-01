@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
@@ -30,12 +31,10 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   int _totalPages = 0;
   int _currentPage = 1;
   int _selectedIndex = 0;
-  ScrollController _controller;
-  StreamController _streamController;
+  final PagingController<int, DataClass> _pagingController1 =  PagingController(firstPageKey: 1);
 
   List<DataClass> dataList = List<DataClass>();
-  List<DataClass> expiredCouponList = List<DataClass>();
-  List<DataClass> activeCouponList =  List<DataClass>();
+
   bool _enabled = true;
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
@@ -70,12 +69,10 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   @override
   void initState()  {
 
+    _pagingController1.addPageRequestListener((pageKey) {
+      _fetchPage(pageKey);
+    });
 
-    _streamController = new StreamController<List<DataClass>>.broadcast();
-    _streamController.add(null);
-
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
 
     tabController = new TabController(vsync:this,length: 2);
     tabController.addListener(() {
@@ -87,30 +84,19 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
 
     _savedCouponViewModel = SavedCouponViewModel(App());
     subscribeToViewModel();
-    callSavedCouponApi();
 
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
 
     super.initState();
   }
 
-
-
-  void _scrollListener() {
-    print(_controller.position.extentAfter);
-    if (_controller.position.extentAfter < 500) {
-      if (_currentPage + 1 <= _totalPages) {
-        setState(() {
-          _isPaginationLoading = true;
-        });
-        _currentPage = _currentPage + 1;
-
-        print('TOTAL PAGES --- $_currentPage');
-        callSavedCouponApi();
-      }
+  Future<void> _fetchPage(int pageKey) async {
+    try {
+      callSavedCouponApi();
+    } catch (error) {
+      _pagingController1.error = error;
     }
   }
+
 
 
   @override
@@ -198,99 +184,71 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                 SizedBox(
                   height: 10.0,
                 ),
-                StreamBuilder<List<DataClass>>(
-                    stream: _streamController.stream,
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.6,
-                          child: Center(
+                Expanded(
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: tabController,
+                    children: [
+                      PagedListView<int, DataClass>(
+                        pagingController: _pagingController1,
+                        builderDelegate: PagedChildBuilderDelegate<DataClass>(
+                          itemBuilder: (context, item, index) {
+
+                            return !checkExpiry(dataList[index].expireAt)?SavedCouponActiveTileView(dataList[index]):null;
+                          },
+                          noItemsFoundIndicatorBuilder: (context) => Center(
+                              child: NoRecordFound(
+                                  "No Active Coupon Found", AppImages.NO_TEETIMES_IMAGE)),
+                          firstPageProgressIndicatorBuilder: (context) => Container(
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            child: Center(
+                              child: Loader(
+                                  isLoading: true,
+                                  color: AppColors.ACCENT_COLOR
+                              ),
+                            ),
+                          ),
+                          newPageProgressIndicatorBuilder: (context) => Padding(
+                            padding: EdgeInsets.all(5),
                             child: Loader(
+                              isLoading: true,
+                              color: AppColors.APP_PRIMARY_COLOR,
+                            ),
+                          ),
+                        ),
+                      ),
+                      PagedListView<int, DataClass>(
+                          pagingController: _pagingController1,
+                          builderDelegate: PagedChildBuilderDelegate<DataClass>(
+                            itemBuilder: (context, item, index) {
+
+                              return checkExpiry(dataList[index].expireAt)?SavedCouponExpiredTileView(dataList[index]):null;
+                            },
+                            noItemsFoundIndicatorBuilder: (context) => Center(
+                                child: NoRecordFound(
+                                    "No Expired Coupon Found", AppImages.NO_TEETIMES_IMAGE)),
+                            firstPageProgressIndicatorBuilder: (context) => Container(
+                              height: MediaQuery.of(context).size.height * 0.4,
+                              child: Center(
+                                child: Loader(
+                                    isLoading: true,
+                                    color: AppColors.ACCENT_COLOR
+                                ),
+                              ),
+                            ),
+                            newPageProgressIndicatorBuilder: (context) => Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Loader(
                                 isLoading: true,
-                                color: AppColors.ACCENT_COLOR
+                                color: AppColors.APP_PRIMARY_COLOR,
+                              ),
                             ),
                           ),
-                        );
-                      } else {
-                        return snapshot.data.length > 0 ? Expanded(
-                          child: Container(
-                            child: TabBarView(
-                              physics: NeverScrollableScrollPhysics(),
-                              controller: tabController,
-                              children: [
-                                ListView(
-                                  shrinkWrap: true,
-                                  controller: _controller,
-                                  children: [
-                                    activeCouponList.length > 0? ListView.builder(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: activeCouponList.length,
-                                        itemBuilder: (context, index) {
-                                          print(" list length ${activeCouponList.length}");
-                                          return SavedCouponActiveTileView(activeCouponList[index]);
-                                        }):Center(
-                                      child: Container(
-                                        child:  Center(
-                                            child: NoRecordFound("No Active Coupons Found",
-                                                AppImages.NO_NOTIFICATIONS_IMAGE)
-                                        ),
-                                      ),
-                                    ),
+                        ),
 
-                                    Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: Loader(
-                                        isLoading: _isPaginationLoading,
-                                        color: AppColors.APP_PRIMARY_COLOR,
-                                      ),
-                                    ),
-                                  ],
-
-                                ),
-                                ListView(
-                                  shrinkWrap: true,
-                                  controller: _controller,
-                                  children: [
-                                    expiredCouponList.length > 0? ListView.builder(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: expiredCouponList.length,
-                                        itemBuilder: (context, index) {
-                                          print(" list length ${expiredCouponList.length}");
-                                          return SavedCouponExpiredTileView(expiredCouponList[index]);
-                                        }):Center(
-                                      child: Container(
-                                          child: Center(
-                                              child: NoRecordFound("No Expired Coupons Found",
-                                                  AppImages.NO_NOTIFICATIONS_IMAGE)
-                                          ),
-                                      ),
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: Loader(
-                                        isLoading: _isPaginationLoading,
-                                        color: AppColors.APP_PRIMARY_COLOR,
-                                      ),
-                                    ),
-                                  ],
-
-                                ),
-
-                              ],
-                            ),
-                          ),
-                        ) : Center(
-                            child: NoRecordFound("No Saved Coupons Found",
-                                AppImages.NO_NOTIFICATIONS_IMAGE)
-                        );
-                      }
-                    })
+                    ],
+                  ),
+                ),
 
               ],
             )));
@@ -313,6 +271,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   @override
   void dispose() {
     tabController.dispose();
+    _pagingController1.dispose();
     super.dispose();
   }
 
@@ -565,21 +524,33 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
       }
 
       if(response.data is SavedCouponModel) {
+        _isPaginationLoading = false;
 
+        _totalPages = response.data.page;
         // SavedCouponModel responseRegister = responseRegister;
+        dataList.clear();
         dataList.addAll(response.data.dataClass);
-        _streamController.add(dataList);
-        DateTime now = DateTime.now();
 
+        final isNotLastPage = _currentPage + 1 <= _totalPages;
+        print('_currentPage $_currentPage');
+        print('isNotLastPage $isNotLastPage');
 
-        for(var coupon in dataList){
-          String date = coupon.expireAt;
-          DateTime dateTime = DateTime.parse(date);
-          if(dateTime.isAfter(now)){
-            activeCouponList.add(coupon);
-          }else{
-            expiredCouponList.add(coupon);
+        if (!isNotLastPage) {
+          // 3
+          if(dataList.length> 0){
+            _pagingController1.appendLastPage(dataList);
           }
+
+
+        } else {
+          final nextPageKey = _currentPage + 1;
+          _currentPage = _currentPage + 1;
+
+          if(dataList.length> 0){
+            _pagingController1.appendPage(dataList, nextPageKey);
+          }
+
+
         }
       }
       else if(response.data is DioError){
@@ -592,6 +563,16 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
 
 
 
+  }
+
+  bool checkExpiry(String expiry){
+    DateTime now = DateTime.now();
+    DateTime dateTime = DateTime.parse(expiry);
+    if(dateTime.isAfter(now)){
+      return false;
+    }else{
+      return true;
+    }
   }
 
 }

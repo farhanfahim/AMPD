@@ -122,6 +122,21 @@ class NetworkNAO {
         return response;
       });
 
+  static Future<dynamic> redeemOffer(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.REDEEM_OFFER,
+          hasHeader: false,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_OFFER_ID: map['offer_id']
+          })
+      ).then((dynamic response) {
+
+        print(map['offer_id']);
+        return response;
+      });
+
+
 
   static Future<dynamic> getOffers(String accessToken,Map<String, dynamic> map) =>
       NetworkUtil().get(

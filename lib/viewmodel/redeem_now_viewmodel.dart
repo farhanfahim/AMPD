@@ -28,7 +28,11 @@ class RedeemNowViewModel {
   }
 
   void redeemNow(Map<String, dynamic> map,int id) {
-    _redeemOfferRepository.redeemOffers(map,id);
+    _redeemOfferRepository.getRedeemOffers(map,id);
+  }
+
+  void redeemOffer(Map<String, dynamic> map) {
+    _redeemOfferRepository.redeemOffer(map);
   }
 
 

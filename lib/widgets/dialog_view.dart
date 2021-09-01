@@ -8,17 +8,18 @@ import 'package:sizer/sizer.dart';
 
 class CustomDialog extends StatefulWidget {
   String title;
+  bool showAnimatedBtn;
   String subTitle;
   bool showImage;
   String buttonText1;
   String buttonText2;
   Function onPressed1;
   Function onPressed2;
-  Widget child;
+  Widget child,btnWidget;
   BuildContext contex ;
 
 
-  CustomDialog({this.title = "", this.buttonText1 = "",this.buttonText2 = "", this.onPressed1,this.onPressed2, this.child,this.contex,this.subTitle = "",this.showImage});
+  CustomDialog({this.title = "", this.showAnimatedBtn = false,this.buttonText1 = "",this.buttonText2 = "", this.onPressed1,this.onPressed2,this.btnWidget, this.child,this.contex,this.subTitle = "",this.showImage});
 
   @override
   _CustomDialogState createState() => _CustomDialogState();
@@ -80,6 +81,7 @@ class _CustomDialogState extends State<CustomDialog> {
                         SizedBox(
                           height: 35.0,
                         ),
+                        widget.showAnimatedBtn?widget.btnWidget:
                         GradientButton(
                           onTap: () { widget.onPressed1();},
                           text: widget.buttonText1,

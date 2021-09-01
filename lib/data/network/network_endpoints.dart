@@ -62,5 +62,8 @@ class NetworkEndpoints {
    //OFFER REVIEW /
    static const String OFFER_REVIEW = BASE_URL + "offer-reviews";
 
+   //REDEEM OFFER
+
+   static const String REDEEM_OFFER = BASE_URL + "redeem-offer";
 
 }
