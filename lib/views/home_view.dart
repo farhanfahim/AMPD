@@ -51,7 +51,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView>
-    with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin,  WidgetsBindingObserver {
   gcl.Position position;
   int _totalPages = 0;
   int _currentPage = 1;
@@ -99,8 +99,20 @@ class _HomeViewState extends State<HomeView>
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      if(!permissionGranted) {
+        //getCurrentLocation();
+      }
+    });
+  }
+
+
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     getCurrentLocation();

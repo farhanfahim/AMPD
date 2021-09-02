@@ -42,9 +42,9 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
   bool _isInternetAvailable = true;
   BuildContext customDialogBoxContext;
   String reviewMessage = "";
-  Timer _timer1,_timer2;
-  int _min = 2;
-  int _sec = 9;
+  Timer _timer1;
+  int _sec = 30;
+  int _secc = 3;
 
   @override
   void initState() {
@@ -62,39 +62,33 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
 
   void startTimer() {
     const oneSec = const Duration(seconds: 1);
-    const oneMin = const Duration(seconds: 9);
     _timer1 = new Timer.periodic(
       oneSec,
           (Timer timer) {
-        if (_min == 0) {
+        if (_sec == 0) {
           setState(() {
             timer.cancel();
           });
         } else {
           setState(() {
             _sec--;
-            if(_sec == 0){
-              _sec = 9;
+            if(_sec == 29){
+              _secc = 2;
+            }
+            else if(_sec == 19){
+              _secc = 1;
+            }
+            else if(_sec == 9){
+              _secc = 0;
+            }
+            else if(_sec == 0){
+              _sec = 0;
+              _secc = 0;
+              Navigator.pop(context);
             }
           });
 
           print(_sec);
-        }
-      },
-    );
-    _timer2 = new Timer.periodic(
-      oneMin,
-          (Timer timer) {
-        if (_min == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _min--;
-          });
-
-          print(_min);
         }
       },
     );
@@ -174,12 +168,12 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CountDownWidget(counter: _min.toString().substring(0),),
+                        CountDownWidget(counter: _secc.toString()),
                         SizedBox(
                           width: 8.0,
 
                         ),
-                        CountDownWidget(counter: _sec.toString().substring(0)),
+                        CountDownWidget(counter: _sec > 9?_sec.toString().substring(1):_sec.toString().substring(0)),
                       ],
                     ),
 
