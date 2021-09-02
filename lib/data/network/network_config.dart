@@ -77,4 +77,10 @@ class NetworkConfig {
   static const String API_OFFER_REVIEW = "review";
   static const String API_OFFER_RATING = "rating";
 
+  //PAGES
+  static const String API_PAGE_ABOUT_US = "about-us";
+  static const String API_PAGE_PRIVACY = "privacy-policy";
+  static const String API_PAGE_TERMS = "terms-and-conditions";
+
+
 }

@@ -118,8 +118,9 @@ class _HomeViewState extends State<HomeView>
               .then((value) {
             position = value;
 
-            UserLocation(
-                latitude: position.latitude, longitude: position.longitude);
+            userLocation.latitude = position.latitude;
+            userLocation.longitude = position.longitude;
+
             callOffersApi();
             permissionGranted = true;
             return permissionGranted;
@@ -330,6 +331,8 @@ class _HomeViewState extends State<HomeView>
 
         var map = Map<String, dynamic>();
         map['status'] = 20;
+        map['latitude'] = userLocation.latitude;
+        map['longitude'] = userLocation.longitude;
         _homeViewModel.offer(map);
       } else {
         setState(() {

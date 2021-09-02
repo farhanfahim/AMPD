@@ -2,13 +2,16 @@
 import 'package:ampd/appresources/theme.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/UserLocation.dart';
+import 'package:ampd/repo/about_repository.dart';
 import 'package:ampd/repo/home_repository.dart';
 import 'package:ampd/repo/qr_scan_repository.dart';
 import 'package:ampd/repo/redeem_now_repository.dart';
 import 'package:ampd/repo/register_repository.dart';
 import 'package:ampd/repo/login_repository.dart';
 import 'package:ampd/repo/reviews_repository.dart';
+import 'package:ampd/repo/side_menu_repository.dart';
 import 'package:ampd/repo/saved_coupon_repository.dart';
+import 'package:ampd/repo/terms_condition_repository.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -118,5 +121,13 @@ class App extends StatelessWidget {
   ReviewsRepository getReviewsRepository({@required AppPreferences appPreferences}) {
     return ReviewsRepository(appPreferences: appPreferences);
   }
-
+  SideMenuRepository getSideMenuRepository({@required AppPreferences appPreferences}) {
+    return SideMenuRepository(appPreferences: appPreferences);
+  }
+  AboutRepository getAboutRepository({@required AppPreferences appPreferences}) {
+    return AboutRepository(appPreferences: appPreferences);
+  }
+  TermsConditionRepository getTermsConditionRepository({@required AppPreferences appPreferences}) {
+    return TermsConditionRepository(appPreferences: appPreferences);
+  }
 }

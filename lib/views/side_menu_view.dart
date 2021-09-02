@@ -5,12 +5,17 @@ import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
 import 'package:ampd/widgets/button_border.dart';
+import 'package:ampd/viewmodel/side_menu_viewmodel.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:ampd/app/app.dart';
 
 class SideMenuView extends StatefulWidget {
   @override
@@ -18,6 +23,15 @@ class SideMenuView extends StatefulWidget {
 }
 
 class _SideMenuState extends State<SideMenuView> {
+  SideMenuViewModel _sideMenuViewModel;
+  bool _isInternetAvailable = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _sideMenuViewModel = SideMenuViewModel(App());
+    subscribeToViewModel();
+  }
   @override
   Widget build(BuildContext context) {
     bool pushNotificationSwitch = false;
@@ -274,7 +288,8 @@ class _SideMenuState extends State<SideMenuView> {
                     flex: 1,
                     child: GestureDetector(
                       onTap: (){
-                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+                        callLogoutApi();
+
                       },
                       child: Container(
 
@@ -310,6 +325,43 @@ class _SideMenuState extends State<SideMenuView> {
             ],
           ),
         ));
+  }
+
+  Future<void> callLogoutApi() async {
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        _sideMenuViewModel.logout(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _sideMenuViewModel
+        .getSideMenuRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+
+
+      if (response.msg == "Logged out successfully") {
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+
+      }else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
   }
 }
 
@@ -350,4 +402,6 @@ class Header extends StatelessWidget {
       ),
     );
   }
+
+
 }

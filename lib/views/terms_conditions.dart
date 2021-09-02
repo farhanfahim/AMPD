@@ -1,12 +1,23 @@
+import 'dart:async';
 import 'dart:math';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
+import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/PageModel.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/loader.dart';
+import 'package:ampd/viewmodel/about_viewmodel.dart';
+import 'package:ampd/viewmodel/term_condition_viewmodel.dart';
+import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -19,6 +30,26 @@ class TermsConditionsView extends StatefulWidget {
 }
 
 class _TermsConditionsState extends State<TermsConditionsView> {
+
+  TermsConditionViewModel _termsConditionViewModel;
+  bool _isInternetAvailable = true;
+  PageModel model;
+  bool _enabled = true;
+  bool isDataLoad = true;
+  StreamController _streamController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _streamController = new StreamController<PageModel>.broadcast();
+    _streamController.add(null);
+
+    _termsConditionViewModel = TermsConditionViewModel(App());
+    subscribeToViewModel();
+    callPageApi();
+  }
+
   @override
   Widget build(BuildContext context) {
     bool pushNotificationSwitch = false;
@@ -33,37 +64,107 @@ class _TermsConditionsState extends State<TermsConditionsView> {
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
           child: SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 30.0),
-              child: Column(
-                children: [
-                  Header(
-                      heading1: AppStrings.TERMS_CONDITION,
-                      heading2: AppStrings.TERMS_AND_CONDITIONS_HELP),
-                  SizedBox(
-                    height: 30.0,
-                  ),
+            child: StreamBuilder<PageModel>(
+                stream: _streamController.stream,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * 0.9,
+                      child: Center(
+                        child: Container(
+                          height: 60.0,
+                          child: Loader(
+                              isLoading: isDataLoad,
+                              color: AppColors.ACCENT_COLOR
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
 
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 0.0,
-                        ),
-                        child: Text(
-                            AppStrings.LOREM_IPSUM,
-                            textAlign: TextAlign.left,
-                            style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0)
-                        ),
-                      )),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                ],
-              ),
-            ),
+                    return snapshot.data!= null ? Container(
+                      margin: EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Column(
+                        children: [
+                          Header(
+                              heading1: AppStrings.TERMS_CONDITION,
+                              heading2: AppStrings.TERMS_AND_CONDITIONS_HELP),
+                          SizedBox(
+                            height: 30.0,
+                          ),
+
+                          Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 0.0,
+                                ),
+                                child: Text(
+                                    model.content,
+                                    textAlign: TextAlign.left,
+                                    style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0)
+                                ),
+                              )),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                        ],
+                      ),
+                    ): Center(
+                        child: NoRecordFound("No about us",
+                            AppImages.NO_NOTIFICATIONS_IMAGE)
+                    );
+                  }
+                }),
           ),
         ));
+  }
+
+  Future<void> callPageApi() async {
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        _termsConditionViewModel.getpage(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _termsConditionViewModel
+        .getTermConditionRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+
+      if(mounted) {
+        setState(() {
+          _enabled = true;
+          isDataLoad= false;
+        });
+      }
+
+      if (response.data is PageModel) {
+        model = response.data;
+        _streamController.add(model);
+
+      }else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
   }
 }
 
@@ -104,6 +205,8 @@ class Header extends StatelessWidget {
       ),
     );
   }
+
+
 }
 
 customHandler(IconData icon) {
@@ -134,3 +237,4 @@ customHandler(IconData icon) {
     ),
   );
 }
+

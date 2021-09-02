@@ -10,6 +10,7 @@ class NetworkEndpoints {
   static const String FORGOT_PASSWORD = BASE_URL+"forgot-password";
   static const String SOCIAL_LOGIN = BASE_URL+"social_login";
   static const String VERIFY_EMAIL_API = BASE_URL+"verify/email-confirmation";
+  static const String LOGOUT_API = BASE_URL+"verify/logout";
 
   //CONTACT-US
   static const String CONTACT_US  = BASE_URL+"contact";
@@ -63,7 +64,9 @@ class NetworkEndpoints {
    static const String OFFER_REVIEW = BASE_URL + "offer-reviews";
 
    //REDEEM OFFER
-
    static const String REDEEM_OFFER = BASE_URL + "redeem-offer";
+
+   //OFFERS /
+   static const String PAGE = BASE_URL + "page";
 
 }

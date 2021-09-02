@@ -149,6 +149,42 @@ class NetworkNAO {
         return response;
       });
 
+  static Future<dynamic> logout(String accessToken,Map<String, dynamic> map) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.LOGOUT,
+          hasHeader: true,
+          token: accessToken,
+          map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
+  static Future<dynamic> getAboutPage(String accessToken,Map<String, dynamic> map) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.PAGE+"/"+NetworkConfig.API_PAGE_ABOUT_US,
+          hasHeader: true,
+          token: accessToken,
+          map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
+  static Future<dynamic> getTermsPage(String accessToken,Map<String, dynamic> map) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.PAGE+"/"+NetworkConfig.API_PAGE_TERMS,
+          hasHeader: true,
+          token: accessToken,
+          map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
+
+
+
   static Future<dynamic> getOffersReviews(String accessToken,Map<String, dynamic> map) =>
       NetworkUtil().get(
           url: NetworkEndpoints.OFFER_REVIEW+"?",
