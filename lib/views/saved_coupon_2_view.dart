@@ -1,18 +1,36 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
+import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/data/model/SavedCouponsModel.dart';
+import 'package:ampd/data/model/UserLocation.dart';
+import 'package:ampd/utils/LocationPermissionHandler.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/loader.dart';
+import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
+import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/flat_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/appresources/app_colors.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
+import 'package:ampd/utils/LocationPermissionHandler.dart';
+import 'package:geolocator/geolocator.dart' as gcl;
+
+import 'package:ampd/utils/loader.dart';
+import 'package:location_permissions/location_permissions.dart'
+as locationPermission;
 
 class SavedCoupons2View extends StatefulWidget {
   @override
@@ -20,20 +38,26 @@ class SavedCoupons2View extends StatefulWidget {
 }
 
 class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
+  gcl.Position position;
+  int pagekey = 0;
   int _totalPages = 0;
+  int resultCount = 0;
   int _currentPage = 1;
+  int _selectedIndex = 0;
+  final PagingController<int, DataClass> _pagingController1 =  PagingController(firstPageKey: 1);
 
-  bool _isEnabled = true;
-  bool _isInternetAvailable = true;
+  List<DataClass> dataList = List<DataClass>();
+
+  bool _openSetting = false;
+  UserLocation userLocation = UserLocation();
+  bool isSearching = false;
+  bool _enabled = true;
   bool _isPaginationLoading = false;
+  bool _isInternetAvailable = false;
 
-  ScrollController _controller;
+  SavedCouponViewModel _savedCouponViewModel;
 
-  StreamController _streamController;
-
-  List<SavedCoupons> _listOfSavedCoupons = [];
-
-  final TextEditingController _filter = new TextEditingController();
+  TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
   String _searchText = "";
   List names = new List();
@@ -57,75 +81,116 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
     });
   }
 
+  bool getCurrentLocation() {
+    LocationPermissionHandler.checkLocationPermission().then((permission) {
+      if (permission == locationPermission.PermissionStatus.granted) {
+        setState(() {
+          _openSetting = true;
+          gcl.Geolocator.getCurrentPosition(
+              desiredAccuracy: gcl.LocationAccuracy.medium)
+              .then((value) {
+            position = value;
+
+            userLocation.latitude = position.latitude;
+            userLocation.longitude = position.longitude;
+
+            return true;
+          });
+        });
+      } else if (permission == locationPermission.PermissionStatus.unknown ||
+          permission == locationPermission.PermissionStatus.denied ||
+          permission == locationPermission.PermissionStatus.restricted) {
+        try {
+          LocationPermissionHandler.requestPermissoin().then((value) {
+            if (permission == locationPermission.PermissionStatus.granted) {
+              setState(() {
+                _openSetting = true;
+                gcl.Geolocator.getCurrentPosition(
+                    desiredAccuracy: gcl.LocationAccuracy.medium)
+                    .then((value) {
+                  position = value;
+
+                  UserLocation(
+                      latitude: position.latitude,
+                      longitude: position.longitude);
+                  return true;
+                });
+              });
+            } else {
+              setState(() {
+                _openSetting = false;
+              });
+            }
+          });
+        } on PlatformException catch (err) {
+          print(err);
+        } catch (err) {
+          print(err);
+        }
+      } else {
+        setState(() {
+          _openSetting = false;
+        });
+      }
+    });
+  }
   @override
-  void initState() {
-    //_streamController = new StreamController<List<Notifications>>.broadcast();
-    //_streamController.add(null);
+  void initState()  {
 
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
-    _listOfSavedCoupons.add(SavedCoupons(
-        name: "Nice EpicReact Flyknit",
-        dateTime: "May 30, 2021 - 12:45",
-        timeToAvail: "Time to Avail: (1 hour)",
-        image:
-            "https://images.pexels.com/photos/821651/pexels-photo-821651.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"));
+    getCurrentLocation();
+    this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
+    this._appBarTitle = new TextFormField(
+      autofocus: true,
 
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
+      onFieldSubmitted: (value){
+        setState(() {
+          _filter.text = value;
+          isSearching = true;
+        });
+        _fetchPage(pagekey,value);
+      },
+      cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
+      keyboardType: TextInputType.text,
+      decoration: new InputDecoration(
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
+          hintText: "Search..."),
+    );
 
+
+    if(_filter.text.isNotEmpty) {
+      _pagingController1.addPageRequestListener((pageKey) {
+        print(pageKey);
+        pagekey = pageKey;
+      });
+    }
+    _savedCouponViewModel = SavedCouponViewModel(App());
+    subscribeToViewModel();
     super.initState();
   }
-
-  void _scrollListener() {
-    print(_controller.position.extentAfter);
-    if (_controller.position.extentAfter < 500) {
-      if (_currentPage + 1 <= _totalPages) {
-        setState(() {
-          _isPaginationLoading = true;
-        });
-        _currentPage = _currentPage + 1;
-
-        print('TOTAL PAGES --- $_currentPage');
-      }
+  Future<void> _fetchPage(int pageKey,String query) async {
+    try {
+      callSavedCouponApi(query);
+    } catch (error) {
+      _pagingController1.error = error;
     }
+  }
+  @override
+  void dispose() {
+
+    _pagingController1.dispose();
+    super.dispose();
   }
 
 
+  static String formatUTCTime(String time) {
+    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
+        time);
+    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
+  }
 
 
   @override
@@ -143,26 +208,58 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                 ),
                 Header(
                     heading1: AppStrings.SAVED_COUPONS,
-                    heading2: AppStrings.SAVED_COUPONS_RESULT),
+                    heading2: AppStrings.SAVED_COUPONS_RESULT +": ($resultCount)"),
                 SizedBox(
                   height: 30.0,
                 ),
-                Expanded(
-                  child: ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: _listOfSavedCoupons.length,
-                      itemBuilder: (context, index) {
-                        return SavedCouponTileView(_listOfSavedCoupons[index]);
-                      }),
-                ),
+                isSearching?Container(
+                  child: Expanded(
+                    child: PagedListView<int, DataClass>(
+                      pagingController: _pagingController1,
+                      builderDelegate: PagedChildBuilderDelegate<DataClass>(
+                        itemBuilder: (context, item, index) {
+
+                          print('Item index: $index');
+
+                          return SavedCouponTileView(item);
+                        },
+                        noItemsFoundIndicatorBuilder: (context) => Center(
+                            child: NoRecordFound(
+                                "No Result Found", AppImages.NO_TEETIMES_IMAGE)),
+                        firstPageProgressIndicatorBuilder: (context) => Container(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: Center(
+                            child: Container(
+                              height: 60.0,
+                              child: Loader(
+                                  isLoading: true,
+                                  color: AppColors.ACCENT_COLOR
+                              ),
+                            ),
+                          ),
+                        ),
+                        newPageProgressIndicatorBuilder: (context) => Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Container(
+                            height: 30.0,
+                            child: Loader(
+                              isLoading: true,
+                              color: AppColors.APP_PRIMARY_COLOR,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ):NoRecordFound(
+                    "No Result Found", AppImages.NO_TEETIMES_IMAGE),
               ],
             ),
           ),
         ));
   }
 
-  Widget SavedCouponTileView(SavedCoupons data) {
+  Widget SavedCouponTileView(DataClass data) {
     return Column(
       children: [
         SizedBox(
@@ -182,7 +279,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     child: Image.network(
-                      data.image,
+                      data.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -194,7 +291,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(data.name,
+                      Text(data.productName,
                           style:
                               AppStyles.blackWithBoldFontTextStyle(context, 16.0)
                                   .copyWith(color: AppColors.COLOR_BLACK)
@@ -203,7 +300,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                         height: 3.0,
                       ),
                       Text(
-                        data.dateTime,
+                        formatUTCTime(data.expireAt),
                         style: AppStyles.blackWithDifferentFontTextStyle(
                                 context, 11.0)
                             .copyWith(
@@ -214,7 +311,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            data.timeToAvail,
+                            "Time to Avail:(${data.availTime } hour)",
                             style: AppStyles.blackWithDifferentFontTextStyle(
                                     context, 12.0)
                                 .copyWith(
@@ -276,6 +373,12 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
       if (this._searchIcon.icon == Icons.search) {
         this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
         this._appBarTitle = new TextFormField(
+          autofocus: true,
+          onChanged: (value){
+            setState(() {
+              _filter.text = value;
+            });
+          },
           cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
           keyboardType: TextInputType.text,
           decoration: new InputDecoration(
@@ -301,4 +404,79 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
       }
     });
   }
+
+  Future<void> callSavedCouponApi(String query) async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['status'] = 10;
+        map['query'] = query;
+        map['latitude'] = userLocation.latitude;
+        map['longitude'] = userLocation.longitude;
+        map['offset'] = _currentPage;
+        _savedCouponViewModel.savedCoupons(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _savedCouponViewModel
+        .getSavedCouponRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+
+      if(mounted) {
+        setState(() {
+          _enabled = true;
+          _isPaginationLoading = false;
+        });
+      }
+
+      if(response.data is SavedCouponModel) {
+        _isPaginationLoading = false;
+
+        _totalPages = response.data.lastPage;
+
+        print('Last Page: $_totalPages');
+
+        final isNotLastPage = _currentPage + 1 <= _totalPages;
+        print('_currentPage $_currentPage');
+        print('isNotLastPage $isNotLastPage');
+
+        if (!isNotLastPage) {
+          // 3
+          _pagingController1.appendLastPage(response.data.dataClass);
+
+
+        } else {
+          final nextPageKey = _currentPage + 1;
+          _currentPage = _currentPage + 1;
+
+          print('New Page: $_totalPages');
+
+          _pagingController1.appendPage(response.data.dataClass, nextPageKey);
+        }
+      }
+      else if(response.data is DioError){
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      }
+      else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+
+
+
+  }
+
 }

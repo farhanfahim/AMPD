@@ -89,7 +89,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
                 builderDelegate: PagedChildBuilderDelegate<DataClass>(
                   itemBuilder: (context, item, index) {
 
-                    return SavedCouponExpiredTileView(item);
+                    return checkExpiry(item.expireAt)?SavedCouponExpiredTileView(item):Container();
                   },
                   noItemsFoundIndicatorBuilder: (context) => Center(
                       child: NoRecordFound(
@@ -128,6 +128,16 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
         time);
     return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
   }
+  bool checkExpiry(String expiry){
+    DateTime now = DateTime.now();
+    DateTime dateTime = DateTime.parse(expiry);
+    if(dateTime.isAfter(now)){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
 
   Widget SavedCouponExpiredTileView(DataClass data) {
     return Column(

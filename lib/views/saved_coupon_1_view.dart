@@ -232,34 +232,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   }
 
   void _searchPressed() {
-    setState(() {
-      if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
-        this._appBarTitle = new TextFormField(
-          cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
-          keyboardType: TextInputType.text,
-          decoration: new InputDecoration(
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              hintText: "Search..."),
-        );
-
-      } else {
-        this._searchIcon = new Icon(Icons.search ,color: AppColors.APP__DETAILS_TEXT_COLOR,);
-        this._appBarTitle = new Text(
-          '',
-          style: AppStyles.blackWithDifferentFontTextStyle(
-              context, 15.0)
-              .copyWith(
-              color: AppColors.APP__DETAILS_TEXT_COLOR),
-        );
-        filteredNames = names;
-        _filter.clear();
-      }
-    });
+    Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2);
   }
 
   static String formatUTCTime(String time) {
