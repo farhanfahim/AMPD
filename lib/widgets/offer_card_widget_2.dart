@@ -185,7 +185,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2> with SingleTickerPr
                               imageUrl: widget.offer,
                               fit: BoxFit.cover,
                               // fadeInCurve: Curves.easeIn,
-//                              height: 300.0,
+                              height: 300.0,
+                              width: 75.0.w,
                               imageBuilder: (BuildContext context,
                                   ImageProvider<dynamic> imageProvider) {
                                 return Image(

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:ampd/utils/network_util.dart';
 import '../network_config.dart';
 import '../network_endpoints.dart';
+import 'package:http_parser/http_parser.dart';
 
 class NetworkNAO {
 
@@ -178,7 +179,33 @@ class NetworkNAO {
           hasHeader: true,
           token: accessToken,
           formData: FormData.fromMap({
-            NetworkConfig.API_KEY_CURRENT_PASSWORD: map['email'],
+            NetworkConfig.API_KEY_EMAIL: map['email'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
+
+  static Future<dynamic> changeEmail(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.VERIFIFY_CHANGE_EMAIL,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_EMAIL: map['email'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
+
+  static Future<dynamic> changePhone(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.VERIFIFY_CHANGE_PHONE,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_PHONE: map['phone'],
           })
       ).then((dynamic response) {
         //print(response);
@@ -191,7 +218,54 @@ class NetworkNAO {
           hasHeader: true,
           token: accessToken,
           formData: FormData.fromMap({
-            NetworkConfig.API_KEY_CURRENT_PASSWORD: map['phone'],
+            NetworkConfig.API_KEY_PHONE: map['phone'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
+
+  static Future<dynamic> verifyEmailOtp(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.VERIFIFY_EMAIL_OTP,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_EMAIL: map['email'],
+            NetworkConfig.API_KEY_CODE: map['code'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
+
+
+  static Future<dynamic> verifyPhoneOtp(String accessToken,Map map) =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.VERIFIFY_PHONE_OTP,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_PHONE: map['phone'],
+            NetworkConfig.API_KEY_CODE: map['code'],
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
+
+
+
+  static Future<dynamic> updateProfile(String accessToken,Map map) async =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.UPDATE_PROFILE,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            if (map["image"] != null)
+              NetworkConfig.API_KEY_IMAGE: await MultipartFile.fromFile(
+                map["image"].path.toString(),
+                filename: "image.png", contentType: MediaType("image", "png")),
           })
       ).then((dynamic response) {
         //print(response);

@@ -9,6 +9,7 @@ import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/viewmodel/redeem_now_viewmodel.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/gradient_button.dart';
@@ -134,7 +135,7 @@ class _RedeemNowViewState extends State<RedeemNowView> {
               offer: AppImages.STARBUCKS_OFFER,
               offerName: "Starbucks Triple Mocha",
               text: singleOfferModel.title,
-              time: "2021-07-03 09:00:00",
+              time: TimerUtils.formatUTCTime(singleOfferModel.expireAt),
               coord: Coords(double.parse(singleOfferModel.user.latitude), double.parse(singleOfferModel.user.longitude)),
               currentCoords:UserLocation(
                   latitude: position.latitude,

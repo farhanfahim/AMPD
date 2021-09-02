@@ -111,26 +111,6 @@ class _MyProfileViewState extends State<MyProfileView> {
                       style:
                       AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery
-                              .of(context)
-                              .size
-                              .width * .09),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                              child: Text(
-                                "Bucharest Romania",
-                                style: AppStyles
-                                    .detailWithSmallTextSizeTextStyle(),
-                                textAlign: TextAlign.center,
-                              )),
-                        ],
-                      ),
-                    ),
-
 
                     SizedBox(
                       height: 25.0,

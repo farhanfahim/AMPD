@@ -64,7 +64,7 @@ class _HomeViewState extends State<HomeView>
   bool _enabled = true;
   bool _isInAsyncCall = true;
   bool _initialCall = false;
-  bool _openSetting = false;
+  bool _openSetting = true;
   bool permissionGranted = false;
   bool _isInternetAvailable = true;
   final PagingController<int, OfferModel> _pagingController =
@@ -106,20 +106,31 @@ class _HomeViewState extends State<HomeView>
   bool getCurrentLocation(){
     LocationPermissionHandler.checkLocationPermission().then((permission) {
       if (permission == locationPermission.PermissionStatus.granted) {
-        setState(() {
-          _openSetting = true;
-          gcl.Geolocator.getCurrentPosition(
-              desiredAccuracy: gcl.LocationAccuracy.medium)
-              .then((value) {
-            position = value;
+        Util.check().then((value) {
+          print('value $value');
+          if (value != null && value) {
+            setState(() {
+              _openSetting = true;
+              gcl.Geolocator.getCurrentPosition(
+                  desiredAccuracy: gcl.LocationAccuracy.medium)
+                  .then((value) {
+                position = value;
 
-            UserLocation(
-                latitude: position.latitude, longitude: position.longitude);
-            callOffersApi();
-            permissionGranted = true;
-            return permissionGranted;
-          });
+                UserLocation(
+                    latitude: position.latitude, longitude: position.longitude);
+                callOffersApi();
+                permissionGranted = true;
+                return permissionGranted;
+              });
+            });
+          } else {
+            setState(() {
+              _isInternetAvailable = false;
+              ToastUtil.showToast(context, "No internet");
+            });
+          }
         });
+
 
       }else if (permission == locationPermission.PermissionStatus.unknown ||
           permission == locationPermission.PermissionStatus.denied ||
@@ -196,6 +207,11 @@ class _HomeViewState extends State<HomeView>
               SwipeCards(
                       matchEngine: _matchEngine,
                       itemBuilder: (BuildContext context, int index) {
+                        if(index == _swipeItems.length - 1 && _currentPage < _totalPages) {
+                          _currentPage++;
+
+                          callOffersApi();
+                        }
                         return Container(
 //                height: 550.0,
 //                height: double.maxFinite,
@@ -228,9 +244,9 @@ class _HomeViewState extends State<HomeView>
                       onStackFinished: () {
                         print('stack finished');
                         if(_currentPage < _totalPages) {
-                          _currentPage++;
-
-                          callOffersApi();
+//                          _currentPage++;
+//
+//                          callOffersApi();
                         } else {
                           setState(() {
                             _stackFinished = true;
@@ -337,17 +353,33 @@ class _HomeViewState extends State<HomeView>
       onRefresh: () async {
 
       },
-      child: Scaffold(appBar: appBar1, body: body),
+      child: Scaffold(
+          appBar: appBar1,
+          body: _isInternetAvailable
+              ? body
+              : NoInternetFound(context, (context) {
+            setState(() {
+              _isInternetAvailable = true;
+            });
+
+            if (position != null) {
+              callOffersApi();
+            } else {
+              getCurrentLocation();
+            }
+          })
+      ),
     );
   }
 
   Future<void> callOffersApi() async {
     Util.check().then((value) {
+      print('value $value');
       if (value != null && value) {
         // Internet Present Case
         setState(() {
           _isInternetAvailable = true;
-          _isInAsyncCall = true;
+//          _isInAsyncCall = true;
         });
 
         var map = Map<String, dynamic>();

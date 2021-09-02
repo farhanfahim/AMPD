@@ -159,7 +159,9 @@ showBottomSheetWidgetWithAnimatedBtn(
     Widget widget,widget2,
     ValueChanged<BuildContext> onTap,
     String btnText,
-    bool showResendBtn) {
+    bool showResendBtn,
+    Function onTapResend
+    ) {
   showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: AppColors.WHITE_COLOR,
@@ -236,7 +238,7 @@ showBottomSheetWidgetWithAnimatedBtn(
                                 width: 2.0,
                               ),
                               InkWell(
-                                onTap: () {},
+                                onTap: onTapResend != null? onTapResend : () {},
                                 child: Text(AppStrings.RESEND,
                                     style: AppStyles
                                         .detailWithSmallTextSizeTextStyle()

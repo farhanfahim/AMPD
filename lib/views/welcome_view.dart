@@ -198,7 +198,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
           text: AppStrings.SUBMIT,
         ), (bc) {
       submitPhoneBc = bc;
-    }, AppStrings.SUBMIT, false);
+    }, AppStrings.SUBMIT, false, null);
   }
 
   showOtpBottomSheet(BuildContext context) {
@@ -240,7 +240,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
           otpPasswordBc = bc1;
         },
         AppStrings.VERIFY_NOW,
-        true);
+        true, () {});
   }
 
   Stack customWidget(BuildContext context) {

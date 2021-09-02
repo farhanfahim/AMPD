@@ -360,6 +360,10 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String ENTER_NEW_PHONE = 'Enter New Phone Number';
   static const String OTP_DESC =
       'Set the new password for your account so you can login and access all the features.';
+  static const String OTP_DESC_EMAIL =
+      'Set the new email for your account so you can login and access all the features.';
+  static const String OTP_DESC_PHONE =
+      'Set the new phone number for your account so you can login and access all the features.';
   static const String PHONE_NUMBER_DESC =
       'Enter your phone number for the verification process, we will send 4 digits code to your number.';
 

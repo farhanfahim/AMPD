@@ -68,6 +68,7 @@ class NetworkConfig {
   static const String API_KEY_FIRST_NAME = "first_name";
   static const String API_KEY_LAST_NAME = "last_name";
   static const String API_KEY_ABOUT = "about";
+  static const String API_KEY_IMAGE = "image";
 
   //OFFER
   static const String API_OFFER_ID = "offer_id";

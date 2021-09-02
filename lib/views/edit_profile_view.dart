@@ -10,12 +10,14 @@ import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/database/app_preferences.dart';
+import 'package:ampd/data/model/login_response_model.dart';
 import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
 import 'package:ampd/utils/MediaPermissionHandler.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
 import 'package:ampd/viewmodel/edit_profile_viewmodel.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/custom_text_form.dart';
 import 'package:ampd/widgets/gradient_button.dart';
@@ -44,7 +46,7 @@ class EditProfileView extends StatefulWidget {
   _EditProfileViewState createState() => _EditProfileViewState();
 }
 
-class _EditProfileViewState extends State<EditProfileView> {
+class _EditProfileViewState extends State<EditProfileView> with TickerProviderStateMixin {
   TextEditingController addressController = new TextEditingController();
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
@@ -62,6 +64,10 @@ class _EditProfileViewState extends State<EditProfileView> {
   bool _enabled = true;
   bool _isInAsyncCall = false;
   bool _isInternetAvailable = true;
+
+  bool _emailChanged = false;
+  bool _phoneChanged = false;
+  bool _imageChanged = false;
 
   var firstNameFocus = FocusNode();
   var lastNameFocus = FocusNode();
@@ -90,14 +96,41 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   EditProfileViewModel _editProfileViewModel;
 
+  AnimationController _codeToEmailButtonController;
+  AnimationController _codeToPhoneButtonController;
+  AnimationController _phoneOtpButtonController;
+  AnimationController _emailOtpButtonController;
+  AnimationController _changeEmailButtonController;
+  AnimationController _changePhoneButtonController;
+  AnimationController _updateProfileButtonController;
+
+  String code = "";
+
+  LoginResponseModel userDetails;
   @override
   void initState() {
     super.initState();
 
+    _codeToEmailButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _codeToPhoneButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _phoneOtpButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _emailOtpButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _changeEmailButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _changePhoneButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _updateProfileButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    
     _appPreferences.isPreferenceReady;
     _appPreferences.getUserDetails().then((userData) {
       print(userData.toJson());
 
+      userDetails = userData;
       setState(() {
         emailController.text = userData.data.email;
         numberController.text = userData.data.phone;
@@ -262,21 +295,6 @@ class _EditProfileViewState extends State<EditProfileView> {
                         style:
                             AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: MediaQuery.of(context).size.width * .09),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                                child: Text(
-                              "Bucharest Romania",
-                              style: AppStyles.detailWithSmallTextSizeTextStyle(),
-                              textAlign: TextAlign.center,
-                            )),
-                          ],
-                        ),
-                      ),
                       SizedBox(
                         height: 20.0,
                       ),
@@ -311,11 +329,11 @@ class _EditProfileViewState extends State<EditProfileView> {
                       SizedBox(
                         height: 25.0,
                       ),
-                      GradientButton(
-                        onTap: () {
-//                        Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+                      AnimatedGradientButton(
+                        onAnimationTap: () {
+                          callUpdateProfileApi();
                         },
+                        buttonController: _updateProfileButtonController,
                         text: AppStrings.UPDATE_PROFILE,
                       ),
                       SizedBox(
@@ -346,6 +364,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         if (rotatedImage != null) {
           setState(() {
             _image = null;
+            imageUrl = "";
           });
           _image = File(rotatedImage.path);
         } else {
@@ -954,52 +973,135 @@ class _EditProfileViewState extends State<EditProfileView> {
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
-
-        AppStrings.PHONE_NUMBER_DESC, phoneNoWidget(context), (bc1) {
-          Navigator.pop(bc1);
-          showPhoneOtpBottomSheet(context);
-        }, AppStrings.SEND, false);
+    showBottomSheetWidgetWithAnimatedBtn(
+        context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
+        AppStrings.PHONE_NUMBER_DESC, phoneNoWidget(context),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validatePhone()) {
+              callVerificationCodeToPhoneApi();
+            }
+          },
+          buttonController: _codeToPhoneButtonController,
+          text: AppStrings.CHANGE,
+        ),
+            (bc1) {
+//          Navigator.pop(bc1);
+//          showPhoneOtpBottomSheet(context);
+        }, AppStrings.SEND, false, null);
   }
 
   showPhoneOtpBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc2) {
-          Navigator.pop(bc2);
-          showUpdatePhoneNoBottomSheet(context);
-        }, AppStrings.VERIFY_NOW, true);
+    showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC_PHONE, OtpTextField(onOtpCodeChanged: (otp) {
+          code = otp;
+        }),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validatePhone()) {
+              callVerifyPhoneOtpApi();
+            }
+          },
+          buttonController: _phoneOtpButtonController,
+          text: AppStrings.VERIFY_NOW,
+        ),
+            (bc2) {
+//          Navigator.pop(bc2);
+//          showUpdatePhoneNoBottomSheet(context);
+        }, AppStrings.VERIFY_NOW, true, () {});
   }
 
   showUpdatePhoneNoBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_NEW_PHONE,
-        "", editableCustomPhoneNoWidget(context), (bc3) {
-          Navigator.pop(bc3);
-        }, AppStrings.CHANGE, false);
+    showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_NEW_PHONE,
+        "", editableCustomPhoneNoWidget(context),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validatePhone()) {
+              callChangePhoneApi();
+            }
+          },
+          buttonController: _changePhoneButtonController,
+          text: AppStrings.UPDATE,
+        ),
+            (bc3) {
+//          Navigator.pop(bc3);
+        }, AppStrings.CHANGE, false, null);
   }
 
-  showEmailOtpBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc4) {
-          Navigator.pop(bc4);
-          showUpdateEmailBottomSheet(context);
-        }, AppStrings.VERIFY_NOW, true);
+  showEmailOtpBottomSheet(BuildContextcontext) {
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC_EMAIL,
+        OtpTextField(onOtpCodeChanged: (otp) {
+          code = otp;
+        }),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validateEmail()) {
+              callVerifyEmailOtpApi();
+            }
+          },
+          buttonController: _emailOtpButtonController,
+          text: AppStrings.VERIFY_NOW,
+        ),
+        (bc4) {
+//          Navigator.pop(bc4);
+//          showUpdateEmailBottomSheet(context);
+        },
+        AppStrings.VERIFY_NOW,
+        true,
+        () {
+          callVerifyEmailOtpApi();
+        }
+    );
   }
-
+  
   showEmailBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.REQUEST_TO_EMAIL_TITLE,
-        AppStrings.EMAIL_DESC, emailWidget(context), (bc5) {
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.REQUEST_TO_EMAIL_TITLE,
+        AppStrings.EMAIL_DESC,
+        emailWidget(context),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validateEmail()) {
+              callVerificationCodeToEmailApi();
+            }
+          },
+          buttonController: _codeToEmailButtonController,
+          text: AppStrings.CHANGE,
+        ),
+            (bc5) {
           // Navigator.pop(bc5);
           // showEmailOtpBottomSheet(context);
-          callVerificationCodeToEmailApi();
-        }, AppStrings.CHANGE, false);
+//          callVerificationCodeToEmailApi();
+        },
+        AppStrings.CHANGE,
+        false, null);
   }
 
   showUpdateEmailBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_NEW_EMAIL,
-        "", customEditableEmailWidget(), (bc6) {
-          Navigator.pop(bc6);
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.ENTER_NEW_EMAIL,
+        "",
+        customEditableEmailWidget(),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validateEmail()) {
+              callChangeEmailApi();
+            }
+          },
+          buttonController: _changeEmailButtonController,
+          text: AppStrings.UPDATE,
+        ),
+            (bc6) {
+//          Navigator.pop(bc6);
 
-        }, AppStrings.CHANGE, false);
+        },
+        AppStrings.CHANGE,
+        false, null);
   }
 
   profilePictureOptionsBottomSheet() {
@@ -1143,12 +1245,14 @@ class _EditProfileViewState extends State<EditProfileView> {
   }
 
   Future<void> callVerificationCodeToEmailApi() async {
+    _playCodeToEmailBtnAnimation();
+
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
           _isInternetAvailable = true;
-          _isInAsyncCall = true;
+//          _isInAsyncCall = true;
         });
 
         print('email ${emailController.text}');
@@ -1165,11 +1269,165 @@ class _EditProfileViewState extends State<EditProfileView> {
     });
   }
 
+  Future<void> callVerificationCodeToPhoneApi() async {
+    _playCodeToPhoneBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('number ${numberController.text}');
+
+        var map = Map<String, dynamic>();
+        map['phone'] = numberController.text.trim().toString();
+        _editProfileViewModel.verificationCodeToPhone(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callChangeEmailApi() async {
+    _playChangeEmailBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _emailChanged = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('email ${emailController.text}');
+
+        var map = Map<String, dynamic>();
+        map['email'] = emailController.text.trim().toString();
+        _editProfileViewModel.changeEmail(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callChangePhoneApi() async {
+    _playChangePhoneBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _phoneChanged = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('number ${editableNumberController.text}');
+
+        var map = Map<String, dynamic>();
+        map['phone'] = editableNumberController.text.trim().toString();
+        _editProfileViewModel.changePhone(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callVerifyEmailOtpApi() async {
+    _playEmailOtpBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('email ${emailController.text}');
+
+        var map = Map<String, dynamic>();
+        map['email'] = emailController.text.trim().toString();
+        map['code'] = code;
+        _editProfileViewModel.verifyEmailOtp(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callVerifyPhoneOtpApi() async {
+    _playPhoneOtpBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('number ${numberController.text}');
+
+        var map = Map<String, dynamic>();
+        map['phone'] = numberController.text.trim().toString();
+        map['code'] = code;
+        _editProfileViewModel.verifyPhoneOtp(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callUpdateProfileApi() async {
+    _playUpdateProfileBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _imageChanged = true;
+//          _isInAsyncCall = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['image'] = _image;
+        _editProfileViewModel.updateProfile(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
   void subscribeToViewModel() {
     _editProfileViewModel
         .getEditProfileRepository()
         .getRepositoryResponse()
         .listen((response) async {
+          _stopAnimation();
       if (mounted) {
         setState(() {
           _enabled = true;
@@ -1177,19 +1435,138 @@ class _EditProfileViewState extends State<EditProfileView> {
         });
       }
 
-      if (response.data is VerficationCodeToEmailModel) {
-        VerficationCodeToEmailModel model = response.data;
+      if (response.success) {
+        if (response.data is VerficationCodeToEmailModel) {
+          VerficationCodeToEmailModel model = response.data;
 
-        print('field ${model.data[0].field}');
-        ToastUtil.showToast(context, response.msg);
-        // Navigator.of(context).pop();
+          //        print('field ${model.data[0].field}');
+          ToastUtil.showToast(context, response.msg);
+           Navigator.pop(context);
+           Future.delayed(Duration(seconds: 1), () {
+             showEmailOtpBottomSheet(context);
+           });
+        } else if (response.data == 1) {  //verfication code to phone response
+          ToastUtil.showToast(context, response.msg);
+          Navigator.pop(context);
+          Future.delayed(Duration(seconds: 1), () {
+            showPhoneOtpBottomSheet(context);
+          });
+        } else if (response.data == 2) {  //verify phone otp response
+          ToastUtil.showToast(context, response.msg);
+          Navigator.pop(context);
+          Future.delayed(Duration(seconds: 1), () {
+            showUpdatePhoneNoBottomSheet(context);
+          });
+        }  else if (response.data == 0) { //email/phone updated response
 
+          ToastUtil.showToast(context, response.msg);
+
+          if(_emailChanged) {
+            userDetails.data.email = emailController.text.trim();
+          } else if(_phoneChanged) {
+            userDetails.data.phone = editableNumberController.text.trim();
+          }
+          Navigator.pop(context);
+        } else if (response.data == null) {
+          Navigator.pop(context);
+          ToastUtil.showToast(context, response.msg);
+          Future.delayed(Duration(seconds: 1), () {
+            showUpdateEmailBottomSheet(context);
+          });
+        }
       } else if (response.data is DioError) {
         _isInternetAvailable = Util.showErrorMsg(context, response.data);
       } else {
         ToastUtil.showToast(context, response.msg);
       }
     });
+  }
+
+  bool validateEmail() {
+    Util.hideKeyBoard(context);
+
+    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+    var email = emailController.text.trim().toString();
+
+    if(email.isEmpty || email == "") {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+
+    if(!emailRegex.hasMatch(email)) {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+    
+    return true;    
+  }
+
+  bool validatePhone() {
+    Util.hideKeyBoard(context);
+
+    var phone = numberController.text.trim();
+
+    if (phone.isEmpty || phone == "") {
+      ToastUtil.showToast(context, "Please provide your phone number");
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<Null> _playCodeToPhoneBtnAnimation() async {
+    try {
+      await _codeToPhoneButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _codeToPhoneButtonController.reverse();
+      await _codeToEmailButtonController.reverse();
+      await _emailOtpButtonController.reverse();
+      await _phoneOtpButtonController.reverse();
+      await _changeEmailButtonController.reverse();
+      await _changePhoneButtonController.reverse();
+      await _updateProfileButtonController.reverse();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playCodeToEmailBtnAnimation() async {
+    try {
+      await _codeToEmailButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playEmailOtpBtnAnimation() async {
+    try {
+      await _emailOtpButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playPhoneOtpBtnAnimation() async {
+    try {
+      await _phoneOtpButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playChangeEmailBtnAnimation() async {
+    try {
+      await _changeEmailButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playChangePhoneBtnAnimation() async {
+    try {
+      await _changePhoneButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playUpdateProfileBtnAnimation() async {
+    try {
+      await _updateProfileButtonController.forward();
+    } on TickerCanceled {}
   }
 }
 

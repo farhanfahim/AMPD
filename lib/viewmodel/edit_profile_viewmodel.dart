@@ -33,4 +33,24 @@ class EditProfileViewModel {
   void verificationCodeToPhone(Map<String, dynamic> map) {
     _editProfileRepository.verificationCodeToPhone(map);
   }
+
+  void changeEmail(Map<String, dynamic> map) {
+    _editProfileRepository.changeEmail(map);
+  }
+
+  void changePhone(Map<String, dynamic> map) {
+    _editProfileRepository.changePhone(map);
+  }
+
+  void verifyEmailOtp(Map<String, dynamic> map) {
+    _editProfileRepository.verifyEmailOtp(map);
+  }
+
+  void verifyPhoneOtp(Map<String, dynamic> map) {
+    _editProfileRepository.verifyPhoneOtp(map);
+  }
+
+  void updateProfile(Map<String, dynamic> map) {
+    _editProfileRepository.updateProfile(map);
+  }
 }

@@ -13,6 +13,7 @@ import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
 import 'package:ampd/viewmodel/change_password_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
@@ -29,7 +30,7 @@ class ChangePasswordView extends StatefulWidget {
   _ChangePasswordState createState() => _ChangePasswordState();
 }
 
-class _ChangePasswordState extends State<ChangePasswordView> {
+class _ChangePasswordState extends State<ChangePasswordView> with TickerProviderStateMixin {
 
   TextEditingController passwordController = new TextEditingController();
   TextEditingController nPasswordController = new TextEditingController();
@@ -64,9 +65,14 @@ class _ChangePasswordState extends State<ChangePasswordView> {
   bool _isInAsyncCall = false;
   bool _isInternetAvailable = true;
 
+  AnimationController _updatePasswordController;
+
   @override
   void initState() {
     super.initState();
+
+    _updatePasswordController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
 
     _changePasswordViewModel = ChangePasswordViewModel(App());
     subscribeToViewModel();
@@ -77,6 +83,7 @@ class _ChangePasswordState extends State<ChangePasswordView> {
     passwordController.dispose();
     nPasswordController.dispose();
     cPasswordController.dispose();
+    _updatePasswordController.dispose();
     super.dispose();
   }
 
@@ -127,44 +134,17 @@ class _ChangePasswordState extends State<ChangePasswordView> {
                           SizedBox(
                             height: 50.0,
                           ),
-                          Container(
-                            child:
-                            GestureDetector(
-                              onTap: (){
-                                if(validate()) {
-                                  callChangePasswordApi();
-                                }
-                               },
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10.0),
-                                height: 50.0,
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                    gradient: LinearGradient(colors: [Color(0xff174EA0), Color(0xff1E70C6), Color(0xff2490E9)],
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10.0)
-                                ),
-                                child: Container(
-                                  constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    AppStrings.UPDATE_PASSWORD,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          AnimatedGradientButton(
+                            onAnimationTap: () {
+                              if (validate()) {
+                                callChangePasswordApi();
+                              }
+                            },
+                            buttonController: _updatePasswordController,
+                            text: AppStrings.UPDATE_PASSWORD,
                           ),
                         ],
                       ),
-
-
                     ],
 
                   ),
@@ -475,12 +455,14 @@ class _ChangePasswordState extends State<ChangePasswordView> {
   }
 
   Future<void> callChangePasswordApi() async {
+    _playAnimation();
+
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
           _isInternetAvailable = true;
-          _isInAsyncCall = true;
+//          _isInAsyncCall = true;
         });
 
         var map = Map<String, dynamic>();
@@ -501,6 +483,8 @@ class _ChangePasswordState extends State<ChangePasswordView> {
         .getChangePasswordRepository()
         .getRepositoryResponse()
         .listen((response) async {
+      _stopAnimation();
+
       if (mounted) {
         setState(() {
           _enabled = true;
@@ -520,4 +504,15 @@ class _ChangePasswordState extends State<ChangePasswordView> {
       }
     });
   }
-}
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _updatePasswordController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _updatePasswordController.reverse();
+    } on TickerCanceled {}
+  }}
