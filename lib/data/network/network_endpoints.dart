@@ -38,7 +38,7 @@ class NetworkEndpoints {
   static const String FORGET_PASSWORD = BASE_URL + "forgot-password";
 
   //NOTIFICATION
-  static const String NOTIFICATION = BASE_URL + "get_all_notifications";
+  static const String NOTIFICATION = BASE_URL + "notifications";
   static const String READ_NOTIFICATION = BASE_URL + "read_notification";
 
   //VERIFY_OTP /
@@ -55,6 +55,7 @@ class NetworkEndpoints {
 
   //OFFERS /
    static const String OFFERS = BASE_URL + "offers";
+   static const String OFFERS_WITHOUT_TOKEN = BASE_URL + "offers-without-token";
    static const String OFFERS_LIKE_DISLIKE = BASE_URL + "user-offers";
 
    //SAVED OFFERS /

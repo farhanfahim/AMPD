@@ -30,6 +30,10 @@ class HomeViewModel {
     _homeRepository.offers(map);
   }
 
+  void offerWithoutToken(Map<String, dynamic> map) {
+    _homeRepository.offersWithoutToken(map);
+  }
+
   void redeemOffer(Map<String, dynamic> map) {
     _homeRepository.redeemOffer(map);
   }

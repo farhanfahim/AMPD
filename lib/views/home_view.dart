@@ -121,7 +121,7 @@ class _HomeViewState extends State<HomeView>
             userLocation.latitude = position.latitude;
             userLocation.longitude = position.longitude;
 
-            callOffersApi();
+            widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
             permissionGranted = true;
             return permissionGranted;
           });
@@ -142,7 +142,7 @@ class _HomeViewState extends State<HomeView>
                   UserLocation(
                       latitude: position.latitude,
                       longitude: position.longitude);
-                  callOffersApi();
+                  widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
                   permissionGranted = true;
                   return permissionGranted;
                 });
@@ -271,7 +271,7 @@ class _HomeViewState extends State<HomeView>
                           margin: EdgeInsets.symmetric(horizontal: 25.0.w),
                           child: GradientButton(
                             onTap: () {
-                              callOffersApi();
+                              widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
                               setState(() {
                                 _stackFinished = false;
                               });
@@ -334,6 +334,26 @@ class _HomeViewState extends State<HomeView>
         map['latitude'] = userLocation.latitude;
         map['longitude'] = userLocation.longitude;
         _homeViewModel.offer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callOffersApiWithoutToken() async {
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+
+        _homeViewModel.offerWithoutToken(map);
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -433,9 +453,9 @@ class _HomeViewState extends State<HomeView>
                   offerName: dataList[i].productName,
                   time: _times[i],
                   image: dataList[i].imageUrl,
-                  coord: Coords(double.parse(dataList[i].user.latitude),
-                      double.parse(dataList[i].user.longitude)),
-                  locationTitle: dataList[i].store.name,
+                  coord: dataList[i].user.latitude != null ?Coords(double.parse(dataList[i].user.latitude),
+                      double.parse(dataList[i].user.longitude)):Coords(0.0,0.0),
+                  locationTitle: dataList[i].store != null?dataList[i].store.name:"-",
                   data: dataList[i]),
               likeAction: () {
                 if (!widget.isGuestLogin) {
@@ -482,16 +502,19 @@ class _HomeViewState extends State<HomeView>
                           showImage: true,
                         );
                       });
+                  callLikeOffersApi(dataList[i].id);
                 } else {
-                  Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
                 }
-                callLikeOffersApi(dataList[i].id);
+
               },
               nopeAction: () {
                 if (widget.isGuestLogin) {
-                  Navigator.pushNamed(context, AppRoutes.SIGN_IN_VIEW);
+                  Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
+                }else{
+                  callDisLikeOffersApi(dataList[i].id);
                 }
-                callDisLikeOffersApi(dataList[i].id);
+
 //            ToastUtil.showToast(context, "Disliked ${_names[i]}");
               },
             ));

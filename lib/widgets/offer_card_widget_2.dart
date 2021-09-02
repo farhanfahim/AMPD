@@ -897,8 +897,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
                             Expanded(
                               child: Text(
-                                widget.data.store.openingTime != null &&
-                                    widget.data.store.closingTime != null ?
+                                widget.data.store != null &&
+                                    widget.data.store != null ?
                                 "Hours: Opens ${ DateFormat.jm().format(
                                     DateFormat("hh:mm:ss").parse(
                                         widget.data.store
@@ -1035,7 +1035,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                         _selectedTab == 0 ? Container(
 //                          height: 500.0,
                           child: Text(
-                            widget.data.store.about != null ? widget.data.store
+                            widget.data.store != null ? widget.data.store
                                 .about : "-",
                             style: AppStyles.poppinsTextStyle(
                                 fontSize: 13.0, weight: FontWeight.w400)

@@ -4,6 +4,7 @@ import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/repo/about_repository.dart';
 import 'package:ampd/repo/home_repository.dart';
+import 'package:ampd/repo/notification_repository.dart';
 import 'package:ampd/repo/qr_scan_repository.dart';
 import 'package:ampd/repo/redeem_now_repository.dart';
 import 'package:ampd/repo/register_repository.dart';
@@ -129,5 +130,8 @@ class App extends StatelessWidget {
   }
   TermsConditionRepository getTermsConditionRepository({@required AppPreferences appPreferences}) {
     return TermsConditionRepository(appPreferences: appPreferences);
+  }
+  NotificationRepository getNotificationRepository({@required AppPreferences appPreferences}) {
+    return NotificationRepository(appPreferences: appPreferences);
   }
 }

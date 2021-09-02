@@ -149,6 +149,17 @@ class NetworkNAO {
         return response;
       });
 
+  static Future<dynamic> getOffersWithoutToken(Map<String, dynamic> map) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.OFFERS_WITHOUT_TOKEN,
+          hasHeader: true,
+          token: null,
+          map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
   static Future<dynamic> logout(String accessToken,Map<String, dynamic> map) =>
       NetworkUtil().get(
           url: NetworkEndpoints.LOGOUT,
@@ -170,6 +181,18 @@ class NetworkNAO {
         print(response);
         return response;
       });
+
+  static Future<dynamic> getNotification(String accessToken,Map<String, dynamic> map) =>
+      NetworkUtil().get(
+          url: NetworkEndpoints.NOTIFICATION,
+          hasHeader: true,
+          token: accessToken,
+          map: map
+      ).then((dynamic response) {
+        print(response);
+        return response;
+      });
+
 
   static Future<dynamic> getTermsPage(String accessToken,Map<String, dynamic> map) =>
       NetworkUtil().get(
