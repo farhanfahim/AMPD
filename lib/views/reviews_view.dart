@@ -92,7 +92,7 @@ class _ReviewsViewState extends State<ReviewsView> {
                     height: MediaQuery
                         .of(context)
                         .size
-                        .height * 0.6,
+                        .height * 0.9,
                     child: Center(
                       child: Loader(
                           isLoading: true,
@@ -101,35 +101,38 @@ class _ReviewsViewState extends State<ReviewsView> {
                     ),
                   );
                 } else {
-                  return snapshot.data.length > 0 ? ListView(
-                    shrinkWrap: true,
-                    controller: _controller,
-                    children: [
-                      _listOfReviews.length > 0? ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: _listOfReviews.length,
-                          itemBuilder: (context, index) {
-                            print(" list length ${_listOfReviews.length}");
-                            return NotificationTileView(data:_listOfReviews[index]);
-                          }):Center(
-                        child: Container(
-                          child:  Center(
-                              child: NoRecordFound("No Review Found",
-                                  AppImages.NO_NOTIFICATIONS_IMAGE)
+                  return snapshot.data.length > 0 ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                    child: ListView(
+                      shrinkWrap: true,
+                      controller: _controller,
+                      children: [
+                        _listOfReviews.length > 0? ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _listOfReviews.length,
+                            itemBuilder: (context, index) {
+                              print(" list length ${_listOfReviews.length}");
+                              return NotificationTileView(data:_listOfReviews[index]);
+                            }):Center(
+                          child: Container(
+                            child:  Center(
+                                child: NoRecordFound("No Review Found",
+                                    AppImages.NO_NOTIFICATIONS_IMAGE)
+                            ),
                           ),
                         ),
-                      ),
 
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Loader(
-                          isLoading: _isPaginationLoading,
-                          color: AppColors.APP_PRIMARY_COLOR,
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Loader(
+                            isLoading: _isPaginationLoading,
+                            color: AppColors.APP_PRIMARY_COLOR,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
 
+                    ),
                   ) : Center(
                       child: NoRecordFound("No Review Found",
                           AppImages.NO_NOTIFICATIONS_IMAGE)

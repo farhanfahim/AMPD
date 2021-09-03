@@ -56,6 +56,7 @@ class _HomeViewState extends State<HomeView>
   int _totalPages = 0;
   int _currentPage = 1;
   int _selectedIndex = -1;
+  String qrUrl = "";
 
   ScrollController _controller;
   StreamController _streamController;
@@ -64,6 +65,7 @@ class _HomeViewState extends State<HomeView>
   HomeViewModel _homeViewModel;
 
   bool _enabled = true;
+  bool _isRefreshing = false;
   bool _openSetting = false;
   bool permissionGranted = false;
   bool _isInternetAvailable = true;
@@ -101,9 +103,21 @@ class _HomeViewState extends State<HomeView>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     setState(() {
-      if(!permissionGranted) {
-        //getCurrentLocation();
-      }
+      LocationPermissionHandler.checkLocationPermission().then((permission) {
+        if (permission == locationPermission.PermissionStatus.granted) {
+          _openSetting = true;
+          gcl.Geolocator.getCurrentPosition(
+              desiredAccuracy: gcl.LocationAccuracy.medium)
+              .then((value) {
+            position = value;
+
+            userLocation.latitude = position.latitude;
+            userLocation.longitude = position.longitude;
+            widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
+          });
+        }
+      });
+
     });
   }
 
@@ -132,8 +146,8 @@ class _HomeViewState extends State<HomeView>
 
             userLocation.latitude = position.latitude;
             userLocation.longitude = position.longitude;
-
             widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
+
             permissionGranted = true;
             return permissionGranted;
           });
@@ -182,6 +196,7 @@ class _HomeViewState extends State<HomeView>
   void dispose() {
     _pagingController.dispose();
     _buttonController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -196,142 +211,152 @@ class _HomeViewState extends State<HomeView>
         hasLeading: false);
 
     final body = SafeArea(
-      child: _openSetting
-          ? !_stackFinished
-              ? Container(
+
+       child: RefreshIndicator(
+            onRefresh: () async {
+              _isRefreshing = false;
+              getCurrentLocation();
+            },
+        child:
+        _isRefreshing?_openSetting
+            ? !_stackFinished
+            ? Container(
 //          height: 550,
 //        color: Colors.yellow,
-                  height: double.maxFinite,
-                  width: double.infinity,
+          height: double.maxFinite,
+          width: double.infinity,
 
-                  child: _swipeItems.length > 0
-                      ? SwipeCards(
-                          matchEngine: _matchEngine,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
+          child: _swipeItems.length > 0
+              ? SwipeCards(
+            matchEngine: _matchEngine,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
 //                height: 550.0,
 //                height: double.maxFinite,
-                              child: OfferCardWidget2(
-                                isRedeemNow: false,
-                                image: _swipeItems[index].content.image,
-                                offer: _swipeItems[index].content.offer,
-                                offerName: _swipeItems[index].content.offerName,
-                                text: _swipeItems[index].content.text,
-                                time: _swipeItems[index].content.time,
-                                coord: _swipeItems[index].content.coord,
-                                currentCoords: UserLocation(
-                                    latitude: position.latitude,
-                                    longitude: position.longitude),
-                                locationTitle:
-                                    _swipeItems[index].content.locationTitle,
-                                data: _swipeItems[index].content.data,
-                                changeDetailTitle: (value) {
-                                  setState(() {
-                                    if (value) {
-                                      _appBarTitle = 'Offer Details';
-                                    } else {
-                                      _appBarTitle = 'Home';
-                                    }
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                          onStackFinished: () {
-                            setState(() {
-                              _stackFinished = true;
-                              _appBarTitle = 'Home';
-                            });
-                          },
-                        )
-                      : Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            height: 60.0,
-                            child: Loader(
-                              isLoading: _swipeItems.length > 0 ? false : true,
-                              color: AppColors.APP_PRIMARY_COLOR,
-                            ),
-                          ),
-                        ),
-                )
-              : Center(
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Opacity(
-                            opacity: 0.3,
-                            child: SvgPicture.asset(
-                              AppImages.IC_COUPONS,
-                              width: 110.0,
-                              height: 110.0,
-                            )),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          'No more coupons left',
-                          style: AppStyles.poppinsTextStyle(
-                                  fontSize: 18.0, weight: FontWeight.w500)
-                              .copyWith(color: AppColors.UNSELECTED_COLOR),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 25.0.w),
-                          child: GradientButton(
-                            onTap: () {
-                              widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
-                              setState(() {
-                                _stackFinished = false;
-                              });
-                            },
-                            text: "Fetch More",
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                )
-          : Center(
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Text(
-                      'Location permission is required to access nearby offers.',
-                      style: AppStyles.poppinsTextStyle(
-                              fontSize: 12.0, weight: FontWeight.w500)
-                          .copyWith(color: AppColors.UNSELECTED_COLOR),
-                    ),
-                    SizedBox(
-                      height: 30.0,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5.0.w),
-                      child: GradientButton(
-                        onTap: () {
-                          AppSettings.openAppSettings();
-                        },
-                        text: "Please enable location",
-                      ),
-                    )
-                  ],
+                child: OfferCardWidget2(
+                  isRedeemNow: false,
+                  image: _swipeItems[index].content.image,
+                  offer: _swipeItems[index].content.offer,
+                  offerName: _swipeItems[index].content.offerName,
+                  text: _swipeItems[index].content.text,
+                  time: _swipeItems[index].content.time,
+                  coord: _swipeItems[index].content.coord,
+                  currentCoords: UserLocation(
+                      latitude: position.latitude,
+                      longitude: position.longitude),
+                  locationTitle:
+                  _swipeItems[index].content.locationTitle,
+                  data: _swipeItems[index].content.data,
+                  changeDetailTitle: (value) {
+                    setState(() {
+                      if (value) {
+                        _appBarTitle = 'Offer Details';
+                      } else {
+                        _appBarTitle = 'Home';
+                      }
+                    });
+                  },
                 ),
+              );
+            },
+            onStackFinished: () {
+              setState(() {
+                _stackFinished = true;
+                _appBarTitle = 'Home';
+              });
+            },
+          )
+              : Padding(
+            padding: EdgeInsets.all(5),
+            child: Container(
+              height: 60.0,
+              child: Loader(
+                isLoading: _swipeItems.length > 0 ? false : true,
+                color: AppColors.APP_PRIMARY_COLOR,
               ),
             ),
+          ),
+        )
+            : Center(
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Opacity(
+                    opacity: 0.3,
+                    child: SvgPicture.asset(
+                      AppImages.IC_COUPONS,
+                      width: 110.0,
+                      height: 110.0,
+                    )),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  'No more coupons left',
+                  style: AppStyles.poppinsTextStyle(
+                      fontSize: 18.0, weight: FontWeight.w500)
+                      .copyWith(color: AppColors.UNSELECTED_COLOR),
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 25.0.w),
+                  child: GradientButton(
+                    onTap: () {
+                      widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
+                      setState(() {
+                        _stackFinished = false;
+                      });
+                    },
+                    text: "Fetch More",
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
+            : Center(
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  'Location permission is required to access nearby offers.',
+                  style: AppStyles.poppinsTextStyle(
+                      fontSize: 12.0, weight: FontWeight.w500)
+                      .copyWith(color: AppColors.UNSELECTED_COLOR),
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 5.0.w),
+                  child: GradientButton(
+                    onTap: () {
+                      AppSettings.openAppSettings();
+                    },
+                    text: "Please enable location",
+                  ),
+                )
+              ],
+            ),
+          ),
+        ):Loader(
+       isLoading: true,
+         color: AppColors.APP_PRIMARY_COLOR,
+       ),
+       ),
     );
 
-    return RefreshIndicator(
-      onRefresh: () async {},
-      child: Scaffold(appBar: appBar1, body: body),
-    );
+    return Scaffold(appBar: appBar1, body: body);
+
   }
+
 
   Future<void> callOffersApi() async {
     Util.check().then((value) {
@@ -417,12 +442,15 @@ class _HomeViewState extends State<HomeView>
     });
   }
 
-  Future<void> redeemOffersApi(int offerId) async {
+  Future<void> redeemOffersApi(int offerId,String qr) async {
     _playAnimation();
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+
+            qrUrl = qr;
+
           _isInternetAvailable = true;
         });
 
@@ -447,6 +475,7 @@ class _HomeViewState extends State<HomeView>
       if (mounted) {
         setState(() {
           _enabled = true;
+          _isRefreshing = true;
         });
       }
 
@@ -495,7 +524,8 @@ class _HomeViewState extends State<HomeView>
 
                                     btnWidget: AnimatedGradientButton(
                                       onAnimationTap: () {
-                                        redeemOffersApi(dataList[i].id);
+                                        redeemOffersApi(dataList[i].id,dataList[i].qrUrl);
+
                                       },
                                       buttonController: _buttonController,
                                       text: AppStrings.YES,
@@ -539,6 +569,7 @@ class _HomeViewState extends State<HomeView>
         Navigator.pop(context);
         Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: {
           'fromSavedCoupon': false,
+          'qrImage': qrUrl,
           'offer_id': response.data.offerId,
         });
       } else if (response.data is LikeDislikeModel) {

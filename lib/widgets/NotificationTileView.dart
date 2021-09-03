@@ -37,61 +37,58 @@ class _NotificationTileViewState extends State<NotificationTileView> {
 
         InkWell(
           onTap: () {},
-          child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-            child: Row(
-              children: [
-                circularAvatar(55.0, 55.0, widget.data.user.imageUrl, 30.0),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${widget.data.user.firstName} ${widget.data.user.lastName}",
-                          style:
-                          AppStyles.blackWithBoldFontTextStyle(context, 15.0)
-                              .copyWith(color: AppColors.COLOR_BLACK)
-                              .copyWith(fontWeight: FontWeight.w600)),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
+          child: Row(
+            children: [
+              circularAvatar(55.0, 55.0, widget.data.user.imageUrl, 30.0),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${widget.data.user.firstName} ${widget.data.user.lastName}",
+                        style:
+                        AppStyles.blackWithBoldFontTextStyle(context, 15.0)
+                            .copyWith(color: AppColors.COLOR_BLACK)
+                            .copyWith(fontWeight: FontWeight.w600)),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
 //                        Icon(
 //                          Icons.star,
 //                          size: 14.0,
 //                          color: AppColors.COLOR_GREEN_RATING,// add custom icons also
 //                        ),
 
-                          Icon(
-                            FontAwesomeIcons.solidStar,
-                            color: AppColors.GREEN_BRIGHT_COLOR,
-                            size: 10.0,
-                          ),
+                        Icon(
+                          FontAwesomeIcons.solidStar,
+                          color: AppColors.GREEN_BRIGHT_COLOR,
+                          size: 10.0,
+                        ),
 
-                          SizedBox(
-                            width: 3.0,
-                          ),
+                        SizedBox(
+                          width: 3.0,
+                        ),
 
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: Text(
-                              widget.data.rating,
-                              style: AppStyles.blackWithBoldFontTextStyle(
-                                  context, 13.0)
-                                  .copyWith(color: AppColors.COLOR_GREEN_RATING),
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5.0),
+                          child: Text(
+                            widget.data.rating,
+                            style: AppStyles.blackWithBoldFontTextStyle(
+                                context, 13.0)
+                                .copyWith(color: AppColors.COLOR_GREEN_RATING),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
 
@@ -104,7 +101,7 @@ class _NotificationTileViewState extends State<NotificationTileView> {
 //      ),
 
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
           child: Align(
             alignment: Alignment.centerLeft,
             child: ReadMoreText(

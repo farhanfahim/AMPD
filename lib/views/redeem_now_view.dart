@@ -327,7 +327,7 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
         Navigator.pop(context);
         Navigator.pushNamed(
             context, AppRoutes.QR_SCAN_VIEW,
-            arguments: {'fromSavedCoupon':true,'offer_id': response.data.offerId,});
+            arguments: {'fromSavedCoupon':true, 'qrImage': singleOfferModel.qrUrl,'offer_id': response.data.offerId,});
       }
       else if(response.data is DioError){
         _isInternetAvailable = Util.showErrorMsg(context, response.data);

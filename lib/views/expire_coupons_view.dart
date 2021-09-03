@@ -11,7 +11,8 @@ import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
-import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
+import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
+import 'package:ampd/viewmodel/expired_coupon_viewmodel.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/flat_button.dart';
@@ -44,7 +45,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
 
-  SavedCouponViewModel _savedCouponViewModel;
+  ExpiredCouponViewModel _expiredCouponViewModel;
 
 
   @override
@@ -55,7 +56,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
       _fetchPage(pageKey);
     });
 
-    _savedCouponViewModel = SavedCouponViewModel(App());
+    _expiredCouponViewModel = ExpiredCouponViewModel(App());
     subscribeToViewModel();
     super.initState();
   }
@@ -82,39 +83,35 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
 
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
-          child: Container(
-            child: Expanded(
-              child: PagedListView<int, DataClass>(
-                pagingController: _pagingController1,
-                builderDelegate: PagedChildBuilderDelegate<DataClass>(
-                  itemBuilder: (context, item, index) {
+          child: PagedListView<int, DataClass>(
+            pagingController: _pagingController1,
+            builderDelegate: PagedChildBuilderDelegate<DataClass>(
+              itemBuilder: (context, item, index) {
 
-                    return checkExpiry(item.expireAt)?SavedCouponExpiredTileView(item):Container();
-                  },
-                  noItemsFoundIndicatorBuilder: (context) => Center(
-                      child: NoRecordFound(
-                          "No Expired Coupon Found", AppImages.NO_TEETIMES_IMAGE)),
-                  firstPageProgressIndicatorBuilder: (context) => Container(
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: Center(
-                      child: Container(
-                        height: 60.0,
-                        child: Loader(
-                            isLoading: true,
-                            color: AppColors.ACCENT_COLOR
-                        ),
-                      ),
+                return checkExpiry(item.expireAt)?SavedCouponExpiredTileView(item):Container();
+              },
+              noItemsFoundIndicatorBuilder: (context) => Center(
+                  child: NoRecordFound(
+                      "No Expired Coupon Found", AppImages.NO_TEETIMES_IMAGE)),
+              firstPageProgressIndicatorBuilder: (context) => Container(
+                height: MediaQuery.of(context).size.height * 0.4,
+                child: Center(
+                  child: Container(
+                    height: 60.0,
+                    child: Loader(
+                        isLoading: true,
+                        color: AppColors.ACCENT_COLOR
                     ),
                   ),
-                  newPageProgressIndicatorBuilder: (context) => Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Container(
-                      height: 30.0,
-                      child: Loader(
-                        isLoading: true,
-                        color: AppColors.APP_PRIMARY_COLOR,
-                      ),
-                    ),
+                ),
+              ),
+              newPageProgressIndicatorBuilder: (context) => Padding(
+                padding: EdgeInsets.all(5),
+                child: Container(
+                  height: 30.0,
+                  child: Loader(
+                    isLoading: true,
+                    color: AppColors.APP_PRIMARY_COLOR,
                   ),
                 ),
               ),
@@ -226,7 +223,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
         var map = Map<String, dynamic>();
         map['status'] = 10;
         map['page'] = _currentPage;
-        _savedCouponViewModel.savedCoupons(map);
+        _expiredCouponViewModel.savedCoupons(map);
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -235,7 +232,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
     });
   }
   void subscribeToViewModel() {
-    _savedCouponViewModel
+    _expiredCouponViewModel
         .getSavedCouponRepository()
         .getRepositoryResponse()
         .listen((response) async {

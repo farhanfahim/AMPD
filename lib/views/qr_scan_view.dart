@@ -65,11 +65,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
     _timer1 = new Timer.periodic(
       oneSec,
           (Timer timer) {
-        if (_sec == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
+
           setState(() {
             _sec--;
             if(_sec == 29){
@@ -84,12 +80,13 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
             else if(_sec == 0){
               _sec = 0;
               _secc = 0;
+              timer.cancel();
               Navigator.pop(context);
             }
           });
 
           print(_sec);
-        }
+
       },
     );
   }
@@ -139,7 +136,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       margin: EdgeInsets.fromLTRB(0.0, 30.0, 0, 0),
                       child: Center(
                         child: SvgPicture.asset(
-                          AppImages.QR_IMAGE,
+                          widget.map['qrImage'] != null ? widget.map['qrImage']:"",
                         ),
                       ),
                     ),

@@ -748,7 +748,10 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                                   itemCount: _listOfReviews.length,
                                   itemBuilder: (context, index) {
 
-                                    return NotificationTileView(data: _listOfReviews[index], hasTopDivider: index == 0? false : true);
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                                      child: NotificationTileView(data: _listOfReviews[index], hasTopDivider: index == 0? false : true),
+                                    );
                                   }
                                ),
 

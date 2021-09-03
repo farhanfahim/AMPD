@@ -4,18 +4,18 @@ import 'package:ampd/repo/saved_coupon_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/app/app.dart';
 
-class SavedCouponViewModel {
+class ActiveCouponViewModel {
   SavedCouponRepository _savedCouponRepository;
 
-  static SavedCouponViewModel _instance;
+  static ActiveCouponViewModel _instance;
 
-  factory SavedCouponViewModel(App app) {
-    _instance ??= SavedCouponViewModel._internal(savedCouponRepository: app.getSavedCouponRepository(
+  factory ActiveCouponViewModel(App app) {
+    _instance ??= ActiveCouponViewModel._internal(savedCouponRepository: app.getSavedCouponRepository(
         appPreferences: app.getAppPreferences()));
     return _instance;
   }
 
-  SavedCouponViewModel._internal(
+  ActiveCouponViewModel._internal(
       {@required SavedCouponRepository savedCouponRepository}) {
     _savedCouponRepository = savedCouponRepository;
   }

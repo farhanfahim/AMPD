@@ -1,5 +1,10 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:ampd/data/model/UserLocation.dart';
+import 'package:ampd/utils/LocationPermissionHandler.dart';
+import 'package:ampd/widgets/gradient_button.dart';
+import 'package:app_settings/app_settings.dart';
+import 'package:flutter/services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:ampd/app/app.dart';
@@ -10,7 +15,7 @@ import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
-import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
+import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/views/active_coupons_view.dart';
 import 'package:ampd/views/expire_coupons_view.dart';
@@ -23,22 +28,23 @@ import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
+import 'package:location_permissions/location_permissions.dart'
+as locationPermission;
+import 'package:geolocator/geolocator.dart' as gcl;
 
 class SavedCoupons1View extends StatefulWidget {
   @override
   _SavedCoupons1ViewState createState() => _SavedCoupons1ViewState();
 }
 
-class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTickerProviderStateMixin {
+class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKeepAliveClientMixin<SavedCoupons1View>, SingleTickerProviderStateMixin, WidgetsBindingObserver {
 
   int _selectedIndex = 0;
-
-
   bool _enabled = true;
-
   TabController tabController;
-
-
+  gcl.Position position;
+  UserLocation userLocation = UserLocation();
+  bool _openSetting = false;
   final TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
   String _searchText = "";
@@ -63,8 +69,22 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   }
 
   @override
-  void initState()  {
+  bool get wantKeepAlive => true;
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      print("asda");
+      getCurrentLocation();
+
+    });
+  }
+
+
+  @override
+  void initState()  {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
 
     tabController = new TabController(vsync:this,length: 2);
     tabController.addListener(() {
@@ -74,14 +94,69 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
       });
     });
 
-    super.initState();
+
   }
 
 
+  bool getCurrentLocation() {
+    LocationPermissionHandler.checkLocationPermission().then((permission) {
+      if (permission == locationPermission.PermissionStatus.granted) {
+        setState(() {
+          _openSetting = true;
+          gcl.Geolocator.getCurrentPosition(
+              desiredAccuracy: gcl.LocationAccuracy.medium)
+              .then((value) {
+            position = value;
+
+            userLocation.latitude = position.latitude;
+            userLocation.longitude = position.longitude;
+
+            return true;
+          });
+        });
+      } else if (permission == locationPermission.PermissionStatus.unknown ||
+          permission == locationPermission.PermissionStatus.denied ||
+          permission == locationPermission.PermissionStatus.restricted) {
+        try {
+          LocationPermissionHandler.requestPermissoin().then((value) {
+            if (permission == locationPermission.PermissionStatus.granted) {
+              setState(() {
+                _openSetting = true;
+                gcl.Geolocator.getCurrentPosition(
+                    desiredAccuracy: gcl.LocationAccuracy.medium)
+                    .then((value) {
+                  position = value;
+
+                  UserLocation(
+                      latitude: position.latitude,
+                      longitude: position.longitude);
+
+                  return true;
+                });
+              });
+            } else {
+              setState(() {
+                _openSetting = false;
+              });
+            }
+          });
+        } on PlatformException catch (err) {
+          print(err);
+        } catch (err) {
+          print(err);
+        }
+      } else {
+        setState(() {
+          _openSetting = false;
+        });
+      }
+    });
+  }
 
 
   @override
   Widget build(BuildContext context) {
+    getCurrentLocation();
     final tabBar = TabBar(
       unselectedLabelColor: Theme
           .of(context)
@@ -135,7 +210,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
     );
 
 
-    final body = Container(
+    final body = _openSetting?Container(
         child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
@@ -167,6 +242,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                 ),
                 Expanded(
                   child: TabBarView(
+
                     physics: NeverScrollableScrollPhysics(),
                     controller: tabController,
                     children: [
@@ -179,7 +255,36 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
                 ),
 
               ],
-            )));
+            ))): Center(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 10.0,
+            ),
+            Text(
+              'Location permission is required to access nearby offers.',
+              style: AppStyles.poppinsTextStyle(
+                  fontSize: 12.0, weight: FontWeight.w500)
+                  .copyWith(color: AppColors.UNSELECTED_COLOR),
+            ),
+            SizedBox(
+              height: 30.0,
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 5.0.w),
+              child: GradientButton(
+                onTap: () {
+                  AppSettings.openAppSettings();
+                },
+                text: "Please enable location",
+              ),
+            )
+          ],
+        ),
+      ),
+    );
 
     return DefaultTabController(
       length: 2,
@@ -199,6 +304,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   @override
   void dispose() {
     tabController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

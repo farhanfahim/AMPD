@@ -12,7 +12,7 @@ import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
 import 'package:ampd/viewmodel/saved_coupon2_viewmodel.dart';
-import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
+import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/flat_button.dart';
@@ -210,7 +210,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                 ),
                 Header(
                     heading1: AppStrings.SAVED_COUPONS,
-                    heading2: AppStrings.SAVED_COUPONS_RESULT +": ($resultCount)"),
+                    heading2: AppStrings.SAVED_COUPONS_RESULT +": (0)"),
                 SizedBox(
                   height: 30.0,
                 ),
@@ -447,8 +447,10 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         map['latitude'] = userLocation.latitude;
         map['longitude'] = userLocation.longitude;
         map['offset'] = _currentPage;
-        map['amount'] = widget.map['maxPrice'];
-        map['is_expired'] = widget.map['endDate'];
+        map['min_amount'] = widget.map['minPrice'];
+        map['max_amount'] = widget.map['maxPrice'];
+        map['start_at'] = widget.map['startDate'];
+        map['end_at'] = widget.map['endDate'];
         map['radius'] = widget.map['maxRadius'];
         _savedCoupon2ViewModel.savedCoupons(map);
       } else {

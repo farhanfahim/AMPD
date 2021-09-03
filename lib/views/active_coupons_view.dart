@@ -11,7 +11,7 @@ import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
-import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
+import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/flat_button.dart';
@@ -44,7 +44,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
 
-  SavedCouponViewModel _savedCouponViewModel;
+  ActiveCouponViewModel _activeCouponViewModel;
 
 
   @override
@@ -55,7 +55,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
       _fetchPage(pageKey);
     });
 
-    _savedCouponViewModel = SavedCouponViewModel(App());
+    _activeCouponViewModel = ActiveCouponViewModel(App());
     subscribeToViewModel();
     super.initState();
   }
@@ -87,9 +87,9 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
             builderDelegate: PagedChildBuilderDelegate<DataClass>(
               itemBuilder: (context, item, index) {
 
-                print('Item index: $index');
 
-                return SavedCouponActiveTileView(item);
+
+                return checkExpiry(item.expireAt)?Container():SavedCouponActiveTileView(item);
               },
               noItemsFoundIndicatorBuilder: (context) => Center(
                   child: NoRecordFound(
@@ -125,6 +125,16 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
     DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
         time);
     return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
+  }
+
+  bool checkExpiry(String expiry){
+    DateTime now = DateTime.now();
+    DateTime dateTime = DateTime.parse(expiry);
+    if(dateTime.isAfter(now)){
+      return false;
+    }else{
+      return true;
+    }
   }
 
   Widget SavedCouponActiveTileView(DataClass data) {
@@ -216,7 +226,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
         var map = Map<String, dynamic>();
         map['status'] = 10;
         map['offset'] = _currentPage;
-        _savedCouponViewModel.savedCoupons(map);
+        _activeCouponViewModel.savedCoupons(map);
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -225,7 +235,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
     });
   }
   void subscribeToViewModel() {
-    _savedCouponViewModel
+    _activeCouponViewModel
         .getSavedCouponRepository()
         .getRepositoryResponse()
         .listen((response) async {

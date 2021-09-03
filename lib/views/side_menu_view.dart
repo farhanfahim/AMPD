@@ -7,8 +7,10 @@ import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/viewmodel/side_menu_viewmodel.dart';
+import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
@@ -22,16 +24,29 @@ class SideMenuView extends StatefulWidget {
   _SideMenuState createState() => _SideMenuState();
 }
 
-class _SideMenuState extends State<SideMenuView> {
+class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
   SideMenuViewModel _sideMenuViewModel;
   bool _isInternetAvailable = true;
 
+  AnimationController _buttonController;
   @override
   void initState() {
     super.initState();
+
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
     _sideMenuViewModel = SideMenuViewModel(App());
     subscribeToViewModel();
   }
+
+  @override
+  void dispose() {
+    _buttonController.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     bool pushNotificationSwitch = false;
@@ -288,7 +303,32 @@ class _SideMenuState extends State<SideMenuView> {
                     flex: 1,
                     child: GestureDetector(
                       onTap: (){
-                        callLogoutApi();
+
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context1) {
+                              return CustomDialog(
+                                showAnimatedBtn: true,
+                                contex: context,
+                                subTitle: "Are you sure?",
+                                //title: "Your feedback will help us improve our services.",
+
+                                btnWidget: AnimatedGradientButton(
+                                  onAnimationTap: () {
+                                    callLogoutApi();
+                                  },
+                                  buttonController: _buttonController,
+                                  text: AppStrings.YES,
+                                ),
+                                buttonText2: AppStrings.NO,
+                                onPressed2: () {
+                                  Navigator.pop(context1);
+                                },
+                                showImage: false,
+                              );
+                            });
+
+
 
                       },
                       child: Container(
@@ -328,6 +368,7 @@ class _SideMenuState extends State<SideMenuView> {
   }
 
   Future<void> callLogoutApi() async {
+    _playAnimation();
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -351,7 +392,7 @@ class _SideMenuState extends State<SideMenuView> {
         .getSideMenuRepository()
         .getRepositoryResponse()
         .listen((response) async {
-
+      _stopAnimation();
 
       if (response.msg == "Logged out successfully") {
         Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
@@ -362,6 +403,19 @@ class _SideMenuState extends State<SideMenuView> {
         ToastUtil.showToast(context, response.msg);
       }
     });
+  }
+
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _buttonController.reverse();
+    } on TickerCanceled {}
   }
 }
 
