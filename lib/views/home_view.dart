@@ -255,12 +255,14 @@ class _HomeViewState extends State<HomeView>
                         }
                       },
                     )
-                  : Text(
+                  : Center(
+                    child: Text(
                 'No coupons available right  now',
                 style: AppStyles.poppinsTextStyle(
-                    fontSize: 18.0, weight: FontWeight.w500)
-                    .copyWith(color: AppColors.UNSELECTED_COLOR),
-                )
+                      fontSize: 18.0, weight: FontWeight.w500)
+                      .copyWith(color: AppColors.UNSELECTED_COLOR),
+                ),
+                  )
                   : Padding(
                 padding: EdgeInsets.all(5),
                 child: Loader(
@@ -298,12 +300,15 @@ class _HomeViewState extends State<HomeView>
                 margin: EdgeInsets.symmetric(horizontal: 25.0.w),
                 child: GradientButton(
                   onTap: () {
-//                    callOffersApi();
-//                    setState(() {
-//                      _stackFinished = false;
-//                    });
+                    _swipeItems.clear();
+                    _currentPage = 1;
+                   callOffersApi();
+                   setState(() {
+                     _isInAsyncCall = true;
+                     _stackFinished = false;
+                   });
 
-//                    _matchEngine = MatchEngine(swipeItems: _swipeItems);
+                   _matchEngine = MatchEngine(swipeItems: _swipeItems);
 ////                      print('length ${_matchEngine.currentItem}');
 //                    _matchEngine.rewindMatch();
 
@@ -396,47 +401,47 @@ class _HomeViewState extends State<HomeView>
   }
 
   Future<void> callLikeOffersApi(int offerId) async {
-//    Util.check().then((value) {
-//      if (value != null && value) {
-//        // Internet Present Case
-//        setState(() {
-//          _isInternetAvailable = true;
-//            _isInAsyncCall = true;
-//        });
-//
-//        var map = Map<String, dynamic>();
-//        map['offer_id'] = offerId;
-//        map['status'] = 10;
-//        _homeViewModel.likeDislikeOffer(map);
-//      } else {
-//        setState(() {
-//          _isInternetAvailable = false;
-//          ToastUtil.showToast(context, "No internet");
-//        });
-//      }
-//    });
+   Util.check().then((value) {
+     if (value != null && value) {
+       // Internet Present Case
+       setState(() {
+         _isInternetAvailable = true;
+           _isInAsyncCall = true;
+       });
+
+       var map = Map<String, dynamic>();
+       map['offer_id'] = offerId;
+       map['status'] = 10;
+       _homeViewModel.likeDislikeOffer(map);
+     } else {
+       setState(() {
+         _isInternetAvailable = false;
+         ToastUtil.showToast(context, "No internet");
+       });
+     }
+   });
   }
 
   Future<void> callDisLikeOffersApi(int offerId) async {
-//    Util.check().then((value) {
-//      if (value != null && value) {
-//        // Internet Present Case
-//        setState(() {
-//          _isInternetAvailable = true;
-//            _isInAsyncCall = true;
-//        });
-//
-//        var map = Map<String, dynamic>();
-//        map['offer_id'] = offerId;
-//        map['status'] = 20;
-//        _homeViewModel.likeDislikeOffer(map);
-//      } else {
-//        setState(() {
-//          _isInternetAvailable = false;
-//          ToastUtil.showToast(context, "No internet");
-//        });
-//      }
-//    });
+   Util.check().then((value) {
+     if (value != null && value) {
+       // Internet Present Case
+       setState(() {
+         _isInternetAvailable = true;
+           _isInAsyncCall = true;
+       });
+
+       var map = Map<String, dynamic>();
+       map['offer_id'] = offerId;
+       map['status'] = 20;
+       _homeViewModel.likeDislikeOffer(map);
+     } else {
+       setState(() {
+         _isInternetAvailable = false;
+         ToastUtil.showToast(context, "No internet");
+       });
+     }
+   });
   }
 
   void subscribeToViewModel() {

@@ -49,7 +49,8 @@ class NetworkConfig {
   static const String API_KEY_CURRENT_PASSWORD= "current_password";
 
   //SETTINGS
-  static const String API_KEY_PUSH_NOTIFICATIONS= "push_notification";
+  static const String API_KEY_PUSH_NOTIFICATIONS= "push_notifications";
+  static const String API_KEY_RADIUS= "radius";
   static const String API_KEY_METHOD= "_method";
   static const String API_KEY_STATUS= "status";
 

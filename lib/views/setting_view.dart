@@ -1,12 +1,21 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/database/app_preferences.dart';
+import 'package:ampd/data/model/login_response_model.dart';
+import 'package:ampd/utils/ToastUtil.dart';
+import 'package:ampd/utils/Util.dart';
+import 'package:ampd/viewmodel/edit_profile_viewmodel.dart';
+import 'package:ampd/viewmodel/settings_viewmodel.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -19,12 +28,37 @@ class SettingView extends StatefulWidget {
 }
 
 class _SettingState extends State<SettingView> {
+
+  SettingsViewModel _settingsViewModel;
+
   bool pushNotificationSwitch = false;
   int a = 0;
   double min=0.0,max=10.0;
+
+  bool _isInAsyncCall = false;
+  bool _isInternetAvailable = true;
+
+  AppPreferences _appPreferences = new AppPreferences();
+
+  LoginResponseModel userDetails;
+  @override
+  void initState() {
+    super.initState();
+
+    _settingsViewModel = SettingsViewModel(App());
+
+    _appPreferences.getUserDetails().then((userData) {
+      setState(() {
+        userDetails = userData;
+        pushNotificationSwitch = userData.data.pushNotifications == 1? true : false;
+        min = userData.data.radius.toDouble();
+      });
+    });
+    subscribeToViewModel();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: appBar(
             title: "",
@@ -69,6 +103,7 @@ class _SettingState extends State<SettingView> {
                                   setState(() {
                                     pushNotificationSwitch = value;
                                   });
+                                  callUpdateProfileApi();
                                 },
                                 // activeColor: Colors.green,
                               ),
@@ -173,11 +208,12 @@ class _SettingState extends State<SettingView> {
                               ),
                             ),
                           ),
+
                           Container(
                             margin: EdgeInsets.only(top: 10, left: 0, right: 0),
                             child: FlutterSlider(
-                              values: [min, max],
-                              rangeSlider: true,
+                              values: [min],
+                              rangeSlider: false,
                               tooltip: FlutterSliderTooltip(
                                 format: (String value) {
                                   String newValue = value;
@@ -206,6 +242,10 @@ class _SettingState extends State<SettingView> {
                               onDragging: (handlerIndex, lowerValue, upperValue) {
                                 min = lowerValue;
                                 max = upperValue;
+
+                                callUpdateProfileApi();
+                                print("min $min");
+                                print("max $max");
                                 setState(() {});
                               },
                               trackBar: FlutterSliderTrackBar(
@@ -248,6 +288,7 @@ class _SettingState extends State<SettingView> {
                           ),
                         ],
                       ),
+
                       SizedBox(
                         height: 20.0,
                       ),
@@ -258,6 +299,54 @@ class _SettingState extends State<SettingView> {
             ),
           ),
         ));
+  }
+
+  Future<void> callUpdateProfileApi() async {
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['push_notifications'] = pushNotificationSwitch? 1 : 0;
+        map['radius'] = min;
+        _settingsViewModel.updateSettings(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _settingsViewModel
+        .getSettingsRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+      if (mounted) {
+        setState(() {
+          _isInAsyncCall = false;
+        });
+      }
+
+      if (response.success) {
+        if(response.data == 0) {
+          userDetails.data.radius = min.toInt();
+          userDetails.data.pushNotifications = pushNotificationSwitch? 1 : 0;
+          _appPreferences.setUserDetails(data: jsonEncode(userDetails));
+          print(response.toString());
+        }
+      } else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
   }
 }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:ampd/app/app.dart';
@@ -177,6 +178,17 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     });
   }
 
+  @override
+  void dispose() {
+    _codeToEmailButtonController.dispose();
+    _codeToPhoneButtonController.dispose();
+    _phoneOtpButtonController.dispose();
+    _emailOtpButtonController.dispose();
+    _changeEmailButtonController.dispose();
+    _changePhoneButtonController.dispose();
+    _updateProfileButtonController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -697,7 +709,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
             },
             child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: false,
+              enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
                 copy: true,
@@ -763,7 +775,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
             },
             child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: false,
+              enabled: _enabled,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -975,7 +987,9 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
   showPhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
         context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
-        AppStrings.PHONE_NUMBER_DESC, phoneNoWidget(context),
+        AppStrings.PHONE_NUMBER_DESC,
+        // phoneNoWidget(context),
+        editableCustomPhoneNoWidget(context),
         AnimatedGradientButton(
           onAnimationTap: () {
             if (validatePhone()) {
@@ -1062,7 +1076,8 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         context,
         AppStrings.REQUEST_TO_EMAIL_TITLE,
         AppStrings.EMAIL_DESC,
-        emailWidget(context),
+        // emailWidget(context),
+        customEditableEmailWidget(editableEmailController),
         AnimatedGradientButton(
           onAnimationTap: () {
             if (validateEmail()) {
@@ -1086,10 +1101,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         context,
         AppStrings.ENTER_NEW_EMAIL,
         "",
-        customEditableEmailWidget(),
+        customEditableEmailWidget(editableEmailController),
         AnimatedGradientButton(
           onAnimationTap: () {
-            if (validateEmail()) {
+            if (validateEditableEmail()) {
               callChangeEmailApi();
             }
           },
@@ -1255,10 +1270,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('email ${emailController.text}');
+        print('email ${editableEmailController.text}');
 
         var map = Map<String, dynamic>();
-        map['email'] = emailController.text.trim().toString();
+        map['email'] = editableEmailController.text.trim().toString();
         _editProfileViewModel.verificationCodeToEmail(map);
       } else {
         setState(() {
@@ -1280,10 +1295,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('number ${numberController.text}');
+        print('number ${editableNumberController.text}');
 
         var map = Map<String, dynamic>();
-        map['phone'] = numberController.text.trim().toString();
+        map['phone'] = editableNumberController.text.trim().toString();
         _editProfileViewModel.verificationCodeToPhone(map);
       } else {
         setState(() {
@@ -1306,10 +1321,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('email ${emailController.text}');
+        print('email ${editableEmailController.text}');
 
         var map = Map<String, dynamic>();
-        map['email'] = emailController.text.trim().toString();
+        map['email'] = editableEmailController.text.trim().toString();
         _editProfileViewModel.changeEmail(map);
       } else {
         setState(() {
@@ -1357,10 +1372,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('email ${emailController.text}');
+        print('email ${editableEmailController.text}');
 
         var map = Map<String, dynamic>();
-        map['email'] = emailController.text.trim().toString();
+        map['email'] = editableEmailController.text.trim().toString();
         map['code'] = code;
         _editProfileViewModel.verifyEmailOtp(map);
       } else {
@@ -1383,10 +1398,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('number ${numberController.text}');
+        print('number ${editableNumberController.text}');
 
         var map = Map<String, dynamic>();
-        map['phone'] = numberController.text.trim().toString();
+        map['phone'] = editableNumberController.text.trim().toString();
         map['code'] = code;
         _editProfileViewModel.verifyPhoneOtp(map);
       } else {
@@ -1412,6 +1427,8 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
         var map = Map<String, dynamic>();
         map['image'] = _image;
+        map['first_name'] = firstNameController.text.trim();
+        map['last_name'] = lastNameController.text.trim();
         _editProfileViewModel.updateProfile(map);
       } else {
         setState(() {
@@ -1445,6 +1462,13 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
            Future.delayed(Duration(seconds: 1), () {
              showEmailOtpBottomSheet(context);
            });
+        } else if (response.data is LoginResponseModel) {  //update profile response
+          ToastUtil.showToast(context, response.msg);
+          print('response ${response.data}');
+          LoginResponseModel newDetails = response.data;
+          print('response ${newDetails.data.imageUrl}');
+          _appPreferences.setUserDetails(data: jsonEncode(newDetails));
+          Navigator.pop(context);
         } else if (response.data == 1) {  //verfication code to phone response
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
@@ -1462,10 +1486,17 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           ToastUtil.showToast(context, response.msg);
 
           if(_emailChanged) {
-            userDetails.data.email = emailController.text.trim();
+            print('response ${editableEmailController.text.trim()}');
+
+            userDetails.data.email = editableEmailController.text.trim();
+            emailController.text = editableEmailController.text.trim();
           } else if(_phoneChanged) {
+            print('response ${editableNumberController.text.trim()}');
+
             userDetails.data.phone = editableNumberController.text.trim();
+            numberController.text = editableNumberController.text.trim();
           }
+          _appPreferences.setUserDetails(data: jsonEncode(userDetails));
           Navigator.pop(context);
         } else if (response.data == null) {
           Navigator.pop(context);
@@ -1502,10 +1533,30 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     return true;    
   }
 
+  bool validateEditableEmail() {
+    Util.hideKeyBoard(context);
+
+    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+    var email = editableEmailController.text.trim().toString();
+
+    if(email.isEmpty || email == "") {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+
+    if(!emailRegex.hasMatch(email)) {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+
+    return true;
+  }
+
   bool validatePhone() {
     Util.hideKeyBoard(context);
 
-    var phone = numberController.text.trim();
+    var phone = editableNumberController.text.trim();
 
     if (phone.isEmpty || phone == "") {
       ToastUtil.showToast(context, "Please provide your phone number");
@@ -1572,6 +1623,9 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
 class customEditableEmailWidget extends StatefulWidget {
 
+  TextEditingController editableEmailController;
+
+  customEditableEmailWidget(this.editableEmailController);
 
   @override
   _customEditableEmailWidgetState createState() => _customEditableEmailWidgetState();
@@ -1581,13 +1635,17 @@ class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
 
   var email2Focus = FocusNode();
   int emailValidation = AppConstants.EMAIL_VALIDATION;
-  TextEditingController emailController = new TextEditingController();
   TextEditingController editableEmailController = new TextEditingController();
   bool _isEmailValid = false;
   IconData checkIconData = Icons.check;
   String email = "";
   bool _enabled = true;
 
+  @override
+  void initState() {
+    super.initState();
+    editableEmailController = widget.editableEmailController;
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -1621,7 +1679,7 @@ class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
 
                   setState(() {
                     _isEmailValid = true;
-                    emailController.text = newVal;
+                    editableEmailController.text = newVal;
                   });
                 } else {
                   setState(() {

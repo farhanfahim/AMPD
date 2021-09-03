@@ -9,6 +9,7 @@ import 'package:ampd/repo/redeem_now_repository.dart';
 import 'package:ampd/repo/register_repository.dart';
 import 'package:ampd/repo/login_repository.dart';
 import 'package:ampd/repo/saved_coupon_repository.dart';
+import 'package:ampd/repo/settings_repository.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -115,5 +116,8 @@ class App extends StatelessWidget {
   }
   EditProfileRepository getEditProfileRepository({@required AppPreferences appPreferences}) {
     return EditProfileRepository(appPreferences: appPreferences);
+  }
+  SettingsRepository getSettingsRepository({@required AppPreferences appPreferences}) {
+    return SettingsRepository(appPreferences: appPreferences);
   }
 }

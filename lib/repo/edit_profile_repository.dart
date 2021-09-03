@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:ampd/data/model/LikeDislikeModel.dart';
 import 'package:ampd/data/model/OfferModel.dart';
 import 'package:ampd/data/model/changePasswordModel.dart';
+import 'package:ampd/data/model/login_response_model.dart';
 import 'package:ampd/data/model/repo_response_model.dart';
 import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
@@ -242,10 +243,10 @@ class EditProfileRepository {
           repositoryResponse.data = null;
           _repositoryResponse.add(repositoryResponse);
         } else {
-//          var changePasswordResponse = VerficationCodeToEmailModel.fromJson(data);
+         var changePasswordResponse = LoginResponseModel.fromJson(data);
           repositoryResponse.success = true;
           repositoryResponse.msg = data['message'];
-          repositoryResponse.data = 0;
+          repositoryResponse.data = changePasswordResponse;
           _repositoryResponse.add(repositoryResponse);
         }
       }).catchError((onError) {

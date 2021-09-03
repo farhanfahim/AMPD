@@ -262,6 +262,10 @@ class NetworkNAO {
           hasHeader: true,
           token: accessToken,
           formData: FormData.fromMap({
+            NetworkConfig.API_KEY_FIRST_NAME: map['first_name'],
+            NetworkConfig.API_KEY_LAST_NAME: map['last_name'],
+            NetworkConfig.API_KEY_PUSH_NOTIFICATIONS: map['push_notifications'],
+            NetworkConfig.API_KEY_RADIUS: map['radius'],
             if (map["image"] != null)
               NetworkConfig.API_KEY_IMAGE: await MultipartFile.fromFile(
                 map["image"].path.toString(),

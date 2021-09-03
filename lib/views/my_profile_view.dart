@@ -54,7 +54,18 @@ class _MyProfileViewState extends State<MyProfileView> {
           appBar: appBar(
               title: "",
               onBackClick: () {Navigator.of(context).pop();},
-              onActionClick: () { Navigator.pushNamed(context, AppRoutes.EDIT_PROFILE_VIEW);},
+              onActionClick: () { Navigator.pushNamed(context, AppRoutes.EDIT_PROFILE_VIEW).then((value) {
+                _appPreferences.getUserDetails().then((userData) {
+                  print(userData.toJson());
+
+                  setState(() {
+                    _email = userData.data.email;
+                    _phone = userData.data.phone;
+                    _imageUrl = userData.data.imageUrl;
+                    _name = "${userData.data.firstName} ${userData.data.lastName}";
+                  });
+                });
+              });},
               iconColor: AppColors.COLOR_BLACK,
               showAction: true,
               actionText:"Edit Profile"),
