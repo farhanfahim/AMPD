@@ -210,7 +210,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                 ),
                 Header(
                     heading1: AppStrings.SAVED_COUPONS,
-                    heading2: AppStrings.SAVED_COUPONS_RESULT +": (0)"),
+                    heading2: AppStrings.SAVED_COUPONS_RESULT +": (${dataList != null?dataList.length:0})"),
                 SizedBox(
                   height: 30.0,
                 ),
@@ -254,7 +254,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
                     ),
                   ),
                 ):NoRecordFound(
-                    "No Result Found", AppImages.NO_TEETIMES_IMAGE),
+                    "Search Coupons", AppImages.NO_TEETIMES_IMAGE),
               ],
             ),
           ),
@@ -482,6 +482,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         _totalPages = response.data.lastPage;
 
         print('Last Page: $_totalPages');
+        print('map data: ${widget.map}');
 
         final isNotLastPage = _currentPage + 1 <= _totalPages;
         print('_currentPage $_currentPage');
@@ -490,14 +491,14 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         if (!isNotLastPage) {
           // 3
           _pagingController1.appendLastPage(response.data.dataClass);
-
+          dataList = _pagingController1.itemList;
 
         } else {
           final nextPageKey = _currentPage + 1;
           _currentPage = _currentPage + 1;
 
           print('New Page: $_totalPages');
-
+          dataList = _pagingController1.itemList;
           _pagingController1.appendPage(response.data.dataClass, nextPageKey);
         }
       }
