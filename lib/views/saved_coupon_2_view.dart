@@ -6,12 +6,12 @@ import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/data/model/SavedCouponModel.dart';
-import 'package:ampd/data/model/SavedCouponsModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/LocationPermissionHandler.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
+import 'package:ampd/viewmodel/saved_coupon2_viewmodel.dart';
 import 'package:ampd/viewmodel/saved_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
@@ -25,19 +25,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
-import 'package:ampd/utils/LocationPermissionHandler.dart';
 import 'package:geolocator/geolocator.dart' as gcl;
-
-import 'package:ampd/utils/loader.dart';
-import 'package:location_permissions/location_permissions.dart'
-as locationPermission;
+import 'package:location_permissions/location_permissions.dart' as locationPermission;
 
 class SavedCoupons2View extends StatefulWidget {
+
+  final Map<String, dynamic> map;
+  SavedCoupons2View(this.map);
+
   @override
   _SavedCoupons2ViewState createState() => _SavedCoupons2ViewState();
 }
 
 class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
+
   gcl.Position position;
   int pagekey = 0;
   int _totalPages = 0;
@@ -55,7 +56,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
 
-  SavedCouponViewModel _savedCouponViewModel;
+  SavedCoupon2ViewModel _savedCoupon2ViewModel;
 
   TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
@@ -167,13 +168,14 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         pagekey = pageKey;
       });
     }
-    _savedCouponViewModel = SavedCouponViewModel(App());
+    _savedCoupon2ViewModel = SavedCoupon2ViewModel(App());
     subscribeToViewModel();
     super.initState();
   }
   Future<void> _fetchPage(int pageKey,String query) async {
     try {
-      callSavedCouponApi(query);
+
+      widget.map['isFromFilterScreen']?callFilterSavedCouponApi(query):callSavedCouponApi(query);
     } catch (error) {
       _pagingController1.error = error;
     }
@@ -374,10 +376,12 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
         this._appBarTitle = new TextFormField(
           autofocus: true,
-          onChanged: (value){
+          onFieldSubmitted: (value){
             setState(() {
               _filter.text = value;
+              isSearching = true;
             });
+            _fetchPage(pagekey,value);
           },
           cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
           keyboardType: TextInputType.text,
@@ -420,7 +424,33 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         map['latitude'] = userLocation.latitude;
         map['longitude'] = userLocation.longitude;
         map['offset'] = _currentPage;
-        _savedCouponViewModel.savedCoupons(map);
+        _savedCoupon2ViewModel.savedCoupons(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+  Future<void> callFilterSavedCouponApi(String query) async {
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['status'] = 10;
+        map['query'] = query;
+        map['latitude'] = userLocation.latitude;
+        map['longitude'] = userLocation.longitude;
+        map['offset'] = _currentPage;
+        map['amount'] = widget.map['maxPrice'];
+        map['is_expired'] = widget.map['endDate'];
+        map['radius'] = widget.map['maxRadius'];
+        _savedCoupon2ViewModel.savedCoupons(map);
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -430,8 +460,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
   }
 
   void subscribeToViewModel() {
-    _savedCouponViewModel
-        .getSavedCouponRepository()
+    _savedCoupon2ViewModel
+        .getSavedCoupon2Repository()
         .getRepositoryResponse()
         .listen((response) async {
 
@@ -444,6 +474,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
 
       if(response.data is SavedCouponModel) {
         _isPaginationLoading = false;
+
+        _pagingController1.itemList = [];
 
         _totalPages = response.data.lastPage;
 

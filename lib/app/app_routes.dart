@@ -146,7 +146,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => SavedCoupons2View(),
+            builder: (BuildContext context) => SavedCoupons2View(routeSettings.arguments),
           );
         }
 

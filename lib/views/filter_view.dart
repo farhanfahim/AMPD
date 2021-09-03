@@ -27,7 +27,7 @@ class _FilterState extends State<FilterView> {
   DateTime selectedDate = DateTime.now();
   bool isDateSelected = false;
   String startDate="Start Expiration",endDate="End Expiration";
-  double min=0.0,max=10.0,min1=0.0,max1=500.0;
+  double min=0.0,max=300.0,min1=0.0,max1=300.0;
   @override
   Widget build(BuildContext context) {
 
@@ -200,9 +200,12 @@ class _FilterState extends State<FilterView> {
                                         min: 0,
 
                                         onDragging: (handlerIndex, lowerValue, upperValue) {
-                                          min1 = lowerValue;
-                                          max1 = upperValue;
-                                          setState(() {});
+
+                                          setState(() {
+                                            min1 = lowerValue;
+                                            max1 = upperValue;
+
+                                          });
                                         },
                                         trackBar: FlutterSliderTrackBar(
                                           inactiveTrackBarHeight: 6,
@@ -283,7 +286,7 @@ class _FilterState extends State<FilterView> {
                                       child: Padding(
                                         padding: const EdgeInsets.only(right:15.0),
                                         child: Text(
-                                          "20\nmile",
+                                          "1000\nmile",
                                           style: AppStyles.blackWithBoldFontTextStyle(
                                               context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                                           textAlign: TextAlign.center,
@@ -317,13 +320,15 @@ class _FilterState extends State<FilterView> {
                                           positionOffset:
                                           FlutterSliderTooltipPositionOffset(top: -30),
                                         ),
-                                        max: 20,
+                                        max: 1000,
                                         min: 0,
 
                                         onDragging: (handlerIndex, lowerValue, upperValue) {
-                                          min = lowerValue;
-                                          max = upperValue;
-                                          setState(() {});
+
+                                          setState(() {
+                                            min = lowerValue;
+                                            max = upperValue;
+                                          });
                                         },
                                         trackBar: FlutterSliderTrackBar(
                                           inactiveTrackBarHeight: 6,
@@ -381,7 +386,16 @@ class _FilterState extends State<FilterView> {
                   ),
                   GradientButton(
                     onTap: () {
-                      Navigator.of(context).pop();
+
+                      Navigator.pushReplacementNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+                        'isFromFilterScreen': true,
+                        'startDate': startDate,
+                        'endDate': endDate,
+                        'minPrice': min1,
+                        'maxPrice': max1,
+                        'minRadius': min,
+                        'maxRadius': max,
+                      });
                     },
                     text: AppStrings.FILTER,
                   ),
@@ -416,7 +430,7 @@ class _FilterState extends State<FilterView> {
 
   getFormatedDate(_date) {
 
-    var outputFormat = DateFormat('MM-dd-yyyy');
+    var outputFormat = DateFormat('yyyy-MM-dd');
     return outputFormat.format(_date);
   }
 

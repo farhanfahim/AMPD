@@ -232,28 +232,15 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   }
 
   void _searchPressed() {
-    Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2);
-  }
-
-  static String formatUTCTime(String time) {
-    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
-        time);
-    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
-  }
-
-
-  bool checkExpiry(String expiry){
-    DateTime now = DateTime.now();
-    DateTime dateTime = DateTime.parse(expiry);
-    if(dateTime.isAfter(now)){
-      return false;
-    }else{
-      return true;
-    }
+    Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+      'isFromFilterScreen': false,
+      'startDate': "0",
+      'endDate': "0",
+      'minPrice': 0.0,
+      'maxPrice': 0.0,
+      'minRadius': 0.0,
+      'maxRadius': 0.0,
+    });
   }
 
 }
-
-/*
-
- */
