@@ -11,6 +11,7 @@ import 'package:ampd/data/model/RedeemOfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/viewmodel/redeem_now_viewmodel.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/animated_gradient_button.dart';
@@ -154,7 +155,7 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
               offer: singleOfferModel.imageUrl,
               offerName: singleOfferModel.productName,
               text: singleOfferModel.value.toString(),
-              time: "2021-07-03 09:00:00",
+              time: TimerUtils.formatUTCTime(singleOfferModel.expireAt),
               coord: Coords(double.parse(singleOfferModel.user.latitude), double.parse(singleOfferModel.user.longitude)),
               currentCoords:UserLocation(
                   latitude: position.latitude,

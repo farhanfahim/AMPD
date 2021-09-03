@@ -49,7 +49,8 @@ class NetworkConfig {
   static const String API_KEY_CURRENT_PASSWORD= "current_password";
 
   //SETTINGS
-  static const String API_KEY_PUSH_NOTIFICATIONS= "push_notification";
+  static const String API_KEY_PUSH_NOTIFICATIONS= "push_notifications";
+  static const String API_KEY_RADIUS= "radius";
   static const String API_KEY_METHOD= "_method";
   static const String API_KEY_STATUS= "status";
 
@@ -68,6 +69,7 @@ class NetworkConfig {
   static const String API_KEY_FIRST_NAME = "first_name";
   static const String API_KEY_LAST_NAME = "last_name";
   static const String API_KEY_ABOUT = "about";
+  static const String API_KEY_IMAGE = "image";
 
   //OFFER
   static const String API_OFFER_ID = "offer_id";

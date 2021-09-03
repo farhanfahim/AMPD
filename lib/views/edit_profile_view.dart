@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
@@ -8,14 +10,22 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/database/app_preferences.dart';
+import 'package:ampd/data/model/login_response_model.dart';
+import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
 import 'package:ampd/utils/MediaPermissionHandler.dart';
+import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/loader.dart';
+import 'package:ampd/viewmodel/edit_profile_viewmodel.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/custom_text_form.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/otp_text_field.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +33,7 @@ import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 // import 'package:images_picker/images_picker.dart';
 import 'package:sizer/sizer.dart';
@@ -36,7 +47,7 @@ class EditProfileView extends StatefulWidget {
   _EditProfileViewState createState() => _EditProfileViewState();
 }
 
-class _EditProfileViewState extends State<EditProfileView> {
+class _EditProfileViewState extends State<EditProfileView> with TickerProviderStateMixin {
   TextEditingController addressController = new TextEditingController();
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
@@ -52,6 +63,12 @@ class _EditProfileViewState extends State<EditProfileView> {
   int numberValidation = AppConstants.PHONE_VALIDATION;
 
   bool _enabled = true;
+  bool _isInAsyncCall = false;
+  bool _isInternetAvailable = true;
+
+  bool _emailChanged = false;
+  bool _phoneChanged = false;
+  bool _imageChanged = false;
 
   var firstNameFocus = FocusNode();
   var lastNameFocus = FocusNode();
@@ -67,17 +84,66 @@ class _EditProfileViewState extends State<EditProfileView> {
   String email = "";
   String address = "";
   String phoneNo = "";
+  String imageUrl = "";
 
   bool _isEmailValid = false;
   IconData checkIconData = Icons.check;
 
   File _image = null;
 
+  AppPreferences _appPreferences = new AppPreferences();
+
+  String _fullName = "";
+
+  EditProfileViewModel _editProfileViewModel;
+
+  AnimationController _codeToEmailButtonController;
+  AnimationController _codeToPhoneButtonController;
+  AnimationController _phoneOtpButtonController;
+  AnimationController _emailOtpButtonController;
+  AnimationController _changeEmailButtonController;
+  AnimationController _changePhoneButtonController;
+  AnimationController _updateProfileButtonController;
+
+  String code = "";
+
+  LoginResponseModel userDetails;
   @override
   void initState() {
     super.initState();
-    emailController.text = "YusufNahass@email.com";
-    numberController.text = "(800) 362-9239";
+
+    _codeToEmailButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _codeToPhoneButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _phoneOtpButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _emailOtpButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _changeEmailButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _changePhoneButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _updateProfileButtonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    
+    _appPreferences.isPreferenceReady;
+    _appPreferences.getUserDetails().then((userData) {
+      print(userData.toJson());
+
+      userDetails = userData;
+      setState(() {
+        emailController.text = userData.data.email;
+        numberController.text = userData.data.phone;
+        firstNameController.text = userData.data.firstName;
+        lastNameController.text = userData.data.lastName;
+        imageUrl = userData.data.imageUrl;
+        _fullName = "${userData.data.firstName} ${userData.data.lastName}";
+      });
+    });
+
+    _editProfileViewModel = EditProfileViewModel(App());
+    subscribeToViewModel();
 
     firstNameController.addListener(() {
       if (firstNameController.text.length <= firstNameValidation) {
@@ -113,169 +179,184 @@ class _EditProfileViewState extends State<EditProfileView> {
   }
 
   @override
+  void dispose() {
+    _codeToEmailButtonController.dispose();
+    _codeToPhoneButtonController.dispose();
+    _phoneOtpButtonController.dispose();
+    _emailOtpButtonController.dispose();
+    _changeEmailButtonController.dispose();
+    _changePhoneButtonController.dispose();
+    _updateProfileButtonController.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         // call this method here to hide soft keyboard
         FocusScope.of(context).requestFocus(new FocusNode());
       },
-      child: Scaffold(
-          appBar: appBar(
-              title: "",
-              onBackClick: () {
-                Navigator.of(context).pop();
-              },
-              iconColor: AppColors.COLOR_BLACK),
-          backgroundColor: AppColors.WHITE_COLOR,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Stack(
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                          child: Container(
-                            decoration: ShapeDecoration(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(80.0),
-                                    side: BorderSide(
-                                        width: 10,
-                                        color: AppColors.AVATAR_BORDER_COLOR))),
-                            child: CircleAvatar(
-                              radius: 60.0,
-                              backgroundColor: AppColors.WHITE_COLOR,
-                              child: _image != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(80),
-                                      child: Image.file(
-                                        _image,
-                                        width: 120,
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                      ),
+      child: ModalProgressHUD(
+        inAsyncCall: _isInAsyncCall,
+        progressIndicator:  Padding(
+          padding: EdgeInsets.all(5),
+          child: Loader(
+            isLoading: _isInAsyncCall,
+//                   isLoading: _swipeItems.length > 0 ? false:true,
+            color: AppColors.APP_PRIMARY_COLOR,
+          ),
+        ),
+        child: Scaffold(
+            appBar: appBar(
+                title: "",
+                onBackClick: () {
+                  Navigator.of(context).pop();
+                },
+                iconColor: AppColors.COLOR_BLACK),
+            backgroundColor: AppColors.WHITE_COLOR,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Stack(
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(80.0),
+                                      side: BorderSide(
+                                          width: 10,
+                                          color: AppColors.AVATAR_BORDER_COLOR))),
+                              child: CircleAvatar(
+                                radius: 60.0,
+                                backgroundColor: AppColors.WHITE_COLOR,
+                                child: imageUrl.isNotEmpty? ClipRRect(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(80.0)),
+                                    child: circularNetworkCacheImageWithShimmerWithHeightWidth(
+                                        imagePath: imageUrl,
+                                      radius: 120.0,
+                                      boxFit: BoxFit.cover
                                     )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(80.0)),
-                                      child: Image.asset(
-                                        "assets/images/user.png",
-                                        fit: BoxFit.cover,
+                                  ) : _image != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(80),
+                                        child: Image.file(
+                                          _image,
+                                          width: 120,
+                                          height: 120,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(80.0)),
+                                        child: Image.asset(
+                                          "assets/images/user.png",
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
+                              ),
                             ),
                           ),
+                          Positioned.fill(
+                            right: 5,
+                            bottom: 20,
+                            child: Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  child: FloatingActionButton(
+                                    heroTag: "tag",
+                                    backgroundColor: AppColors.BLUE_COLOR,
+                                    // backgroundColor:
+                                    // AppColors.PRIMARY_COLORTWO,
+                                    elevation: 2,
+                                    child: Icon(
+                                      Icons.camera_alt_outlined,
+                                      color: Colors.white,
+                                      size: 20.0,
+                                    ),
+                                    onPressed: () {
+                                      profilePictureOptionsBottomSheet();
+                                      // showBottomSheet(context);
+                                    },
+                                    // onPressed: widget.addClickListner
+                                  )),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Text(
+                        _fullName,
+                        style:
+                            AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 25.0),
+                        child: new Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Flexible(
+                              child: firstNameTextField(context),
+                              flex: 1,
+                            ),
+                            SizedBox(
+                              width: 17.0,
+                            ),
+                            Flexible(
+                              child: lastNameTextField(context),
+                              flex: 1,
+                            ),
+                          ],
                         ),
-                        Positioned.fill(
-                          right: 5,
-                          bottom: 20,
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Container(
-                                width: 40,
-                                height: 40,
-                                child: FloatingActionButton(
-                                  heroTag: "tag",
-                                  backgroundColor: AppColors.BLUE_COLOR,
-                                  // backgroundColor:
-                                  // AppColors.PRIMARY_COLORTWO,
-                                  elevation: 2,
-                                  child: Icon(
-                                    Icons.camera_alt_outlined,
-                                    color: Colors.white,
-                                    size: 20.0,
-                                  ),
-                                  onPressed: () {
-                                    profilePictureOptionsBottomSheet();
-                                    // showBottomSheet(context);
-                                  },
-                                  // onPressed: widget.addClickListner
-                                )),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Text(
-                      "Yusuf Nahass",
-                      style:
-                          AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * .09),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                              child: Text(
-                            "Bucharest Romania",
-                            style: AppStyles.detailWithSmallTextSizeTextStyle(),
-                            textAlign: TextAlign.center,
-                          )),
-                        ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 25.0),
-                      child: new Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Flexible(
-                            child: firstNameTextField(context),
-                            flex: 1,
-                          ),
-                          SizedBox(
-                            width: 17.0,
-                          ),
-                          Flexible(
-                            child: lastNameTextField(context),
-                            flex: 1,
-                          ),
-                        ],
+                      SizedBox(
+                        height: 20.0,
                       ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    customEmailTextField(context),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    customPhoneNoWidget(context),
-                    SizedBox(
-                      height: 25.0,
-                    ),
-                    GradientButton(
-                      onTap: () {
-//                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      },
-                      text: AppStrings.UPDATE_PROFILE,
-                    ),
-                    SizedBox(
-                      height: 50.0,
-                    ),
-                  ],
+                      customEmailTextField(context),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      customPhoneNoWidget(context),
+                      SizedBox(
+                        height: 25.0,
+                      ),
+                      AnimatedGradientButton(
+                        onAnimationTap: () {
+                          callUpdateProfileApi();
+                        },
+                        buttonController: _updateProfileButtonController,
+                        text: AppStrings.UPDATE_PROFILE,
+                      ),
+                      SizedBox(
+                        height: 50.0,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )),
+            )),
+      ),
     );
   }
 
@@ -295,6 +376,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         if (rotatedImage != null) {
           setState(() {
             _image = null;
+            imageUrl = "";
           });
           _image = File(rotatedImage.path);
         } else {
@@ -627,7 +709,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             },
             child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: false,
+              enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
                 copy: true,
@@ -693,7 +775,7 @@ class _EditProfileViewState extends State<EditProfileView> {
             },
             child: TextFormField(
 //                                enableInteractiveSelection: false,
-              enabled: false,
+              enabled: _enabled,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -903,51 +985,138 @@ class _EditProfileViewState extends State<EditProfileView> {
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
-
-        AppStrings.PHONE_NUMBER_DESC, phoneNoWidget(context), (bc1) {
-          Navigator.pop(bc1);
-          showPhoneOtpBottomSheet(context);
-        }, AppStrings.SEND, false);
+    showBottomSheetWidgetWithAnimatedBtn(
+        context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
+        AppStrings.PHONE_NUMBER_DESC,
+        // phoneNoWidget(context),
+        editableCustomPhoneNoWidget(context),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validatePhone()) {
+              callVerificationCodeToPhoneApi();
+            }
+          },
+          buttonController: _codeToPhoneButtonController,
+          text: AppStrings.CHANGE,
+        ),
+            (bc1) {
+//          Navigator.pop(bc1);
+//          showPhoneOtpBottomSheet(context);
+        }, AppStrings.SEND, false, null);
   }
 
   showPhoneOtpBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc2) {
-          Navigator.pop(bc2);
-          showUpdatePhoneNoBottomSheet(context);
-        }, AppStrings.VERIFY_NOW, true);
+    showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC_PHONE, OtpTextField(onOtpCodeChanged: (otp) {
+          code = otp;
+        }),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validatePhone()) {
+              callVerifyPhoneOtpApi();
+            }
+          },
+          buttonController: _phoneOtpButtonController,
+          text: AppStrings.VERIFY_NOW,
+        ),
+            (bc2) {
+//          Navigator.pop(bc2);
+//          showUpdatePhoneNoBottomSheet(context);
+        }, AppStrings.VERIFY_NOW, true, () {});
   }
 
   showUpdatePhoneNoBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_NEW_PHONE,
-        "", editableCustomPhoneNoWidget(context), (bc3) {
-          Navigator.pop(bc3);
-        }, AppStrings.CHANGE, false);
+    showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_NEW_PHONE,
+        "", editableCustomPhoneNoWidget(context),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validatePhone()) {
+              callChangePhoneApi();
+            }
+          },
+          buttonController: _changePhoneButtonController,
+          text: AppStrings.UPDATE,
+        ),
+            (bc3) {
+//          Navigator.pop(bc3);
+        }, AppStrings.CHANGE, false, null);
   }
 
-  showEmailOtpBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(), (bc4) {
-          Navigator.pop(bc4);
-          showUpdateEmailBottomSheet(context);
-        }, AppStrings.VERIFY_NOW, true);
+  showEmailOtpBottomSheet(BuildContextcontext) {
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.ENTER_OTP_DIGIT,
+        AppStrings.OTP_DESC_EMAIL,
+        OtpTextField(onOtpCodeChanged: (otp) {
+          code = otp;
+        }),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validateEmail()) {
+              callVerifyEmailOtpApi();
+            }
+          },
+          buttonController: _emailOtpButtonController,
+          text: AppStrings.VERIFY_NOW,
+        ),
+        (bc4) {
+//          Navigator.pop(bc4);
+//          showUpdateEmailBottomSheet(context);
+        },
+        AppStrings.VERIFY_NOW,
+        true,
+        () {
+          callVerifyEmailOtpApi();
+        }
+    );
   }
-
+  
   showEmailBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.REQUEST_TO_EMAIL_TITLE,
-        AppStrings.EMAIL_DESC, emailWidget(context), (bc5) {
-          Navigator.pop(bc5);
-          showEmailOtpBottomSheet(context);
-        }, AppStrings.CHANGE, false);
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.REQUEST_TO_EMAIL_TITLE,
+        AppStrings.EMAIL_DESC,
+        // emailWidget(context),
+        customEditableEmailWidget(editableEmailController),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validateEmail()) {
+              callVerificationCodeToEmailApi();
+            }
+          },
+          buttonController: _codeToEmailButtonController,
+          text: AppStrings.CHANGE,
+        ),
+            (bc5) {
+          // Navigator.pop(bc5);
+          // showEmailOtpBottomSheet(context);
+//          callVerificationCodeToEmailApi();
+        },
+        AppStrings.CHANGE,
+        false, null);
   }
 
   showUpdateEmailBottomSheet(BuildContext context) {
-    showBottomSheetWidget(context, AppStrings.ENTER_NEW_EMAIL,
-        "", customEditableEmailWidget(), (bc6) {
-          Navigator.pop(bc6);
+    showBottomSheetWidgetWithAnimatedBtn(
+        context,
+        AppStrings.ENTER_NEW_EMAIL,
+        "",
+        customEditableEmailWidget(editableEmailController),
+        AnimatedGradientButton(
+          onAnimationTap: () {
+            if (validateEditableEmail()) {
+              callChangeEmailApi();
+            }
+          },
+          buttonController: _changeEmailButtonController,
+          text: AppStrings.UPDATE,
+        ),
+            (bc6) {
+//          Navigator.pop(bc6);
 
-        }, AppStrings.CHANGE, false);
+        },
+        AppStrings.CHANGE,
+        false, null);
   }
 
   profilePictureOptionsBottomSheet() {
@@ -1090,11 +1259,373 @@ class _EditProfileViewState extends State<EditProfileView> {
         });
   }
 
+  Future<void> callVerificationCodeToEmailApi() async {
+    _playCodeToEmailBtnAnimation();
 
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('email ${editableEmailController.text}');
+
+        var map = Map<String, dynamic>();
+        map['email'] = editableEmailController.text.trim().toString();
+        _editProfileViewModel.verificationCodeToEmail(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callVerificationCodeToPhoneApi() async {
+    _playCodeToPhoneBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('number ${editableNumberController.text}');
+
+        var map = Map<String, dynamic>();
+        map['phone'] = editableNumberController.text.trim().toString();
+        _editProfileViewModel.verificationCodeToPhone(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callChangeEmailApi() async {
+    _playChangeEmailBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _emailChanged = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('email ${editableEmailController.text}');
+
+        var map = Map<String, dynamic>();
+        map['email'] = editableEmailController.text.trim().toString();
+        _editProfileViewModel.changeEmail(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callChangePhoneApi() async {
+    _playChangePhoneBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _phoneChanged = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('number ${editableNumberController.text}');
+
+        var map = Map<String, dynamic>();
+        map['phone'] = editableNumberController.text.trim().toString();
+        _editProfileViewModel.changePhone(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callVerifyEmailOtpApi() async {
+    _playEmailOtpBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('email ${editableEmailController.text}');
+
+        var map = Map<String, dynamic>();
+        map['email'] = editableEmailController.text.trim().toString();
+        map['code'] = code;
+        _editProfileViewModel.verifyEmailOtp(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callVerifyPhoneOtpApi() async {
+    _playPhoneOtpBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        print('number ${editableNumberController.text}');
+
+        var map = Map<String, dynamic>();
+        map['phone'] = editableNumberController.text.trim().toString();
+        map['code'] = code;
+        _editProfileViewModel.verifyPhoneOtp(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> callUpdateProfileApi() async {
+    _playUpdateProfileBtnAnimation();
+
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _imageChanged = true;
+//          _isInAsyncCall = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['image'] = _image;
+        map['first_name'] = firstNameController.text.trim();
+        map['last_name'] = lastNameController.text.trim();
+        _editProfileViewModel.updateProfile(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  void subscribeToViewModel() {
+    _editProfileViewModel
+        .getEditProfileRepository()
+        .getRepositoryResponse()
+        .listen((response) async {
+          _stopAnimation();
+      if (mounted) {
+        setState(() {
+          _enabled = true;
+          _isInAsyncCall = false;
+        });
+      }
+
+      if (response.success) {
+        if (response.data is VerficationCodeToEmailModel) {
+          VerficationCodeToEmailModel model = response.data;
+
+          //        print('field ${model.data[0].field}');
+          ToastUtil.showToast(context, response.msg);
+           Navigator.pop(context);
+           Future.delayed(Duration(seconds: 1), () {
+             showEmailOtpBottomSheet(context);
+           });
+        } else if (response.data is LoginResponseModel) {  //update profile response
+          ToastUtil.showToast(context, response.msg);
+          print('response ${response.data}');
+          LoginResponseModel newDetails = response.data;
+          print('response ${newDetails.data.imageUrl}');
+          _appPreferences.setUserDetails(data: jsonEncode(newDetails));
+          Navigator.pop(context);
+        } else if (response.data == 1) {  //verfication code to phone response
+          ToastUtil.showToast(context, response.msg);
+          Navigator.pop(context);
+          Future.delayed(Duration(seconds: 1), () {
+            showPhoneOtpBottomSheet(context);
+          });
+        } else if (response.data == 2) {  //verify phone otp response
+          ToastUtil.showToast(context, response.msg);
+          Navigator.pop(context);
+          Future.delayed(Duration(seconds: 1), () {
+            showUpdatePhoneNoBottomSheet(context);
+          });
+        }  else if (response.data == 0) { //email/phone updated response
+
+          ToastUtil.showToast(context, response.msg);
+
+          if(_emailChanged) {
+            print('response ${editableEmailController.text.trim()}');
+
+            userDetails.data.email = editableEmailController.text.trim();
+            emailController.text = editableEmailController.text.trim();
+          } else if(_phoneChanged) {
+            print('response ${editableNumberController.text.trim()}');
+
+            userDetails.data.phone = editableNumberController.text.trim();
+            numberController.text = editableNumberController.text.trim();
+          }
+          _appPreferences.setUserDetails(data: jsonEncode(userDetails));
+          Navigator.pop(context);
+        } else if (response.data == null) {
+          Navigator.pop(context);
+          ToastUtil.showToast(context, response.msg);
+          Future.delayed(Duration(seconds: 1), () {
+            showUpdateEmailBottomSheet(context);
+          });
+        }
+      } else if (response.data is DioError) {
+        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+      } else {
+        ToastUtil.showToast(context, response.msg);
+      }
+    });
+  }
+
+  bool validateEmail() {
+    Util.hideKeyBoard(context);
+
+    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+    var email = emailController.text.trim().toString();
+
+    if(email.isEmpty || email == "") {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+
+    if(!emailRegex.hasMatch(email)) {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+    
+    return true;    
+  }
+
+  bool validateEditableEmail() {
+    Util.hideKeyBoard(context);
+
+    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
+    var email = editableEmailController.text.trim().toString();
+
+    if(email.isEmpty || email == "") {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+
+    if(!emailRegex.hasMatch(email)) {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+
+    return true;
+  }
+
+  bool validatePhone() {
+    Util.hideKeyBoard(context);
+
+    var phone = editableNumberController.text.trim();
+
+    if (phone.isEmpty || phone == "") {
+      ToastUtil.showToast(context, "Please provide your phone number");
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<Null> _playCodeToPhoneBtnAnimation() async {
+    try {
+      await _codeToPhoneButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _codeToPhoneButtonController.reverse();
+      await _codeToEmailButtonController.reverse();
+      await _emailOtpButtonController.reverse();
+      await _phoneOtpButtonController.reverse();
+      await _changeEmailButtonController.reverse();
+      await _changePhoneButtonController.reverse();
+      await _updateProfileButtonController.reverse();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playCodeToEmailBtnAnimation() async {
+    try {
+      await _codeToEmailButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playEmailOtpBtnAnimation() async {
+    try {
+      await _emailOtpButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playPhoneOtpBtnAnimation() async {
+    try {
+      await _phoneOtpButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playChangeEmailBtnAnimation() async {
+    try {
+      await _changeEmailButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playChangePhoneBtnAnimation() async {
+    try {
+      await _changePhoneButtonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _playUpdateProfileBtnAnimation() async {
+    try {
+      await _updateProfileButtonController.forward();
+    } on TickerCanceled {}
+  }
 }
 
 class customEditableEmailWidget extends StatefulWidget {
 
+  TextEditingController editableEmailController;
+
+  customEditableEmailWidget(this.editableEmailController);
 
   @override
   _customEditableEmailWidgetState createState() => _customEditableEmailWidgetState();
@@ -1104,13 +1635,17 @@ class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
 
   var email2Focus = FocusNode();
   int emailValidation = AppConstants.EMAIL_VALIDATION;
-  TextEditingController emailController = new TextEditingController();
   TextEditingController editableEmailController = new TextEditingController();
   bool _isEmailValid = false;
   IconData checkIconData = Icons.check;
   String email = "";
   bool _enabled = true;
 
+  @override
+  void initState() {
+    super.initState();
+    editableEmailController = widget.editableEmailController;
+  }
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -1144,7 +1679,7 @@ class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
 
                   setState(() {
                     _isEmailValid = true;
-                    emailController.text = newVal;
+                    editableEmailController.text = newVal;
                   });
                 } else {
                   setState(() {

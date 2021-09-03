@@ -313,7 +313,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           text: AppStrings.RECOVER_NOW,
         ), (bc) {
       forgetPasswordBc = bc;
-    }, AppStrings.RECOVER_NOW, false);
+    }, AppStrings.RECOVER_NOW, false, null);
   }
 
   showResetPasswordBottomSheet(BuildContext context) {
@@ -390,7 +390,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           text: AppStrings.UPDATE_PASSWORD,
         ), (bc2) {
       passwordBc = bc2;
-    }, AppStrings.UPDATE_PASSWORD, false);
+    }, AppStrings.UPDATE_PASSWORD, false, null);
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
@@ -435,7 +435,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           text: AppStrings.SUBMIT,
         ), (bc3) {
       submitPhoneBc = bc3;
-    }, AppStrings.SUBMIT, false);
+    }, AppStrings.SUBMIT, false, null);
   }
 
   showOtpBottomSheet(BuildContext context) {
@@ -501,7 +501,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               otpPasswordBc = bc1;
             },
             AppStrings.VERIFY_NOW,
-            true);
+            true, () {});
   }
 
   Stack customEmailTextField(BuildContext context) {
@@ -784,12 +784,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               ],
 
               onFieldSubmitted: (texttt) {
-                /*final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-                                if (regExp.hasMatch(phoneNo)) {
-                                  _isEmailValid = true;
-                                } else {
-                                  _isEmailValid = false;
-                                }*/
+                Focus.of(context).requestFocus(passwordNode);
               },
               textInputAction: TextInputAction.next,
               decoration:

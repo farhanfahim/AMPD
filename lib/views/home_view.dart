@@ -14,6 +14,7 @@ import 'package:ampd/data/model/RedeemOfferModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/viewmodel/home_viewmodel.dart';
 import 'package:ampd/widgets/NoInternetFound.dart';
 import 'package:ampd/widgets/animated_gradient_button.dart';
@@ -65,8 +66,10 @@ class _HomeViewState extends State<HomeView>
   HomeViewModel _homeViewModel;
 
   bool _enabled = true;
+  bool _isInAsyncCall = true;
+  bool _initialCall = false;
+  bool _openSetting = true;
   bool _isRefreshing = false;
-  bool _openSetting = false;
   bool permissionGranted = false;
   bool _isInternetAvailable = true;
   final PagingController<int, OfferModel> _pagingController =
@@ -83,11 +86,6 @@ class _HomeViewState extends State<HomeView>
     "2021-07-03 09:00:00",
     "2021-07-05 09:00:00",
     "2021-07-10 09:00:00",
-    "2021-06-29 09:00:00",
-    "2021-06-29 09:00:00",
-    "2021-06-29 09:00:00",
-    "2021-06-29 09:00:00",
-    "2021-06-29 09:00:00",
     "2021-06-29 09:00:00",
     "2021-07-29 09:00:00",
   ];
@@ -137,13 +135,29 @@ class _HomeViewState extends State<HomeView>
   bool getCurrentLocation() {
     LocationPermissionHandler.checkLocationPermission().then((permission) {
       if (permission == locationPermission.PermissionStatus.granted) {
-        setState(() {
-          _openSetting = true;
-          gcl.Geolocator.getCurrentPosition(
+        Util.check().then((value) {
+          print('value $value');
+          if (value != null && value) {
+            setState(() {
+              _openSetting = true;
+              gcl.Geolocator.getCurrentPosition(
                   desiredAccuracy: gcl.LocationAccuracy.medium)
-              .then((value) {
-            position = value;
+                  .then((value) {
+                position = value;
 
+                UserLocation(
+                    latitude: position.latitude, longitude: position.longitude);
+                callOffersApi();
+                permissionGranted = true;
+                return permissionGranted;
+              });
+            });
+          } else {
+            setState(() {
+              _isInternetAvailable = false;
+              ToastUtil.showToast(context, "No internet");
+            });
+          }
             userLocation.latitude = position.latitude;
             userLocation.longitude = position.longitude;
             widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
@@ -151,8 +165,8 @@ class _HomeViewState extends State<HomeView>
             permissionGranted = true;
             return permissionGranted;
           });
-        });
-      } else if (permission == locationPermission.PermissionStatus.unknown ||
+
+      }else if (permission == locationPermission.PermissionStatus.unknown ||
           permission == locationPermission.PermissionStatus.denied ||
           permission == locationPermission.PermissionStatus.restricted) {
         try {
@@ -226,13 +240,154 @@ class _HomeViewState extends State<HomeView>
           height: double.maxFinite,
           width: double.infinity,
 
-          child: _swipeItems.length > 0
-              ? SwipeCards(
-            matchEngine: _matchEngine,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
+              child: !_isInAsyncCall || _initialCall?
+              _swipeItems.length > 0
+                  ?
+              SwipeCards(
+                      matchEngine: _matchEngine,
+                      itemBuilder: (BuildContext context, int index) {
+                        if(index == _swipeItems.length - 1 && _currentPage < _totalPages) {
+                          _currentPage++;
+
+                          callOffersApi();
+                        }
+                        return Container(
 //                height: 550.0,
 //                height: double.maxFinite,
+                          child: OfferCardWidget2(
+                            isRedeemNow: false,
+                            image: _swipeItems[index].content.image,
+                            offer: _swipeItems[index].content.offer,
+                            offerName: _swipeItems[index].content.offerName,
+                            text: _swipeItems[index].content.text,
+                            time: _swipeItems[index].content.time,
+                            coord: _swipeItems[index].content.coord,
+                            currentCoords: UserLocation(
+                                latitude: position.latitude,
+                                longitude: position.longitude),
+                            locationTitle:
+                                _swipeItems[index].content.locationTitle,
+                            data: _swipeItems[index].content.data,
+                            changeDetailTitle: (value) {
+                              setState(() {
+                                if (value) {
+                                  _appBarTitle = 'Offer Details';
+                                } else {
+                                  _appBarTitle = 'Home';
+                                }
+                              });
+                            },
+                          ),
+                        );
+                      },
+                      onStackFinished: () {
+                        print('stack finished');
+                        if(_currentPage < _totalPages) {
+//                          _currentPage++;
+//
+//                          callOffersApi();
+                        } else {
+                          setState(() {
+                            _stackFinished = true;
+                            _appBarTitle = 'Home';
+                          });
+                        }
+                      },
+                    )
+                  : Center(
+                    child: Text(
+                'No coupons available right  now',
+                style: AppStyles.poppinsTextStyle(
+                      fontSize: 18.0, weight: FontWeight.w500)
+                      .copyWith(color: AppColors.UNSELECTED_COLOR),
+                ),
+                  )
+                  : Padding(
+                padding: EdgeInsets.all(5),
+                child: Loader(
+                   isLoading: _isInAsyncCall || _initialCall,
+//                   isLoading: _swipeItems.length > 0 ? false:true,
+                  color: AppColors.APP_PRIMARY_COLOR,
+                ),
+              ),
+            )
+          :Center(
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Opacity(
+                  opacity: 0.3,
+                  child: SvgPicture.asset(
+                    AppImages.IC_COUPONS,
+                    width: 110.0,
+                    height: 110.0,
+                  )),
+              SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                'No more coupons left',
+                style: AppStyles.poppinsTextStyle(
+                    fontSize: 18.0, weight: FontWeight.w500)
+                    .copyWith(color: AppColors.UNSELECTED_COLOR),
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 25.0.w),
+                child: GradientButton(
+                  onTap: () {
+                    _swipeItems.clear();
+                    _currentPage = 1;
+                   callOffersApi();
+                   setState(() {
+                     _isInAsyncCall = true;
+                     _stackFinished = false;
+                   });
+
+                   _matchEngine = MatchEngine(swipeItems: _swipeItems);
+////                      print('length ${_matchEngine.currentItem}');
+//                    _matchEngine.rewindMatch();
+
+                  },
+                  text: "Fetch More",
+                ),
+              )
+            ],
+          ),
+        ),
+      ):Center(
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+
+              SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                'Location permission is required to access nearby offers.',
+                style: AppStyles.poppinsTextStyle(
+                    fontSize: 12.0, weight: FontWeight.w500)
+                    .copyWith(color: AppColors.UNSELECTED_COLOR),
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5.0.w),
+                child: GradientButton(
+                  onTap: () {
+
+
+                    AppSettings.openAppSettings();
+                  },
+                  text: "Please enable location",
+                ),
+              )
+            ],
                 child: OfferCardWidget2(
                   isRedeemNow: false,
                   image: _swipeItems[index].content.image,
@@ -355,21 +510,42 @@ class _HomeViewState extends State<HomeView>
 
     return Scaffold(appBar: appBar1, body: body);
 
+      },
+      child: Scaffold(
+          appBar: appBar1,
+          body: _isInternetAvailable
+              ? body
+              : NoInternetFound(context, (context) {
+            setState(() {
+              _isInternetAvailable = true;
+            });
+
+            if (position != null) {
+              callOffersApi();
+            } else {
+              getCurrentLocation();
+            }
+          })
+      ),
+    );
   }
 
 
   Future<void> callOffersApi() async {
     Util.check().then((value) {
+      print('value $value');
       if (value != null && value) {
         // Internet Present Case
         setState(() {
           _isInternetAvailable = true;
+//          _isInAsyncCall = true;
         });
 
         var map = Map<String, dynamic>();
         map['status'] = 20;
         map['latitude'] = userLocation.latitude;
         map['longitude'] = userLocation.longitude;
+        map['offset'] = _currentPage;
         _homeViewModel.offer(map);
       } else {
         setState(() {
@@ -401,45 +577,47 @@ class _HomeViewState extends State<HomeView>
   }
 
   Future<void> callLikeOffersApi(int offerId) async {
-    Util.check().then((value) {
-      if (value != null && value) {
-        // Internet Present Case
-        setState(() {
-          _isInternetAvailable = true;
-        });
+   Util.check().then((value) {
+     if (value != null && value) {
+       // Internet Present Case
+       setState(() {
+         _isInternetAvailable = true;
+           _isInAsyncCall = true;
+       });
 
-        var map = Map<String, dynamic>();
-        map['offer_id'] = offerId;
-        map['status'] = 10;
-        _homeViewModel.likeDislikeOffer(map);
-      } else {
-        setState(() {
-          _isInternetAvailable = false;
-          ToastUtil.showToast(context, "No internet");
-        });
-      }
-    });
+       var map = Map<String, dynamic>();
+       map['offer_id'] = offerId;
+       map['status'] = 10;
+       _homeViewModel.likeDislikeOffer(map);
+     } else {
+       setState(() {
+         _isInternetAvailable = false;
+         ToastUtil.showToast(context, "No internet");
+       });
+     }
+   });
   }
 
   Future<void> callDisLikeOffersApi(int offerId) async {
-    Util.check().then((value) {
-      if (value != null && value) {
-        // Internet Present Case
-        setState(() {
-          _isInternetAvailable = true;
-        });
+   Util.check().then((value) {
+     if (value != null && value) {
+       // Internet Present Case
+       setState(() {
+         _isInternetAvailable = true;
+           _isInAsyncCall = true;
+       });
 
-        var map = Map<String, dynamic>();
-        map['offer_id'] = offerId;
-        map['status'] = 20;
-        _homeViewModel.likeDislikeOffer(map);
-      } else {
-        setState(() {
-          _isInternetAvailable = false;
-          ToastUtil.showToast(context, "No internet");
-        });
-      }
-    });
+       var map = Map<String, dynamic>();
+       map['offer_id'] = offerId;
+       map['status'] = 20;
+       _homeViewModel.likeDislikeOffer(map);
+     } else {
+       setState(() {
+         _isInternetAvailable = false;
+         ToastUtil.showToast(context, "No internet");
+       });
+     }
+   });
   }
 
   Future<void> redeemOffersApi(int offerId,String qr) async {
@@ -475,14 +653,22 @@ class _HomeViewState extends State<HomeView>
       if (mounted) {
         setState(() {
           _enabled = true;
+          _isInAsyncCall = false;
+          _initialCall = false;
           _isRefreshing = true;
         });
       }
 
       if (response.data is OfferModel) {
         OfferModel responseRegister = response.data;
+
+        print('total ${responseRegister.data.lastPage}');
+        _totalPages = responseRegister.data.lastPage;
+
         dataList.clear();
-        dataList.addAll(responseRegister.data.dataclass);
+//        dataList.addAll(responseRegister.data.dataclass);
+        dataList.addAll(responseRegister.data.dataclass.where((a) => dataList.every((b) => a.id != b.id)));
+
 
         if (dataList.isNotEmpty) {
           for (int i = 0; i < dataList.length; i++) {
@@ -492,12 +678,12 @@ class _HomeViewState extends State<HomeView>
                   text: dataList[i].value.toString(),
                   offer: dataList[i].imageUrl,
                   offerName: dataList[i].productName,
-                  time: _times[i],
+                  time: TimerUtils.formatUTCTime(dataList[i].expireAt),
                   image: dataList[i].imageUrl,
                   coord: dataList[i].user.latitude != null ?Coords(double.parse(dataList[i].user.latitude),
                       double.parse(dataList[i].user.longitude)):Coords(0.0,0.0),
                   locationTitle: dataList[i].store != null?dataList[i].store.name:"-",
-                  data: dataList[i]),
+                 data: dataList[i]),
               likeAction: () {
                 if (!widget.isGuestLogin) {
                   showDialog(
@@ -562,7 +748,13 @@ class _HomeViewState extends State<HomeView>
             ));
           }
 
-          _matchEngine = MatchEngine(swipeItems: _swipeItems);
+          if (_currentPage > 1) {
+            setState(() {
+
+            });
+          } else {
+            _matchEngine = MatchEngine(swipeItems: _swipeItems);
+          }
         }
       } else if (response.data is RedeemOfferModel) {
         ToastUtil.showToast(context, response.msg);

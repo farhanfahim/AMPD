@@ -1,24 +1,14 @@
-import 'dart:async';
 
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
-import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_fonts.dart';
-import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/widgets/button_border.dart';
-import 'package:ampd/widgets/custom_text_form.dart';
-import 'package:ampd/widgets/gradient_button.dart';
+import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_pin_code_fields/flutter_pin_code_fields.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sizer/sizer.dart';
 
-import '../appresources/app_colors.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
 
@@ -28,6 +18,31 @@ class MyProfileView extends StatefulWidget {
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
+
+  AppPreferences _appPreferences = new AppPreferences();
+
+  String _name = "--";
+  String _email = "--";
+  String _phone = "--";
+  String _imageUrl = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    _appPreferences.isPreferenceReady;
+    _appPreferences.getUserDetails().then((userData) {
+      print(userData.toJson());
+
+      setState(() {
+        _email = userData.data.email;
+        _phone = userData.data.phone;
+        _imageUrl = userData.data.imageUrl;
+        _name = "${userData.data.firstName} ${userData.data.lastName}";
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -39,7 +54,18 @@ class _MyProfileViewState extends State<MyProfileView> {
           appBar: appBar(
               title: "",
               onBackClick: () {Navigator.of(context).pop();},
-              onActionClick: () { Navigator.pushNamed(context, AppRoutes.EDIT_PROFILE_VIEW);},
+              onActionClick: () { Navigator.pushNamed(context, AppRoutes.EDIT_PROFILE_VIEW).then((value) {
+                _appPreferences.getUserDetails().then((userData) {
+                  print(userData.toJson());
+
+                  setState(() {
+                    _email = userData.data.email;
+                    _phone = userData.data.phone;
+                    _imageUrl = userData.data.imageUrl;
+                    _name = "${userData.data.firstName} ${userData.data.lastName}";
+                  });
+                });
+              });},
               iconColor: AppColors.COLOR_BLACK,
               showAction: true,
               actionText:"Edit Profile"),
@@ -69,7 +95,15 @@ class _MyProfileViewState extends State<MyProfileView> {
                         child: CircleAvatar(
                           radius: 60.0,
                           backgroundColor: AppColors.WHITE_COLOR,
-                          child: ClipRRect(
+                          child: _imageUrl.isNotEmpty? ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(80.0)),
+                              child: circularNetworkCacheImageWithShimmerWithHeightWidth(
+                                  imagePath: _imageUrl,
+                                  radius: 120.0,
+                                  boxFit: BoxFit.cover
+                              )
+                          ) : ClipRRect(
                             borderRadius: BorderRadius.circular(60),
                             child: Image.asset(
                               "assets/images/user.png",
@@ -84,30 +118,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                       height: 30.0,
                     ),
                     Text(
-                      "Yusuf Nahass",
+                      _name,
                       style:
                       AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
                     ),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                          horizontal: MediaQuery
-                              .of(context)
-                              .size
-                              .width * .09),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                              child: Text(
-                                "Bucharest Romania",
-                                style: AppStyles
-                                    .detailWithSmallTextSizeTextStyle(),
-                                textAlign: TextAlign.center,
-                              )),
-                        ],
-                      ),
-                    ),
-
 
                     SizedBox(
                       height: 25.0,
@@ -138,7 +152,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "YusufNahass@email.com",
+                                    _email,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                         fontSize: 14.0,
@@ -178,7 +192,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    "(800) 362-9239",
+                                    _phone,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                         fontSize: 14.0,

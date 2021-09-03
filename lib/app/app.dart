@@ -2,6 +2,8 @@
 import 'package:ampd/appresources/theme.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/UserLocation.dart';
+import 'package:ampd/repo/change_password_repository.dart';
+import 'package:ampd/repo/edit_profile_repository.dart';
 import 'package:ampd/repo/about_repository.dart';
 import 'package:ampd/repo/home_repository.dart';
 import 'package:ampd/repo/notification_repository.dart';
@@ -13,6 +15,7 @@ import 'package:ampd/repo/reviews_repository.dart';
 import 'package:ampd/repo/saved_coupon2_repository.dart';
 import 'package:ampd/repo/side_menu_repository.dart';
 import 'package:ampd/repo/saved_coupon_repository.dart';
+import 'package:ampd/repo/settings_repository.dart';
 import 'package:ampd/repo/terms_condition_repository.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
 import 'package:flutter/material.dart';
@@ -138,5 +141,14 @@ class App extends StatelessWidget {
   }
   NotificationRepository getNotificationRepository({@required AppPreferences appPreferences}) {
     return NotificationRepository(appPreferences: appPreferences);
+  }
+  ChangePasswordRepository getChangePasswordRepository({@required AppPreferences appPreferences}) {
+    return ChangePasswordRepository(appPreferences: appPreferences);
+  }
+  EditProfileRepository getEditProfileRepository({@required AppPreferences appPreferences}) {
+    return EditProfileRepository(appPreferences: appPreferences);
+  }
+  SettingsRepository getSettingsRepository({@required AppPreferences appPreferences}) {
+    return SettingsRepository(appPreferences: appPreferences);
   }
 }

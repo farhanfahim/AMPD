@@ -41,6 +41,15 @@ class NetworkEndpoints {
   static const String NOTIFICATION = BASE_URL + "notifications";
   static const String READ_NOTIFICATION = BASE_URL + "read_notification";
 
+  //EDIT PROFILE
+  static const String VERIFIFCATION_CODE_TO_EMAIL = BASE_URL + "verification-code-to-email";
+  static const String VERIFIFCATION_CODE_TO_PHONE = BASE_URL + "verification-code-to-phone";
+  static const String VERIFIFY_EMAIL_OTP = BASE_URL + "verify-email";
+  static const String VERIFIFY_PHONE_OTP = BASE_URL + "verify-phone";
+  static const String VERIFIFY_CHANGE_EMAIL = BASE_URL + "change-email";
+  static const String VERIFIFY_CHANGE_PHONE = BASE_URL + "change-phone";
+  static const String UPDATE_PROFILE = BASE_URL + "update-user";
+
   //VERIFY_OTP /
   static const String VERIFY_OTP_CODE = BASE_URL + "verify-reset-code";
   static const String RESEND_CODE = BASE_URL + "resend-code";

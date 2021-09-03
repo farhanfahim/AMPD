@@ -12,8 +12,16 @@ class TimerUtils {
     return timeParsed.isNegative;
   }
 
+
+  static String formatUTCTime(String time) {
+    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
+        time);
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(tempDate);
+  }
+
   static String getDays(String time, String type) {
     var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal().difference(DateTime.now());
+//    print('timeParsed ${DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal()}');
 //    var converted = DateFormat("dd").format(timeParsed);
     switch(type) {
       case 'days':
