@@ -489,7 +489,7 @@ class _HomeViewState extends State<HomeView>
             print("index $i, length ${dataList.length}");
             _swipeItems.add(SwipeItem(
               content: Content(
-                  text: dataList[i].title,
+                  text: dataList[i].value.toString(),
                   offer: dataList[i].imageUrl,
                   offerName: dataList[i].productName,
                   time: _times[i],

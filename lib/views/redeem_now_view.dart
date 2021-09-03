@@ -151,9 +151,9 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
             return snapshot.data!= null ? OfferCardWidget2(
               isRedeemNow: true,
               image: singleOfferModel.imageUrl,
-              offer: AppImages.STARBUCKS_OFFER,
-              offerName: "Starbucks Triple Mocha",
-              text: singleOfferModel.title,
+              offer: singleOfferModel.imageUrl,
+              offerName: singleOfferModel.productName,
+              text: singleOfferModel.value.toString(),
               time: "2021-07-03 09:00:00",
               coord: Coords(double.parse(singleOfferModel.user.latitude), double.parse(singleOfferModel.user.longitude)),
               currentCoords:UserLocation(

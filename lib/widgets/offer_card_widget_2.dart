@@ -126,6 +126,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
               },
               child: Container(
                 height: !_isDetail ? 550.0 : 520.0,
+                color: Colors.red,
                 child: FlipCard(
                   direction: FlipDirection.HORIZONTAL,
                   // default
@@ -134,25 +135,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                   front: Stack(
                     fit: StackFit.expand,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: widget.image,
-                        fit: BoxFit.cover,
-                        // fadeInCurve: Curves.easeIn,
-                        imageBuilder: (BuildContext context,
-                            ImageProvider<dynamic> imageProvider) {
-                          return Image(
-                            // width: constraints.maxWidth,
-                            image: imageProvider,
-                            color: Colors.black38,
-                            colorBlendMode: BlendMode.srcATop,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                        placeholder: (context, url) => Skeleton(),
-//              errorWidget: (context, url, error){
-//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-//              },
-                      ),
+
 
                       Container(
                         margin: EdgeInsets.only(top: 25.0, bottom: 80.0),
@@ -161,21 +144,33 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                           children: [
                             Center(
                               child: Text(
-                                widget.text,
+                                widget.data.type == 10?"\$"+widget.text:widget.text+"%",
                                 style: AppStyles.poppinsTextStyle(
                                     fontSize: 30.0.sp, weight: FontWeight.w400),
                               ),
                             ),
 
                             SizedBox(height: 20.0,),
-
-                            Image.asset(
-                              widget.offer,
-//                              width: 45.0.w,
+                            CachedNetworkImage(
+                              imageUrl: widget.data.imageUrl,
+                              fit: BoxFit.cover,
                               height: 300.0,
-//                              width: 45.0.w,
-//                              height: 80.0.w,
+                              // fadeInCurve: Curves.easeIn,
+                              imageBuilder: (BuildContext context,
+                                  ImageProvider<dynamic> imageProvider) {
+                                return Image(
+                                  // width: constraints.maxWidth,
+                                  image: imageProvider,
+                                  colorBlendMode: BlendMode.srcATop,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                              placeholder: (context, url) => Skeleton(),
+//              errorWidget: (context, url, error){
+//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
+//              },
                             ),
+
                           ],
                         ),
                       ),
@@ -185,7 +180,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                     fit: StackFit.expand,
                     children: [
                       CachedNetworkImage(
-                        imageUrl: widget.image,
+                        imageUrl: widget.data.imageUrl,
                         fit: BoxFit.cover,
                         // fadeInCurve: Curves.easeIn,
                         imageBuilder: (BuildContext context,
@@ -212,7 +207,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              widget.offerName,
+                              widget.data.productName,
                               // 'hello heloo jdfsd jdf jbdfkj  fsdfdsfsf fsdf fbsdfb djbdksf jkdfskjds bfdsbfk',
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -761,9 +756,9 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                           children: [
                                             Flexible(
                                               child: Text(
-                                                widget.data.description != null
-                                                    ? widget.data.description
-                                                    : "No Description",
+                                                widget.data.store != null
+                                                    ? widget.data.store.name
+                                                    : "-",
                                                 style: AppStyles
                                                     .poppinsTextStyle(
                                                     fontSize: 14.0,
