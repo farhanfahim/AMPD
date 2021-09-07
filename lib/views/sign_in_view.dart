@@ -190,20 +190,22 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   flag = true;
                                   _isInternetAvailable = true;
                                 });
-                                if(phoneNo2.isNotEmpty) {
-                                  if(password.isNotEmpty) {
+                                if (phoneNo2.isNotEmpty) {
+                                  if (password.isNotEmpty) {
                                     callLoginApi();
-                                  }else{
+                                  } else {
                                     setState(() {
                                       flag = true;
-                                      });
-                                    ToastUtil.showToast(context, "Please enter your password");
+                                    });
+                                    ToastUtil.showToast(
+                                        context, "Please enter your password");
                                   }
-                                }else{
+                                } else {
                                   setState(() {
                                     flag = true;
                                   });
-                                  ToastUtil.showToast(context, "Please enter phone number");
+                                  ToastUtil.showToast(
+                                      context, "Please enter phone number");
                                 }
                               } else {
                                 setState(() {
@@ -274,46 +276,50 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
   showForgetBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
-        context,
-        "Forgot password",
-        AppStrings.PHONE_NUMBER_DESC,
-        customWidget(context),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (flag) {
-              if (validate()) {
-                Util.check().then((value) {
-                  if (value != null && value) {
-                    // Internet Present Case
-                    setState(() {
-                      flag = true;
-                      _isInternetAvailable = true;
-                    });
-                    if(phoneNo.isNotEmpty) {
-                      callForgetPasswordApi();
-                    }else{
-                      setState(() {
-                        flag = true;
-                      });
-                      ToastUtil.showToast(context, "Please enter phone number");
-                    }
-
+      context,
+      "Forgot password",
+      AppStrings.PHONE_NUMBER_DESC,
+      customWidget(context),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (flag) {
+            if (validate()) {
+              Util.check().then((value) {
+                if (value != null && value) {
+                  // Internet Present Case
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = true;
+                  });
+                  if (phoneNo.isNotEmpty) {
+                    callForgetPasswordApi();
                   } else {
                     setState(() {
                       flag = true;
-                      _isInternetAvailable = false;
-                      ToastUtil.showToast(context, "No internet");
                     });
+                    ToastUtil.showToast(context, "Please enter phone number");
                   }
-                });
-              }
+                } else {
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = false;
+                    ToastUtil.showToast(context, "No internet");
+                  });
+                }
+              });
             }
-          },
-          buttonController: _recoverButtonController,
-          text: AppStrings.RECOVER_NOW,
-        ), (bc) {
-      forgetPasswordBc = bc;
-    }, AppStrings.RECOVER_NOW, false, null);
+          }
+        },
+        buttonController: _recoverButtonController,
+        text: AppStrings.RECOVER_NOW,
+      ),
+      null,
+      (bc) {
+        forgetPasswordBc = bc;
+      },
+      AppStrings.RECOVER_NOW,
+      false,
+    );
   }
 
   showResetPasswordBottomSheet(BuildContext context) {
@@ -341,39 +347,38 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       flag = true;
                       _isInternetAvailable = true;
                     });
-                    if(nPassword.isNotEmpty) {
-                      if(nPassword.length > 7) {
-                        if(cPassword.isNotEmpty) {
-                          if(cPassword.length > 7) {
+                    if (nPassword.isNotEmpty) {
+                      if (nPassword.length > 7) {
+                        if (cPassword.isNotEmpty) {
+                          if (cPassword.length > 7) {
                             callResetPasswordApi();
-
-                          }else{
+                          } else {
                             setState(() {
                               flag = true;
                             });
-                            ToastUtil.showToast(context, "Confirm password is too short");
+                            ToastUtil.showToast(
+                                context, "Confirm password is too short");
                           }
-                        }else{
+                        } else {
                           setState(() {
                             flag = true;
                           });
-                          ToastUtil.showToast(context, "Please enter confirm password");
+                          ToastUtil.showToast(
+                              context, "Please enter confirm password");
                         }
-
-                      }else{
+                      } else {
                         setState(() {
                           flag = true;
                         });
-                        ToastUtil.showToast(context, "New password is too short");
+                        ToastUtil.showToast(
+                            context, "New password is too short");
                       }
-
-                    }else{
+                    } else {
                       setState(() {
                         flag = true;
                       });
                       ToastUtil.showToast(context, "Please enter new password");
                     }
-
                   } else {
                     setState(() {
                       flag = true;
@@ -381,16 +386,16 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       ToastUtil.showToast(context, "No internet");
                     });
                   }
-
                 });
               }
             }
           },
           buttonController: _updatePasswordButtonController,
           text: AppStrings.UPDATE_PASSWORD,
-        ), (bc2) {
+        ),
+        null, (bc2) {
       passwordBc = bc2;
-    }, AppStrings.UPDATE_PASSWORD, false, null);
+    }, AppStrings.UPDATE_PASSWORD, false);
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
@@ -410,16 +415,31 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       flag = true;
                       _isInternetAvailable = true;
                     });
-                    if(phoneNo.isNotEmpty) {
-                      callRegisterViaPhoneApi();
-                    }else{
+                    if (phoneNo.isNotEmpty) {
+                      if (phoneNo.length < 12) {
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(
+                            context, "Phone number is too short ");
+                      } else {
+                        if (phoneNo.length > 16) {
+                          setState(() {
+                            flag = true;
+                          });
+                          ToastUtil.showToast(
+                              context, "Phone number is too short ");
+                        } else {
+                          callRegisterViaPhoneApi();
+                        }
+                      }
+
+                    } else {
                       setState(() {
                         flag = true;
                       });
                       ToastUtil.showToast(context, "Please enter phone number");
                     }
-
-
                   } else {
                     setState(() {
                       flag = true;
@@ -433,37 +453,79 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           },
           buttonController: _submitButtonController,
           text: AppStrings.SUBMIT,
-        ), (bc3) {
+        ),
+        null, (bc3) {
       submitPhoneBc = bc3;
-    }, AppStrings.SUBMIT, false, null);
+    }, AppStrings.SUBMIT, false);
   }
 
   showOtpBottomSheet(BuildContext context) {
     isForgetPasswordFlow
         ? showBottomSheetWidget(
-        context, AppStrings.ENTER_OTP_DIGIT, AppStrings.OTP_DESC,
-        OtpTextField(onOtpCodeChanged: (otp) {
-      code = otp;
-    }), (bc1) {
-    Navigator.pop(bc1);
-    if(code.isNotEmpty) {
-      if(code.length == 4) {
-        showResetPasswordBottomSheet(context);
-      }else{
-        setState(() {
-          flag = true;
-        });
-        ToastUtil.showToast(context, "Please enter valid otp code");
-      }
-    }else{
-      setState(() {
-        flag = true;
-      });
-      ToastUtil.showToast(context, "Please enter otp code");
-    }
-
-
-    }, AppStrings.VERIFY_NOW, true):showBottomSheetWidgetWithAnimatedBtn(
+            context, AppStrings.ENTER_OTP_DIGIT, AppStrings.OTP_DESC,
+            OtpTextField(onOtpCodeChanged: (otp) {
+            code = otp;
+          }), () {
+            if (validate()) {
+              Util.check().then((value) {
+                if (value != null && value) {
+                  // Internet Present Case
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = true;
+                  });
+                  if (phoneNo.isNotEmpty) {
+                    if (phoneNo.length < 12) {
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(
+                          context, "Phone number is too short ");
+                    } else {
+                      if (phoneNo.length > 16) {
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(
+                            context, "Phone number is too short ");
+                      } else {
+                        callForgetPasswordApi();
+                      }
+                    }
+                  } else {
+                    setState(() {
+                      flag = true;
+                    });
+                    ToastUtil.showToast(context, "Please enter phone number");
+                  }
+                } else {
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = false;
+                    ToastUtil.showToast(context, "No internet");
+                  });
+                }
+              });
+            }
+          }, (bc1) {
+            Navigator.pop(bc1);
+            if (code.isNotEmpty) {
+              if (code.length == 4) {
+                showResetPasswordBottomSheet(context);
+              } else {
+                setState(() {
+                  flag = true;
+                });
+                ToastUtil.showToast(context, "Please enter valid otp code");
+              }
+            } else {
+              setState(() {
+                flag = true;
+              });
+              ToastUtil.showToast(context, "Please enter otp code");
+            }
+          }, AppStrings.VERIFY_NOW, true)
+        : showBottomSheetWidgetWithAnimatedBtn(
             context,
             AppStrings.ENTER_OTP_DIGIT,
             AppStrings.OTP_DESC,
@@ -482,7 +544,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           _isInternetAvailable = true;
                         });
                         callVerifyOtpApi();
-
                       } else {
                         setState(() {
                           flag = true;
@@ -497,11 +558,55 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               buttonController: _verifyButtonController,
               text: AppStrings.VERIFY_NOW,
             ),
+            () {
+              if (validate()) {
+                Util.check().then((value) {
+                  if (value != null && value) {
+                    // Internet Present Case
+                    setState(() {
+                      flag = true;
+                      _isInternetAvailable = true;
+                    });
+                    if (phoneNo.isNotEmpty) {
+                      if (phoneNo.length < 12) {
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(
+                            context, "Phone number is too short ");
+                      } else {
+                        if (phoneNo.length > 16) {
+                          setState(() {
+                            flag = true;
+                          });
+                          ToastUtil.showToast(
+                              context, "Phone number is too short ");
+                        } else {
+                          callRegisterViaPhoneApi();
+                        }
+                      }
+                    } else {
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Please enter phone number");
+                    }
+                  } else {
+                    setState(() {
+                      flag = true;
+                      _isInternetAvailable = false;
+                      ToastUtil.showToast(context, "No internet");
+                    });
+                  }
+                });
+              }
+            },
             (bc1) {
               otpPasswordBc = bc1;
             },
             AppStrings.VERIFY_NOW,
-            true, () {});
+            true,
+          );
   }
 
   Stack customEmailTextField(BuildContext context) {
@@ -1155,14 +1260,12 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           map['email'] = emailController.text.toString();
         }
       } else if (response.msg == "Code has been sent to your phone number") {
-
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
         }
         showOtpBottomSheet(context);
       } else if (response.msg ==
           "Verification code has been send successfully") {
-
         if (forgetPasswordBc != null) {
           Navigator.pop(forgetPasswordBc);
         }
@@ -1176,7 +1279,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               'phone': phoneNo,
             });
       } else if (response.msg == "Password Changed Successfully") {
-
         if (passwordBc != null) {
           Navigator.pop(passwordBc);
         }

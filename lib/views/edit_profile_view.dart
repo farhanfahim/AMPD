@@ -857,14 +857,15 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+//
               enabled: _enabled,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
               onChanged: (String newVal) {
                 if (newVal.length <= emailValidation) {
                   email = newVal;
-                } else {
+                }
+                else {
                   editableEmailController.value = new TextEditingValue(
                       text: email,
                       selection: new TextSelection(
@@ -873,7 +874,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                           affinity: TextAffinity.downstream,
                           isDirectional: false),
                       composing: new TextRange(start: 0, end: emailValidation));
-                  //  _emailController.text = text;
                 }
               },
               controller: editableEmailController,
@@ -881,7 +881,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               inputFormatters: [
                 LengthLimitingTextInputFormatter(emailValidation),
               ],
-
 
               onFieldSubmitted: (texttt) {
                 bool emailValid = RegExp(
@@ -999,10 +998,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _codeToPhoneButtonController,
           text: AppStrings.CHANGE,
         ),
-            (bc1) {
+            null,(bc1) {
 //          Navigator.pop(bc1);
 //          showPhoneOtpBottomSheet(context);
-        }, AppStrings.SEND, false, null);
+        }, AppStrings.SEND, false);
   }
 
   showPhoneOtpBottomSheet(BuildContext context) {
@@ -1019,10 +1018,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _phoneOtpButtonController,
           text: AppStrings.VERIFY_NOW,
         ),
-            (bc2) {
+          () { callVerificationCodeToPhoneApi();},(bc2) {
 //          Navigator.pop(bc2);
 //          showUpdatePhoneNoBottomSheet(context);
-        }, AppStrings.VERIFY_NOW, true, () {});
+        }, AppStrings.VERIFY_NOW, true,);
   }
 
   showUpdatePhoneNoBottomSheet(BuildContext context) {
@@ -1037,9 +1036,9 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _changePhoneButtonController,
           text: AppStrings.UPDATE,
         ),
-            (bc3) {
+            null,(bc3) {
 //          Navigator.pop(bc3);
-        }, AppStrings.CHANGE, false, null);
+        }, AppStrings.CHANGE, false,);
   }
 
   showEmailOtpBottomSheet(BuildContextcontext) {
@@ -1058,16 +1057,13 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           },
           buttonController: _emailOtpButtonController,
           text: AppStrings.VERIFY_NOW,
-        ),
+        ),() {callVerificationCodeToEmailApi();},
         (bc4) {
 //          Navigator.pop(bc4);
 //          showUpdateEmailBottomSheet(context);
         },
         AppStrings.VERIFY_NOW,
         true,
-        () {
-          callVerifyEmailOtpApi();
-        }
     );
   }
   
@@ -1087,13 +1083,13 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _codeToEmailButtonController,
           text: AppStrings.CHANGE,
         ),
-            (bc5) {
+           null, (bc5) {
           // Navigator.pop(bc5);
           // showEmailOtpBottomSheet(context);
 //          callVerificationCodeToEmailApi();
         },
         AppStrings.CHANGE,
-        false, null);
+        false,);
   }
 
   showUpdateEmailBottomSheet(BuildContext context) {
@@ -1111,12 +1107,12 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _changeEmailButtonController,
           text: AppStrings.UPDATE,
         ),
-            (bc6) {
+            null,(bc6) {
 //          Navigator.pop(bc6);
 
         },
         AppStrings.CHANGE,
-        false, null);
+        false,);
   }
 
   profilePictureOptionsBottomSheet() {
@@ -1559,11 +1555,23 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     var phone = editableNumberController.text.trim();
 
     if (phone.isEmpty || phone == "") {
+
       ToastUtil.showToast(context, "Please provide your phone number");
       return false;
-    }
+    }else if(phone.length < 12){
+      ToastUtil.showToast(
+          context, "Phone number is too short ");
+      return false;
 
-    return true;
+    }
+      else if(phone.length > 16){
+        ToastUtil.showToast(
+            context, "Phone number is too short ");
+        return false;
+
+      }else{
+        return true;
+      }
   }
 
   Future<Null> _playCodeToPhoneBtnAnimation() async {
