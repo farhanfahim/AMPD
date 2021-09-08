@@ -58,6 +58,7 @@ class _HomeViewState extends State<HomeView>
   int _currentPage = 1;
   int _selectedIndex = -1;
   String qrUrl = "";
+  String redeemMessage = "";
 
   ScrollController _controller;
   StreamController _streamController;
@@ -506,7 +507,7 @@ class _HomeViewState extends State<HomeView>
    });
   }
 
-  Future<void> redeemOffersApi(int offerId,String qr) async {
+  Future<void> redeemOffersApi(int offerId,String qr,String rMessage) async {
     _playAnimation();
     Util.check().then((value) {
       if (value != null && value) {
@@ -514,6 +515,7 @@ class _HomeViewState extends State<HomeView>
         setState(() {
 
             qrUrl = qr;
+            redeemMessage = rMessage;
 
           _isInternetAvailable = true;
         });
@@ -596,7 +598,7 @@ class _HomeViewState extends State<HomeView>
 
                                     btnWidget: AnimatedGradientButton(
                                       onAnimationTap: () {
-                                        redeemOffersApi(dataList[i].id,dataList[i].qrUrl);
+                                        redeemOffersApi(dataList[i].id,dataList[i].qrUrl,dataList[i].redeemMessage);
 
                                       },
                                       buttonController: _buttonController,
@@ -645,9 +647,10 @@ class _HomeViewState extends State<HomeView>
       } else if (response.data is RedeemOfferModel) {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(context);
-        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: {
+        Navigator.pushNamed(context, qrUrl != null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW, arguments: {
           'fromSavedCoupon': false,
           'qrImage': qrUrl,
+          'redeemMessage': redeemMessage,
           'offer_id': response.data.offerId,
         });
       } else if (response.data is LikeDislikeModel) {

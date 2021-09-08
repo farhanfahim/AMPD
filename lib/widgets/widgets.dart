@@ -153,10 +153,11 @@ showBottomSheetWidgetWithAnimatedBtn(
     String title,
     String desc,
     Widget widget,widget2,
+
+    Function onTapResend,
     ValueChanged<BuildContext> onTap,
     String btnText,
     bool showResendBtn,
-    Function onTapResend
     ) {
   showModalBottomSheet(
       isScrollControlled: true,
@@ -234,7 +235,7 @@ showBottomSheetWidgetWithAnimatedBtn(
                                 width: 2.0,
                               ),
                               InkWell(
-                                onTap: onTapResend != null? onTapResend : () {},
+                                onTap: onTapResend,
                                 child: Text(AppStrings.RESEND,
                                     style: AppStyles
                                         .detailWithSmallTextSizeTextStyle()
@@ -261,6 +262,7 @@ showBottomSheetWidget(
     String title,
     String desc,
     Widget widget,
+    Function onResendTap,
     ValueChanged<BuildContext> onTap,
     String btnText,
     bool showResendBtn) {
@@ -345,7 +347,7 @@ showBottomSheetWidget(
                                   width: 2.0,
                                 ),
                                 InkWell(
-                                  onTap: () {},
+                                  onTap: onResendTap,
                                   child: Text(AppStrings.RESEND,
                                       style: AppStyles
                                               .detailWithSmallTextSizeTextStyle()

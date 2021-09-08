@@ -189,7 +189,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => RedeemMessageView(),
+            builder: (BuildContext context) => RedeemMessageView(routeSettings.arguments),
           );
         }
 
