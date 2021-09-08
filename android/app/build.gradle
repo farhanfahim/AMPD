@@ -35,7 +35,7 @@ android {
     }
 
     lintOptions {
-        disable 'MissingTranslation'
+        disable 'InvalidPackage'
         checkReleaseBuilds false
     }
 
