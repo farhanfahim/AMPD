@@ -616,7 +616,7 @@ class _HomeViewState extends State<HomeView>
                           showImage: true,
                         );
                       });
-                  //callLikeOffersApi(dataList[i].id);
+                  callLikeOffersApi(dataList[i].id);
                 } else {
                   Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
                 }
@@ -626,7 +626,7 @@ class _HomeViewState extends State<HomeView>
                 if (widget.isGuestLogin) {
                   Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
                 }else{
-                  //callDisLikeOffersApi(dataList[i].id);
+                  callDisLikeOffersApi(dataList[i].id);
                 }
 
 //            ToastUtil.showToast(context, "Disliked ${_names[i]}");
