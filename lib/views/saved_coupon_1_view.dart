@@ -44,7 +44,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
   TabController tabController;
   gcl.Position position;
   UserLocation userLocation = UserLocation();
-  bool _openSetting = false;
   final TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
   String _searchText = "";
@@ -72,19 +71,8 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
   bool get wantKeepAlive => true;
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      print("asda");
-      getCurrentLocation();
-
-    });
-  }
-
-
-  @override
   void initState()  {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
 
     tabController = new TabController(vsync:this,length: 2);
     tabController.addListener(() {
@@ -102,7 +90,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
     LocationPermissionHandler.checkLocationPermission().then((permission) {
       if (permission == locationPermission.PermissionStatus.granted) {
         setState(() {
-          _openSetting = true;
           gcl.Geolocator.getCurrentPosition(
               desiredAccuracy: gcl.LocationAccuracy.medium)
               .then((value) {
@@ -121,7 +108,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
           LocationPermissionHandler.requestPermissoin().then((value) {
             if (permission == locationPermission.PermissionStatus.granted) {
               setState(() {
-                _openSetting = true;
+
                 gcl.Geolocator.getCurrentPosition(
                     desiredAccuracy: gcl.LocationAccuracy.medium)
                     .then((value) {
@@ -134,10 +121,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
                   return true;
                 });
               });
-            } else {
-              setState(() {
-                _openSetting = false;
-              });
             }
           });
         } on PlatformException catch (err) {
@@ -145,10 +128,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
         } catch (err) {
           print(err);
         }
-      } else {
-        setState(() {
-          _openSetting = false;
-        });
       }
     });
   }
@@ -210,7 +189,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
     );
 
 
-    final body = _openSetting?Container(
+    final body = Container(
         child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
@@ -255,36 +234,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
                 ),
 
               ],
-            ))): Center(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'Location permission is required to access nearby offers.',
-              style: AppStyles.poppinsTextStyle(
-                  fontSize: 12.0, weight: FontWeight.w500)
-                  .copyWith(color: AppColors.UNSELECTED_COLOR),
-            ),
-            SizedBox(
-              height: 30.0,
-            ),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 5.0.w),
-              child: GradientButton(
-                onTap: () {
-                  AppSettings.openAppSettings();
-                },
-                text: "Please enable location",
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+            )));
 
     return DefaultTabController(
       length: 2,

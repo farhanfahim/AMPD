@@ -52,7 +52,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView>
-    with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin,  WidgetsBindingObserver {
+    with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin {
   gcl.Position position;
   int _totalPages = 0;
   int _currentPage = 1;
@@ -69,7 +69,6 @@ class _HomeViewState extends State<HomeView>
   bool _enabled = true;
   bool _isInAsyncCall = true;
   bool _initialCall = false;
-  bool _openSetting = true;
   bool _isRefreshing = false;
   bool permissionGranted = false;
   bool _isInternetAvailable = true;
@@ -83,14 +82,6 @@ class _HomeViewState extends State<HomeView>
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  List<String> _times = [
-    "2021-07-03 09:00:00",
-    "2021-07-05 09:00:00",
-    "2021-07-10 09:00:00",
-    "2021-06-29 09:00:00",
-    "2021-07-29 09:00:00",
-  ];
-
   @override
   bool get wantKeepAlive => true;
 
@@ -99,32 +90,11 @@ class _HomeViewState extends State<HomeView>
     super.didChangeDependencies();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      LocationPermissionHandler.checkLocationPermission().then((permission) {
-        if (permission == locationPermission.PermissionStatus.granted) {
-          _openSetting = true;
-          gcl.Geolocator.getCurrentPosition(
-              desiredAccuracy: gcl.LocationAccuracy.medium)
-              .then((value) {
-            position = value;
-
-            userLocation.latitude = position.latitude;
-            userLocation.longitude = position.longitude;
-            widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
-          });
-        }
-      });
-
-    });
-  }
 
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
 
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
@@ -140,7 +110,6 @@ class _HomeViewState extends State<HomeView>
           print('value $value');
           if (value != null && value) {
             setState(() {
-              _openSetting = true;
               gcl.Geolocator.getCurrentPosition(
                   desiredAccuracy: gcl.LocationAccuracy.medium)
                   .then((value) {
@@ -174,7 +143,6 @@ class _HomeViewState extends State<HomeView>
           LocationPermissionHandler.requestPermissoin().then((value) {
             if (permission == locationPermission.PermissionStatus.granted) {
               setState(() {
-                _openSetting = true;
                 gcl.Geolocator.getCurrentPosition(
                         desiredAccuracy: gcl.LocationAccuracy.medium)
                     .then((value) {
@@ -188,10 +156,6 @@ class _HomeViewState extends State<HomeView>
                   return permissionGranted;
                 });
               });
-            } else {
-              setState(() {
-                _openSetting = false;
-              });
             }
           });
         } on PlatformException catch (err) {
@@ -199,10 +163,6 @@ class _HomeViewState extends State<HomeView>
         } catch (err) {
           print(err);
         }
-      } else {
-        setState(() {
-          _openSetting = false;
-        });
       }
     });
   }
@@ -211,7 +171,6 @@ class _HomeViewState extends State<HomeView>
   void dispose() {
     _pagingController.dispose();
     _buttonController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -234,7 +193,7 @@ class _HomeViewState extends State<HomeView>
             },
         child:
         _isRefreshing ?
-        _openSetting ?
+
         !_stackFinished ?
            Container(
 //          height: 550,
@@ -361,36 +320,7 @@ class _HomeViewState extends State<HomeView>
           ),
         ),
       )
-            : Center(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  'Location permission is required to access nearby offers.',
-                  style: AppStyles.poppinsTextStyle(
-                      fontSize: 12.0, weight: FontWeight.w500)
-                      .copyWith(color: AppColors.UNSELECTED_COLOR),
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.0.w),
-                  child: GradientButton(
-                    onTap: () {
-                      AppSettings.openAppSettings();
-                    },
-                    text: "Please enable location",
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
+
              :Loader(
        isLoading: true,
          color: AppColors.APP_PRIMARY_COLOR,

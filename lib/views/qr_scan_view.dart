@@ -185,6 +185,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                     GradientButton(
                       onTap: () {
                         if (!widget.map['fromSavedCoupon']) {
+                          _timer1.cancel();
                           Navigator.pop(context);
                         }
                         showDialog(

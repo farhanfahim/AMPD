@@ -113,18 +113,21 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                         height: 30.0,
                       ),
                       Container(
+                        height: MediaQuery.of(context).size.height * 0.10,
                         margin: EdgeInsets.symmetric(
                             horizontal: MediaQuery.of(context).size.width * .14),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                                child: Text(
-                        widget.map['redeemMessage'],
-                              style: AppStyles.detailWithSmallTextSizeTextStyle(),
-                              textAlign: TextAlign.center,
-                            )),
-                          ],
+                        child: SingleChildScrollView(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Expanded(
+                                  child: Text(
+                          widget.map['redeemMessage'],
+                                style: AppStyles.detailWithSmallTextSizeTextStyle(),
+                                textAlign: TextAlign.center,
+                              )),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -161,6 +164,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                       GradientButton(
                         onTap: () {
                           if (!widget.map['fromSavedCoupon']) {
+                            _timer1.cancel();
                             Navigator.pop(context);
                           }
                           showDialog(
