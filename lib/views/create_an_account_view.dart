@@ -311,7 +311,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               enabled: _enabled,
               focusNode: firstNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,
@@ -374,7 +374,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               enabled: _enabled,
               focusNode: lastNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,

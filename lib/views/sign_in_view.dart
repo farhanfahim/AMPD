@@ -191,15 +191,32 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   _isInternetAvailable = true;
                                 });
                                 if (phoneNo2.isNotEmpty) {
-                                  if (password.isNotEmpty) {
-                                    callLoginApi();
-                                  } else {
+                                  if (phoneNo2.length < 11) {
                                     setState(() {
                                       flag = true;
                                     });
                                     ToastUtil.showToast(
-                                        context, "Please enter your password");
+                                        context, "Phone number is too short ");
+                                  } else {
+                                    if (phoneNo2.length > 16) {
+                                      setState(() {
+                                        flag = true;
+                                      });
+                                      ToastUtil.showToast(
+                                          context, "Phone number is too long ");
+                                    } else {
+                                      if (password.isNotEmpty) {
+                                        callLoginApi();
+                                      } else {
+                                        setState(() {
+                                          flag = true;
+                                        });
+                                        ToastUtil.showToast(
+                                            context, "Please enter your password");
+                                      }
+                                    }
                                   }
+
                                 } else {
                                   setState(() {
                                     flag = true;
@@ -416,7 +433,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 12) {
+                      if (phoneNo.length < 11) {
                         setState(() {
                           flag = true;
                         });
@@ -428,7 +445,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                             flag = true;
                           });
                           ToastUtil.showToast(
-                              context, "Phone number is too short ");
+                              context, "Phone number is too long ");
                         } else {
                           callRegisterViaPhoneApi();
                         }
@@ -475,7 +492,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     _isInternetAvailable = true;
                   });
                   if (phoneNo.isNotEmpty) {
-                    if (phoneNo.length < 12) {
+                    if (phoneNo.length < 11) {
                       setState(() {
                         flag = true;
                       });
@@ -487,7 +504,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           flag = true;
                         });
                         ToastUtil.showToast(
-                            context, "Phone number is too short ");
+                            context, "Phone number is too long ");
                       } else {
                         callForgetPasswordApi();
                       }
@@ -568,7 +585,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 12) {
+                      if (phoneNo.length < 11) {
                         setState(() {
                           flag = true;
                         });
@@ -580,7 +597,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                             flag = true;
                           });
                           ToastUtil.showToast(
-                              context, "Phone number is too short ");
+                              context, "Phone number is too long ");
                         } else {
                           callRegisterViaPhoneApi();
                         }
@@ -791,7 +808,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -817,7 +834,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -857,7 +874,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -883,7 +900,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 }
               },
               controller: phoneNumberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(phoneNumberValidation),
               ],

@@ -92,7 +92,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "Setting",
+                                    "Settings",
                                     style: AppStyles.blackWithDifferentFontTextStyle(
                                             context, 12.0)
                                         .copyWith(
