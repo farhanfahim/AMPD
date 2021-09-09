@@ -31,6 +31,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>AMPD would required access to your camera for capturing videos and images. Please provide the same.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to your location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>AMPD requires access to your photo library for selecting images and videos. </string>
 	<key>UILaunchStoryboardName</key>
@@ -52,7 +54,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-    	<string>This app requires access to your location</string>
 </dict>
 </plist>
