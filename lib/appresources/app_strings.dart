@@ -391,6 +391,7 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String SETTING = 'Settings';
   static const String SIDE_MENU = 'Side Menu';
   static const String DISCOVER_MORE = 'Discover more options';
+  static const String APPLY = 'Apply';
   static const String FILTER = 'Filters';
   static const String FILTER_YOUR = 'Filter your save coupons result';
   static const String MANAGE_YOUR_ACCOUNT_SETTING = 'Manage your account setting';

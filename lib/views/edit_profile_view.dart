@@ -406,7 +406,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               enabled: _enabled,
               focusNode: firstNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,
@@ -469,7 +469,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               enabled: _enabled,
               focusNode: lastNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,
@@ -624,7 +624,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: false,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -650,7 +650,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -708,7 +708,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -734,7 +734,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -935,7 +935,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -961,7 +961,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 }
               },
               controller: editableNumberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -1558,7 +1558,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
       ToastUtil.showToast(context, "Please provide your phone number");
       return false;
-    }else if(phone.length < 12){
+    }else if(phone.length < 11){
       ToastUtil.showToast(
           context, "Phone number is too short ");
       return false;
@@ -1566,7 +1566,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     }
       else if(phone.length > 16){
         ToastUtil.showToast(
-            context, "Phone number is too short ");
+            context, "Phone number is too long ");
         return false;
 
       }else{

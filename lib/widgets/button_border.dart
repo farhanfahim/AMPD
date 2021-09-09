@@ -17,7 +17,7 @@ class ButtonBorder extends StatelessWidget {
 
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 25.0),
-        height: 50.0,
+        height: 47.0,
         width: double.maxFinite,
         child: Container(
           constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),

@@ -187,7 +187,7 @@ class _WelcomeViewState extends State<WelcomeView>
                             flag = true;
                           });
                           ToastUtil.showToast(
-                              context, "Phone number is too short ");
+                              context, "Phone number is too long ");
                         }else{
                           callRegisterViaPhoneApi();
                         }
@@ -294,7 +294,7 @@ class _WelcomeViewState extends State<WelcomeView>
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               cursorColor: AppColors.ACCENT_COLOR,
               onChanged: (String newVal) {
                 if (newVal.length <= numberValidation) {
@@ -313,7 +313,7 @@ class _WelcomeViewState extends State<WelcomeView>
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],

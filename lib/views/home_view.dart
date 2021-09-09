@@ -117,7 +117,9 @@ class _HomeViewState extends State<HomeView>
 
                 UserLocation(
                     latitude: position.latitude, longitude: position.longitude);
-                callOffersApi();
+                userLocation.latitude = position.latitude;
+                userLocation.longitude = position.longitude;
+                widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
                 permissionGranted = true;
                 return permissionGranted;
               });
@@ -128,9 +130,7 @@ class _HomeViewState extends State<HomeView>
               ToastUtil.showToast(context, "No internet");
             });
           }
-            userLocation.latitude = position.latitude;
-            userLocation.longitude = position.longitude;
-            widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
+
 
             permissionGranted = true;
             return permissionGranted;

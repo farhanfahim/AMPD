@@ -397,7 +397,7 @@ class _FilterState extends State<FilterView> {
                         'maxRadius': max,
                       });
                     },
-                    text: AppStrings.FILTER,
+                    text: AppStrings.APPLY,
                   ),
                 ],
               ),
