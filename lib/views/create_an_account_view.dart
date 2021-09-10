@@ -311,7 +311,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               enabled: _enabled,
               focusNode: firstNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,
@@ -334,7 +334,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
 //                }
 //              },
               controller: firstNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(firstNameValidation),
               ],
@@ -374,7 +374,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               enabled: _enabled,
               focusNode: lastNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,
@@ -397,7 +397,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
 //                }
 //              },
               controller: lastNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(lastNameValidation),
               ],
@@ -754,7 +754,11 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
           map['email'] = emailController.text.toString();
         }
       } else if(response.data is DioError){
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
       } else {
         ToastUtil.showToast(context, response.msg);
         _stopAnimation();

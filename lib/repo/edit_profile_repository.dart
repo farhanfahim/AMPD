@@ -8,6 +8,7 @@ import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:ampd/app/app.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 
 class EditProfileRepository {
@@ -74,10 +75,12 @@ class EditProfileRepository {
           repositoryResponse.data = 0;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;
@@ -109,10 +112,12 @@ class EditProfileRepository {
           repositoryResponse.data = 0;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;
@@ -144,10 +149,12 @@ class EditProfileRepository {
           repositoryResponse.data = 1;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;
@@ -179,10 +186,12 @@ class EditProfileRepository {
           repositoryResponse.data = null;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;
@@ -214,10 +223,12 @@ class EditProfileRepository {
           repositoryResponse.data = 2;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;
@@ -249,10 +260,12 @@ class EditProfileRepository {
           repositoryResponse.data = changePasswordResponse;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;

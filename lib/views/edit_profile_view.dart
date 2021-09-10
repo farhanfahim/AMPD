@@ -13,6 +13,7 @@ import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/login_response_model.dart';
 import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
+import 'package:ampd/utils/FirstUpperCaseTextFormatter.dart';
 import 'package:ampd/utils/MediaPermissionHandler.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
@@ -401,12 +402,12 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                     TextPosition(offset: firstNameController.text.length));
               }
             },
-            child: TextFormField(
+            child: TextField(
 //                                enableInteractiveSelection: false,
               enabled: _enabled,
               focusNode: firstNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,
@@ -430,14 +431,15 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //                }
 //              },
               controller: firstNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(firstNameValidation),
+//                FirstUpperCaseTextFormatter()
               ],
               onEditingComplete: () =>
                   FocusScope.of(context).requestFocus(lastNameFocus),
 
-              onFieldSubmitted: (texttt) {
+              onSubmitted: (texttt) {
                 FocusScope.of(context).requestFocus(lastNameFocus);
               },
               textInputAction: TextInputAction.next,
@@ -464,12 +466,12 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                     TextPosition(offset: lastNameController.text.length));
               }
             },
-            child: TextFormField(
+            child: TextField(
 //                                enableInteractiveSelection: false,
               enabled: _enabled,
               focusNode: lastNameFocus,
               cursorColor: AppColors.ACCENT_COLOR,
-              textCapitalization: TextCapitalization.words,
+              textCapitalization: TextCapitalization.sentences,
               toolbarOptions: ToolbarOptions(
                 copy: true,
                 cut: true,
@@ -493,17 +495,17 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //                }
 //              },
               controller: lastNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(lastNameValidation),
               ],
               onEditingComplete: () =>
                   FocusScope.of(context).requestFocus(emailFocus),
 
-              onFieldSubmitted: (texttt) {
+              onSubmitted: (texttt) {
                 FocusScope.of(context).requestFocus(emailFocus);
               },
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               decoration: AppStyles.decorationWithBorder(AppStrings.LAST_NAME),
               //   , iconData, (){
               //
@@ -624,7 +626,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: false,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -650,7 +652,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -708,7 +710,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -734,7 +736,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -857,14 +859,15 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+//
               enabled: _enabled,
               focusNode: emailFocus,
               cursorColor: AppColors.ACCENT_COLOR,
               onChanged: (String newVal) {
                 if (newVal.length <= emailValidation) {
                   email = newVal;
-                } else {
+                }
+                else {
                   editableEmailController.value = new TextEditingValue(
                       text: email,
                       selection: new TextSelection(
@@ -873,7 +876,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                           affinity: TextAffinity.downstream,
                           isDirectional: false),
                       composing: new TextRange(start: 0, end: emailValidation));
-                  //  _emailController.text = text;
                 }
               },
               controller: editableEmailController,
@@ -881,7 +883,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               inputFormatters: [
                 LengthLimitingTextInputFormatter(emailValidation),
               ],
-
 
               onFieldSubmitted: (texttt) {
                 bool emailValid = RegExp(
@@ -936,7 +937,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -962,7 +963,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 }
               },
               controller: editableNumberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -999,10 +1000,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _codeToPhoneButtonController,
           text: AppStrings.CHANGE,
         ),
-            (bc1) {
+            null,(bc1) {
 //          Navigator.pop(bc1);
 //          showPhoneOtpBottomSheet(context);
-        }, AppStrings.SEND, false, null);
+        }, AppStrings.SEND, false);
   }
 
   showPhoneOtpBottomSheet(BuildContext context) {
@@ -1019,10 +1020,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _phoneOtpButtonController,
           text: AppStrings.VERIFY_NOW,
         ),
-            (bc2) {
+          () { callVerificationCodeToPhoneApi();},(bc2) {
 //          Navigator.pop(bc2);
 //          showUpdatePhoneNoBottomSheet(context);
-        }, AppStrings.VERIFY_NOW, true, () {});
+        }, AppStrings.VERIFY_NOW, true,);
   }
 
   showUpdatePhoneNoBottomSheet(BuildContext context) {
@@ -1037,9 +1038,9 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _changePhoneButtonController,
           text: AppStrings.UPDATE,
         ),
-            (bc3) {
+            null,(bc3) {
 //          Navigator.pop(bc3);
-        }, AppStrings.CHANGE, false, null);
+        }, AppStrings.CHANGE, false,);
   }
 
   showEmailOtpBottomSheet(BuildContextcontext) {
@@ -1058,16 +1059,13 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           },
           buttonController: _emailOtpButtonController,
           text: AppStrings.VERIFY_NOW,
-        ),
+        ),() {callVerificationCodeToEmailApi();},
         (bc4) {
 //          Navigator.pop(bc4);
 //          showUpdateEmailBottomSheet(context);
         },
         AppStrings.VERIFY_NOW,
         true,
-        () {
-          callVerifyEmailOtpApi();
-        }
     );
   }
   
@@ -1087,13 +1085,13 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _codeToEmailButtonController,
           text: AppStrings.CHANGE,
         ),
-            (bc5) {
+           null, (bc5) {
           // Navigator.pop(bc5);
           // showEmailOtpBottomSheet(context);
 //          callVerificationCodeToEmailApi();
         },
         AppStrings.CHANGE,
-        false, null);
+        false,);
   }
 
   showUpdateEmailBottomSheet(BuildContext context) {
@@ -1111,12 +1109,12 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _changeEmailButtonController,
           text: AppStrings.UPDATE,
         ),
-            (bc6) {
+            null,(bc6) {
 //          Navigator.pop(bc6);
 
         },
         AppStrings.CHANGE,
-        false, null);
+        false,);
   }
 
   profilePictureOptionsBottomSheet() {
@@ -1506,7 +1504,11 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           });
         }
       } else if (response.data is DioError) {
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
       } else {
         ToastUtil.showToast(context, response.msg);
       }
@@ -1559,11 +1561,23 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     var phone = editableNumberController.text.trim();
 
     if (phone.isEmpty || phone == "") {
+
       ToastUtil.showToast(context, "Please provide your phone number");
       return false;
-    }
+    }else if(phone.length < 11){
+      ToastUtil.showToast(
+          context, "Phone number is too short ");
+      return false;
 
-    return true;
+    }
+      else if(phone.length > 16){
+        ToastUtil.showToast(
+            context, "Phone number is too long ");
+        return false;
+
+      }else{
+        return true;
+      }
   }
 
   Future<Null> _playCodeToPhoneBtnAnimation() async {

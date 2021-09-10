@@ -22,12 +22,12 @@ import 'package:sizer/sizer.dart';
 import 'package:toast/toast.dart';
 
 class WelcomeView extends StatefulWidget {
-
   @override
   _WelcomeViewState createState() => _WelcomeViewState();
 }
 
-class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixin{
+class _WelcomeViewState extends State<WelcomeView>
+    with TickerProviderStateMixin {
   TextEditingController numberController = new TextEditingController();
   int numberValidation = AppConstants.PHONE_VALIDATION;
   String phoneNo = "";
@@ -174,14 +174,31 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
                       flag = true;
                       _isInternetAvailable = true;
                     });
-                    if(phoneNo.isNotEmpty){
-                    callRegisterViaPhoneApi();
-                    }
-                    else{
+                    if (phoneNo.isNotEmpty) {
+                      if(phoneNo.length < 12){
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(
+                            context, "Phone number is too short ");
+                      }else{
+                        if(phoneNo.length > 16){
+                          setState(() {
+                            flag = true;
+                          });
+                          ToastUtil.showToast(
+                              context, "Phone number is too long ");
+                        }else{
+                          callRegisterViaPhoneApi();
+                        }
+                      }
+
+                    } else {
                       setState(() {
                         flag = true;
                       });
-                      ToastUtil.showToast(context, "Please enter phone number ");
+                      ToastUtil.showToast(
+                          context, "Please enter phone number ");
                     }
                   } else {
                     setState(() {
@@ -196,51 +213,72 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
           },
           buttonController: _submitButtonController,
           text: AppStrings.SUBMIT,
-        ), (bc) {
+        ),
+        null, (bc) {
       submitPhoneBc = bc;
-    }, AppStrings.SUBMIT, false, null);
+    }, AppStrings.SUBMIT, false);
   }
 
   showOtpBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
-        context,
-        AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC,
-        OtpTextField(onOtpCodeChanged: (otp) {
-          code = otp;
-        }),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (flag) {
-              if (validate()) {
-                Util.check().then((value) {
-                  if (value != null && value) {
-                    // Internet Present Case
-                    setState(() {
-                      flag = true;
-                      _isInternetAvailable = true;
-                    });
-                        callVerifyOtpApi();
-
-                  } else {
-                    setState(() {
-                      flag = true;
-                      _isInternetAvailable = false;
-                      ToastUtil.showToast(context, "No internet");
-                    });
-                  }
-                });
-              }
+      context,
+      AppStrings.ENTER_OTP_DIGIT,
+      AppStrings.OTP_DESC,
+      OtpTextField(onOtpCodeChanged: (otp) {
+        code = otp;
+      }),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (flag) {
+            if (validate()) {
+              Util.check().then((value) {
+                if (value != null && value) {
+                  // Internet Present Case
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = true;
+                  });
+                  callVerifyOtpApi();
+                } else {
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = false;
+                    ToastUtil.showToast(context, "No internet");
+                  });
+                }
+              });
             }
-          },
-          buttonController: _verifyButtonController,
-          text: AppStrings.VERIFY_NOW,
-        ),
-            (bc1) {
-          otpPasswordBc = bc1;
+          }
         },
-        AppStrings.VERIFY_NOW,
-        true, () {});
+        buttonController: _verifyButtonController,
+        text: AppStrings.VERIFY_NOW,
+      ),
+      () {
+        if (validate()) {
+          Util.check().then((value) {
+            if (value != null && value) {
+              // Internet Present Case
+              setState(() {
+                flag = true;
+                _isInternetAvailable = true;
+              });
+              callRegisterViaPhoneApi();
+            } else {
+              setState(() {
+                flag = true;
+                _isInternetAvailable = false;
+                ToastUtil.showToast(context, "No internet");
+              });
+            }
+          });
+        }
+      },
+      (bc1) {
+        otpPasswordBc = bc1;
+      },
+      AppStrings.VERIFY_NOW,
+      true,
+    );
   }
 
   Stack customWidget(BuildContext context) {
@@ -256,7 +294,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               cursorColor: AppColors.ACCENT_COLOR,
               onChanged: (String newVal) {
                 if (newVal.length <= numberValidation) {
@@ -275,7 +313,7 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -319,12 +357,11 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
         if (otpPasswordBc != null) {
           Navigator.pop(otpPasswordBc);
         }
-        Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW,arguments: {
-          'phone' : phoneNo,
-        });
-
-      }
-      else if(response.msg == "Code has been sent to your phone number") {
+        Navigator.pushNamed(context, AppRoutes.CREATE_AN_ACCOUNT_VIEW,
+            arguments: {
+              'phone': phoneNo,
+            });
+      } else if (response.msg == "Code has been sent to your phone number") {
         _stopSubmitBtnAnimation();
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
@@ -332,18 +369,18 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
 
         code = "";
         showOtpBottomSheet(context);
-      }
-      else if (response.data is DioError) {
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
-      }
-      else {
+      } else if (response.data is DioError) {
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
+      } else {
         ToastUtil.showToast(context, response.msg);
         _stopVerifyBtnAnimation();
         _stopSubmitBtnAnimation();
       }
     });
-
-
   }
 
   Future<void> callRegisterViaPhoneApi() async {
@@ -374,7 +411,6 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
   }
 
   Future<void> callVerifyOtpApi() async {
-
     _playVerifyBtnAnimation();
     String number = numberController.text.trim();
 
@@ -428,5 +464,4 @@ class _WelcomeViewState extends State<WelcomeView>  with TickerProviderStateMixi
       await _submitButtonController.reverse();
     } on TickerCanceled {}
   }
-
 }

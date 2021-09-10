@@ -52,12 +52,13 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView>
-    with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin,  WidgetsBindingObserver {
+    with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin {
   gcl.Position position;
   int _totalPages = 0;
   int _currentPage = 1;
   int _selectedIndex = -1;
   String qrUrl = "";
+  String redeemMessage = "";
 
   ScrollController _controller;
   StreamController _streamController;
@@ -68,7 +69,6 @@ class _HomeViewState extends State<HomeView>
   bool _enabled = true;
   bool _isInAsyncCall = true;
   bool _initialCall = false;
-  bool _openSetting = true;
   bool _isRefreshing = false;
   bool permissionGranted = false;
   bool _isInternetAvailable = true;
@@ -82,14 +82,6 @@ class _HomeViewState extends State<HomeView>
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  List<String> _times = [
-    "2021-07-03 09:00:00",
-    "2021-07-05 09:00:00",
-    "2021-07-10 09:00:00",
-    "2021-06-29 09:00:00",
-    "2021-07-29 09:00:00",
-  ];
-
   @override
   bool get wantKeepAlive => true;
 
@@ -98,32 +90,11 @@ class _HomeViewState extends State<HomeView>
     super.didChangeDependencies();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      LocationPermissionHandler.checkLocationPermission().then((permission) {
-        if (permission == locationPermission.PermissionStatus.granted) {
-          _openSetting = true;
-          gcl.Geolocator.getCurrentPosition(
-              desiredAccuracy: gcl.LocationAccuracy.medium)
-              .then((value) {
-            position = value;
-
-            userLocation.latitude = position.latitude;
-            userLocation.longitude = position.longitude;
-            widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
-          });
-        }
-      });
-
-    });
-  }
 
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
 
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
@@ -139,15 +110,17 @@ class _HomeViewState extends State<HomeView>
           print('value $value');
           if (value != null && value) {
             setState(() {
-              _openSetting = true;
               gcl.Geolocator.getCurrentPosition(
                   desiredAccuracy: gcl.LocationAccuracy.medium)
-                  .then((value) {
-                position = value;
+                  .then((locationValue) {
+                position = locationValue;
 
+                print("location: ${locationValue}");
                 UserLocation(
                     latitude: position.latitude, longitude: position.longitude);
-                callOffersApi();
+                userLocation.latitude = position.latitude;
+                userLocation.longitude = position.longitude;
+                widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
                 permissionGranted = true;
                 return permissionGranted;
               });
@@ -158,9 +131,7 @@ class _HomeViewState extends State<HomeView>
               ToastUtil.showToast(context, "No internet");
             });
           }
-            userLocation.latitude = position.latitude;
-            userLocation.longitude = position.longitude;
-            widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
+
 
             permissionGranted = true;
             return permissionGranted;
@@ -173,7 +144,6 @@ class _HomeViewState extends State<HomeView>
           LocationPermissionHandler.requestPermissoin().then((value) {
             if (permission == locationPermission.PermissionStatus.granted) {
               setState(() {
-                _openSetting = true;
                 gcl.Geolocator.getCurrentPosition(
                         desiredAccuracy: gcl.LocationAccuracy.medium)
                     .then((value) {
@@ -187,10 +157,6 @@ class _HomeViewState extends State<HomeView>
                   return permissionGranted;
                 });
               });
-            } else {
-              setState(() {
-                _openSetting = false;
-              });
             }
           });
         } on PlatformException catch (err) {
@@ -198,10 +164,6 @@ class _HomeViewState extends State<HomeView>
         } catch (err) {
           print(err);
         }
-      } else {
-        setState(() {
-          _openSetting = false;
-        });
       }
     });
   }
@@ -210,7 +172,6 @@ class _HomeViewState extends State<HomeView>
   void dispose() {
     _pagingController.dispose();
     _buttonController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -233,7 +194,7 @@ class _HomeViewState extends State<HomeView>
             },
         child:
         _isRefreshing ?
-        _openSetting ?
+
         !_stackFinished ?
            Container(
 //          height: 550,
@@ -360,36 +321,7 @@ class _HomeViewState extends State<HomeView>
           ),
         ),
       )
-            : Center(
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  'Location permission is required to access nearby offers.',
-                  style: AppStyles.poppinsTextStyle(
-                      fontSize: 12.0, weight: FontWeight.w500)
-                      .copyWith(color: AppColors.UNSELECTED_COLOR),
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5.0.w),
-                  child: GradientButton(
-                    onTap: () {
-                      AppSettings.openAppSettings();
-                    },
-                    text: "Please enable location",
-                  ),
-                )
-              ],
-            ),
-          ),
-        )
+
              :Loader(
        isLoading: true,
          color: AppColors.APP_PRIMARY_COLOR,
@@ -506,7 +438,7 @@ class _HomeViewState extends State<HomeView>
    });
   }
 
-  Future<void> redeemOffersApi(int offerId,String qr) async {
+  Future<void> redeemOffersApi(int offerId,String qr,String rMessage) async {
     _playAnimation();
     Util.check().then((value) {
       if (value != null && value) {
@@ -514,6 +446,7 @@ class _HomeViewState extends State<HomeView>
         setState(() {
 
             qrUrl = qr;
+            redeemMessage = rMessage;
 
           _isInternetAvailable = true;
         });
@@ -596,7 +529,7 @@ class _HomeViewState extends State<HomeView>
 
                                     btnWidget: AnimatedGradientButton(
                                       onAnimationTap: () {
-                                        redeemOffersApi(dataList[i].id,dataList[i].qrUrl);
+                                        redeemOffersApi(dataList[i].id,dataList[i].qrUrl,dataList[i].redeemMessage);
 
                                       },
                                       buttonController: _buttonController,
@@ -616,7 +549,7 @@ class _HomeViewState extends State<HomeView>
                           showImage: true,
                         );
                       });
-                  //callLikeOffersApi(dataList[i].id);
+                  callLikeOffersApi(dataList[i].id);
                 } else {
                   Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
                 }
@@ -626,7 +559,7 @@ class _HomeViewState extends State<HomeView>
                 if (widget.isGuestLogin) {
                   Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
                 }else{
-                  //callDisLikeOffersApi(dataList[i].id);
+                  callDisLikeOffersApi(dataList[i].id);
                 }
 
 //            ToastUtil.showToast(context, "Disliked ${_names[i]}");
@@ -645,15 +578,20 @@ class _HomeViewState extends State<HomeView>
       } else if (response.data is RedeemOfferModel) {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(context);
-        Navigator.pushNamed(context, AppRoutes.QR_SCAN_VIEW, arguments: {
+        Navigator.pushNamed(context, qrUrl != null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW, arguments: {
           'fromSavedCoupon': false,
           'qrImage': qrUrl,
+          'redeemMessage': redeemMessage,
           'offer_id': response.data.offerId,
         });
       } else if (response.data is LikeDislikeModel) {
         ToastUtil.showToast(context, response.msg);
       } else if (response.data is DioError) {
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
       } else {
         ToastUtil.showToast(context, response.msg);
       }

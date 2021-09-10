@@ -20,10 +20,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sizer/sizer.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
-
+import 'dart:async';
 class SignInView extends StatefulWidget {
   @override
   _SignInViewState createState() => _SignInViewState();
@@ -36,7 +37,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   BuildContext passwordBc;
   BuildContext submitPhoneBc;
   LoginViewModel _loginViewModel;
-
+  Timer _timer1;
+  int _sec = 2;
   bool isForgetPasswordFlow = false;
 
   TextEditingController emailController = new TextEditingController();
@@ -100,7 +102,22 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       },
       child: Scaffold(
           backgroundColor: AppColors.WHITE_COLOR,
-          body: SafeArea(
+          body: KeyboardActions(
+              tapOutsideToDismiss: true,
+              config: KeyboardActionsConfig(
+                keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+                keyboardBarColor: Colors.grey[500],
+                actions: [
+                  KeyboardActionsItem(
+                    focusNode: phoneNumberFocus,
+                  ),
+
+                  // KeyboardActionsItem(
+                  //   focusNode: handicapIndexNode,
+                  // ),
+                ],
+              ),
+              child: SafeArea(
             child: SingleChildScrollView(
               child: Center(
                 child: Column(
@@ -190,20 +207,39 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   flag = true;
                                   _isInternetAvailable = true;
                                 });
-                                if(phoneNo2.isNotEmpty) {
-                                  if(password.isNotEmpty) {
-                                    callLoginApi();
-                                  }else{
+                                if (phoneNo2.isNotEmpty) {
+                                  if (phoneNo2.length < 11) {
                                     setState(() {
                                       flag = true;
+                                    });
+                                    ToastUtil.showToast(
+                                        context, "Phone number is too short ");
+                                  } else {
+                                    if (phoneNo2.length > 16) {
+                                      setState(() {
+                                        flag = true;
                                       });
-                                    ToastUtil.showToast(context, "Please enter your password");
+                                      ToastUtil.showToast(
+                                          context, "Phone number is too long ");
+                                    } else {
+                                      if (password.isNotEmpty) {
+                                        callLoginApi();
+                                      } else {
+                                        setState(() {
+                                          flag = true;
+                                        });
+                                        ToastUtil.showToast(
+                                            context, "Please enter your password");
+                                      }
+                                    }
                                   }
-                                }else{
+
+                                } else {
                                   setState(() {
                                     flag = true;
                                   });
-                                  ToastUtil.showToast(context, "Please enter phone number");
+                                  ToastUtil.showToast(
+                                      context, "Please enter phone number");
                                 }
                               } else {
                                 setState(() {
@@ -240,7 +276,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               ),
             ),
           )),
-    );
+    ),);
   }
 
   @override
@@ -274,46 +310,50 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
   showForgetBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
-        context,
-        "Forgot password",
-        AppStrings.PHONE_NUMBER_DESC,
-        customWidget(context),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (flag) {
-              if (validate()) {
-                Util.check().then((value) {
-                  if (value != null && value) {
-                    // Internet Present Case
-                    setState(() {
-                      flag = true;
-                      _isInternetAvailable = true;
-                    });
-                    if(phoneNo.isNotEmpty) {
-                      callForgetPasswordApi();
-                    }else{
-                      setState(() {
-                        flag = true;
-                      });
-                      ToastUtil.showToast(context, "Please enter phone number");
-                    }
-
+      context,
+      "Forgot password",
+      AppStrings.PHONE_NUMBER_DESC,
+      customWidget(context),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (flag) {
+            if (validate()) {
+              Util.check().then((value) {
+                if (value != null && value) {
+                  // Internet Present Case
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = true;
+                  });
+                  if (phoneNo.isNotEmpty) {
+                    callForgetPasswordApi();
                   } else {
                     setState(() {
                       flag = true;
-                      _isInternetAvailable = false;
-                      ToastUtil.showToast(context, "No internet");
                     });
+                    ToastUtil.showToast(context, "Please enter phone number");
                   }
-                });
-              }
+                } else {
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = false;
+                    ToastUtil.showToast(context, "No internet");
+                  });
+                }
+              });
             }
-          },
-          buttonController: _recoverButtonController,
-          text: AppStrings.RECOVER_NOW,
-        ), (bc) {
-      forgetPasswordBc = bc;
-    }, AppStrings.RECOVER_NOW, false, null);
+          }
+        },
+        buttonController: _recoverButtonController,
+        text: AppStrings.RECOVER_NOW,
+      ),
+      null,
+      (bc) {
+        forgetPasswordBc = bc;
+      },
+      AppStrings.RECOVER_NOW,
+      false,
+    );
   }
 
   showResetPasswordBottomSheet(BuildContext context) {
@@ -341,39 +381,38 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       flag = true;
                       _isInternetAvailable = true;
                     });
-                    if(nPassword.isNotEmpty) {
-                      if(nPassword.length > 7) {
-                        if(cPassword.isNotEmpty) {
-                          if(cPassword.length > 7) {
+                    if (nPassword.isNotEmpty) {
+                      if (nPassword.length > 7) {
+                        if (cPassword.isNotEmpty) {
+                          if (cPassword.length > 7) {
                             callResetPasswordApi();
-
-                          }else{
+                          } else {
                             setState(() {
                               flag = true;
                             });
-                            ToastUtil.showToast(context, "Confirm password is too short");
+                            ToastUtil.showToast(
+                                context, "Confirm password is too short");
                           }
-                        }else{
+                        } else {
                           setState(() {
                             flag = true;
                           });
-                          ToastUtil.showToast(context, "Please enter confirm password");
+                          ToastUtil.showToast(
+                              context, "Please enter confirm password");
                         }
-
-                      }else{
+                      } else {
                         setState(() {
                           flag = true;
                         });
-                        ToastUtil.showToast(context, "New password is too short");
+                        ToastUtil.showToast(
+                            context, "New password is too short");
                       }
-
-                    }else{
+                    } else {
                       setState(() {
                         flag = true;
                       });
                       ToastUtil.showToast(context, "Please enter new password");
                     }
-
                   } else {
                     setState(() {
                       flag = true;
@@ -381,16 +420,16 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       ToastUtil.showToast(context, "No internet");
                     });
                   }
-
                 });
               }
             }
           },
           buttonController: _updatePasswordButtonController,
           text: AppStrings.UPDATE_PASSWORD,
-        ), (bc2) {
+        ),
+        null, (bc2) {
       passwordBc = bc2;
-    }, AppStrings.UPDATE_PASSWORD, false, null);
+    }, AppStrings.UPDATE_PASSWORD, false);
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
@@ -410,16 +449,31 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       flag = true;
                       _isInternetAvailable = true;
                     });
-                    if(phoneNo.isNotEmpty) {
-                      callRegisterViaPhoneApi();
-                    }else{
+                    if (phoneNo.isNotEmpty) {
+                      if (phoneNo.length < 11) {
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(
+                            context, "Phone number is too short ");
+                      } else {
+                        if (phoneNo.length > 16) {
+                          setState(() {
+                            flag = true;
+                          });
+                          ToastUtil.showToast(
+                              context, "Phone number is too long ");
+                        } else {
+                          callRegisterViaPhoneApi();
+                        }
+                      }
+
+                    } else {
                       setState(() {
                         flag = true;
                       });
                       ToastUtil.showToast(context, "Please enter phone number");
                     }
-
-
                   } else {
                     setState(() {
                       flag = true;
@@ -433,37 +487,79 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           },
           buttonController: _submitButtonController,
           text: AppStrings.SUBMIT,
-        ), (bc3) {
+        ),
+        null, (bc3) {
       submitPhoneBc = bc3;
-    }, AppStrings.SUBMIT, false, null);
+    }, AppStrings.SUBMIT, false);
   }
 
   showOtpBottomSheet(BuildContext context) {
     isForgetPasswordFlow
         ? showBottomSheetWidget(
-        context, AppStrings.ENTER_OTP_DIGIT, AppStrings.OTP_DESC,
-        OtpTextField(onOtpCodeChanged: (otp) {
-      code = otp;
-    }), (bc1) {
-    Navigator.pop(bc1);
-    if(code.isNotEmpty) {
-      if(code.length == 4) {
-        showResetPasswordBottomSheet(context);
-      }else{
-        setState(() {
-          flag = true;
-        });
-        ToastUtil.showToast(context, "Please enter valid otp code");
-      }
-    }else{
-      setState(() {
-        flag = true;
-      });
-      ToastUtil.showToast(context, "Please enter otp code");
-    }
-
-
-    }, AppStrings.VERIFY_NOW, true):showBottomSheetWidgetWithAnimatedBtn(
+            context, AppStrings.ENTER_OTP_DIGIT, AppStrings.OTP_DESC,
+            OtpTextField(onOtpCodeChanged: (otp) {
+            code = otp;
+          }), () {
+            if (validate()) {
+              Util.check().then((value) {
+                if (value != null && value) {
+                  // Internet Present Case
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = true;
+                  });
+                  if (phoneNo.isNotEmpty) {
+                    if (phoneNo.length < 11) {
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(
+                          context, "Phone number is too short ");
+                    } else {
+                      if (phoneNo.length > 16) {
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(
+                            context, "Phone number is too long ");
+                      } else {
+                        callForgetPasswordApi();
+                      }
+                    }
+                  } else {
+                    setState(() {
+                      flag = true;
+                    });
+                    ToastUtil.showToast(context, "Please enter phone number");
+                  }
+                } else {
+                  setState(() {
+                    flag = true;
+                    _isInternetAvailable = false;
+                    ToastUtil.showToast(context, "No internet");
+                  });
+                }
+              });
+            }
+          }, (bc1) {
+            Navigator.pop(bc1);
+            if (code.isNotEmpty) {
+              if (code.length == 4) {
+                showResetPasswordBottomSheet(context);
+              } else {
+                setState(() {
+                  flag = true;
+                });
+                ToastUtil.showToast(context, "Please enter valid otp code");
+              }
+            } else {
+              setState(() {
+                flag = true;
+              });
+              ToastUtil.showToast(context, "Please enter otp code");
+            }
+          }, AppStrings.VERIFY_NOW, true)
+        : showBottomSheetWidgetWithAnimatedBtn(
             context,
             AppStrings.ENTER_OTP_DIGIT,
             AppStrings.OTP_DESC,
@@ -482,7 +578,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           _isInternetAvailable = true;
                         });
                         callVerifyOtpApi();
-
                       } else {
                         setState(() {
                           flag = true;
@@ -497,11 +592,55 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               buttonController: _verifyButtonController,
               text: AppStrings.VERIFY_NOW,
             ),
+            () {
+              if (validate()) {
+                Util.check().then((value) {
+                  if (value != null && value) {
+                    // Internet Present Case
+                    setState(() {
+                      flag = true;
+                      _isInternetAvailable = true;
+                    });
+                    if (phoneNo.isNotEmpty) {
+                      if (phoneNo.length < 11) {
+                        setState(() {
+                          flag = true;
+                        });
+                        ToastUtil.showToast(
+                            context, "Phone number is too short ");
+                      } else {
+                        if (phoneNo.length > 16) {
+                          setState(() {
+                            flag = true;
+                          });
+                          ToastUtil.showToast(
+                              context, "Phone number is too long ");
+                        } else {
+                          callRegisterViaPhoneApi();
+                        }
+                      }
+                    } else {
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Please enter phone number");
+                    }
+                  } else {
+                    setState(() {
+                      flag = true;
+                      _isInternetAvailable = false;
+                      ToastUtil.showToast(context, "No internet");
+                    });
+                  }
+                });
+              }
+            },
             (bc1) {
               otpPasswordBc = bc1;
             },
             AppStrings.VERIFY_NOW,
-            true, () {});
+            true,
+          );
   }
 
   Stack customEmailTextField(BuildContext context) {
@@ -634,8 +773,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(passwordValidation),
               ],
-              /*onEditingComplete: () => FocusScope.of(context).requestFocus(confirmPasswordNode),
-                          onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(confirmPasswordNode),*/
+              onEditingComplete: () => FocusScope.of(context).unfocus(),
+                          onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
               obscureText: obscureText,
               textInputAction: TextInputAction.done,
               decoration: AppStyles.decorationWithBorder(AppStrings.PASSWORD),
@@ -686,7 +825,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -712,7 +851,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 }
               },
               controller: numberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
@@ -752,7 +891,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               }
             },
             child: TextFormField(
-//                                enableInteractiveSelection: false,
+              focusNode: phoneNumberFocus,
+              enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
               toolbarOptions: ToolbarOptions(
@@ -778,10 +918,12 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 }
               },
               controller: phoneNumberController,
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.phone,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(phoneNumberValidation),
               ],
+              onEditingComplete: () =>
+                  FocusScope.of(context).requestFocus(passwordNode),
 
               onFieldSubmitted: (texttt) {
                 Focus.of(context).requestFocus(passwordNode);
@@ -1144,25 +1286,18 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
         if (responseRegister != null) {
           App().getAppPreferences().setIsLoggedIn(loggedIn: true);
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-            'isGuestLogin': false,
-            'tab_index': 1,
-            'show_tutorial': true
-          });
+          startTimer();
         } else {
           Map map = Map<String, String>();
           map['email'] = emailController.text.toString();
         }
       } else if (response.msg == "Code has been sent to your phone number") {
-
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
         }
         showOtpBottomSheet(context);
       } else if (response.msg ==
           "Verification code has been send successfully") {
-
         if (forgetPasswordBc != null) {
           Navigator.pop(forgetPasswordBc);
         }
@@ -1176,13 +1311,17 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               'phone': phoneNo,
             });
       } else if (response.msg == "Password Changed Successfully") {
-
         if (passwordBc != null) {
           Navigator.pop(passwordBc);
         }
         ToastUtil.showToast(context, response.msg);
       } else if (response.data is DioError) {
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
+
       } else {
         ToastUtil.showToast(context, response.msg);
         _stopAnimation();
@@ -1259,5 +1398,31 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     try {
       await _submitButtonController.reverse();
     } on TickerCanceled {}
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer1 = new Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        _sec--;
+        print(_sec);
+        setState(() {
+          if(_sec == 0){
+
+            timer.cancel();
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+              'isGuestLogin': false,
+              'tab_index': 1,
+              'show_tutorial': true
+            });
+
+          }
+        });
+
+
+      },
+    );
   }
 }

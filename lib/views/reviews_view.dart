@@ -14,6 +14,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ampd/appresources/app_colors.dart';
+import 'package:ampd/app/app_routes.dart';
 
 class ReviewsView extends StatefulWidget {
   Map<String, dynamic> map;
@@ -196,7 +197,11 @@ class _ReviewsViewState extends State<ReviewsView> {
 
       }
       else if(response.data is DioError){
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
       }
       else {
         ToastUtil.showToast(context, response.msg);
