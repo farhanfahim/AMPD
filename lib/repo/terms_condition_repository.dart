@@ -8,6 +8,7 @@ import 'package:ampd/data/model/repo_response_model.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:ampd/app/app.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 
 class TermsConditionRepository {
@@ -41,10 +42,12 @@ class TermsConditionRepository {
           repositoryResponse.data = pageResponse;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;

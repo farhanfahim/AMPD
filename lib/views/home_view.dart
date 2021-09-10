@@ -112,9 +112,10 @@ class _HomeViewState extends State<HomeView>
             setState(() {
               gcl.Geolocator.getCurrentPosition(
                   desiredAccuracy: gcl.LocationAccuracy.medium)
-                  .then((value) {
-                position = value;
+                  .then((locationValue) {
+                position = locationValue;
 
+                print("location: ${locationValue}");
                 UserLocation(
                     latitude: position.latitude, longitude: position.longitude);
                 userLocation.latitude = position.latitude;
@@ -586,7 +587,11 @@ class _HomeViewState extends State<HomeView>
       } else if (response.data is LikeDislikeModel) {
         ToastUtil.showToast(context, response.msg);
       } else if (response.data is DioError) {
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
       } else {
         ToastUtil.showToast(context, response.msg);
       }

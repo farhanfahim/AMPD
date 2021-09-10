@@ -33,7 +33,7 @@ class _SettingState extends State<SettingView> {
 
   bool pushNotificationSwitch = false;
   int a = 0;
-  double min=0.0,max=10.0;
+  double min=0.0,max=100.0;
 
   bool _isInAsyncCall = false;
   bool _isInternetAvailable = true;
@@ -200,7 +200,7 @@ class _SettingState extends State<SettingView> {
                             child: Padding(
                               padding: const EdgeInsets.only(right:15.0),
                               child: Text(
-                                "20\nmile",
+                                "1000\nmile",
                                 style: AppStyles.blackWithBoldFontTextStyle(
                                     context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                                 textAlign: TextAlign.center,
@@ -236,7 +236,7 @@ class _SettingState extends State<SettingView> {
                                 positionOffset:
                                 FlutterSliderTooltipPositionOffset(top: -30),
                               ),
-                              max: 20,
+                              max: 1000,
                               min: 0,
 
                               onDragging: (handlerIndex, lowerValue, upperValue) {
@@ -342,7 +342,11 @@ class _SettingState extends State<SettingView> {
           print(response.toString());
         }
       } else if (response.data is DioError) {
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
       } else {
         ToastUtil.showToast(context, response.msg);
       }

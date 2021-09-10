@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ampd/app/app.dart';
 import 'package:ampd/data/model/LikeDislikeModel.dart';
 import 'package:ampd/data/model/OffeReviewsModel.dart';
 import 'package:ampd/data/model/OfferModel.dart';
@@ -41,10 +42,12 @@ class AboutRepository {
           repositoryResponse.data = pageResponse;
           _repositoryResponse.add(repositoryResponse);
         }
-      }).catchError((onError) {
+      }).catchError((onError) async {
         if(onError is DioError){
           if (onError.response.statusCode == 401) {
             repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
           }
         }
         repositoryResponse.success = false;

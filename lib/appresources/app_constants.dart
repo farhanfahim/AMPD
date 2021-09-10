@@ -1,7 +1,7 @@
 
 class AppConstants{
 
-  static const int APP_VERSION = 390;
+  static const int APP_VERSION = 202;
 
   static const double LOGO_TEXT_SIZE = 55.0;
   static const double SLOGAN_TEXT_SIZE = 13.0;

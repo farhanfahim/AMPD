@@ -754,7 +754,11 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
           map['email'] = emailController.text.toString();
         }
       } else if(response.data is DioError){
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
       } else {
         ToastUtil.showToast(context, response.msg);
         _stopAnimation();

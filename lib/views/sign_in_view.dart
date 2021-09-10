@@ -24,7 +24,7 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sizer/sizer.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
-
+import 'dart:async';
 class SignInView extends StatefulWidget {
   @override
   _SignInViewState createState() => _SignInViewState();
@@ -37,7 +37,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   BuildContext passwordBc;
   BuildContext submitPhoneBc;
   LoginViewModel _loginViewModel;
-
+  Timer _timer1;
+  int _sec = 2;
   bool isForgetPasswordFlow = false;
 
   TextEditingController emailController = new TextEditingController();
@@ -1285,12 +1286,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
         if (responseRegister != null) {
           App().getAppPreferences().setIsLoggedIn(loggedIn: true);
-          Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-            'isGuestLogin': false,
-            'tab_index': 1,
-            'show_tutorial': true
-          });
+          startTimer();
         } else {
           Map map = Map<String, String>();
           map['email'] = emailController.text.toString();
@@ -1320,7 +1316,12 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         }
         ToastUtil.showToast(context, response.msg);
       } else if (response.data is DioError) {
-        _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        if (response.statusCode == 401) {
+          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        }else{
+          _isInternetAvailable = Util.showErrorMsg(context, response.data);
+        }
+
       } else {
         ToastUtil.showToast(context, response.msg);
         _stopAnimation();
@@ -1397,5 +1398,31 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     try {
       await _submitButtonController.reverse();
     } on TickerCanceled {}
+  }
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer1 = new Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        _sec--;
+        print(_sec);
+        setState(() {
+          if(_sec == 0){
+
+            timer.cancel();
+            Navigator.pushNamedAndRemoveUntil(
+                context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+              'isGuestLogin': false,
+              'tab_index': 1,
+              'show_tutorial': true
+            });
+
+          }
+        });
+
+
+      },
+    );
   }
 }

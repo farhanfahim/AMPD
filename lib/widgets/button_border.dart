@@ -17,10 +17,10 @@ class ButtonBorder extends StatelessWidget {
 
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 25.0),
-        height: 47.0,
-        width: double.maxFinite,
+        height: 50.0,
+        width: 350.0,
         child: Container(
-          constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+          constraints: BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
           alignment: Alignment.center,
           decoration: ShapeDecoration(
               color: Colors.white,

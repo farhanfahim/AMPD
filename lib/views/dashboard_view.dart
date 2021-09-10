@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
+import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
@@ -10,9 +12,11 @@ import 'package:ampd/views/side_menu_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:app_settings/app_settings.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:open_appstore/open_appstore.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart' as gcl;
 import 'package:sizer/sizer.dart';
@@ -54,6 +58,7 @@ class _DashboardViewState extends State<DashboardView>
 
   @override
   void initState() {
+    updateAppDialog();
     _selectedPageIndex = widget.map['tab_index'];
     listOfMainScreens = [
       SavedCoupons1View(),
@@ -380,6 +385,192 @@ class _DashboardViewState extends State<DashboardView>
                 : Container()
             : Container()
       ],
+    );
+  }
+
+  void updateAppDialog() {
+    Map<String, dynamic> appData = null;
+
+    FirebaseFirestore.instance
+        .collection('app_update')
+        .doc('app_id')
+        .get()
+        .then((chatlistSnapshot) async {
+      // print(chatlistSnapshot.length.toString());
+
+      appData = chatlistSnapshot.data();
+
+      print(appData.toString());
+
+      // setState(() {
+      //   appUpdateMap = appData;
+      // });
+      //
+      if (AppConstants.APP_VERSION < appData['version_number']) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context1) {
+              return WillPopScope(
+                onWillPop: () => Future.value(false),
+                child: UpdateDialog(
+                  contex: context,
+                  subTitle: "A newer version is available for download! Please update the app by visiting the ${Platform
+                      .isIOS ? 'App Store.' : 'Google Play Store.'}",
+                  title: "New Version Available",
+                  buttonText1: "Update Now",
+                  buttonText2: "Later",
+                  showLaterButton: !appData['force_update'],
+                  onPressed1: () {
+                    if(appData['force_update'] == false){
+                      Navigator.pop(context1);
+                    }
+
+                   /* OpenAppstore.launch(androidAppId: "com.app.ampd",
+                        iOSAppId: "1561178517");*/
+                  },
+                  onPressed2: () {
+                    Navigator.pop(context1);
+                  },
+                ),
+              );
+            });
+      }
+    });
+  }
+}
+
+
+class UpdateDialog extends StatefulWidget {
+
+  String title;
+  String subTitle;
+  String buttonText1;
+  String buttonText2;
+  Function onPressed1;
+  Function onPressed2;
+  Widget child;
+  BuildContext contex ;
+  bool showLaterButton;
+
+
+  UpdateDialog({this.showLaterButton, this.title = "", this.buttonText1 = "",this.buttonText2 = "", this.onPressed1,this.onPressed2, this.child,this.contex,this.subTitle = ""});
+
+  @override
+  _UpdateDialogState createState() => _UpdateDialogState();
+}
+
+class _UpdateDialogState extends State<UpdateDialog> {
+  @override
+  Widget build(BuildContext context) {
+    double height  =  MediaQuery.of(context).size.height * 0.48;
+    double width   =  MediaQuery.of(context).size.width  * 0.4;
+    double height1 =  MediaQuery.of(context).size.height * 0.5;
+
+    return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 15.0),
+      backgroundColor: Colors.transparent,
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 15),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.transparent,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(20.0))
+                  ),
+
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Column(
+                      children: [
+
+                        Text(
+                          widget.title,
+                          style: AppStyles.staticLabelsTextStyle(context).copyWith(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 18.0),
+                        ),
+                        SizedBox(height: 10,),
+                        Text(
+                          widget.subTitle,
+                          textAlign: TextAlign.center,
+                          style: AppStyles.staticLabelsTextStyle(context),
+                        ),
+                        SizedBox(height: 20,),
+
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width/3,
+                              child: buttonWithColor(
+                                title: widget.buttonText1,
+                                color: AppColors.APP_MAIN_SPLASH_COLOR,
+                                onTap: () {
+
+                                  widget.onPressed1();
+                                }
+                                ,),
+                            ),
+                            widget.showLaterButton ? SizedBox(width: 20,) : Container(),
+                            widget.showLaterButton ? Container(
+                              width: MediaQuery.of(context).size.width/3,
+                              child: buttonWithColor(
+                                color: AppColors.ACCENT_COLOR,
+                                title: widget.buttonText2,
+                                // btnColor: AppColors.APPGREENCOLOR,
+                                onTap: () {
+                                  widget.onPressed2();
+                                },),
+                            ) : Container(),
+                          ],
+                        )
+
+                      ],
+                    ),
+                  ),
+
+                ),
+              ),
+
+              widget.showLaterButton ? Positioned.fill(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                      width: 40,
+                      height: 40,
+                      child:
+                      FloatingActionButton(
+                        heroTag: "tag",
+                        backgroundColor:AppColors.ACCENT_COLOR ,
+                        // backgroundColor:
+                        // AppColors.PRIMARY_COLORTWO,
+                        elevation: 2,
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30.0,
+                        ),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                        // onPressed: widget.addClickListner
+                      )
+                  ),
+                ),
+              ) : Container(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

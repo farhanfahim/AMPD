@@ -16,7 +16,7 @@ class GradientButton extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 25.0),
         height: 50.0,
-        width: double.maxFinite,
+        width: 350.0,
         decoration: BoxDecoration(
             gradient: LinearGradient(colors: [Color(0xff174EA0), Color(0xff1E70C6), Color(0xff2490E9)],
               begin: Alignment.centerLeft,
@@ -25,7 +25,7 @@ class GradientButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0)
         ),
         child: Container(
-          constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+          constraints: BoxConstraints(maxWidth: 350.0, minHeight: 50.0),
           alignment: Alignment.center,
           child: Text(
             text,
