@@ -38,7 +38,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   BuildContext submitPhoneBc;
   LoginViewModel _loginViewModel;
   Timer _timer1;
-  int _sec = 2;
+  int _sec = 3;
   bool isForgetPasswordFlow = false;
 
   TextEditingController emailController = new TextEditingController();

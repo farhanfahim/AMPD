@@ -45,12 +45,14 @@
 	<string>AMPD needs to access your location in order to allow user to select location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>AMPD requires access to your location</string>
+
 	<key>NSMicrophoneUsageDescription</key>
 	<string>AMPD needs to access your microphone to record the videos.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>AMPD app needs to be able to access your motion use</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>AMPD needs to access your photo library to select images for posts and products.</string>
+
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>AMPD requires access to your photo library for selecting images and videos. </string>
 	<key>NSSpeechRecognitionUsageDescription</key>
