@@ -175,6 +175,7 @@ class _HomeViewState extends State<HomeView>
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     final appBar1 = appBar(
@@ -266,10 +267,15 @@ class _HomeViewState extends State<HomeView>
                   )
                   : Padding(
                 padding: EdgeInsets.all(5),
-                child: Loader(
-                   isLoading: _isInAsyncCall || _initialCall,
+                child: Center(
+                  child: Container(
+                    height: 60.0,
+                    child: Loader(
+                       isLoading: _isInAsyncCall || _initialCall,
 //                   isLoading: _swipeItems.length > 0 ? false:true,
-                  color: AppColors.APP_PRIMARY_COLOR,
+                      color: AppColors.APP_PRIMARY_COLOR,
+                    ),
+                  ),
                 ),
               ),
             )
@@ -322,10 +328,15 @@ class _HomeViewState extends State<HomeView>
         ),
       )
 
-             :Loader(
-       isLoading: true,
-         color: AppColors.APP_PRIMARY_COLOR,
-       ),
+             :Center(
+               child: Container(
+          height: 60.0,
+          child: Loader(
+                isLoading: true,
+                color: AppColors.ACCENT_COLOR
+          ),
+        ),
+             ),
        ),
     );
 
