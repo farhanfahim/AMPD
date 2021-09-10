@@ -348,6 +348,19 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
       automaticallyImplyLeading: false,
       centerTitle: true,
       title: _appBarTitle,
+      leading: IconButton(
+        onPressed: () {
+          if(_enabled){ Navigator.of(context).pop(); }
+        },
+        icon: Transform.rotate(
+          angle: 180 * pi / 180,
+          child: Icon(
+            Icons.arrow_right_alt,
+            size: 32.0,
+            // add custom icons also
+          ),
+        ),
+      ),
       actions: <Widget>[
         IconButton(
           icon: _searchIcon,

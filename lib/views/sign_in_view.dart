@@ -20,6 +20,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sizer/sizer.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
@@ -100,7 +101,22 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       },
       child: Scaffold(
           backgroundColor: AppColors.WHITE_COLOR,
-          body: SafeArea(
+          body: KeyboardActions(
+              tapOutsideToDismiss: true,
+              config: KeyboardActionsConfig(
+                keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+                keyboardBarColor: Colors.grey[500],
+                actions: [
+                  KeyboardActionsItem(
+                    focusNode: phoneNumberFocus,
+                  ),
+
+                  // KeyboardActionsItem(
+                  //   focusNode: handicapIndexNode,
+                  // ),
+                ],
+              ),
+              child: SafeArea(
             child: SingleChildScrollView(
               child: Center(
                 child: Column(
@@ -259,7 +275,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               ),
             ),
           )),
-    );
+    ),);
   }
 
   @override
@@ -756,8 +772,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(passwordValidation),
               ],
-              /*onEditingComplete: () => FocusScope.of(context).requestFocus(confirmPasswordNode),
-                          onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(confirmPasswordNode),*/
+              onEditingComplete: () => FocusScope.of(context).unfocus(),
+                          onFieldSubmitted: (_) => FocusScope.of(context).unfocus(),
               obscureText: obscureText,
               textInputAction: TextInputAction.done,
               decoration: AppStyles.decorationWithBorder(AppStrings.PASSWORD),
@@ -874,6 +890,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               }
             },
             child: TextFormField(
+              focusNode: phoneNumberFocus,
               enableInteractiveSelection: false,
               enabled: _enabled,
               cursorColor: AppColors.ACCENT_COLOR,
@@ -904,6 +921,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               inputFormatters: [
                 LengthLimitingTextInputFormatter(phoneNumberValidation),
               ],
+              onEditingComplete: () =>
+                  FocusScope.of(context).requestFocus(passwordNode),
 
               onFieldSubmitted: (texttt) {
                 Focus.of(context).requestFocus(passwordNode);
