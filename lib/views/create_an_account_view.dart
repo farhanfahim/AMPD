@@ -334,7 +334,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
 //                }
 //              },
               controller: firstNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(firstNameValidation),
               ],
@@ -397,7 +397,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
 //                }
 //              },
               controller: lastNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(lastNameValidation),
               ],
