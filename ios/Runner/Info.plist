@@ -29,12 +29,37 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>AMPD needs to access apple music.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>AMPD needs to access your calendar.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>AMPD would required access to your camera for capturing videos and images. Please provide the same.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>AMPD needs to access your contacts.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>AMPD needs to access your location in order to allow user to select location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>AMPD needs to access your location in order to allow user to select location.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>AMPD needs to access your location in order to allow user to select location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires access to your location</string>
+	<string>AMPD requires access to your location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>AMPD needs to access your microphone to record the videos.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>AMPD app needs to be able to access your motion use</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>AMPD needs to access your photo library to select images for posts and products.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>AMPD requires access to your photo library for selecting images and videos. </string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>TeeMates needs to access speech recognition to recognize speech</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
