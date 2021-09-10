@@ -13,6 +13,7 @@ import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/login_response_model.dart';
 import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
+import 'package:ampd/utils/FirstUpperCaseTextFormatter.dart';
 import 'package:ampd/utils/MediaPermissionHandler.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
@@ -401,7 +402,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                     TextPosition(offset: firstNameController.text.length));
               }
             },
-            child: TextFormField(
+            child: TextField(
 //                                enableInteractiveSelection: false,
               enabled: _enabled,
               focusNode: firstNameFocus,
@@ -430,14 +431,15 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //                }
 //              },
               controller: firstNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(firstNameValidation),
+//                FirstUpperCaseTextFormatter()
               ],
               onEditingComplete: () =>
                   FocusScope.of(context).requestFocus(lastNameFocus),
 
-              onFieldSubmitted: (texttt) {
+              onSubmitted: (texttt) {
                 FocusScope.of(context).requestFocus(lastNameFocus);
               },
               textInputAction: TextInputAction.next,
@@ -464,7 +466,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                     TextPosition(offset: lastNameController.text.length));
               }
             },
-            child: TextFormField(
+            child: TextField(
 //                                enableInteractiveSelection: false,
               enabled: _enabled,
               focusNode: lastNameFocus,
@@ -493,17 +495,17 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //                }
 //              },
               controller: lastNameController,
-              keyboardType: TextInputType.name,
+              keyboardType: TextInputType.text,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(lastNameValidation),
               ],
               onEditingComplete: () =>
                   FocusScope.of(context).requestFocus(emailFocus),
 
-              onFieldSubmitted: (texttt) {
+              onSubmitted: (texttt) {
                 FocusScope.of(context).requestFocus(emailFocus);
               },
-              textInputAction: TextInputAction.next,
+              textInputAction: TextInputAction.done,
               decoration: AppStyles.decorationWithBorder(AppStrings.LAST_NAME),
               //   , iconData, (){
               //
