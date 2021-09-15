@@ -20,14 +20,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 import 'package:toast/toast.dart';
+import 'package:open_appstore/open_appstore.dart';
+import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart' as gcl;
+import 'package:sizer/sizer.dart';
+import 'package:ampd/utils/LocationPermissionHandler.dart';
+import 'package:ampd/utils/loader.dart';
 
+import 'package:app_settings/app_settings.dart';
+import 'package:location_permissions/location_permissions.dart'    as locationPermission;
 class WelcomeView extends StatefulWidget {
   @override
   _WelcomeViewState createState() => _WelcomeViewState();
 }
 
 class _WelcomeViewState extends State<WelcomeView>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin  , WidgetsBindingObserver {
   TextEditingController numberController = new TextEditingController();
   int numberValidation = AppConstants.PHONE_VALIDATION;
   String phoneNo = "";
@@ -35,7 +43,7 @@ class _WelcomeViewState extends State<WelcomeView>
   bool _enabled = true;
   bool _isInternetAvailable = true;
   String _loginPlatform;
-
+  bool _openSetting = false;
   BuildContext otpPasswordBc;
   BuildContext submitPhoneBc;
   AnimationController _submitButtonController;
@@ -43,6 +51,44 @@ class _WelcomeViewState extends State<WelcomeView>
 
   bool flag = true;
   RegisterViewModel _registerViewModel;
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() {
+      LocationPermissionHandler.checkLocationPermission().then((permission) {
+        if (permission == locationPermission.PermissionStatus.granted) {
+
+          _openSetting = true;
+        }
+      });
+    });
+  }
+
+  bool getCurrentLocation() {
+    LocationPermissionHandler.checkLocationPermission().then((permission) {
+      if (permission == locationPermission.PermissionStatus.granted) {
+        _openSetting = true;
+      } else if (permission == locationPermission.PermissionStatus.unknown ||
+          permission == locationPermission.PermissionStatus.denied ||
+          permission == locationPermission.PermissionStatus.restricted) {
+        try {
+          LocationPermissionHandler.requestPermissoin().then((value) {
+            if (permission == locationPermission.PermissionStatus.granted) {
+              _openSetting = true;
+            } else {
+              _openSetting = false;
+            }
+          });
+        } on PlatformException catch (err) {
+          print(err);
+        } catch (err) {
+          print(err);
+        }
+      } else {
+        _openSetting = false;
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +186,9 @@ class _WelcomeViewState extends State<WelcomeView>
   @override
   void initState() {
     //throw Exception("This is a crash!");
+
+    getCurrentLocation();
+    WidgetsBinding.instance.addObserver(this);
     _submitButtonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     _verifyButtonController = AnimationController(

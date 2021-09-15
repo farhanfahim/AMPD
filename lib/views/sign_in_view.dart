@@ -104,13 +104,16 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           backgroundColor: AppColors.WHITE_COLOR,
           body: KeyboardActions(
               tapOutsideToDismiss: true,
+
               config: KeyboardActionsConfig(
                 keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
                 keyboardBarColor: Colors.grey[500],
+                nextFocus: false,
                 actions: [
                   KeyboardActionsItem(
                     focusNode: phoneNumberFocus,
                   ),
+
 
                   // KeyboardActionsItem(
                   //   focusNode: handicapIndexNode,
@@ -1286,7 +1289,12 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
         if (responseRegister != null) {
           App().getAppPreferences().setIsLoggedIn(loggedIn: true);
-          startTimer();
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+            'isGuestLogin': false,
+            'tab_index': 1,
+            'show_tutorial': true
+          });
         } else {
           Map map = Map<String, String>();
           map['email'] = emailController.text.toString();
@@ -1400,29 +1408,4 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     } on TickerCanceled {}
   }
 
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer1 = new Timer.periodic(
-      oneSec,
-          (Timer timer) {
-        _sec--;
-        print(_sec);
-        setState(() {
-          if(_sec == 0){
-
-            timer.cancel();
-            Navigator.pushNamedAndRemoveUntil(
-                context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-              'isGuestLogin': false,
-              'tab_index': 1,
-              'show_tutorial': true
-            });
-
-          }
-        });
-
-
-      },
-    );
-  }
 }

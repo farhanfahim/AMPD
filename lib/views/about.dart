@@ -17,9 +17,11 @@ import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_web_view/easy_web_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 
@@ -30,6 +32,7 @@ class AboutView extends StatefulWidget {
 
 class _AboutState extends State<AboutView> {
 
+  static ValueKey key3 = ValueKey('key_2');
   AboutViewModel _aboutViewModel;
   bool _isInternetAvailable = true;
   PageModel model;
@@ -62,63 +65,62 @@ class _AboutState extends State<AboutView> {
             iconColor: AppColors.COLOR_BLACK),
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: StreamBuilder<PageModel>(
-                stream: _streamController.stream,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.9,
-                      child: Center(
-                        child: Container(
-                          height: 60.0,
-                          child: Loader(
-                              isLoading: isDataLoad,
-                              color: AppColors.ACCENT_COLOR
-                          ),
+          child: StreamBuilder<PageModel>(
+              stream: _streamController.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.9,
+                    child: Center(
+                      child: Container(
+                        height: 60.0,
+                        child: Loader(
+                            isLoading: isDataLoad,
+                            color: AppColors.ACCENT_COLOR
                         ),
                       ),
-                    );
-                  } else {
+                    ),
+                  );
+                } else {
 
-                    return snapshot.data!= null ? Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Column(
-                        children: [
-                          Header(
-                              heading1: AppStrings.ABOUT,
-                              heading2: AppStrings.WHO_WE_ARE),
-                          SizedBox(
-                            height: 30.0,
-                          ),
+                  return snapshot.data!= null ? Container(
+                    margin: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Column(
+                      children: [
+                        Header(
+                            heading1: AppStrings.ABOUT,
+                            heading2: AppStrings.WHO_WE_ARE),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        Expanded(
+                          child: EasyWebView(
+                              src: snapshot.data.content,
+                              onLoaded: () {
+                                print('$key3: Loaded: ${snapshot.data.content}');
+                              },
+                              isHtml: true,
 
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 0.0,
-                                ),
-                                child: Text(
-                                    model.content,
-                                    textAlign: TextAlign.left,
-                                    style: AppStyles.detailWithSmallTextSizeTextStyle().copyWith(fontSize: 12.0)
-                                ),
-                              )),
-                          SizedBox(
-                            height: 20.0,
+                              isMarkdown: false,
+                              convertToWidgets: false,
+                              widgetsTextSelectable: false,
+                              key: key3
+                            // width: 100,
+                            // height: 100,
                           ),
-                        ],
-                      ),
-                    ): Center(
-                        child: NoRecordFound("No about us",
-                            AppImages.NO_NOTIFICATIONS_IMAGE)
-                    );
-                  }
-                }),
-          ),
+                        ),
+
+                      ],
+                    ),
+                  ): Center(
+                      child: NoRecordFound("No about us",
+                          AppImages.NO_NOTIFICATIONS_IMAGE)
+                  );
+                }
+              }),
         ));
   }
 

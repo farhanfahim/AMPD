@@ -7,6 +7,7 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SplashView extends StatefulWidget {
@@ -14,14 +15,18 @@ class SplashView extends StatefulWidget {
   _SplashViewState createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
+  bool _openSetting = false;
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     Timer(Duration(seconds: 3),
             () =>  checkIsLoggedIn());
-  }
+      }
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -48,7 +53,7 @@ class _SplashViewState extends State<SplashView> {
             alignment: Alignment.bottomCenter,
             margin: EdgeInsets.only(bottom: 15.0),
             child: Text(
-              "Version 2.0.2",
+              "Version 2.0.3",
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontSize: 12.0,
@@ -63,6 +68,8 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future checkIsLoggedIn() async {
+
+
     await App().getAppPreferences().isPreferenceReady;
 
     App().getAppPreferences().getIsLoggedIn().then((value) {
