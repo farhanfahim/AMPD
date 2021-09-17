@@ -211,14 +211,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   _isInternetAvailable = true;
                                 });
                                 if (phoneNo2.isNotEmpty) {
-                                  if (phoneNo2.length < 11) {
+                                  if (phoneNo2.length < 10) {
                                     setState(() {
                                       flag = true;
                                     });
                                     ToastUtil.showToast(
                                         context, "Phone number is too short ");
                                   } else {
-                                    if (phoneNo2.length > 16) {
+                                    if (phoneNo2.length > 15) {
                                       setState(() {
                                         flag = true;
                                       });
@@ -453,14 +453,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 11) {
+                      if (phoneNo.length < 10) {
                         setState(() {
                           flag = true;
                         });
                         ToastUtil.showToast(
                             context, "Phone number is too short ");
                       } else {
-                        if (phoneNo.length > 16) {
+                        if (phoneNo.length > 15) {
                           setState(() {
                             flag = true;
                           });
@@ -512,14 +512,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     _isInternetAvailable = true;
                   });
                   if (phoneNo.isNotEmpty) {
-                    if (phoneNo.length < 11) {
+                    if (phoneNo.length < 10) {
                       setState(() {
                         flag = true;
                       });
                       ToastUtil.showToast(
                           context, "Phone number is too short ");
                     } else {
-                      if (phoneNo.length > 16) {
+                      if (phoneNo.length > 15) {
                         setState(() {
                           flag = true;
                         });
@@ -605,14 +605,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 11) {
+                      if (phoneNo.length < 10) {
                         setState(() {
                           flag = true;
                         });
                         ToastUtil.showToast(
                             context, "Phone number is too short ");
                       } else {
-                        if (phoneNo.length > 16) {
+                        if (phoneNo.length > 15) {
                           setState(() {
                             flag = true;
                           });
@@ -1290,11 +1290,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         if (responseRegister != null) {
           App().getAppPreferences().setIsLoggedIn(loggedIn: true);
           Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-            'isGuestLogin': false,
-            'tab_index': 1,
-            'show_tutorial': true
-          });
+              context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false);
         } else {
           Map map = Map<String, String>();
           map['email'] = emailController.text.toString();

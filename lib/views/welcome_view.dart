@@ -224,14 +224,14 @@ class _WelcomeViewState extends State<WelcomeView>
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if(phoneNo.length < 12){
+                      if(phoneNo.length < 10){
                         setState(() {
                           flag = true;
                         });
                         ToastUtil.showToast(
                             context, "Phone number is too short ");
                       }else{
-                        if(phoneNo.length > 16){
+                        if(phoneNo.length > 15){
                           setState(() {
                             flag = true;
                           });

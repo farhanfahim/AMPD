@@ -35,8 +35,7 @@ class DashboardView extends StatefulWidget {
   _DashboardViewState createState() => _DashboardViewState();
 }
 
-class _DashboardViewState extends State<DashboardView>
-    with WidgetsBindingObserver {
+class _DashboardViewState extends State<DashboardView> {
   List<String> _tutorialIcons = [
     AppImages.IC_TUTORIAL_DISLIKE,
     AppImages.IC_TUTORIAL_LIKE,
@@ -45,7 +44,6 @@ class _DashboardViewState extends State<DashboardView>
 
   int _tutorialCount = 0;
 
-  bool _openSetting = true;
   List<String> bottomBarIcons = [
     AppImages.IC_COUPONS,
     AppImages.IC_MENU,
@@ -67,8 +65,6 @@ class _DashboardViewState extends State<DashboardView>
     ];
 
     _pageController = PageController(initialPage: _selectedPageIndex);
-    getCurrentLocation();
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -76,54 +72,10 @@ class _DashboardViewState extends State<DashboardView>
   void dispose() {
     _pageController.dispose();
 
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() {
-      LocationPermissionHandler.checkLocationPermission().then((permission) {
-        if (permission == locationPermission.PermissionStatus.granted) {
-          _openSetting = true;
-        }
-      });
-    });
-  }
 
-  bool getCurrentLocation() {
-    LocationPermissionHandler.checkLocationPermission().then((permission) {
-      if (permission == locationPermission.PermissionStatus.granted) {
-        setState(() {
-          _openSetting = true;
-        });
-      } else if (permission == locationPermission.PermissionStatus.unknown ||
-          permission == locationPermission.PermissionStatus.denied ||
-          permission == locationPermission.PermissionStatus.restricted) {
-        try {
-          LocationPermissionHandler.requestPermissoin().then((value) {
-            if (permission == locationPermission.PermissionStatus.granted) {
-              setState(() {
-                _openSetting = true;
-              });
-            } else {
-              setState(() {
-                _openSetting = false;
-              });
-            }
-          });
-        } on PlatformException catch (err) {
-          print(err);
-        } catch (err) {
-          print(err);
-        }
-      } else {
-        setState(() {
-          _openSetting = false;
-        });
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,37 +107,8 @@ class _DashboardViewState extends State<DashboardView>
       children: [
         Scaffold(
           // appBar: _selectedPageIndex == 1? appBar1 : null,
-          body: _openSetting
-              ? body
-              : Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'Location permission is required to access nearby offers.',
-                        style: AppStyles.poppinsTextStyle(
-                                fontSize: 12.0, weight: FontWeight.w500)
-                            .copyWith(color: AppColors.UNSELECTED_COLOR),
-                      ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 5.0.w),
-                        child: GradientButton(
-                          onTap: () {
-                            AppSettings.openAppSettings();
-                          },
-                          text: "Please enable location",
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-          bottomNavigationBar: _openSetting?Container(
+          body: body,
+          bottomNavigationBar: Container(
             height: 95.0,
             color: Colors.white,
             child: Stack(
@@ -319,7 +242,7 @@ class _DashboardViewState extends State<DashboardView>
                 )
               ],
             ),
-          ):null,
+          ),
         ),
         widget.map['show_tutorial']
             ? _tutorialCount < 3

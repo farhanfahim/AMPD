@@ -75,11 +75,8 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
     App().getAppPreferences().getIsLoggedIn().then((value) {
       if(value) {
         //   ToastUtil.showToast(context, "value: "+value.toString());
-        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-          'isGuestLogin' : false,
-          'tab_index' : 1,
-          'show_tutorial' : false
-        });
+        Navigator.pushNamedAndRemoveUntil(
+            context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false);
       }else{
         Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (route) => false);
       }

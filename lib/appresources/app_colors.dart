@@ -25,6 +25,7 @@ class AppColors {
   static const Color APP_APP_BAR_DARK_COLOR = Color(0xFF323233);
   static const Color APP_COLOR_LIGHT_GREY = Color(0xFFF6F6F6);
   static const Color APP_COLOR_EXTRA_LIGHT_GREY = Color(0xFFEFEFF2);
+  static const Color TRANSPARENT = Color(0xFF00000000);
   static const Color OUTLINE = Color(0xFFCBCBCB);
 
   static const Color TAG_FRIEND_OUTLINE = Color(0xFFB9B9B9);

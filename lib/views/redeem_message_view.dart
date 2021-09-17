@@ -78,9 +78,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(title:"",onBackClick: (){
-          Navigator.of(context).pop();
-        },iconColor:AppColors.WHITE_COLOR),
+
         backgroundColor: AppColors.BLUE_COLOR,
         body: SafeArea(
             child: Center(
@@ -175,7 +173,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                                 return CustomRatingDialog(
                                   contex: context,
                                   subTitle: "How was Starbucks?",
-                                  title: "Your feedback will help us improve our services.",
+                                  title: "Help other AMPD users by leaving a store review",
                                   ratingBar: RatingBarWidget(),
                                   buttonText1: AppStrings.SUBMIT,
                                   onPressed1: (message) {
