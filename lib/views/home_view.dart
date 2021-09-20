@@ -137,34 +137,10 @@ class _HomeViewState extends State<HomeView>
             return permissionGranted;
           });
 
-      }else if (permission == locationPermission.PermissionStatus.unknown ||
-          permission == locationPermission.PermissionStatus.denied ||
-          permission == locationPermission.PermissionStatus.restricted) {
-        try {
-          LocationPermissionHandler.requestPermissoin().then((value) {
-            if (permission == locationPermission.PermissionStatus.granted) {
-              setState(() {
-                gcl.Geolocator.getCurrentPosition(
-                        desiredAccuracy: gcl.LocationAccuracy.medium)
-                    .then((value) {
-                  position = value;
+      }else{
 
-                  UserLocation(
-                      latitude: position.latitude,
-                      longitude: position.longitude);
-                  widget.isGuestLogin?callOffersApiWithoutToken():callOffersApi();
-                  permissionGranted = true;
-                  return permissionGranted;
-                });
-              });
-            }
-          });
-        } on PlatformException catch (err) {
-          print(err);
-        } catch (err) {
-          print(err);
-        }
       }
+
     });
   }
 

@@ -101,33 +101,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
             return true;
           });
         });
-      } else if (permission == locationPermission.PermissionStatus.unknown ||
-          permission == locationPermission.PermissionStatus.denied ||
-          permission == locationPermission.PermissionStatus.restricted) {
-        try {
-          LocationPermissionHandler.requestPermissoin().then((value) {
-            if (permission == locationPermission.PermissionStatus.granted) {
-              setState(() {
-
-                gcl.Geolocator.getCurrentPosition(
-                    desiredAccuracy: gcl.LocationAccuracy.medium)
-                    .then((value) {
-                  position = value;
-
-                  UserLocation(
-                      latitude: position.latitude,
-                      longitude: position.longitude);
-
-                  return true;
-                });
-              });
-            }
-          });
-        } on PlatformException catch (err) {
-          print(err);
-        } catch (err) {
-          print(err);
-        }
       }
     });
   }

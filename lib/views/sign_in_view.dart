@@ -104,13 +104,16 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           backgroundColor: AppColors.WHITE_COLOR,
           body: KeyboardActions(
               tapOutsideToDismiss: true,
+
               config: KeyboardActionsConfig(
                 keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
                 keyboardBarColor: Colors.grey[500],
+                nextFocus: false,
                 actions: [
                   KeyboardActionsItem(
                     focusNode: phoneNumberFocus,
                   ),
+
 
                   // KeyboardActionsItem(
                   //   focusNode: handicapIndexNode,
@@ -208,14 +211,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   _isInternetAvailable = true;
                                 });
                                 if (phoneNo2.isNotEmpty) {
-                                  if (phoneNo2.length < 11) {
+                                  if (phoneNo2.length < 10) {
                                     setState(() {
                                       flag = true;
                                     });
                                     ToastUtil.showToast(
                                         context, "Phone number is too short ");
                                   } else {
-                                    if (phoneNo2.length > 16) {
+                                    if (phoneNo2.length > 15) {
                                       setState(() {
                                         flag = true;
                                       });
@@ -450,14 +453,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 11) {
+                      if (phoneNo.length < 10) {
                         setState(() {
                           flag = true;
                         });
                         ToastUtil.showToast(
                             context, "Phone number is too short ");
                       } else {
-                        if (phoneNo.length > 16) {
+                        if (phoneNo.length > 15) {
                           setState(() {
                             flag = true;
                           });
@@ -509,14 +512,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     _isInternetAvailable = true;
                   });
                   if (phoneNo.isNotEmpty) {
-                    if (phoneNo.length < 11) {
+                    if (phoneNo.length < 10) {
                       setState(() {
                         flag = true;
                       });
                       ToastUtil.showToast(
                           context, "Phone number is too short ");
                     } else {
-                      if (phoneNo.length > 16) {
+                      if (phoneNo.length > 15) {
                         setState(() {
                           flag = true;
                         });
@@ -602,14 +605,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 11) {
+                      if (phoneNo.length < 10) {
                         setState(() {
                           flag = true;
                         });
                         ToastUtil.showToast(
                             context, "Phone number is too short ");
                       } else {
-                        if (phoneNo.length > 16) {
+                        if (phoneNo.length > 15) {
                           setState(() {
                             flag = true;
                           });
@@ -1286,7 +1289,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
         if (responseRegister != null) {
           App().getAppPreferences().setIsLoggedIn(loggedIn: true);
-          startTimer();
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false);
         } else {
           Map map = Map<String, String>();
           map['email'] = emailController.text.toString();
@@ -1400,29 +1404,4 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     } on TickerCanceled {}
   }
 
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer1 = new Timer.periodic(
-      oneSec,
-          (Timer timer) {
-        _sec--;
-        print(_sec);
-        setState(() {
-          if(_sec == 0){
-
-            timer.cancel();
-            Navigator.pushNamedAndRemoveUntil(
-                context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-              'isGuestLogin': false,
-              'tab_index': 1,
-              'show_tutorial': true
-            });
-
-          }
-        });
-
-
-      },
-    );
-  }
 }

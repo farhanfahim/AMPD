@@ -245,7 +245,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
                             SizedBox(height: 20.0,),
 
-                            Row(
+                         /*   Row(
                               children: [
                                 Text(
                                   "Average Review :",
@@ -273,7 +273,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                               ],
                             ),
 
-                            SizedBox(height: 15.0,),
+                            SizedBox(height: 15.0,),*/
 
                             Row(
                               children: [
@@ -306,7 +306,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
                             SizedBox(height: 15.0,),
 
-                            Row(
+                           /* Row(
                               children: [
                                 Text(
                                   "Distance :",
@@ -341,7 +341,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                   padding: EdgeInsets.symmetric(
                                       vertical: 4.0, horizontal: 10.0),
                                   child: Text(
-                                    "${calculateDistance()} km",
+                                    "${calculateDistance()} miles",
                                     style: AppStyles.poppinsTextStyle(
                                         fontSize: 11.0.sp,
                                         weight: FontWeight.w400).copyWith(
@@ -384,7 +384,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                   ),
                                 )
                               ],
-                            ),
+                            ),*/
 
                             SizedBox(height: 15.0,),
 
@@ -396,7 +396,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
                             Center(
                               child: Text(
-                                "Time to Avail the Offer:",
+                                "Offer redemption time limit",
                                 style: AppStyles.poppinsTextStyle(
                                     fontSize: 15.0.sp, weight: FontWeight.w400),
                               ),
@@ -783,7 +783,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                           padding: EdgeInsets.symmetric(
                                               vertical: 3.0, horizontal: 6.0),
                                           child: Text(
-                                            "${calculateDistance()} km",
+                                            "${calculateDistance()} miles",
                                             style: AppStyles.poppinsTextStyle(
                                                 fontSize: 13.0,
                                                 weight: FontWeight.w400)
@@ -1113,8 +1113,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
         widget.coord.latitude, widget.coord.longitude,
         widget.currentCoords.latitude, widget.currentCoords.longitude) / 1000;
 
-    //double convertKmToMile = _distanceInMeters/0.6213;
-    return _distanceInMeters.roundToDouble();
+    double convertKmToMile = _distanceInMeters/0.6213;
+    return convertKmToMile.roundToDouble();
   }
 
 

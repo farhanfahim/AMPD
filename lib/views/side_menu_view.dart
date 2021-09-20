@@ -71,7 +71,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                   child: Column(
                     children: [
                       Header(
-                          heading1: AppStrings.SIDE_MENU,
+                          heading1: "Preferences",
                           heading2: AppStrings.DISCOVER_MORE),
                       SizedBox(
                         height: 30.0,
@@ -175,57 +175,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, AppRoutes.MY_PROFILE_VIEW);
-                        },
-                        child: Container(
-                          width: double.maxFinite,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            //crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "My Profile",
-                                    style: AppStyles.blackWithDifferentFontTextStyle(
-                                            context, 12.0)
-                                        .copyWith(
-                                            color: AppColors
-                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                  ),
-                                  SizedBox(
-                                    height: 6.0,
-                                  ),
-                                  Text(
-                                    "Manage your profile",
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        fontSize: 14.0,
-                                        color: AppColors.COLOR_BLACK,
-                                        fontFamily: AppFonts.POPPINS_MEDIUM,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ],
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                size: 16.0,
-                                color:
-                                    AppColors.COLOR_BLACK, // add custom icons also
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+
                       SizedBox(
                         height: 30.0,
                       ),

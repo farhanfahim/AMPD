@@ -22,6 +22,7 @@ import 'package:ampd/views/terms_conditions.dart';
 import 'package:ampd/views/welcome_view.dart';
 import 'package:ampd/views/active_coupons_view.dart';
 import 'package:ampd/views/expire_coupons_view.dart';
+import 'package:ampd/views/location_setting_view.dart';
 import 'package:flutter/material.dart';
 
 
@@ -40,6 +41,7 @@ class AppRoutes {
   static const String REVIEWS_VIEW = "/reviews_view";
   static const String HOME_VIEW = "/home_view";
   static const String DASHBOARD_VIEW = "/dashboard_view";
+  static const String LOCATION_SETTING_VIEW = "/location_setting_view";
   static const String EDIT_PROFILE_VIEW = "/edit_profile_view";
   static const String MY_PROFILE_VIEW = "/my_profile_view";
   static const String FILTER_VIEW = "/filter_view";
@@ -81,6 +83,14 @@ class AppRoutes {
           return MaterialPageRoute<void>(
             settings: routeSettings,
             builder: (BuildContext context) => ActiveCouponsView(),
+          );
+        }
+
+      case LOCATION_SETTING_VIEW:
+        {
+          return MaterialPageRoute<void>(
+            settings: routeSettings,
+            builder: (BuildContext context) => LocationSettingView(),
           );
         }
 

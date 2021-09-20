@@ -1564,13 +1564,13 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
       ToastUtil.showToast(context, "Please provide your phone number");
       return false;
-    }else if(phone.length < 11){
+    }else if(phone.length < 10){
       ToastUtil.showToast(
           context, "Phone number is too short ");
       return false;
 
     }
-      else if(phone.length > 16){
+      else if(phone.length > 15){
         ToastUtil.showToast(
             context, "Phone number is too long ");
         return false;
