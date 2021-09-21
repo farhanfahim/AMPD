@@ -138,6 +138,22 @@ class NetworkNAO {
       });
 
 
+  static Future<dynamic> deleteOffer(String accessToken,Map<String, dynamic> map) =>
+
+      NetworkUtil().post(
+          url: '${NetworkEndpoints.OFFERS}/${map['offer_id']}',
+          hasHeader: false,
+          token: accessToken,
+          formData: FormData.fromMap({
+            '_method':'delete'
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      }); //
+
+
+
 
   static Future<dynamic> getOffers(String accessToken,Map<String, dynamic> map) =>
       NetworkUtil().get(

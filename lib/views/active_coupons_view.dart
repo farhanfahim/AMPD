@@ -7,13 +7,17 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/OfferDataClassModel.dart';
+import 'package:ampd/data/model/RedeemOfferModel.dart';
 import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
 import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
+import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/flat_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
@@ -31,15 +35,13 @@ class ActiveCouponsView extends StatefulWidget {
   _ActiveCouponsState createState() => _ActiveCouponsState();
 }
 
-class _ActiveCouponsState extends State<ActiveCouponsView> {
-
+class _ActiveCouponsState extends State<ActiveCouponsView> with TickerProviderStateMixin{
+  AnimationController _buttonController;
   int _totalPages = 0;
   int _currentPage = 1;
   int _selectedIndex = 0;
   final PagingController<int, DataClass> _pagingController1 =  PagingController(firstPageKey: 1);
-
-  List<DataClass> dataList = List<DataClass>();
-
+  DataClass singleOfferModel;
   bool _enabled = true;
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
@@ -55,6 +57,10 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
       _fetchPage(pageKey);
     });
 
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
+
     _activeCouponViewModel = ActiveCouponViewModel(App());
     subscribeToViewModel();
     super.initState();
@@ -69,7 +75,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
   }
   @override
   void dispose() {
-
+    _buttonController.dispose();
     _pagingController1.dispose();
     super.dispose();
   }
@@ -89,7 +95,21 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
 
 
 
-                return checkExpiry(item.expireAt)?Container():SavedCouponActiveTileView(item);
+                return checkExpiry(item.expireAt)?Container():Dismissible(
+                  direction: DismissDirection.endToStart,
+                  key: Key(item.title),
+                  onDismissed: (direction) {
+                    // Removes that item the list on swipwe
+                    setState(() {
+                      deleteOffersApi(item.id);
+                      _pagingController1.itemList.removeAt(index);
+                    });
+
+
+                  },
+                  background: Container(color: Colors.red),
+                  child: SavedCouponActiveTileView(item),
+                );
               },
               noItemsFoundIndicatorBuilder: (context) => Center(
                   child: NoRecordFound(
@@ -138,79 +158,251 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
   }
 
   Widget SavedCouponActiveTileView(DataClass data) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 10.0,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.0),
-          child: Row(
-            children: [
-              Container(
-                width: 70.0,
-                height: 70.0,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  child: Image.network(
-                    data.imageUrl,
-                    fit: BoxFit.cover,
+    return Container(
+      color: AppColors.WHITE_COLOR,
+      child: GestureDetector(
+        onTap:(){
+          Navigator.pushNamed(context, AppRoutes.REDEEM_NOW,arguments: {'offer_id': data.id,});
+        },
+        child: Column(
+          children: [
+            SizedBox(
+              height: 10.0,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 70.0,
+                    height: 70.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        data.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(data.productName,
-                        style:
-                        AppStyles.blackWithBoldFontTextStyle(context, 16.0)
-                            .copyWith(color: AppColors.COLOR_BLACK)
-                            .copyWith(fontWeight: FontWeight.w600)),
-                    SizedBox(
-                      height: 3.0,
-                    ),
-                    Text(
-                      formatUTCTime(data.expireAt),
-                      style: AppStyles.blackWithDifferentFontTextStyle(
-                          context, 11.0)
-                          .copyWith(
-                          color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Time to Avail:(${data.availTime } hour)",
-                          style: AppStyles.blackWithDifferentFontTextStyle(
-                              context, 12.0)
-                              .copyWith(
-                              color:
-                              AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                        Text(data.productName,
+                            style:
+                            AppStyles.blackWithBoldFontTextStyle(context, 16.0)
+                                .copyWith(color: AppColors.COLOR_BLACK)
+                                .copyWith(fontWeight: FontWeight.w600)),
+                        SizedBox(
+                          height: 3.0,
                         ),
-                        FlatButtonWidget(
-                          onTap: () {
-                            Navigator.pushNamed(context, AppRoutes.REDEEM_NOW,arguments: {'offer_id': data.id,});
-                          }, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
+                        Text(
+                          formatUTCTime(data.expireAt),
+                          style: AppStyles.blackWithDifferentFontTextStyle(
+                              context, 11.0)
+                              .copyWith(
+                              color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Time to Avail:(${data.availTime } hour)",
+                              style: AppStyles.blackWithDifferentFontTextStyle(
+                                  context, 12.0)
+                                  .copyWith(
+                                  color:
+                                  AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                            ),
+                            FlatButtonWidget(
+                              onTap: () {
+                                setState(() {
+                                  singleOfferModel = data;
+                                });
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context1) {
+                                      return Dialog(
+                                        insetPadding: EdgeInsets.symmetric(
+                                            horizontal: 0.0),
+                                        backgroundColor: Colors.transparent,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment
+                                              .center,
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .center,
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 20),
+                                                  child: Container(
+                                                    margin: EdgeInsets.symmetric(
+                                                        horizontal: 30.0),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border.all(
+                                                          color: Colors.transparent,
+                                                        ),
+                                                        borderRadius: BorderRadius
+                                                            .all(
+                                                            Radius.circular(20.0))
+                                                    ),
+
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(
+                                                          10.0),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize
+                                                            .min,
+                                                        //mainAxisAlignment: MainAxisAlignment.center,
+                                                        //crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Container(
+                                                            margin: EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: MediaQuery
+                                                                    .of(context)
+                                                                    .size
+                                                                    .width * .13),
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(10, 20,
+                                                                10, 25),
+                                                            child: Text(
+                                                              "Redeem Offer Now",
+                                                              style:
+                                                              AppStyles
+                                                                  .blackWithSemiBoldFontTextStyle(
+                                                                  context, 18.0)
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight
+                                                                      .w600),
+                                                              textAlign: TextAlign
+                                                                  .center,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: MediaQuery
+                                                                    .of(context)
+                                                                    .size
+                                                                    .width * 0.1),
+                                                            child: Text(
+                                                              "Do you want to Redeem this offer right now?",
+                                                              style:
+                                                              AppStyles
+                                                                  .blackWithSemiBoldFontTextStyle(
+                                                                  context, 15.0)
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight
+                                                                      .w500),
+                                                              textAlign: TextAlign
+                                                                  .center,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 25.0,
+                                                          ),
+
+                                                          AnimatedGradientButton(
+                                                            onAnimationTap: () {
+                                                              redeemOffersApi(data.id);
+                                                            },
+                                                            buttonController: _buttonController,
+                                                            text: AppStrings.REDEEM_NOW,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 20.0,
+                                                          ),
+                                                          ButtonBorder(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context1);
+                                                            },
+                                                            text: AppStrings.LATER,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 45.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+
+                                                  ),
+                                                ),
+                                                Positioned.fill(
+                                                  right: 15,
+                                                  child: Align(
+                                                    alignment: Alignment.topRight,
+
+                                                    child: Container(
+                                                        width: 50,
+                                                        height: 50,
+                                                        child:
+                                                        FloatingActionButton(
+                                                          heroTag: "tag",
+                                                          backgroundColor: AppColors
+                                                              .BLUE_COLOR,
+                                                          // backgroundColor:
+                                                          // AppColors.PRIMARY_COLORTWO,
+                                                          elevation: 2,
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                            size: 20.0,
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(context);
+                                                          },
+                                                          // onPressed: widget.addClickListner
+                                                        )
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
+
+
+                              }, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
+                          ],
+                        ),
+
                       ],
                     ),
-
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            divider(),
+          ],
         ),
-        SizedBox(
-          height: 10.0,
-        ),
-        divider(),
-      ],
+      ),
     );
+  }
+
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _buttonController.reverse();
+    } on TickerCanceled {}
   }
 
 
@@ -234,17 +426,69 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
       }
     });
   }
+
+  Future<void> redeemOffersApi(int offerId) async {
+    _playAnimation();
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        _activeCouponViewModel.redeemOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
+  Future<void> deleteOffersApi(int offerId) async {
+    _playAnimation();
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        _activeCouponViewModel.deleteOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
+
   void subscribeToViewModel() {
     _activeCouponViewModel
         .getSavedCouponRepository()
         .getRepositoryResponse()
         .listen((response) async {
-
+      _stopAnimation();
       if(mounted) {
         setState(() {
           _enabled = true;
           _isPaginationLoading = false;
         });
+      }
+
+
+      else if (response.data is RedeemOfferModel) {
+        ToastUtil.showToast(context, response.msg);
+        Navigator.pop(context);
+        Navigator.pushNamed(
+            context, singleOfferModel.qrUrl!= null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW,
+            arguments: {'fromSavedCoupon':true, 'qrImage': singleOfferModel.qrUrl,'redeemMessage':singleOfferModel.redeemMessage,'offer_id': response.data.offerId,});
       }
 
       if(response.data is SavedCouponModel) {
@@ -270,6 +514,10 @@ class _ActiveCouponsState extends State<ActiveCouponsView> {
 
             _pagingController1.appendPage(response.data.dataClass, nextPageKey);
         }
+      }
+      else if(response.msg == "Offer deleted successfully!"){
+        Scaffold.of(context)
+            .showSnackBar(SnackBar(content: Text("Offer deleted successfully!")));
       }
       else if(response.data is DioError){
         if (response.statusCode == 401) {

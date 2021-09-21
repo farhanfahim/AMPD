@@ -26,6 +26,13 @@ class ActiveCouponViewModel {
     _savedCouponRepository = null;
   }
 
+  void redeemOffer(Map<String, dynamic> map) {
+    _savedCouponRepository.redeemOffer(map);
+  }
+  void deleteOffer(Map<String, dynamic> map) {
+    _savedCouponRepository.deleteOffer(map);
+  }
+
 
   void savedCoupons(Map<String, dynamic> map) {
     _savedCouponRepository.getSavedCoupons(map);
