@@ -50,6 +50,10 @@ class NetworkConfig {
 
   //SETTINGS
   static const String API_KEY_PUSH_NOTIFICATIONS= "push_notifications";
+  static const String API_KEY_EXPIRATION= "soonest_expiration";
+  static const String API_KEY_DISCOUNT_AMOUNT= "highest_discount_amount";
+  static const String API_KEY_NEAREST_LOCATION= "nearest_location";
+  static const String API_KEY_SORTING= "sorting_ascending";
   static const String API_KEY_RADIUS= "radius";
   static const String API_KEY_METHOD= "_method";
   static const String API_KEY_STATUS= "status";

@@ -175,7 +175,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
   Future<void> _fetchPage(int pageKey,String query) async {
     try {
 
-      widget.map['isFromFilterScreen']?callFilterSavedCouponApi(query):callSavedCouponApi(query);
+      callSavedCouponApi(query);
     } catch (error) {
       _pagingController1.error = error;
     }
@@ -460,11 +460,6 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         map['latitude'] = userLocation.latitude;
         map['longitude'] = userLocation.longitude;
         map['offset'] = _currentPage;
-        map['min_amount'] = widget.map['minPrice'];
-        map['max_amount'] = widget.map['maxPrice'];
-        map['start_at'] = widget.map['startDate'];
-        map['end_at'] = widget.map['endDate'];
-        map['radius'] = widget.map['maxRadius'];
         _savedCoupon2ViewModel.savedCoupons(map);
       } else {
         setState(() {

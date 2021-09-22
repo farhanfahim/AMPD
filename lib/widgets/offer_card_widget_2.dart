@@ -524,7 +524,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                 children: [
                   AnimatedSize(
                     curve: Curves.fastOutSlowIn, child: new Container(
-                    height: !_isDetail ? 320.0 : 0.0,
+                    height: !_isDetail ? 350.0 : 0.0,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,

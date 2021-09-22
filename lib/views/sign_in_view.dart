@@ -363,7 +363,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     showBottomSheetWidgetWithAnimatedBtn(
         context,
         AppStrings.PASSWORD_RESET_TITLE,
-        AppStrings.OTP_DESC,
+        AppStrings.PASSWORD_DESC,
         Column(
           children: [
             newPasswordTextField(context),

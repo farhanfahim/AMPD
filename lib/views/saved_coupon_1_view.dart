@@ -72,6 +72,8 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
 
   @override
   void initState()  {
+    WidgetsBinding.instance.addObserver(this);
+
     super.initState();
     getCurrentLocation();
     tabController = new TabController(vsync:this,length: 2);
@@ -83,6 +85,26 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
     });
 
 
+  }
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print("app in resumed");
+
+        break;
+      case AppLifecycleState.inactive:
+        print("app in inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("app in paused");
+        break;
+      case AppLifecycleState.detached:
+        print("app in detached");
+        break;
+    }
   }
 
 
@@ -258,6 +280,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
       ],
     );
   }
+
 
   void _searchPressed() {
     Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {

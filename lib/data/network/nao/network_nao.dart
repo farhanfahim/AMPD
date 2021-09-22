@@ -382,11 +382,31 @@ class NetworkNAO {
             NetworkConfig.API_KEY_FIRST_NAME: map['first_name'],
             NetworkConfig.API_KEY_LAST_NAME: map['last_name'],
             NetworkConfig.API_KEY_PUSH_NOTIFICATIONS: map['push_notifications'],
+            NetworkConfig.API_KEY_EXPIRATION: map['soonest_expiration'],
+            NetworkConfig.API_KEY_NEAREST_LOCATION: map['nearest_location'],
+            NetworkConfig.API_KEY_DISCOUNT_AMOUNT: map['highest_discount_amount'],
+            NetworkConfig.API_KEY_SORTING: map['sorting_ascending'],
             NetworkConfig.API_KEY_RADIUS: map['radius'],
             if (map["image"] != null)
               NetworkConfig.API_KEY_IMAGE: await MultipartFile.fromFile(
                 map["image"].path.toString(),
                 filename: "image.png", contentType: MediaType("image", "png")),
+          })
+      ).then((dynamic response) {
+        //print(response);
+        return response;
+      });
+
+  static Future<dynamic> filter(String accessToken,Map map) async =>
+      NetworkUtil().post(
+          url: NetworkEndpoints.UPDATE_PROFILE,
+          hasHeader: true,
+          token: accessToken,
+          formData: FormData.fromMap({
+            NetworkConfig.API_KEY_FIRST_NAME: map['first_name'],
+            NetworkConfig.API_KEY_LAST_NAME: map['last_name'],
+            NetworkConfig.API_KEY_PUSH_NOTIFICATIONS: map['push_notifications'],
+            NetworkConfig.API_KEY_RADIUS: map['radius'],
           })
       ).then((dynamic response) {
         //print(response);
