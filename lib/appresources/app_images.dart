@@ -85,9 +85,9 @@ class AppImages {
   static const String IC_COUPONS = BASE_IMAGE_PATH + "coupon.svg";
   static const String IC_MENU = BASE_IMAGE_PATH + "menu.svg";
   static const String IC_HOME = BASE_IMAGE_PATH + "home.svg";
-  static const String IC_TUTORIAL_DISLIKE = BASE_IMAGE_PATH + "tutorial_dislike.png";
-  static const String IC_TUTORIAL_LIKE = BASE_IMAGE_PATH + "tutorial_like.png";
-  static const String IC_TUTORIAL_DETAILS = BASE_IMAGE_PATH + "tutorial_details.png";
+  static const String IC_TUTORIAL_DISLIKE = BASE_IMAGE_PATH + "swipe_left.png";
+  static const String IC_TUTORIAL_LIKE = BASE_IMAGE_PATH + "swipe_right.png";
+  static const String IC_TUTORIAL_DETAILS = BASE_IMAGE_PATH + "double_tap.png";
 
 
   static const String HANDICAP_ICON_IMAGE = BASE_IMAGE_PATH + "ic_handicap.png";
