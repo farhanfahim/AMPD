@@ -85,11 +85,6 @@ class _HomeViewState extends State<HomeView>
   @override
   bool get wantKeepAlive => true;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
 
 
   @override

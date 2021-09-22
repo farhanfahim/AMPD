@@ -63,6 +63,7 @@ class DataClass {
   String mediumImageUrl;
   String smallImageUrl;
   String qrUrl;
+  List<UserOffer> userOffers;
 
   DataClass(
       {this.id,
@@ -89,7 +90,8 @@ class DataClass {
         this.imageUrl,
         this.mediumImageUrl,
         this.smallImageUrl,
-        this.qrUrl});
+        this.qrUrl,
+        this.userOffers});
 
   DataClass.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -117,7 +119,16 @@ class DataClass {
     mediumImageUrl = json['medium_image_url'];
     smallImageUrl = json['small_image_url'];
     qrUrl = json['qr_url'];
+    if (json['user_offers'] != null) {
+      userOffers = new List<UserOffer>();
+      json['user_offers'].forEach((v) {
+        userOffers.add(new UserOffer.fromJson(v));
+      });
+    }
   }
+
+
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -146,6 +157,34 @@ class DataClass {
     data['medium_image_url'] = this.mediumImageUrl;
     data['small_image_url'] = this.smallImageUrl;
     data['qr_url'] = this.qrUrl;
+    if (this.userOffers != null) {
+      data['user_offers'] = this.userOffers.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class UserOffer {
+  int id;
+  int offerId;
+
+
+  UserOffer(
+      {this.id,
+        this.offerId});
+
+  UserOffer.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    offerId = json['offer_id'];
+  }
+
+
+
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['offer_id'] = this.offerId;
     return data;
   }
 }

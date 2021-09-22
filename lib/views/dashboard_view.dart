@@ -75,8 +75,6 @@ class _DashboardViewState extends State<DashboardView> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final appBar2 = AppBar(
@@ -97,152 +95,135 @@ class _DashboardViewState extends State<DashboardView> {
         iconColor: AppColors.WHITE_COLOR,
         hasLeading: _selectedPageIndex == 1 ? false : true);
 
-    final body = PageView(
-      controller: _pageController,
-      physics: NeverScrollableScrollPhysics(),
-      children: listOfMainScreens,
+    final body = Container(
+      child: Column(
+        children: [
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              physics: NeverScrollableScrollPhysics(),
+              children: listOfMainScreens,
+            ),
+          ),
+        ],
+      ),
     );
 
     return Stack(
       children: [
         Scaffold(
-          // appBar: _selectedPageIndex == 1? appBar1 : null,
           body: body,
-          bottomNavigationBar: Container(
-            height: 95.0,
-            color: Colors.white,
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Material(
-                    elevation: 10.0,
-                    child: Container(
-                      color: Colors.white,
-                      height: 65.0,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                print('0 tapped');
-                                if (!widget.map['isGuestLogin']) {
-                                  setState(() {
-                                    _selectedPageIndex = 0;
-                                    _pageController.jumpToPage(0);
-                                  });
-                                } else {
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      AppRoutes.SIGN_IN_VIEW, (route) => false);
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(10.0),
-//                                color: Colors .red,
-                                color: Colors.white,
-                                child: SvgPicture.asset(
-                                  bottomBarIcons[0],
-
-//                                width: 25.0,
-//                                height: 25.0,
-                                  color: (_selectedPageIndex == 0)
-                                      ? AppColors.ACCENT_COLOR
-                                      : AppColors.UNSELECTED_COLOR,
-//                              Theme.of(context).iconTheme.color,
-                                  matchTextDirection: true,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          Spacer(),
-
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                print('2 tapped');
-                                if (!widget.map['isGuestLogin']) {
-                                  setState(() {
-                                    _selectedPageIndex = 2;
-                                    _pageController.jumpToPage(2);
-                                  });
-                                } else {
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      AppRoutes.SIGN_IN_VIEW, (route) => false);
-                                }
-                              },
-                              child: Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.all(10.0),
-                                child: SvgPicture.asset(
-                                  bottomBarIcons[1],
+          floatingActionButton: FloatingActionButton(
+            elevation: 15,
+            backgroundColor: Colors.white,
+            child: Container(
+              height: 80,
+              width: 80,
+              padding: EdgeInsets.all(15.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _selectedPageIndex == 1
+                    ? AppColors.ACCENT_COLOR
+                    : AppColors.UNSELECTED_COLOR,
+                //border: Border.all(color: darkBlueColor, width: 1.7)
+              ),
+              child: SvgPicture.asset(
+                AppImages.IC_HOME,
+                width: 20.0,
+                height: 20.0,
+                color: Colors.white,
+                //Theme.of(context).iconTheme.color,
+                matchTextDirection: true,
+              ),
+            ),
+            onPressed: () {
+              print('1 tapped');
+              setState(() {
+                _selectedPageIndex = 1;
+                _pageController.jumpToPage(1);
+              });
+            },
+          ),
+          bottomNavigationBar: BottomAppBar(
+            shape: CircularNotchedRectangle(),
+            notchMargin: 4,
+            child: BottomNavigationBar(
+              backgroundColor: Colors.white,
+              items: [
+                BottomNavigationBarItem(
+                    icon: GestureDetector(
+                      onTap: () {
+                        print('2 tapped');
+                        if (!widget.map['isGuestLogin']) {
+                          setState(() {
+                            _selectedPageIndex = 0;
+                            _pageController.jumpToPage(0);
+                          });
+                        } else {
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              AppRoutes.SIGN_IN_VIEW, (route) => false);
+                        }
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.fromLTRB(10,10,30,10),
+                        child: SvgPicture.asset(
+                          bottomBarIcons[0],
 //                                  width: 18.0,
 //                                  height: 18.0,
-                                  color: (_selectedPageIndex == 2)
-                                      ? AppColors.ACCENT_COLOR
-                                      : AppColors.UNSELECTED_COLOR,
-                                  //Theme.of(context).iconTheme.color,
-                                  matchTextDirection: true,
-                                ),
-                              ),
-                            ),
-                          ),
-
-//                          SizedBox(width: 50.0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 20.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 70.5,
-                        width: 70.5,
-                        child: FloatingActionButton(
-                          elevation: 15,
-                          backgroundColor: Colors.white,
-                          child: Container(
-                            height: 70.5,
-                            width: 70.5,
-                            padding: EdgeInsets.all(20.0),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _selectedPageIndex == 1
-                                  ? AppColors.ACCENT_COLOR
-                                  : AppColors.UNSELECTED_COLOR,
-                              //border: Border.all(color: darkBlueColor, width: 1.7)
-                            ),
-                            child: SvgPicture.asset(
-                              AppImages.IC_HOME,
-                              width: 20.0,
-                              height: 20.0,
-                              color: Colors.white,
-                              //Theme.of(context).iconTheme.color,
-                              matchTextDirection: true,
-                            ),
-                          ),
-                          onPressed: () {
-                            print('1 tapped');
-                            setState(() {
-                              _selectedPageIndex = 1;
-                              _pageController.jumpToPage(1);
-                            });
-                          },
+                          color: (_selectedPageIndex == 0)
+                              ? AppColors.ACCENT_COLOR
+                              : AppColors.UNSELECTED_COLOR,
+                          //Theme.of(context).iconTheme.color,
+                          matchTextDirection: true,
                         ),
                       ),
-                    ],
-                  ),
-                )
+                    ),
+                    title: Text(
+                      "Title",
+                      style: TextStyle(fontSize: 1),
+                    )),
+                BottomNavigationBarItem(
+                    icon: GestureDetector(
+                      onTap: () {
+                        print('2 tapped');
+                        if (!widget.map['isGuestLogin']) {
+                          setState(() {
+                            _selectedPageIndex = 2;
+                            _pageController.jumpToPage(2);
+                          });
+                        } else {
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              AppRoutes.SIGN_IN_VIEW, (route) => false);
+                        }
+                      },
+                      child: Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.fromLTRB(30,10,10,10),
+                        child: SvgPicture.asset(
+                          bottomBarIcons[1],
+//                                  width: 18.0,
+//                                  height: 18.0,
+                          color: (_selectedPageIndex == 2)
+                              ? AppColors.ACCENT_COLOR
+                              : AppColors.UNSELECTED_COLOR,
+                          //Theme.of(context).iconTheme.color,
+                          matchTextDirection: true,
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      "Title",
+                      style: TextStyle(fontSize: 1),
+                    )),
               ],
+              onTap: (index) {
+                print(index);
+              },
             ),
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
         ),
         widget.map['show_tutorial']
             ? _tutorialCount < 3
@@ -338,18 +319,18 @@ class _DashboardViewState extends State<DashboardView> {
                 onWillPop: () => Future.value(false),
                 child: UpdateDialog(
                   contex: context,
-                  subTitle: "A newer version is available for download! Please update the app by visiting the ${Platform
-                      .isIOS ? 'App Store.' : 'Google Play Store.'}",
+                  subTitle:
+                      "A newer version is available for download! Please update the app by visiting the ${Platform.isIOS ? 'App Store.' : 'Google Play Store.'}",
                   title: "New Version Available",
                   buttonText1: "Update Now",
                   buttonText2: "Later",
                   showLaterButton: !appData['force_update'],
                   onPressed1: () {
-                    if(appData['force_update'] == false){
+                    if (appData['force_update'] == false) {
                       Navigator.pop(context1);
                     }
 
-                   /* OpenAppstore.launch(androidAppId: "com.app.ampd",
+                    /* OpenAppstore.launch(androidAppId: "com.app.ampd",
                         iOSAppId: "1561178517");*/
                   },
                   onPressed2: () {
@@ -363,9 +344,7 @@ class _DashboardViewState extends State<DashboardView> {
   }
 }
 
-
 class UpdateDialog extends StatefulWidget {
-
   String title;
   String subTitle;
   String buttonText1;
@@ -373,11 +352,20 @@ class UpdateDialog extends StatefulWidget {
   Function onPressed1;
   Function onPressed2;
   Widget child;
-  BuildContext contex ;
+  BuildContext contex;
+
   bool showLaterButton;
 
-
-  UpdateDialog({this.showLaterButton, this.title = "", this.buttonText1 = "",this.buttonText2 = "", this.onPressed1,this.onPressed2, this.child,this.contex,this.subTitle = ""});
+  UpdateDialog(
+      {this.showLaterButton,
+      this.title = "",
+      this.buttonText1 = "",
+      this.buttonText2 = "",
+      this.onPressed1,
+      this.onPressed2,
+      this.child,
+      this.contex,
+      this.subTitle = ""});
 
   @override
   _UpdateDialogState createState() => _UpdateDialogState();
@@ -386,14 +374,13 @@ class UpdateDialog extends StatefulWidget {
 class _UpdateDialogState extends State<UpdateDialog> {
   @override
   Widget build(BuildContext context) {
-    double height  =  MediaQuery.of(context).size.height * 0.48;
-    double width   =  MediaQuery.of(context).size.width  * 0.4;
-    double height1 =  MediaQuery.of(context).size.height * 0.5;
+    double height = MediaQuery.of(context).size.height * 0.48;
+    double width = MediaQuery.of(context).size.width * 0.4;
+    double height1 = MediaQuery.of(context).size.height * 0.5;
 
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 15.0),
       backgroundColor: Colors.transparent,
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -408,88 +395,96 @@ class _UpdateDialogState extends State<UpdateDialog> {
                       border: Border.all(
                         color: Colors.transparent,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(20.0))
-                  ),
-
+                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
                   child: Padding(
                     padding: const EdgeInsets.all(25.0),
                     child: Column(
                       children: [
-
                         Text(
                           widget.title,
-                          style: AppStyles.staticLabelsTextStyle(context).copyWith(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 18.0),
+                          style: AppStyles.staticLabelsTextStyle(context)
+                              .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18.0),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Text(
                           widget.subTitle,
                           textAlign: TextAlign.center,
                           style: AppStyles.staticLabelsTextStyle(context),
                         ),
-                        SizedBox(height: 20,),
-
+                        SizedBox(
+                          height: 20,
+                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              width: MediaQuery.of(context).size.width/3,
+                              width: MediaQuery.of(context).size.width / 3,
                               child: buttonWithColor(
                                 title: widget.buttonText1,
                                 color: AppColors.APP_MAIN_SPLASH_COLOR,
                                 onTap: () {
-
                                   widget.onPressed1();
-                                }
-                                ,),
+                                },
+                              ),
                             ),
-                            widget.showLaterButton ? SizedBox(width: 20,) : Container(),
-                            widget.showLaterButton ? Container(
-                              width: MediaQuery.of(context).size.width/3,
-                              child: buttonWithColor(
-                                color: AppColors.ACCENT_COLOR,
-                                title: widget.buttonText2,
-                                // btnColor: AppColors.APPGREENCOLOR,
-                                onTap: () {
-                                  widget.onPressed2();
-                                },),
-                            ) : Container(),
+                            widget.showLaterButton
+                                ? SizedBox(
+                                    width: 20,
+                                  )
+                                : Container(),
+                            widget.showLaterButton
+                                ? Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 3,
+                                    child: buttonWithColor(
+                                      color: AppColors.ACCENT_COLOR,
+                                      title: widget.buttonText2,
+                                      // btnColor: AppColors.APPGREENCOLOR,
+                                      onTap: () {
+                                        widget.onPressed2();
+                                      },
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         )
-
                       ],
                     ),
                   ),
-
                 ),
               ),
-
-              widget.showLaterButton ? Positioned.fill(
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                      width: 40,
-                      height: 40,
-                      child:
-                      FloatingActionButton(
-                        heroTag: "tag",
-                        backgroundColor:AppColors.ACCENT_COLOR ,
-                        // backgroundColor:
-                        // AppColors.PRIMARY_COLORTWO,
-                        elevation: 2,
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 30.0,
-                        ),
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                        // onPressed: widget.addClickListner
-                      )
-                  ),
-                ),
-              ) : Container(),
+              widget.showLaterButton
+                  ? Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                            width: 40,
+                            height: 40,
+                            child: FloatingActionButton(
+                              heroTag: "tag",
+                              backgroundColor: AppColors.ACCENT_COLOR,
+                              // backgroundColor:
+                              // AppColors.PRIMARY_COLORTWO,
+                              elevation: 2,
+                              child: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 30.0,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              // onPressed: widget.addClickListner
+                            )),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ],
@@ -497,3 +492,4 @@ class _UpdateDialogState extends State<UpdateDialog> {
     );
   }
 }
+

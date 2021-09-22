@@ -118,7 +118,7 @@ class _SettingState extends State<SettingView> {
                       SizedBox(
                         height: 30.0,
                       ),
-                      InkWell(
+                      GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
                               context, AppRoutes.MY_PROFILE_VIEW);
@@ -169,7 +169,7 @@ class _SettingState extends State<SettingView> {
                       SizedBox(
                         height: 30.0,
                       ),
-                      InkWell(
+                      GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
                               context, AppRoutes.CHANGE_PASSWORD_VIEW);

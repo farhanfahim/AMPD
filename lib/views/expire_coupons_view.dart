@@ -92,7 +92,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
               },
               noItemsFoundIndicatorBuilder: (context) => Center(
                   child: NoRecordFound(
-                      "No Expired Coupon Found", AppImages.NO_TEETIMES_IMAGE)),
+                      "No Expired Coupon Found", AppImages.IC_COUPONS)),
               firstPageProgressIndicatorBuilder: (context) => Container(
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: Center(

@@ -25,6 +25,7 @@ class NoRecordFound extends StatelessWidget {
               image,
               width: 240.0,
               height: 100.0,
+              color: AppColors.UNSELECTED_COLOR,
               matchTextDirection: true,
             ),
 

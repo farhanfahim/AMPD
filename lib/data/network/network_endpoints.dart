@@ -69,6 +69,8 @@ class NetworkEndpoints {
 
    //SAVED OFFERS /
    static const String SAVED_OFFERS = BASE_URL + "user-offers?";
+   //DELETE OFFERS /
+   static const String DELETE_OFFERS = BASE_URL + "user-offers";
 
    //OFFER REVIEW /
    static const String OFFER_REVIEW = BASE_URL + "offer-reviews";

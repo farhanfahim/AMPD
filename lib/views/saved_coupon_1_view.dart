@@ -73,7 +73,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
   @override
   void initState()  {
     super.initState();
-
+    getCurrentLocation();
     tabController = new TabController(vsync:this,length: 2);
     tabController.addListener(() {
       setState(() {
@@ -105,10 +105,9 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    getCurrentLocation();
+
     final tabBar = TabBar(
       unselectedLabelColor: Theme
           .of(context)

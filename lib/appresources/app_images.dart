@@ -38,7 +38,7 @@ class AppImages {
   static const String IC_CREATE_TEETIMES = BASE_IMAGE_PATH + "create_teetime_icon.svg";
   static const String IC_CREATE_POST = BASE_IMAGE_PATH + "ic_create_post.svg";
   static const String IC_UPLOAD_PRODUCT = BASE_IMAGE_PATH + "ic_upload_product.svg";
-  static const String IC_DELETE = BASE_IMAGE_PATH + "ic_delete.svg";
+  static const String IC_DELETE = BASE_IMAGE_PATH + "delete.svg";
 
   static const String SHARE = BASE_IMAGE_PATH + "share_icon.svg";
   static const String COMMENTS = BASE_IMAGE_PATH + "ic_comments.png";

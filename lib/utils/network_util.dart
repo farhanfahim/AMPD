@@ -131,6 +131,61 @@ class NetworkUtil {
         }
       });
 
+  /// Post Method -> Future<dynamic>
+  /// @param -> @required url -> String
+  ///        -> headers -> Map
+  ///        -> body -> dynamic
+  ///        -> encoding -> dynamic
+  ///  @usage -> Make HTTP-POST request to specified URL and returns the response in JSON format
+  Future<dynamic> delete(
+      {@required String url, Map headers, FormData formData, encoding, bool hasHeader, String token}) =>
+      Network.getDio(hasHeader: hasHeader, token: token)
+          .delete(
+        url,
+        data: formData,
+
+        options: Options(
+            followRedirects: false,
+            validateStatus: (status) {
+              return status < 500;
+            }),
+      ) // Make HTTP-POST request
+          .then((response) {
+        // On response received
+        // Get response status code
+        final int statusCode = response.statusCode;
+
+        // print("__________API_________________"); // Error occurred
+        // print("Error request : ${response.request}"); // Error occurred
+        // print("Error headers : ${response.headers}"); // Error occurred
+        // print("Error statusCode : ${response.statusCode}"); // Error occurred
+        // print("Error statusBody: ${response.data}"); // Error occurred
+        // print("__________API END_________________");
+        // Check response status code for error condition
+        if (statusCode < 200 || statusCode > 400 || json == null) {
+          if (statusCode == 401 || statusCode == 403 || statusCode == 422 || statusCode == 500) {
+//            var res = response.data;
+//            var data = _decoder.convert(res);
+            /* if(data["status"] == null || data["status"] != 200){
+            throw new Exception(data["message"]);
+          }*/
+            return response;
+          } else
+            throw new Exception("Error while fetching data");
+        } else {
+          // No error occurred
+          // Get response body
+          var res = response;
+          //   print("Error : ${res}"); // Error occurred
+
+          //var data = _decoder.convert(res);
+          /* if(data["status"] == null || data["status"] != 200){
+            throw new Exception(data["message"]);
+          }*/
+          return res;
+        }
+      });
+
   Future<dynamic> put(
       {@required String url, Map headers, FormData formData, encoding, bool hasHeader, String token}) =>
       Network.getDio(hasHeader: hasHeader, token: token)
