@@ -22,7 +22,7 @@ class Dataclass {
   int status;
   String createdAt;
   String updatedAt;
-  String averageRating;
+  Object averageRating;
   int totalReviews;
   String imageUrl;
   String mediumImageUrl;

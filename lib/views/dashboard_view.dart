@@ -43,35 +43,23 @@ class _DashboardViewState extends State<DashboardView> {
   ];
 
   int _tutorialCount = 0;
+  int pos = 1;
+
 
   List<String> bottomBarIcons = [
     AppImages.IC_COUPONS,
     AppImages.IC_MENU,
   ];
 
-  List<Widget> listOfMainScreens = [];
-
-  var _selectedPageIndex;
-  PageController _pageController;
 
   @override
   void initState() {
     updateAppDialog();
-    _selectedPageIndex = widget.map['tab_index'];
-    listOfMainScreens = [
-      SavedCoupons1View(),
-      HomeView(widget.map['isGuestLogin']),
-      SideMenuView(),
-    ];
-
-    _pageController = PageController(initialPage: _selectedPageIndex);
     super.initState();
   }
 
   @override
   void dispose() {
-    _pageController.dispose();
-
     super.dispose();
   }
 
@@ -81,7 +69,7 @@ class _DashboardViewState extends State<DashboardView> {
 //      elevation: 0.6,
       brightness: Theme.of(context).appBarTheme.brightness,
       backgroundColor: Theme.of(context).appBarTheme.color,
-      title: Text(_selectedPageIndex == 1 ? "Home" : "",
+      title: Text(pos == 1 ? "Home" : "",
           style: AppStyles.poppinsTextStyle(
                   fontSize: 20.0, weight: FontWeight.w500)
               .copyWith(color: Colors.black)),
@@ -93,16 +81,14 @@ class _DashboardViewState extends State<DashboardView> {
         title: "Home",
         onBackClick: () {},
         iconColor: AppColors.WHITE_COLOR,
-        hasLeading: _selectedPageIndex == 1 ? false : true);
+        hasLeading: pos == 1 ? false : true);
 
     final body = Container(
       child: Column(
         children: [
           Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: NeverScrollableScrollPhysics(),
-              children: listOfMainScreens,
+            child: Container(
+              child:  pos == 1 ?HomeView(widget.map['isGuestLogin']):pos == 0?SavedCoupons1View():  SideMenuView(),
             ),
           ),
         ],
@@ -122,7 +108,7 @@ class _DashboardViewState extends State<DashboardView> {
               padding: EdgeInsets.all(15.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _selectedPageIndex == 1
+                color: pos == 1
                     ? AppColors.ACCENT_COLOR
                     : AppColors.UNSELECTED_COLOR,
                 //border: Border.all(color: darkBlueColor, width: 1.7)
@@ -139,8 +125,7 @@ class _DashboardViewState extends State<DashboardView> {
             onPressed: () {
               print('1 tapped');
               setState(() {
-                _selectedPageIndex = 1;
-                _pageController.jumpToPage(1);
+                pos = 1;
               });
             },
           ),
@@ -156,8 +141,7 @@ class _DashboardViewState extends State<DashboardView> {
                         print('2 tapped');
                         if (!widget.map['isGuestLogin']) {
                           setState(() {
-                            _selectedPageIndex = 0;
-                            _pageController.jumpToPage(0);
+                            pos = 0;
                           });
                         } else {
                           Navigator.pushNamedAndRemoveUntil(context,
@@ -171,7 +155,7 @@ class _DashboardViewState extends State<DashboardView> {
                           bottomBarIcons[0],
 //                                  width: 18.0,
 //                                  height: 18.0,
-                          color: (_selectedPageIndex == 0)
+                          color: (pos == 0)
                               ? AppColors.ACCENT_COLOR
                               : AppColors.UNSELECTED_COLOR,
                           //Theme.of(context).iconTheme.color,
@@ -189,8 +173,7 @@ class _DashboardViewState extends State<DashboardView> {
                         print('2 tapped');
                         if (!widget.map['isGuestLogin']) {
                           setState(() {
-                            _selectedPageIndex = 2;
-                            _pageController.jumpToPage(2);
+                            pos = 2;
                           });
                         } else {
                           Navigator.pushNamedAndRemoveUntil(context,
@@ -204,7 +187,7 @@ class _DashboardViewState extends State<DashboardView> {
                           bottomBarIcons[1],
 //                                  width: 18.0,
 //                                  height: 18.0,
-                          color: (_selectedPageIndex == 2)
+                          color: (pos == 2)
                               ? AppColors.ACCENT_COLOR
                               : AppColors.UNSELECTED_COLOR,
                           //Theme.of(context).iconTheme.color,
@@ -292,6 +275,17 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
+
+  Widget updateScreen(int pos){
+
+    if(pos == 0){
+      return SavedCoupons1View();
+    }else if(pos == 1){
+      return  HomeView(widget.map['isGuestLogin']);
+    }else if(pos ==2){
+      return SideMenuView();
+    }
+  }
   void updateAppDialog() {
     Map<String, dynamic> appData = null;
 

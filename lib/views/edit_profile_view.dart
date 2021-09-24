@@ -344,7 +344,20 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                       ),
                       AnimatedGradientButton(
                         onAnimationTap: () {
-                          callUpdateProfileApi();
+                          if(firstName.isNotEmpty){
+                            if(lastName.isNotEmpty){
+                              callUpdateProfileApi();
+                            }else{
+                              Util.hideKeyBoard(context);
+                              ToastUtil.showToast(
+                                  context, "Please enter last name ");
+                            }
+                          }else{
+                            Util.hideKeyBoard(context);
+                            ToastUtil.showToast(
+                                context, "Please enter first name ");
+                          }
+
                         },
                         buttonController: _updateProfileButtonController,
                         text: AppStrings.UPDATE_PROFILE,
@@ -1425,7 +1438,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         });
 
         var map = Map<String, dynamic>();
-        map['image'] = _image!=null?_image:null;
+        map['image'] = _image!=null?_image:"null";
         map['first_name'] = firstNameController.text.trim();
         map['last_name'] = lastNameController.text.trim();
         _editProfileViewModel.updateProfile(map);

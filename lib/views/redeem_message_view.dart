@@ -17,7 +17,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-double offerRating = 4.0;
+double offerRating = 0.0;
 class RedeemMessageView extends StatefulWidget {
   Map<String, dynamic> map;
   RedeemMessageView(this.map);
@@ -181,12 +181,16 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                                   },
                                   btnWidget:AnimatedGradientButton(
                                     onAnimationTap: () {
-                                      if(reviewMessage.isNotEmpty) {
-                                        callOfferReview(
-                                            widget.map['offer_id'], reviewMessage,
-                                            offerRating.toString());
+                                      if(offerRating > 0.0) {
+                                        if(reviewMessage.isNotEmpty) {
+                                          callOfferReview(
+                                              widget.map['offer_id'], reviewMessage,
+                                              offerRating.toString());
+                                        }else{
+                                          ToastUtil.showToast(customDialogBoxContext, "Please write a review");
+                                        }
                                       }else{
-                                        ToastUtil.showToast(customDialogBoxContext, "Your review is empty");
+                                        ToastUtil.showToast(customDialogBoxContext, "Please rate this store");
                                       }
                                     },
                                     buttonController: _buttonController,
@@ -312,7 +316,10 @@ class _RatingBarWidgetState extends State<RatingBarWidget> {
   Widget build(BuildContext context) {
     return RatingBar(
       onRatingUpdate: (rating) {
-        offerRating = rating;
+        setState(() {
+          offerRating = rating;
+        });
+
       },
       ratingWidget: RatingWidget(
           full: Icon(

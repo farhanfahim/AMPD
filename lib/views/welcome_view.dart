@@ -200,6 +200,7 @@ class _WelcomeViewState extends State<WelcomeView>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _verifyButtonController.dispose();
     _submitButtonController.dispose();
 
