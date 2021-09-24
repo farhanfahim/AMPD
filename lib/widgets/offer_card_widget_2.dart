@@ -62,8 +62,11 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
   bool _isRedeemNow = false;
   Timer _timer;
 
+  int clr;
   @override
   void initState() {
+    String color = widget.data.backgroundColor.replaceAll('#', '0xff');
+    clr  =int.parse(color);
     _time = widget.time;
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -98,7 +101,6 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
     _isRedeemNow = widget.isRedeemNow;
     super.initState();
   }
-
   @override
   void dispose() {
     if (_timer != null) {
@@ -124,137 +126,137 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                 widget.changeDetailTitle(_isDetail);
                 cardKey.currentState.toggleCard();
               },
-              child: Container(
-                height: !_isDetail ? 550.0 : 520.0,
-                color: Colors.red,
+              child: new Container(
+              height: !_isDetail ? 550.0 : 520.0,
+              color: Color(clr),
                 child: FlipCard(
-                  direction: FlipDirection.HORIZONTAL,
-                  // default
-                  flipOnTouch: false,
-                  key: cardKey,
-                  front: Stack(
-                    fit: StackFit.expand,
-                    children: [
+                direction: FlipDirection.HORIZONTAL,
+                // default
+                flipOnTouch: false,
+                key: cardKey,
+                front: Stack(
+                  fit: StackFit.expand,
+                  children: [
 
 
-                      Container(
-                        margin: EdgeInsets.only(top: 25.0, bottom: 80.0),
-                        child: Column(
+                    Container(
+                      margin: EdgeInsets.only(top: 25.0, bottom: 80.0),
+                      child: Column(
 //                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Center(
-                              child: Text(
-                                widget.data.type == 10?"\$"+widget.text:widget.text+"%",
-                                style: AppStyles.poppinsTextStyle(
-                                    fontSize: 30.0.sp, weight: FontWeight.w400),
-                              ),
-                            ),
-
-                            SizedBox(height: 20.0,),
-                            CachedNetworkImage(
-                              imageUrl: widget.data.imageUrl,
-                              fit: BoxFit.cover,
-                              height: 300.0,
-                              // fadeInCurve: Curves.easeIn,
-                              imageBuilder: (BuildContext context,
-                                  ImageProvider<dynamic> imageProvider) {
-                                return Image(
-                                  // width: constraints.maxWidth,
-                                  image: imageProvider,
-                                  colorBlendMode: BlendMode.srcATop,
-                                  fit: BoxFit.cover,
-                                );
-                              },
-                              placeholder: (context, url) => Skeleton(),
-//              errorWidget: (context, url, error){
-//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-//              },
-                            ),
-
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  back: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: widget.data.imageUrl,
-                        fit: BoxFit.cover,
-                        // fadeInCurve: Curves.easeIn,
-                        imageBuilder: (BuildContext context,
-                            ImageProvider<dynamic> imageProvider) {
-                          return Image(
-                            // width: constraints.maxWidth,
-                            image: imageProvider,
-                            color: Colors.black45,
-                            colorBlendMode: BlendMode.srcATop,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                        placeholder: (context, url) => Skeleton(),
-//              errorWidget: (context, url, error){
-//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-//              },
-                      ),
-
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.data.productName,
-                              // 'hello heloo jdfsd jdf jbdfkj  fsdfdsfsf fsdf fbsdfb djbdksf jkdfskjds bfdsbfk',
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                        children: [
+                          Center(
+                            child: Text(
+                              widget.data.type == 10?"\$"+widget.text:widget.text+"%",
                               style: AppStyles.poppinsTextStyle(
-                                  fontSize: 18.0.sp, weight: FontWeight.w500),
+                                  fontSize: 30.0.sp, weight: FontWeight.w400),
                             ),
+                          ),
 
-                            SizedBox(height: 10.0,),
+                          SizedBox(height: 20.0,),
+                          CachedNetworkImage(
+                            imageUrl: widget.data.imageUrl,
+                            fit: BoxFit.cover,
+                            height: 300.0,
+                            // fadeInCurve: Curves.easeIn,
+                            imageBuilder: (BuildContext context,
+                                ImageProvider<dynamic> imageProvider) {
+                              return Image(
+                                // width: constraints.maxWidth,
+                                image: imageProvider,
+                                colorBlendMode: BlendMode.srcATop,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                            placeholder: (context, url) => Skeleton(),
+//              errorWidget: (context, url, error){
+//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
+//              },
+                          ),
 
-                            RatingBar(
-                              onRatingUpdate: null,
-                              ratingWidget: RatingWidget(
-                                  full: Icon(
-                                    FontAwesomeIcons.solidStar,
-                                    color: AppColors.PALE_YELLOW_COLOR,
-                                  ),
-                                  half: Icon(
-                                    FontAwesomeIcons.starHalfAlt,
-                                    color: AppColors.PALE_YELLOW_COLOR,
-                                  ),
-                                  empty: Icon(
-                                    FontAwesomeIcons.star,
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                back: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: widget.data.imageUrl,
+                      fit: BoxFit.cover,
+                      // fadeInCurve: Curves.easeIn,
+                      imageBuilder: (BuildContext context,
+                          ImageProvider<dynamic> imageProvider) {
+                        return Image(
+                          // width: constraints.maxWidth,
+                          image: imageProvider,
+                          color: Colors.black45,
+                          colorBlendMode: BlendMode.srcATop,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                      placeholder: (context, url) => Skeleton(),
+//              errorWidget: (context, url, error){
+//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
+//              },
+                    ),
+
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 30.0, vertical: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.data.productName,
+                            // 'hello heloo jdfsd jdf jbdfkj  fsdfdsfsf fsdf fbsdfb djbdksf jkdfskjds bfdsbfk',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppStyles.poppinsTextStyle(
+                                fontSize: 18.0.sp, weight: FontWeight.w500),
+                          ),
+
+                          SizedBox(height: 10.0,),
+
+                          RatingBar(
+                            onRatingUpdate: null,
+                            ratingWidget: RatingWidget(
+                                full: Icon(
+                                  FontAwesomeIcons.solidStar,
+                                  color: AppColors.PALE_YELLOW_COLOR,
+                                ),
+                                half: Icon(
+                                  FontAwesomeIcons.starHalfAlt,
+                                  color: AppColors.PALE_YELLOW_COLOR,
+                                ),
+                                empty: Icon(
+                                  FontAwesomeIcons.star,
 //                                    color: AppColors.PALE_YELLOW_COLOR,
-                                    color: Colors.white,
-                                  )
+                                  color: Colors.white,
+                                )
+                            ),
+                            itemSize: 15.0,
+                            initialRating: widget.data.averageRating != null
+                                ? double.parse(widget.data.averageRating)
+                                : 0.0,
+                            allowHalfRating: true,
+                            glow: false,
+                            itemPadding: EdgeInsets.only(left: 5.0),
+                          ),
+
+                          SizedBox(height: 20.0,),
+
+                          /*   Row(
+                            children: [
+                              Text(
+                                "Average Review :",
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 12.0.sp,
+                                    weight: FontWeight.w300),
                               ),
-                              itemSize: 15.0,
-                              initialRating: widget.data.averageRating != null
-                                  ? double.parse(widget.data.averageRating)
-                                  : 0.0,
-                              allowHalfRating: true,
-                              glow: false,
-                              itemPadding: EdgeInsets.only(left: 5.0),
-                            ),
 
-                            SizedBox(height: 20.0,),
-
-                         /*   Row(
-                              children: [
-                                Text(
-                                  "Average Review :",
-                                  style: AppStyles.poppinsTextStyle(
-                                      fontSize: 12.0.sp,
-                                      weight: FontWeight.w300),
-                                ),
-
-                                Spacer(),
+                              Spacer(),
 
 //                                Text(
 //                                  "  - - - - - - - - - -  ",
@@ -263,28 +265,28 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 //
 //                                Spacer(),
 
-                                Text(
-                                  widget.data.averageRating != null ? widget
-                                      .data.averageRating : "0.0",
-                                  style: AppStyles.poppinsTextStyle(
-                                      fontSize: 12.0.sp,
-                                      weight: FontWeight.w300),
-                                )
-                              ],
-                            ),
+                              Text(
+                                widget.data.averageRating != null ? widget
+                                    .data.averageRating : "0.0",
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 12.0.sp,
+                                    weight: FontWeight.w300),
+                              )
+                            ],
+                          ),
 
-                            SizedBox(height: 15.0,),*/
+                          SizedBox(height: 15.0,),*/
 
-                            Row(
-                              children: [
-                                Text(
-                                  "Number of Uses :",
-                                  style: AppStyles.poppinsTextStyle(
-                                      fontSize: 12.0.sp,
-                                      weight: FontWeight.w300),
-                                ),
+                          Row(
+                            children: [
+                              Text(
+                                "Number of Uses :",
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 12.0.sp,
+                                    weight: FontWeight.w300),
+                              ),
 
-                                Spacer(),
+                              Spacer(),
 
 //                                Text(
 //                                  "  - - - - - - - - - -  ",
@@ -293,29 +295,29 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
 //                                Spacer(),
 
-                                Text(
+                              Text(
 
-                                  widget.data.numberOfUses != null ? widget.data
-                                      .numberOfUses.toString() : "0.0",
-                                  style: AppStyles.poppinsTextStyle(
-                                      fontSize: 12.0.sp,
-                                      weight: FontWeight.w300),
-                                )
-                              ],
-                            ),
+                                widget.data.numberOfUses != null ? widget.data
+                                    .numberOfUses.toString() : "0.0",
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 12.0.sp,
+                                    weight: FontWeight.w300),
+                              )
+                            ],
+                          ),
 
-                            SizedBox(height: 15.0,),
+                          SizedBox(height: 15.0,),
 
-                           /* Row(
-                              children: [
-                                Text(
-                                  "Distance :",
-                                  style: AppStyles.poppinsTextStyle(
-                                      fontSize: 12.0.sp,
-                                      weight: FontWeight.w300),
-                                ),
+                          /* Row(
+                            children: [
+                              Text(
+                                "Distance :",
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 12.0.sp,
+                                    weight: FontWeight.w300),
+                              ),
 
-                                Spacer(),
+                              Spacer(),
 
 //                                Text(
 //                                  "  - - - - - - - - - -  ",
@@ -324,190 +326,190 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 //
 //                                Spacer(),
 
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 8,
-                                        offset: Offset(
-                                            0, 3), // changes position of shadow
-                                      ),
-                                    ],
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 4.0, horizontal: 10.0),
-                                  child: Text(
-                                    "${calculateDistance()} miles",
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 2,
+                                      blurRadius: 8,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 4.0, horizontal: 10.0),
+                                child: Text(
+                                  "${calculateDistance()} miles",
+                                  style: AppStyles.poppinsTextStyle(
+                                      fontSize: 11.0.sp,
+                                      weight: FontWeight.w400).copyWith(
+                                      color: Colors.black),
+                                ),
+                              )
+                            ],
+                          ),
+
+                          SizedBox(height: 15.0,),
+
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Location :",
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 12.0.sp,
+                                    weight: FontWeight.w300),
+                              ),
+
+                              Spacer(),
+//                                SizedBox(width: 15.0,),
+
+//                                Text(
+//                                  "  - - - - - - - - - -  ",
+//                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
+//                                ),
+//
+//                                SizedBox(width: 15.0,),
+
+                              Expanded(
+                                child: Text(
+                                  widget.data.user.address != null ? widget
+                                      .data.user.address : "-",
+                                  style: AppStyles.poppinsTextStyle(
+                                      fontSize: 12.0.sp,
+                                      weight: FontWeight.w300),
+                                  textAlign: TextAlign.end,
+                                ),
+                              )
+                            ],
+                          ),*/
+
+                          SizedBox(height: 15.0,),
+
+                          Divider(color: Colors.grey[400],
+                            height: 1.0,
+                            thickness: 0.5,),
+
+                          SizedBox(height: 15.0,),
+
+                          Center(
+                            child: Text(
+                              "Offer redemption time limit",
+                              style: AppStyles.poppinsTextStyle(
+                                  fontSize: 15.0.sp, weight: FontWeight.w400),
+                            ),
+                          ),
+
+                          SizedBox(height: 8.0,),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    _days,
+                                    //widget.data.availTime != null? widget.data.availTime.toString() :"00",
                                     style: AppStyles.poppinsTextStyle(
-                                        fontSize: 11.0.sp,
-                                        weight: FontWeight.w400).copyWith(
-                                        color: Colors.black),
+                                        fontSize: 24.0.sp,
+                                        weight: FontWeight.w500).copyWith(
+                                        letterSpacing: 2.0),
                                   ),
-                                )
-                              ],
-                            ),
 
-                            SizedBox(height: 15.0,),
+//                                    SizedBox(height: 6.0,),
 
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Location :",
-                                  style: AppStyles.poppinsTextStyle(
-                                      fontSize: 12.0.sp,
-                                      weight: FontWeight.w300),
-                                ),
-
-                                Spacer(),
-//                                SizedBox(width: 15.0,),
-
-//                                Text(
-//                                  "  - - - - - - - - - -  ",
-//                                  style: AppStyles.poppinsTextStyle(fontSize: 13.0.sp, weight: FontWeight.w400),
-//                                ),
-//
-//                                SizedBox(width: 15.0,),
-
-                                Expanded(
-                                  child: Text(
-                                    widget.data.user.address != null ? widget
-                                        .data.user.address : "-",
+                                  Text(
+                                    //widget.data.availTime > 1? 'Days' : 'Day',
+                                    int.parse(_days) > 1 ? 'Days' : 'Day',
                                     style: AppStyles.poppinsTextStyle(
                                         fontSize: 12.0.sp,
                                         weight: FontWeight.w300),
-                                    textAlign: TextAlign.end,
                                   ),
-                                )
-                              ],
-                            ),*/
-
-                            SizedBox(height: 15.0,),
-
-                            Divider(color: Colors.grey[400],
-                              height: 1.0,
-                              thickness: 0.5,),
-
-                            SizedBox(height: 15.0,),
-
-                            Center(
-                              child: Text(
-                                "Offer redemption time limit",
-                                style: AppStyles.poppinsTextStyle(
-                                    fontSize: 15.0.sp, weight: FontWeight.w400),
+                                ],
                               ),
-                            ),
 
-                            SizedBox(height: 8.0,),
+                              SizedBox(width: 20.0,),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      _days,
-                                      //widget.data.availTime != null? widget.data.availTime.toString() :"00",
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 24.0.sp,
-                                          weight: FontWeight.w500).copyWith(
-                                          letterSpacing: 2.0),
-                                    ),
+                              Column(
+                                children: [
+                                  Text(
+                                    //widget.data.recurrenceTime != null? widget.data.recurrenceTime.toString() :"00",
+                                    _hours,
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 24.0.sp,
+                                        weight: FontWeight.w500).copyWith(
+                                        letterSpacing: 2.0),
+                                  ),
 
 //                                    SizedBox(height: 6.0,),
 
-                                    Text(
-                                      //widget.data.availTime > 1? 'Days' : 'Day',
-                                      int.parse(_days) > 1 ? 'Days' : 'Day',
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 12.0.sp,
-                                          weight: FontWeight.w300),
-                                    ),
-                                  ],
-                                ),
+                                  Text(
+                                    //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
+                                    int.parse(_hours) > 1 ? 'Hours' : 'Hour',
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 12.0.sp,
+                                        weight: FontWeight.w300),
+                                  ),
+                                ],
+                              ),
 
-                                SizedBox(width: 20.0,),
+                              SizedBox(width: 20.0,),
 
-                                Column(
-                                  children: [
-                                    Text(
-                                      //widget.data.recurrenceTime != null? widget.data.recurrenceTime.toString() :"00",
-                                      _hours,
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 24.0.sp,
-                                          weight: FontWeight.w500).copyWith(
-                                          letterSpacing: 2.0),
-                                    ),
-
-//                                    SizedBox(height: 6.0,),
-
-                                    Text(
-                                      //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
-                                      int.parse(_hours) > 1 ? 'Hours' : 'Hour',
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 12.0.sp,
-                                          weight: FontWeight.w300),
-                                    ),
-                                  ],
-                                ),
-
-                                SizedBox(width: 20.0,),
-
-                                Column(
-                                  children: [
-                                    Text(
-                                      _min,
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 24.0.sp,
-                                          weight: FontWeight.w500).copyWith(
-                                          letterSpacing: 2.0),
-                                    ),
+                              Column(
+                                children: [
+                                  Text(
+                                    _min,
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 24.0.sp,
+                                        weight: FontWeight.w500).copyWith(
+                                        letterSpacing: 2.0),
+                                  ),
 
 //                                    SizedBox(height: 6.0,),
 
-                                    Text(
-                                      'Min',
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 12.0.sp,
-                                          weight: FontWeight.w300),
-                                    ),
-                                  ],
-                                ),
+                                  Text(
+                                    'Min',
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 12.0.sp,
+                                        weight: FontWeight.w300),
+                                  ),
+                                ],
+                              ),
 
-                                SizedBox(width: 20.0,),
+                              SizedBox(width: 20.0,),
 
-                                Column(
-                                  children: [
-                                    Text(
-                                      _sec,
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 24.0.sp,
-                                          weight: FontWeight.w500).copyWith(
-                                          letterSpacing: 2.0),
-                                    ),
+                              Column(
+                                children: [
+                                  Text(
+                                    _sec,
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 24.0.sp,
+                                        weight: FontWeight.w500).copyWith(
+                                        letterSpacing: 2.0),
+                                  ),
 
 //                                    SizedBox(height: 0.0,),
 
-                                    Text(
-                                      'Sec',
-                                      style: AppStyles.poppinsTextStyle(
-                                          fontSize: 12.0.sp,
-                                          weight: FontWeight.w300),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  Text(
+                                    'Sec',
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 12.0.sp,
+                                        weight: FontWeight.w300),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
               ),
             ),
             Container(
@@ -520,441 +522,447 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
               Column(
               mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  !_isDetail ? Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 2,
-                          blurRadius: 8,
-                          offset: Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 20.0),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 20.0),
-                    child: Column(
-                      children: [
-                        widget.isRedeemNow ? GestureDetector(
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context1) {
-                                  return Dialog(
-                                    insetPadding: EdgeInsets.symmetric(
-                                        horizontal: 0.0),
-                                    backgroundColor: Colors.transparent,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .center,
-                                      mainAxisAlignment: MainAxisAlignment
-                                          .center,
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(top: 20),
-                                              child: Container(
-                                                margin: EdgeInsets.symmetric(
-                                                    horizontal: 30.0),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(
-                                                      color: Colors.transparent,
-                                                    ),
-                                                    borderRadius: BorderRadius
-                                                        .all(
-                                                        Radius.circular(20.0))
-                                                ),
+                  AnimatedSize(
+                    curve: Curves.fastOutSlowIn, child: new Container(
+                    height: !_isDetail ? 350.0 : 0.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 8,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 20.0),
+                      child: Column(
+                        children: [
+                          widget.isRedeemNow ? GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context1) {
+                                    return Dialog(
+                                      insetPadding: EdgeInsets.symmetric(
+                                          horizontal: 0.0),
+                                      backgroundColor: Colors.transparent,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .center,
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .center,
+                                        children: [
+                                          Stack(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(top: 20),
+                                                child: Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 30.0),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(
+                                                        color: Colors.transparent,
+                                                      ),
+                                                      borderRadius: BorderRadius
+                                                          .all(
+                                                          Radius.circular(20.0))
+                                                  ),
 
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize
-                                                        .min,
-                                                    //mainAxisAlignment: MainAxisAlignment.center,
-                                                    //crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                            horizontal: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width * .13),
-                                                        padding: EdgeInsets
-                                                            .fromLTRB(10, 20,
-                                                            10, 25),
-                                                        child: Text(
-                                                          "Redeem Offer Now",
-                                                          style:
-                                                          AppStyles
-                                                              .blackWithSemiBoldFontTextStyle(
-                                                              context, 18.0)
-                                                              .copyWith(
-                                                              fontWeight: FontWeight
-                                                                  .w600),
-                                                          textAlign: TextAlign
-                                                              .center,
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(
+                                                        10.0),
+                                                    child: Column(
+                                                      mainAxisSize: MainAxisSize
+                                                          .min,
+                                                      //mainAxisAlignment: MainAxisAlignment.center,
+                                                      //crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                              horizontal: MediaQuery
+                                                                  .of(context)
+                                                                  .size
+                                                                  .width * .13),
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(10, 20,
+                                                              10, 25),
+                                                          child: Text(
+                                                            "Redeem Offer Now",
+                                                            style:
+                                                            AppStyles
+                                                                .blackWithSemiBoldFontTextStyle(
+                                                                context, 18.0)
+                                                                .copyWith(
+                                                                fontWeight: FontWeight
+                                                                    .w600),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                            horizontal: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width * 0.1),
-                                                        child: Text(
-                                                          "Do you want to Redeem this offer right now?",
-                                                          style:
-                                                          AppStyles
-                                                              .blackWithSemiBoldFontTextStyle(
-                                                              context, 15.0)
-                                                              .copyWith(
-                                                              fontWeight: FontWeight
-                                                                  .w500),
-                                                          textAlign: TextAlign
-                                                              .center,
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                              horizontal: MediaQuery
+                                                                  .of(context)
+                                                                  .size
+                                                                  .width * 0.1),
+                                                          child: Text(
+                                                            "Do you want to Redeem this offer right now?",
+                                                            style:
+                                                            AppStyles
+                                                                .blackWithSemiBoldFontTextStyle(
+                                                                context, 15.0)
+                                                                .copyWith(
+                                                                fontWeight: FontWeight
+                                                                    .w500),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 25.0,
-                                                      ),
-                                                      GradientButton(
-                                                        onTap: widget.onRedeemTap,
-                                                        text: AppStrings
-                                                            .REDEEM_NOW,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20.0,
-                                                      ),
-                                                      ButtonBorder(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context1);
+                                                        SizedBox(
+                                                          height: 25.0,
+                                                        ),
+                                                        GradientButton(
+                                                          onTap: widget.onRedeemTap,
+                                                          text: AppStrings
+                                                              .REDEEM_NOW,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20.0,
+                                                        ),
+                                                        ButtonBorder(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context1);
+                                                          },
+                                                          text: AppStrings.LATER,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 45.0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+
+                                                ),
+                                              ),
+                                              Positioned.fill(
+                                                right: 15,
+                                                child: Align(
+                                                  alignment: Alignment.topRight,
+
+                                                  child: Container(
+                                                      width: 50,
+                                                      height: 50,
+                                                      child:
+                                                      FloatingActionButton(
+                                                        heroTag: "tag",
+                                                        backgroundColor: AppColors
+                                                            .BLUE_COLOR,
+                                                        // backgroundColor:
+                                                        // AppColors.PRIMARY_COLORTWO,
+                                                        elevation: 2,
+                                                        child: Icon(
+                                                          Icons.close,
+                                                          color: Colors.white,
+                                                          size: 20.0,
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
                                                         },
-                                                        text: AppStrings.LATER,
-                                                      ),
-                                                      SizedBox(
-                                                        height: 45.0,
-                                                      ),
-                                                    ],
+                                                        // onPressed: widget.addClickListner
+                                                      )
                                                   ),
                                                 ),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            child: Container(
+                              height: 50.0,
+                              width: double.maxFinite,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(colors: [
+                                    Color(0xff174EA0),
+                                    Color(0xff1E70C6),
+                                    Color(0xff2490E9)
+                                  ],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.0)
+                              ),
+                              child: Container(
+                                constraints: BoxConstraints(
+                                    maxWidth: 300.0, minHeight: 50.0),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  AppStrings.REDEEM_NOW,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ) : Container(),
 
-                                              ),
-                                            ),
-                                            Positioned.fill(
-                                              right: 15,
-                                              child: Align(
-                                                alignment: Alignment.topRight,
+                          SizedBox(height: 30.0,),
 
-                                                child: Container(
-                                                    width: 50,
-                                                    height: 50,
-                                                    child:
-                                                    FloatingActionButton(
-                                                      heroTag: "tag",
-                                                      backgroundColor: AppColors
-                                                          .BLUE_COLOR,
-                                                      // backgroundColor:
-                                                      // AppColors.PRIMARY_COLORTWO,
-                                                      elevation: 2,
-                                                      child: Icon(
-                                                        Icons.close,
-                                                        color: Colors.white,
-                                                        size: 20.0,
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      // onPressed: widget.addClickListner
-                                                    )
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              circularAvatar(
+                                  60.0,
+                                  60.0,
+//                                "https://i1.wp.com/www.logoworks.com/blog/wp-content/uploads/2017/06/Untitled-2.png?fit=1280%2C800&ssl=1",
+                                  widget.image,
+                                  28.0
+                              ),
+
+                              SizedBox(width: 10.0,),
+
+                              Expanded(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .start,
+                                        children: [
+                                          Text(
+                                            widget.offerName,
+                                            // 'asdsd sdsad sdasd sfdf dsfds dfdsf sfsdf fsf sfdsf fsdf  dfsd fsdf fsdf sdfsdf dfs',
+                                            style: AppStyles.poppinsTextStyle(
+                                                fontSize: 17.0,
+                                                weight: FontWeight.w500).copyWith(
+                                                color: Colors.black),
+                                          ),
+
+                                          SizedBox(height: 5.0,),
+
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .start,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  widget.data.store != null
+                                                      ? widget.data.store.name
+                                                      : "-",
+                                                  style: AppStyles
+                                                      .poppinsTextStyle(
+                                                      fontSize: 14.0,
+                                                      weight: FontWeight.w300)
+                                                      .copyWith(
+                                                      color: Colors.black),
                                                 ),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                });
-                          },
-                          child: Container(
-                            height: 50.0,
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                                  Color(0xff174EA0),
-                                  Color(0xff1E70C6),
-                                  Color(0xff2490E9)
-                                ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
-                                borderRadius: BorderRadius.circular(10.0)
-                            ),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                  maxWidth: 300.0, minHeight: 50.0),
-                              alignment: Alignment.center,
-                              child: Text(
-                                AppStrings.REDEEM_NOW,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ) : Container(),
+                                            ],
+                                          ),
 
-                        SizedBox(height: 30.0,),
+                                          SizedBox(height: 8.0,),
 
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            circularAvatar(
-                                60.0,
-                                60.0,
-//                                "https://i1.wp.com/www.logoworks.com/blog/wp-content/uploads/2017/06/Untitled-2.png?fit=1280%2C800&ssl=1",
-                                widget.image,
-                                28.0
-                            ),
-
-                            SizedBox(width: 10.0,),
-
-                            Expanded(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment
-                                          .start,
-                                      children: [
-                                        Text(
-                                          widget.offerName,
-                                          // 'asdsd sdsad sdasd sfdf dsfds dfdsf sfsdf fsf sfdsf fsdf  dfsd fsdf fsdf sdfsdf dfs',
-                                          style: AppStyles.poppinsTextStyle(
-                                              fontSize: 17.0,
-                                              weight: FontWeight.w500).copyWith(
-                                              color: Colors.black),
-                                        ),
-
-                                        SizedBox(height: 5.0,),
-
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                widget.data.store != null
-                                                    ? widget.data.store.name
-                                                    : "-",
-                                                style: AppStyles
-                                                    .poppinsTextStyle(
-                                                    fontSize: 14.0,
-                                                    weight: FontWeight.w300)
-                                                    .copyWith(
-                                                    color: Colors.black),
-                                              ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius
+                                                    .circular(10.0),
+                                                border: Border.all(
+                                                    color: AppColors.GREY_COLOR,
+                                                    width: 1.0)
                                             ),
-                                          ],
-                                        ),
-
-                                        SizedBox(height: 8.0,),
-
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius
-                                                  .circular(10.0),
-                                              border: Border.all(
-                                                  color: AppColors.GREY_COLOR,
-                                                  width: 1.0)
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 3.0, horizontal: 6.0),
+                                            child: Text(
+                                              "${calculateDistance()} miles",
+                                              style: AppStyles.poppinsTextStyle(
+                                                  fontSize: 13.0,
+                                                  weight: FontWeight.w400)
+                                                  .copyWith(color: Colors.black),
+                                            ),
                                           ),
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 3.0, horizontal: 6.0),
-                                          child: Text(
-                                            "${calculateDistance()} miles",
-                                            style: AppStyles.poppinsTextStyle(
-                                                fontSize: 13.0,
-                                                weight: FontWeight.w400)
-                                                .copyWith(color: Colors.black),
-                                          ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
 
-                        SizedBox(height: 15.0,),
+                          SizedBox(height: 15.0,),
 
-                        Divider(color: Colors.grey[400],
-                          height: 1.0,
-                          thickness: 0.5,),
+                          Divider(color: Colors.grey[400],
+                            height: 1.0,
+                            thickness: 0.5,),
 
-                        SizedBox(height: 15.0,),
+                          SizedBox(height: 15.0,),
 
-                        Row(
-                          children: [
-                            SizedBox(width: 2.0,),
+                          Row(
+                            children: [
+                              SizedBox(width: 2.0,),
 
-                            Icon(
-                              Icons.phone,
-                              color: AppColors.GREEN_COLOR,
-                              size: 20.0,
-                            ),
-
-                            SizedBox(width: 12.0,),
-
-                            GestureDetector(
-                              onTap: () {
-                                launch(('tel:${widget.data.user.phone}'));
-                              },
-                              child: Text(
-                                widget.data.user.phone != null ? widget.data
-                                    .user.phone : "-",
-                                style: AppStyles.poppinsTextStyle(
-                                    fontSize: 13.0, weight: FontWeight.w400)
-                                    .copyWith(color: AppColors.GREEN_COLOR),
+                              Icon(
+                                Icons.phone,
+                                color: AppColors.GREEN_COLOR,
+                                size: 20.0,
                               ),
-                            )
-                          ],
-                        ),
 
-                        SizedBox(height: 6.0,),
+                              SizedBox(width: 12.0,),
 
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on_rounded,
-                              color: AppColors.RED_COLOR,
-                              size: 24.0,
-                            ),
-
-                            SizedBox(width: 12.0,),
-
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () async {
-                                  if (await MapLauncher.isMapAvailable(
-                                      Platform.isAndroid
-                                          ? MapType.google
-                                          : MapType.apple)) {
-                                    await MapLauncher.showMarker(
-                                      mapType: Platform.isAndroid ? MapType
-                                          .google : MapType.apple,
-                                      coords: widget.coord,
-                                      title: widget.locationTitle,
-//                                  description: "Map",
-                                    );
-                                  }
+                              GestureDetector(
+                                onTap: () {
+                                  launch(('tel:${widget.data.user.phone}'));
                                 },
                                 child: Text(
+                                  widget.data.user.phone != null ? widget.data
+                                      .user.phone : "-",
+                                  style: AppStyles.poppinsTextStyle(
+                                      fontSize: 13.0, weight: FontWeight.w400)
+                                      .copyWith(color: AppColors.GREEN_COLOR),
+                                ),
+                              )
+                            ],
+                          ),
 
-                                  widget.data.user.address != null ? widget.data
-                                      .user.address : "-",
+                          SizedBox(height: 6.0,),
+
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_rounded,
+                                color: AppColors.RED_COLOR,
+                                size: 24.0,
+                              ),
+
+                              SizedBox(width: 12.0,),
+
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    if (await MapLauncher.isMapAvailable(
+                                        Platform.isAndroid
+                                            ? MapType.google
+                                            : MapType.apple)) {
+                                      await MapLauncher.showMarker(
+                                        mapType: Platform.isAndroid ? MapType
+                                            .google : MapType.apple,
+                                        coords: widget.coord,
+                                        title: widget.locationTitle,
+//                                  description: "Map",
+                                      );
+                                    }
+                                  },
+                                  child: Text(
+
+                                    widget.data.user.address != null ? widget.data
+                                        .user.address : "-",
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 13.0, weight: FontWeight.w400)
+                                        .copyWith(
+                                        color: AppColors.BLUE_COLOR_DARK),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+
+                          SizedBox(height: 6.0,),
+
+                          Row(
+                            children: [
+                              SizedBox(width: 3.0,),
+
+                              Icon(
+                                FontAwesomeIcons.solidClock,
+                                color: AppColors.DARK_GREY_COLOR2,
+                                size: 17.0,
+                              ),
+
+                              SizedBox(width: 15.0,),
+
+                              Expanded(
+                                child: Text(
+                                  widget.data.store != null &&
+                                      widget.data.store != null ?
+                                  "Hours: Opens ${ DateFormat.jm().format(
+                                      DateFormat("hh:mm:ss").parse(
+                                          widget.data.store
+                                              .openingTime))} - Closed ${ DateFormat
+                                      .jm().format(DateFormat("hh:mm:ss").parse(
+                                      widget.data.store.closingTime))}" : "-",
+
                                   style: AppStyles.poppinsTextStyle(
                                       fontSize: 13.0, weight: FontWeight.w400)
                                       .copyWith(
-                                      color: AppColors.BLUE_COLOR_DARK),
+                                      color: AppColors.DARK_GREY_COLOR2),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
+                              )
+                            ],
+                          ),
 
-                        SizedBox(height: 6.0,),
+                          SizedBox(height: 10.0,),
 
-                        Row(
-                          children: [
-                            SizedBox(width: 3.0,),
+                          Row(
+                            children: [
+                              SizedBox(width: 35.0,),
 
-                            Icon(
-                              FontAwesomeIcons.solidClock,
-                              color: AppColors.DARK_GREY_COLOR2,
-                              size: 17.0,
-                            ),
+                              Text(
 
-                            SizedBox(width: 15.0,),
-
-                            Expanded(
-                              child: Text(
-                                widget.data.store != null &&
-                                    widget.data.store != null ?
-                                "Hours: Opens ${ DateFormat.jm().format(
-                                    DateFormat("hh:mm:ss").parse(
-                                        widget.data.store
-                                            .openingTime))} - Closed ${ DateFormat
-                                    .jm().format(DateFormat("hh:mm:ss").parse(
-                                    widget.data.store.closingTime))}" : "-",
-
+                                widget.data.averageRating != null ? "5.0 (${widget
+                                    .data.averageRating})" : "5.0 (0.0)",
                                 style: AppStyles.poppinsTextStyle(
-                                    fontSize: 13.0, weight: FontWeight.w400)
+                                    fontSize: 14.0, weight: FontWeight.w400)
                                     .copyWith(
-                                    color: AppColors.DARK_GREY_COLOR2),
+                                    color: AppColors.GREEN_BRIGHT_COLOR),
                               ),
-                            )
-                          ],
-                        ),
 
-                        SizedBox(height: 10.0,),
-
-                        Row(
-                          children: [
-                            SizedBox(width: 35.0,),
-
-                            Text(
-
-                              widget.data.averageRating != null ? "5.0 (${widget
-                                  .data.averageRating})" : "5.0 (0.0)",
-                              style: AppStyles.poppinsTextStyle(
-                                  fontSize: 14.0, weight: FontWeight.w400)
-                                  .copyWith(
-                                  color: AppColors.GREEN_BRIGHT_COLOR),
-                            ),
-
-                            RatingBar(
-                              onRatingUpdate: null,
-                              ratingWidget: RatingWidget(
-                                  full: Icon(
-                                    FontAwesomeIcons.solidStar,
-                                    color: AppColors.GREEN_BRIGHT_COLOR,
-                                  ),
-                                  half: Icon(
-                                    FontAwesomeIcons.starHalfAlt,
-                                    color: AppColors.GREEN_BRIGHT_COLOR,
-                                  ),
-                                  empty: Icon(
-                                    FontAwesomeIcons.star,
-                                    color: AppColors.GREEN_BRIGHT_COLOR,
-                                  )
+                              RatingBar(
+                                onRatingUpdate: null,
+                                ratingWidget: RatingWidget(
+                                    full: Icon(
+                                      FontAwesomeIcons.solidStar,
+                                      color: AppColors.GREEN_BRIGHT_COLOR,
+                                    ),
+                                    half: Icon(
+                                      FontAwesomeIcons.starHalfAlt,
+                                      color: AppColors.GREEN_BRIGHT_COLOR,
+                                    ),
+                                    empty: Icon(
+                                      FontAwesomeIcons.star,
+                                      color: AppColors.GREEN_BRIGHT_COLOR,
+                                    )
+                                ),
+                                itemSize: 13.0,
+                                initialRating: widget.data.averageRating != null
+                                    ? double.parse(widget.data.averageRating)
+                                    : 0.0,
+                                allowHalfRating: true,
+                                glow: false,
+                                itemPadding: EdgeInsets.only(left: 5.0),
                               ),
-                              itemSize: 13.0,
-                              initialRating: widget.data.averageRating != null
-                                  ? double.parse(widget.data.averageRating)
-                                  : 0.0,
-                              allowHalfRating: true,
-                              glow: false,
-                              itemPadding: EdgeInsets.only(left: 5.0),
-                            ),
-                          ],
-                        )
-                      ],
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ) : Container(),
+                  ),
+                    vsync: this, duration: new Duration(seconds: 1),
+                  ),
 
                   true ? SizedBox(height: 15.0,) : Container(),
 

@@ -76,7 +76,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                       SizedBox(
                         height: 30.0,
                       ),
-                      InkWell(
+                      GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
                               context, AppRoutes.SETTING_VIEW);
@@ -127,7 +127,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                       SizedBox(
                         height: 30.0,
                       ),
-                      InkWell(
+                      GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
                               context, AppRoutes.TERMS_CONDITIONS);
@@ -179,7 +179,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                       SizedBox(
                         height: 30.0,
                       ),
-                      InkWell(
+                      GestureDetector(
                         onTap: (){
                           Navigator.pushNamed(context, AppRoutes.ABOUT);
                         },

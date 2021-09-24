@@ -118,7 +118,7 @@ dependencies:
   collection: #^1.15.0
   open_appstore: #^1.0.2
   app_settings: ^4.0.4
-
+  flutter_swipe_action_cell:
 
   #NOTIFICATION
   notification_permissions: 0.4.8

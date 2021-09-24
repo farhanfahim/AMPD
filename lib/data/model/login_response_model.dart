@@ -33,6 +33,10 @@ class Data {
   Object latitude;
   Object longitude;
   int pushNotifications;
+  int sortingAscending;
+  int nearestLocation;
+  int highestDiscountAmount;
+  int soonestExpiration;
   int radius;
   Object socialPlatform;
   Object clientId;
@@ -60,6 +64,10 @@ class Data {
         this.latitude,
         this.longitude,
         this.pushNotifications,
+        this.sortingAscending,
+        this.nearestLocation,
+        this.highestDiscountAmount,
+        this.soonestExpiration,
         this.radius,
         this.socialPlatform,
         this.clientId,
@@ -87,6 +95,10 @@ class Data {
     latitude = json['latitude'];
     longitude = json['longitude'];
     pushNotifications = json['push_notifications'];
+    sortingAscending = json['sorting_ascending'];
+    nearestLocation = json['nearest_location'];
+    highestDiscountAmount = json['highest_discount_amount'];
+    soonestExpiration = json['soonest_expiration'];
     radius = json['radius'];
     socialPlatform = json['social_platform'];
     clientId = json['client_id'];
@@ -119,6 +131,10 @@ class Data {
     data['latitude'] = this.latitude;
     data['longitude'] = this.longitude;
     data['push_notifications'] = this.pushNotifications;
+    data['sorting_ascending'] = this.sortingAscending;
+    data['nearest_location'] = this.nearestLocation;
+    data['highest_discount_amount'] = this.highestDiscountAmount;
+    data['soonest_expiration'] = this.soonestExpiration;
     data['radius'] = this.radius;
     data['social_platform'] = this.socialPlatform;
     data['client_id'] = this.clientId;

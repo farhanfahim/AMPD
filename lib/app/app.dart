@@ -17,6 +17,7 @@ import 'package:ampd/repo/side_menu_repository.dart';
 import 'package:ampd/repo/saved_coupon_repository.dart';
 import 'package:ampd/repo/settings_repository.dart';
 import 'package:ampd/repo/terms_condition_repository.dart';
+import 'package:ampd/repo/filter_repository.dart';
 import 'package:ampd/widgets/GlobalVariable.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -150,5 +151,9 @@ class App extends StatelessWidget {
   }
   SettingsRepository getSettingsRepository({@required AppPreferences appPreferences}) {
     return SettingsRepository(appPreferences: appPreferences);
+  }
+
+  FilterRepository getFilterRepository({@required AppPreferences appPreferences}) {
+    return FilterRepository(appPreferences: appPreferences);
   }
 }

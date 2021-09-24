@@ -97,20 +97,7 @@ class _AboutState extends State<AboutView> {
                           height: 30.0,
                         ),
                         Expanded(
-                          child: EasyWebView(
-                              src: snapshot.data.content,
-                              onLoaded: () {
-                                print('$key3: Loaded: ${snapshot.data.content}');
-                              },
-                              isHtml: true,
-
-                              isMarkdown: false,
-                              convertToWidgets: false,
-                              widgetsTextSelectable: false,
-                              key: key3
-                            // width: 100,
-                            // height: 100,
-                          ),
+                          child: aboutUsText(snapshot.data.content,context),
                         ),
 
                       ],
@@ -122,6 +109,22 @@ class _AboutState extends State<AboutView> {
                 }
               }),
         ));
+  }
+
+  Widget aboutUsText(String content,BuildContext ctx) {
+    return Container(
+      child: Html(
+        data: content,
+        onLinkTap: (val){
+          Util.launchInWebViewWithJavaScript(val);
+        },
+        defaultTextStyle: AppStyles.blackWithDifferentFontTextStyle(ctx, 14.0)
+            .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+      ),
+      // child: Text(aboutUsResponse.content,
+      //     style: AppStyles.detailTextStyle()
+      //         .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR)),
+    );
   }
 
   Future<void> callPageApi() async {

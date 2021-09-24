@@ -22,6 +22,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:easy_web_view/easy_web_view.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 
@@ -99,18 +100,7 @@ class _TermsConditionsState extends State<TermsConditionsView> {
                         ),
 
                         Expanded(
-                          child: EasyWebView(
-                              src: snapshot.data.content,
-                              onLoaded: () {
-                                print('$key3: Loaded: ${snapshot.data.content}');
-                              },
-                              isHtml: true,
-
-                              isMarkdown: false,
-                              convertToWidgets: false,
-                              widgetsTextSelectable: false,
-                              key: key3,
-                          ),
+                          child: aboutUsText(snapshot.data.content,context),
                         ),
                         SizedBox(
                           height: 20.0,
@@ -214,6 +204,22 @@ class Header extends StatelessWidget {
   }
 
 
+}
+
+Widget aboutUsText(String content,BuildContext ctx) {
+  return Container(
+    child: Html(
+      data: content,
+      onLinkTap: (val){
+        Util.launchInWebViewWithJavaScript(val);
+      },
+      defaultTextStyle: AppStyles.blackWithDifferentFontTextStyle(ctx, 14.0)
+          .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+    ),
+    // child: Text(aboutUsResponse.content,
+    //     style: AppStyles.detailTextStyle()
+    //         .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR)),
+  );
 }
 
 customHandler(IconData icon) {

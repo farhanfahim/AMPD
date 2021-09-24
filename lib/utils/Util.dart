@@ -298,8 +298,8 @@ class Util {
     if (await canLaunch(url)) {
       await launch(
         url,
-        forceSafariVC: true,
-        forceWebView: true,
+        forceSafariVC: false,
+        forceWebView: false,
         enableJavaScript: true,
 
       );
