@@ -82,6 +82,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                               context, AppRoutes.SETTING_VIEW);
                         },
                         child: Container(
+                          color: AppColors.WHITE_COLOR,
                           width: double.maxFinite,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -133,6 +134,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                               context, AppRoutes.TERMS_CONDITIONS);
                         },
                         child: Container(
+                          color: AppColors.WHITE_COLOR,
                           width: double.maxFinite,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -189,7 +191,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-
+                              color: AppColors.WHITE_COLOR,
                               width: double.maxFinite,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,

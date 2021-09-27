@@ -856,6 +856,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               controller: numberController,
               keyboardType: TextInputType.phone,
               inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
 
@@ -923,6 +924,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               controller: phoneNumberController,
               keyboardType: TextInputType.phone,
               inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(phoneNumberValidation),
               ],
               onEditingComplete: () =>

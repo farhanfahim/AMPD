@@ -365,6 +365,7 @@ class _WelcomeViewState extends State<WelcomeView>
               controller: numberController,
               keyboardType: TextInputType.phone,
               inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
 

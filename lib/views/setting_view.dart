@@ -124,6 +124,7 @@ class _SettingState extends State<SettingView> {
                               context, AppRoutes.MY_PROFILE_VIEW);
                         },
                         child: Container(
+                          color: AppColors.WHITE_COLOR,
                           width: double.maxFinite,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -175,6 +176,7 @@ class _SettingState extends State<SettingView> {
                               context, AppRoutes.CHANGE_PASSWORD_VIEW);
                         },
                         child: Container(
+                          color: AppColors.WHITE_COLOR,
                           width: double.maxFinite,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

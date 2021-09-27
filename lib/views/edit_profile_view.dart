@@ -138,7 +138,11 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         numberController.text = userData.data.phone;
         firstNameController.text = userData.data.firstName;
         lastNameController.text = userData.data.lastName;
-        imageUrl = userData.data.imageUrl;
+        if(userData.data.image!= null) {
+          imageUrl = userData.data.imageUrl;
+        }else{
+          imageUrl = "";
+        }
         _fullName = "${userData.data.firstName} ${userData.data.lastName}";
       });
     });
@@ -667,6 +671,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               controller: numberController,
               keyboardType: TextInputType.phone,
               inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
 
@@ -751,6 +756,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               controller: numberController,
               keyboardType: TextInputType.phone,
               inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
                 LengthLimitingTextInputFormatter(numberValidation),
               ],
 
