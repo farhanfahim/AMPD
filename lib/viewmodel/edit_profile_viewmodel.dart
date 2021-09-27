@@ -53,4 +53,8 @@ class EditProfileViewModel {
   void updateProfile(Map<String, dynamic> map) {
     _editProfileRepository.updateProfile(map);
   }
+
+  void updateProfileWithRemoveImage(Map<String, dynamic> map) {
+    _editProfileRepository.updateProfileWithRemoveImage(map);
+  }
 }

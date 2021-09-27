@@ -1438,10 +1438,19 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         });
 
         var map = Map<String, dynamic>();
-        map['image'] = _image!=null?_image:"null";
-        map['first_name'] = firstNameController.text.trim();
-        map['last_name'] = lastNameController.text.trim();
-        _editProfileViewModel.updateProfile(map);
+
+        if(_image != null && imageUrl != null){
+          map['image'] = _image;
+          map['first_name'] = firstNameController.text.trim();
+          map['last_name'] = lastNameController.text.trim();
+          _editProfileViewModel.updateProfile(map);
+        }else{
+          map['image'] = "null";
+          map['first_name'] = firstNameController.text.trim();
+          map['last_name'] = lastNameController.text.trim();
+          _editProfileViewModel.updateProfileWithRemoveImage(map);
+        }
+
       } else {
         setState(() {
           _isInternetAvailable = false;
