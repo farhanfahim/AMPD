@@ -17,7 +17,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-double offerRating = 0.0;
+
 class RedeemMessageView extends StatefulWidget {
   Map<String, dynamic> map;
   RedeemMessageView(this.map);
@@ -27,6 +27,7 @@ class RedeemMessageView extends StatefulWidget {
 }
 
 class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderStateMixin {
+  double offerRating = 0.0;
   Timer _timer1;
   int _sec = 10;
   int _secc = 1;
@@ -161,10 +162,8 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                       ),
                       GradientButton(
                         onTap: () {
-                          if (!widget.map['fromSavedCoupon']) {
                             _timer1.cancel();
                             Navigator.pop(context);
-                          }
                           showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -174,7 +173,9 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                                   contex: context,
                                   subTitle: "How was Starbucks?",
                                   title: "Help other AMPD users by leaving a store review",
-                                  ratingBar: RatingBarWidget(),
+                                  ratingBar: RatingBarWidget(onRatingChange: (onRatingChanged){
+                                    offerRating = onRatingChanged;
+                                  },),
                                   buttonText1: AppStrings.SUBMIT,
                                   onPressed1: (message) {
                                     reviewMessage = message;
@@ -187,9 +188,11 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                                               widget.map['offer_id'], reviewMessage,
                                               offerRating.toString());
                                         }else{
+                                          Util.hideKeyBoard(customDialogBoxContext);
                                           ToastUtil.showToast(customDialogBoxContext, "Please write a review");
                                         }
                                       }else{
+                                        Util.hideKeyBoard(customDialogBoxContext);
                                         ToastUtil.showToast(customDialogBoxContext, "Please rate this store");
                                       }
                                     },
@@ -304,8 +307,10 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
 
 }
 
+
 class RatingBarWidget extends StatefulWidget {
-  const RatingBarWidget({Key key}) : super(key: key);
+  final ValueChanged<double> onRatingChange;
+  const RatingBarWidget({Key key,this.onRatingChange}) : super(key: key);
 
   @override
   _RatingBarWidgetState createState() => _RatingBarWidgetState();
@@ -314,10 +319,11 @@ class RatingBarWidget extends StatefulWidget {
 class _RatingBarWidgetState extends State<RatingBarWidget> {
   @override
   Widget build(BuildContext context) {
+
     return RatingBar(
       onRatingUpdate: (rating) {
         setState(() {
-          offerRating = rating;
+          widget.onRatingChange(rating);
         });
 
       },
@@ -337,7 +343,7 @@ class _RatingBarWidgetState extends State<RatingBarWidget> {
           )
       ),
       itemSize: 22.0,
-      initialRating: offerRating,
+      initialRating: 0.0,
       allowHalfRating: true,
       glow: false,
       itemPadding: EdgeInsets.only(left: 5.0),

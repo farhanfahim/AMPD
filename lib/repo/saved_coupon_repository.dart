@@ -57,7 +57,6 @@ class SavedCouponRepository {
     });
   }
 
-
   void redeemOffer(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = false;

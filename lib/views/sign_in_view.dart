@@ -1081,6 +1081,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   controller: cPasswordController,
                   keyboardType: TextInputType.visiblePassword,
                   inputFormatters: [
+
                     LengthLimitingTextInputFormatter(cPasswordValidation),
                   ],
                   /*onEditingComplete: () => FocusScope.of(context).requestFocus(cPasswordNode),

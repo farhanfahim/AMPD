@@ -37,7 +37,6 @@ class _MyProfileViewState extends State<MyProfileView> {
       setState(() {
         _email = userData.data.email;
         _phone = userData.data.phone;
-        _imageUrl = userData.data.imageUrl;
         if(userData.data.image!= null) {
           _imageUrl = userData.data.imageUrl;
         }else{
@@ -66,7 +65,11 @@ class _MyProfileViewState extends State<MyProfileView> {
                   setState(() {
                     _email = userData.data.email;
                     _phone = userData.data.phone;
-                    _imageUrl = userData.data.imageUrl;
+                    if(userData.data.image!= null) {
+                      _imageUrl = userData.data.imageUrl;
+                    }else{
+                      _imageUrl = "";
+                    }
                     _name = "${userData.data.firstName} ${userData.data.lastName}";
                   });
                 });

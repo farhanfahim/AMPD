@@ -7,7 +7,6 @@ import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
-import 'package:ampd/data/model/OfferDataClassModel.dart';
 import 'package:ampd/data/model/RedeemOfferModel.dart';
 import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
@@ -39,6 +38,7 @@ class ActiveCouponsView extends StatefulWidget {
 
 class _ActiveCouponsState extends State<ActiveCouponsView>
     with TickerProviderStateMixin {
+  BuildContext dialogContext;
   AnimationController _buttonController;
   int _totalPages = 0;
   int _currentPage = 1;
@@ -239,6 +239,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context1) {
+                                        dialogContext = context1;
                                         return Dialog(
                                           insetPadding: EdgeInsets.symmetric(
                                               horizontal: 0.0),
@@ -496,7 +497,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
 
   void subscribeToViewModel() {
     _activeCouponViewModel
-        .getSavedCouponRepository()
+        .getActiveCouponRepository()
         .getRepositoryResponse()
         .listen((response) async {
       _stopAnimation();
@@ -505,9 +506,11 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
           _enabled = true;
           _isPaginationLoading = false;
         });
-      } else if (response.data is RedeemOfferModel) {
+      }
+
+      if (response.data is RedeemOfferModel) {
         ToastUtil.showToast(context, response.msg);
-        Navigator.pop(context);
+        Navigator.pop(dialogContext);
         Navigator.pushNamed(
             context,
             singleOfferModel.qrUrl != null
@@ -519,6 +522,9 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
             });
+      }else if (response.msg == "You have already availed this offer!") {
+        ToastUtil.showToast(context, response.msg);
+        Navigator.pop(dialogContext);
       }
 
       if (response.data is SavedCouponModel) {

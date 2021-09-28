@@ -1,41 +1,42 @@
 import 'dart:async';
 
+import 'package:ampd/repo/active_coupon_repository.dart';
 import 'package:ampd/repo/saved_coupon_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/app/app.dart';
 
 class ActiveCouponViewModel {
-  SavedCouponRepository _savedCouponRepository;
+  ActiveCouponRepository _activeCouponRepository;
 
   static ActiveCouponViewModel _instance;
 
   factory ActiveCouponViewModel(App app) {
-    _instance ??= ActiveCouponViewModel._internal(savedCouponRepository: app.getSavedCouponRepository(
+    _instance ??= ActiveCouponViewModel._internal(activeCouponRepository: app.getActiveCouponRepository(
         appPreferences: app.getAppPreferences()));
     return _instance;
   }
 
   ActiveCouponViewModel._internal(
-      {@required SavedCouponRepository savedCouponRepository}) {
-    _savedCouponRepository = savedCouponRepository;
+      {@required ActiveCouponRepository activeCouponRepository}) {
+    _activeCouponRepository = activeCouponRepository;
   }
 
-  SavedCouponRepository getSavedCouponRepository() => _savedCouponRepository;
+  ActiveCouponRepository getActiveCouponRepository() => _activeCouponRepository;
 
-  SavedCouponRepository clearRepositroyResponse() {
-    _savedCouponRepository = null;
+  ActiveCouponRepository clearRepositroyResponse() {
+    _activeCouponRepository = null;
   }
 
   void redeemOffer(Map<String, dynamic> map) {
-    _savedCouponRepository.redeemOffer(map);
+    _activeCouponRepository.redeemOffer(map);
   }
   void deleteOffer(Map<String, dynamic> map) {
-    _savedCouponRepository.deleteOffer(map);
+    _activeCouponRepository.deleteOffer(map);
   }
 
 
   void savedCoupons(Map<String, dynamic> map) {
-    _savedCouponRepository.getSavedCoupons(map);
+    _activeCouponRepository.getSavedCoupons(map);
   }
 
 

@@ -450,6 +450,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               controller: firstNameController,
               keyboardType: TextInputType.text,
               inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
                 LengthLimitingTextInputFormatter(firstNameValidation),
 //                FirstUpperCaseTextFormatter()
               ],
@@ -514,6 +515,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               controller: lastNameController,
               keyboardType: TextInputType.text,
               inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
                 LengthLimitingTextInputFormatter(lastNameValidation),
               ],
               onEditingComplete: () =>
@@ -1445,16 +1447,22 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
         var map = Map<String, dynamic>();
 
-        if(_image != null && imageUrl != null){
+        if(_image != null){
           map['image'] = _image;
           map['first_name'] = firstNameController.text.trim();
           map['last_name'] = lastNameController.text.trim();
           _editProfileViewModel.updateProfile(map);
         }else{
-          map['image'] = "null";
-          map['first_name'] = firstNameController.text.trim();
-          map['last_name'] = lastNameController.text.trim();
-          _editProfileViewModel.updateProfileWithRemoveImage(map);
+          if(imageUrl != ""){
+            map['first_name'] = firstNameController.text.trim();
+            map['last_name'] = lastNameController.text.trim();
+            _editProfileViewModel.updateProfile(map);
+          }else{
+            map['image'] = "null";
+            map['first_name'] = firstNameController.text.trim();
+            map['last_name'] = lastNameController.text.trim();
+            _editProfileViewModel.updateProfileWithRemoveImage(map);
+          }
         }
 
       } else {

@@ -2,6 +2,7 @@
 import 'package:ampd/appresources/theme.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/data/model/UserLocation.dart';
+import 'package:ampd/repo/active_coupon_repository.dart';
 import 'package:ampd/repo/change_password_repository.dart';
 import 'package:ampd/repo/edit_profile_repository.dart';
 import 'package:ampd/repo/about_repository.dart';
@@ -120,6 +121,11 @@ class App extends StatelessWidget {
   SavedCoupon2Repository getSavedCoupon2Repository({@required AppPreferences appPreferences}) {
     return SavedCoupon2Repository(appPreferences: appPreferences);
   }
+
+  ActiveCouponRepository getActiveCouponRepository({@required AppPreferences appPreferences}) {
+    return ActiveCouponRepository(appPreferences: appPreferences);
+  }
+
   RedeemNowRepository getRedeemNowRepository({@required AppPreferences appPreferences}) {
     return RedeemNowRepository(appPreferences: appPreferences);
   }

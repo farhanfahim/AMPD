@@ -92,7 +92,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        print("app in resumed");
+        print("adasdasdapp in resumed");
 
         break;
       case AppLifecycleState.inactive:

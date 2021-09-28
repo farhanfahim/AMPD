@@ -36,7 +36,6 @@ class RedeemNowView extends StatefulWidget {
 
   Map<String, dynamic> map;
 
-
   RedeemNowView(this.map);
   @override
   _RedeemNowViewState createState() => _RedeemNowViewState();
@@ -44,6 +43,7 @@ class RedeemNowView extends StatefulWidget {
 
 class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateMixin{
 
+  BuildContext dialogContext;
   AnimationController _buttonController;
   bool _openSetting = false;
   String _appBarTitle = 'Offer';
@@ -170,6 +170,7 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
                     context: context,
                     builder: (
                         BuildContext context1) {
+                      dialogContext = context;
                       return CustomDialog(
                         showAnimatedBtn: true,
                         contex: context,
@@ -329,6 +330,9 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
         Navigator.pushNamed(
             context, singleOfferModel.qrUrl!= null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW,
             arguments: {'fromSavedCoupon':true, 'qrImage': singleOfferModel.qrUrl,'redeemMessage':singleOfferModel.redeemMessage,'offer_id': response.data.offerId,});
+      }else if (response.msg == "You have already availed this offer!") {
+        ToastUtil.showToast(context, response.msg);
+        Navigator.pop(dialogContext);
       }
       else if(response.data is DioError){
         if (response.statusCode == 401) {

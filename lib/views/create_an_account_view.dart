@@ -336,6 +336,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               controller: firstNameController,
               keyboardType: TextInputType.text,
               inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
                 LengthLimitingTextInputFormatter(firstNameValidation),
               ],
               onEditingComplete: () =>
@@ -399,6 +400,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
               controller: lastNameController,
               keyboardType: TextInputType.text,
               inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
                 LengthLimitingTextInputFormatter(lastNameValidation),
               ],
               onEditingComplete: () =>

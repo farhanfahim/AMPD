@@ -25,8 +25,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
 
-double offerRating = 0.0;
-
 class QrScanView extends StatefulWidget {
   Map<String, dynamic> map;
   QrScanView(this.map);
@@ -36,6 +34,7 @@ class QrScanView extends StatefulWidget {
 }
 
 class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
+  double offerRating = 0.0;
   AnimationController _buttonController;
   QrScanViewModel _qrScanViewModel;
   bool _enabled = true;
@@ -178,10 +177,10 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                     ),
                     GradientButton(
                       onTap: () {
-                        if (!widget.map['fromSavedCoupon']) {
+
                           _timer1.cancel();
                           Navigator.pop(context);
-                        }
+
                         showDialog(
                             context: context,
                             barrierDismissible: false,
@@ -191,7 +190,9 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                                 contex: context,
                                 subTitle: "How was Starbucks?",
                                 title: "Help other AMPD users by leaving a store review",
-                                ratingBar: RatingBarWidget(),
+                                ratingBar: RatingBarWidget(onRatingChange: (onRatingChanged){
+                                  offerRating = onRatingChanged;
+                                },),
                                 buttonText1: AppStrings.SUBMIT,
                                 onPressed1: (message) {
                                   reviewMessage = message;
@@ -204,9 +205,11 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                                             widget.map['offer_id'], reviewMessage,
                                             offerRating.toString());
                                       }else{
+                                        Util.hideKeyBoard(customDialogBoxContext);
                                         ToastUtil.showToast(customDialogBoxContext, "Please write a review");
                                       }
                                     }else{
+                                      Util.hideKeyBoard(customDialogBoxContext);
                                       ToastUtil.showToast(customDialogBoxContext, "Please rate this store");
                                     }
                                   },
@@ -321,7 +324,8 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
 
 
 class RatingBarWidget extends StatefulWidget {
-  const RatingBarWidget({Key key}) : super(key: key);
+  final ValueChanged<double> onRatingChange;
+  const RatingBarWidget({Key key,this.onRatingChange}) : super(key: key);
 
   @override
   _RatingBarWidgetState createState() => _RatingBarWidgetState();
@@ -330,10 +334,11 @@ class RatingBarWidget extends StatefulWidget {
 class _RatingBarWidgetState extends State<RatingBarWidget> {
   @override
   Widget build(BuildContext context) {
+
     return RatingBar(
       onRatingUpdate: (rating) {
         setState(() {
-          offerRating = rating;
+          widget.onRatingChange(rating);
         });
 
       },
@@ -353,7 +358,7 @@ class _RatingBarWidgetState extends State<RatingBarWidget> {
           )
       ),
       itemSize: 22.0,
-      initialRating: offerRating,
+      initialRating: 0.0,
       allowHalfRating: true,
       glow: false,
       itemPadding: EdgeInsets.only(left: 5.0),
