@@ -128,9 +128,10 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       height: 30.0.h,
                       margin: EdgeInsets.fromLTRB(0.0, 30.0, 0, 0),
                       child: Center(
-                        child: SvgPicture.asset(
+                        child: Image.network(
                           widget.map['qrImage'] != null ? widget.map['qrImage']:"",
-                        ),
+                          fit: BoxFit.cover,
+                        )
                       ),
                     ),
                     SizedBox(
