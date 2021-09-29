@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:ampd/appresources/app_constants.dart';
+import 'package:ampd/appresources/app_fonts.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
@@ -26,7 +29,7 @@ import 'package:geolocator/geolocator.dart' as gcl;
 import 'package:sizer/sizer.dart';
 import 'package:ampd/utils/LocationPermissionHandler.dart';
 import 'package:ampd/utils/loader.dart';
-
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:location_permissions/location_permissions.dart'    as locationPermission;
 class WelcomeView extends StatefulWidget {
@@ -36,6 +39,10 @@ class WelcomeView extends StatefulWidget {
 
 class _WelcomeViewState extends State<WelcomeView>
     with TickerProviderStateMixin  , WidgetsBindingObserver {
+
+  String initialCountry = 'US';
+  PhoneNumber number = PhoneNumber(isoCode: 'US');
+  bool isValidate = false;
   TextEditingController numberController = new TextEditingController();
   int numberValidation = AppConstants.PHONE_VALIDATION;
   String phoneNo = "";
@@ -186,8 +193,9 @@ class _WelcomeViewState extends State<WelcomeView>
   @override
   void initState() {
     //throw Exception("This is a crash!");
+    Timer(Duration(seconds: 2),
+            () => getCurrentLocation());
 
-    getCurrentLocation();
     WidgetsBinding.instance.addObserver(this);
     _submitButtonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
@@ -212,7 +220,42 @@ class _WelcomeViewState extends State<WelcomeView>
         context,
         AppStrings.PHONE_NUMBER_TITLE,
         AppStrings.PHONE_NUMBER_DESC,
-        customWidget(context),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                      width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
+          child: InternationalPhoneNumberInput(
+            onInputChanged: (PhoneNumber number) {
+              print(number.phoneNumber);
+              phoneNo = number.phoneNumber;
+            },
+            onInputValidated: (bool value) {
+              print(value);
+              setState(() {
+                isValidate = value;
+              });
+            },
+            selectorConfig: SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+            ),
+            formatInput: false,
+            initialValue: number,
+            ignoreBlank: false,
+            selectorTextStyle: TextStyle(
+                fontSize: 12.0,
+                color: AppColors.COLOR_BLACK,
+                fontFamily: AppFonts.POPPINS_MEDIUM,
+                fontWeight: FontWeight.w400),
+            autoValidateMode: AutovalidateMode.onUserInteraction,
+            textFieldController: numberController,
+            inputDecoration:
+            AppStyles.decorationWithoutBorder("Phone Number"),
+          ),
+        ),
         AnimatedGradientButton(
           onAnimationTap: () {
             if (flag) {
@@ -225,22 +268,15 @@ class _WelcomeViewState extends State<WelcomeView>
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if(phoneNo.length < 10){
+
+                      if (isValidate) {
+                        callRegisterViaPhoneApi();
+                      } else {
                         setState(() {
                           flag = true;
                         });
-                        ToastUtil.showToast(
-                            context, "Phone number is too short ");
-                      }else{
-                        if(phoneNo.length > 15){
-                          setState(() {
-                            flag = true;
-                          });
-                          ToastUtil.showToast(
-                              context, "Phone number is too long ");
-                        }else{
-                          callRegisterViaPhoneApi();
-                        }
+                        Util.hideKeyBoard(context);
+                        ToastUtil.showToast(context, "Invalid phone number");
                       }
 
                     } else {

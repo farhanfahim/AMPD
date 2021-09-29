@@ -36,6 +36,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 // import 'package:images_picker/images_picker.dart';
 import 'package:sizer/sizer.dart';
 
@@ -49,6 +50,12 @@ class EditProfileView extends StatefulWidget {
 }
 
 class _EditProfileViewState extends State<EditProfileView> with TickerProviderStateMixin {
+
+  String initialCountry = 'US';
+  PhoneNumber number = PhoneNumber(isoCode: 'US');
+  bool isValidate = false;
+  bool isValidate2 = false;
+
   TextEditingController addressController = new TextEditingController();
   TextEditingController firstNameController = new TextEditingController();
   TextEditingController lastNameController = new TextEditingController();
@@ -1011,7 +1018,42 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         context, AppStrings.REQUEST_TO_PHONE_NUMBER_TITLE,
         AppStrings.PHONE_NUMBER_DESC,
         // phoneNoWidget(context),
-        editableCustomPhoneNoWidget(context),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                      width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
+          child: InternationalPhoneNumberInput(
+            onInputChanged: (PhoneNumber number) {
+              print(number.phoneNumber);
+              phoneNo = number.phoneNumber;
+            },
+            onInputValidated: (bool value) {
+              print(value);
+              setState(() {
+                isValidate = value;
+              });
+            },
+            selectorConfig: SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+            ),
+            formatInput: false,
+            initialValue: number,
+            ignoreBlank: false,
+            selectorTextStyle: TextStyle(
+                fontSize: 12.0,
+                color: AppColors.COLOR_BLACK,
+                fontFamily: AppFonts.POPPINS_MEDIUM,
+                fontWeight: FontWeight.w400),
+            autoValidateMode: AutovalidateMode.onUserInteraction,
+            textFieldController: numberController,
+            inputDecoration:
+            AppStyles.decorationWithoutBorder("Phone Number"),
+          ),
+        ),
         AnimatedGradientButton(
           onAnimationTap: () {
             if (validatePhone()) {
@@ -1049,7 +1091,42 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
   showUpdatePhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_NEW_PHONE,
-        "", editableCustomPhoneNoWidget(context),
+        "", Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                      width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
+          child: InternationalPhoneNumberInput(
+            onInputChanged: (PhoneNumber number) {
+              print(number.phoneNumber);
+              phoneNo = number.phoneNumber;
+            },
+            onInputValidated: (bool value) {
+              print(value);
+              setState(() {
+                isValidate = value;
+              });
+            },
+            selectorConfig: SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+            ),
+            formatInput: false,
+            initialValue: number,
+            ignoreBlank: false,
+            selectorTextStyle: TextStyle(
+                fontSize: 12.0,
+                color: AppColors.COLOR_BLACK,
+                fontFamily: AppFonts.POPPINS_MEDIUM,
+                fontWeight: FontWeight.w400),
+            autoValidateMode: AutovalidateMode.onUserInteraction,
+            textFieldController: editableNumberController,
+            inputDecoration:
+            AppStyles.decorationWithoutBorder("Phone Number"),
+          ),
+        ),
         AnimatedGradientButton(
           onAnimationTap: () {
             if (validatePhone()) {
@@ -1318,7 +1395,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         print('number ${editableNumberController.text}');
 
         var map = Map<String, dynamic>();
-        map['phone'] = editableNumberController.text.trim().toString();
+        map['phone'] = phoneNo;
         _editProfileViewModel.verificationCodeToPhone(map);
       } else {
         setState(() {
@@ -1370,7 +1447,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         print('number ${editableNumberController.text}');
 
         var map = Map<String, dynamic>();
-        map['phone'] = editableNumberController.text.trim().toString();
+        map['phone'] = phoneNo;
         _editProfileViewModel.changePhone(map);
       } else {
         setState(() {
@@ -1421,7 +1498,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         print('number ${editableNumberController.text}');
 
         var map = Map<String, dynamic>();
-        map['phone'] = editableNumberController.text.trim().toString();
+        map['phone'] = phoneNo;
         map['code'] = code;
         _editProfileViewModel.verifyPhoneOtp(map);
       } else {
@@ -1597,24 +1674,17 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
     var phone = editableNumberController.text.trim();
 
-    if (phone.isEmpty || phone == "") {
+    if (phoneNo.isEmpty || phoneNo == "") {
 
-      ToastUtil.showToast(context, "Please provide your phone number");
+      //ToastUtil.showToast(context, "Please provide your phone number");
       return false;
-    }else if(phone.length < 10){
-      ToastUtil.showToast(
-          context, "Phone number is too short ");
+    }else if (isValidate) {
+      return true;
+    } else {
+      Util.hideKeyBoard(context);
+      ToastUtil.showToast(context, "Invalid phone number");
       return false;
-
     }
-      else if(phone.length > 15){
-        ToastUtil.showToast(
-            context, "Phone number is too long ");
-        return false;
-
-      }else{
-        return true;
-      }
   }
 
   Future<Null> _playCodeToPhoneBtnAnimation() async {

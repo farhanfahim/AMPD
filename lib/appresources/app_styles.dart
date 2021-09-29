@@ -399,6 +399,28 @@ class AppStyles {
       contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
     );
   }
+  static InputDecoration decorationWithoutBorder(String title) {
+    return InputDecoration(
+      /*labelText: title,
+      alignLabelWithHint: true,*/
+      disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(width: 0.0, color: AppColors.TRANSPARENT_COLOR)),
+      enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(width:  0.0, color: AppColors.TRANSPARENT_COLOR)),
+      hintText: title,
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(width:  0.0, color: AppColors.TRANSPARENT_COLOR)),
+      hintStyle: TextStyle(
+          fontSize: 15.0,
+          fontFamily: AppFonts.POPPINS,
+          fontWeight: FontWeight.w400,
+          color: AppColors.LIGHT_GREY_TEXT_COLOR),
+      contentPadding: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 10.0),
+    );
+  }
 
   static InputDecoration decoration(String title) {
     return InputDecoration(

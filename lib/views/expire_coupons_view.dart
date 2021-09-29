@@ -250,7 +250,9 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
           _isPaginationLoading = false;
         });
       }
-
+      if(_pagingController1.itemList != null){
+        _pagingController1.itemList.clear();
+      }
       if(response.data is SavedCouponModel) {
         _isPaginationLoading = false;
 

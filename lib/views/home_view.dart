@@ -614,6 +614,9 @@ class _HomeViewState extends State<HomeView>
                                                                   onPressed2: () {
                                                                     Navigator.pop(context3);
                                                                   },
+                                                                  onPressed3:(){
+                                                                    Navigator.pop(context3);
+                                                                  },
                                                                   showImage: false,
                                                                 );
                                                               });
@@ -627,7 +630,7 @@ class _HomeViewState extends State<HomeView>
                                                       ButtonBorder(
                                                         onTap: () {
                                                           Navigator.pop(
-                                                              context1);
+                                                              context);
                                                         },
                                                         text: AppStrings.LATER,
                                                       ),
@@ -675,6 +678,10 @@ class _HomeViewState extends State<HomeView>
                                     ),
                                   );
                                 });
+
+                          },
+                          onPressed3:(){
+                            Navigator.pop(context1);
 
                           },
                           onPressed2: () {

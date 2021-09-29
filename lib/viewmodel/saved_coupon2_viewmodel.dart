@@ -32,5 +32,9 @@ class SavedCoupon2ViewModel {
     _savedCoupon2Repository.getSavedCoupons(map);
   }
 
+  void redeemOffer(Map<String, dynamic> map) {
+    _savedCoupon2Repository.redeemOffer(map);
+  }
+
 
 }

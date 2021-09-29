@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
-import 'package:ampd/appresources/app_fonts.dart';
+
+
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
@@ -26,8 +27,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
-import 'package:flutter_switch/flutter_switch.dart';
-import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
@@ -39,7 +38,10 @@ class ActiveCouponsView extends StatefulWidget {
 class _ActiveCouponsState extends State<ActiveCouponsView>
     with TickerProviderStateMixin {
   BuildContext dialogContext;
+  BuildContext dialogContext1;
   AnimationController _buttonController;
+  AnimationController _buttonController1;
+  int deletedItem;
   int _totalPages = 0;
   int _currentPage = 1;
   int _selectedIndex = 0;
@@ -57,12 +59,15 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
     controller = SwipeActionController(selectedIndexPathsChangeCallback:
         (changedIndexPaths, selected, currentCount) {});
 
+
     _pagingController1.addPageRequestListener((pageKey) {
       print(pageKey);
       _fetchPage(pageKey);
     });
 
     _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _buttonController1 = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
 
     _activeCouponViewModel = ActiveCouponViewModel(App());
@@ -81,12 +86,17 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
   @override
   void dispose() {
     _buttonController.dispose();
+    _buttonController1.dispose();
     _pagingController1.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if(_pagingController1.itemList != null){
+      _pagingController1.itemList.clear();
+    }
+
     return Scaffold(
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
@@ -161,11 +171,41 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
             ),
             onTap: (handler) async {
               await handler(true);
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context3) {
+                    dialogContext1 = context3;
+                    return CustomDialog(
+                      showAnimatedBtn: true,
+                      contex: context,
+                      subTitle: "Are you sure?",
+                      //title: "Your feedback will help us improve our services.",
 
-              deleteOffersApi(data.userOffers[0].id);
-              setState(() {
-                _pagingController1.itemList.removeAt(pos);
-              });
+                      btnWidget: AnimatedGradientButton(
+                        onAnimationTap: () {
+
+                          deleteOffersApi(data.userOffers[0].id);
+                          setState(() {
+                            deletedItem = pos;
+                          });
+
+                        },
+                        buttonController: _buttonController1,
+                        text: AppStrings.YES,
+                      ),
+                      onPressed3:(){
+                        Navigator.pop(context3);
+                        _pagingController1.refresh();
+                      },
+                      buttonText2: AppStrings.NO,
+                      onPressed2: () {
+                        _pagingController1.refresh();
+                        Navigator.pop(context3);
+                      },
+                      showImage: false,
+                    );
+                  });
+
             }),
       ],
       child: GestureDetector(
@@ -433,6 +473,18 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
     } on TickerCanceled {}
   }
 
+  Future<Null> _playAnimation1() async {
+    try {
+      await _buttonController1.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation1() async {
+    try {
+      await _buttonController1.reverse();
+    } on TickerCanceled {}
+  }
+
   Future<void> callSavedCouponApi() async {
     Util.check().then((value) {
       if (value != null && value) {
@@ -475,7 +527,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
   }
 
   Future<void> deleteOffersApi(int offerId) async {
-    _playAnimation();
+    _playAnimation1();
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -501,6 +553,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
         .getRepositoryResponse()
         .listen((response) async {
       _stopAnimation();
+      _stopAnimation1();
       if (mounted) {
         setState(() {
           _enabled = true;
@@ -549,10 +602,13 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
 
           _pagingController1.appendPage(response.data.dataClass, nextPageKey);
         }
-      } else if (response.msg == "Offer deleted successfully!") {
-        Scaffold.of(context).showSnackBar(
-            SnackBar(content: Text("Offer deleted successfully!")));
-      } else if (response.data is DioError) {
+      } else if (response.msg == "Saved offer has been removed successfully!") {
+        setState(() {
+          _pagingController1.itemList.removeAt(deletedItem);
+        });
+        Navigator.pop(dialogContext1);
+        ToastUtil.showToast(context, response.msg);
+      }  else if (response.data is DioError) {
         if (response.statusCode == 401) {
           Navigator.pushNamedAndRemoveUntil(
               context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
@@ -565,3 +621,4 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
     });
   }
 }
+

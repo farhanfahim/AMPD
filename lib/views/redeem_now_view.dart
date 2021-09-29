@@ -192,6 +192,9 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
                               .pop(
                               context1);
                         },
+                        onPressed3:(){
+                          Navigator.pop(context1);
+                        },
                         showImage: false,
                       );
                     });

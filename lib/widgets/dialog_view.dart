@@ -15,11 +15,12 @@ class CustomDialog extends StatefulWidget {
   String buttonText2;
   Function onPressed1;
   Function onPressed2;
+  Function onPressed3;
   Widget child,btnWidget;
   BuildContext contex ;
 
 
-  CustomDialog({this.title = "", this.showAnimatedBtn = false,this.buttonText1 = "",this.buttonText2 = "", this.onPressed1,this.onPressed2,this.btnWidget, this.child,this.contex,this.subTitle = "",this.showImage});
+  CustomDialog({this.title = "", this.showAnimatedBtn = false,this.buttonText1 = "",this.buttonText2 = "", this.onPressed1,this.onPressed2,this.onPressed3,this.btnWidget, this.child,this.contex,this.subTitle = "",this.showImage});
 
   @override
   _CustomDialogState createState() => _CustomDialogState();
@@ -122,9 +123,7 @@ class _CustomDialogState extends State<CustomDialog> {
                           color: Colors.white,
                           size: 20.0,
                         ),
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
+                        onPressed: widget.onPressed3,
                         // onPressed: widget.addClickListner
                       )
                   ),

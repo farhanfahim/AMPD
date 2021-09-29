@@ -4,6 +4,7 @@ import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/gradient_button.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sizer/sizer.dart';
@@ -130,6 +131,9 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                               keyboardType: TextInputType.multiline,
                               maxLength: 150,
                               maxLines: 3,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                              ],
                               decoration: InputDecoration(
                                   border: InputBorder.none, hintText: "Comments...",hintStyle: AppStyles.inputHintStyle(context)),
                               style: AppStyles.inputTextStyle2(context),

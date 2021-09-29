@@ -22,6 +22,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import '../appresources/app_colors.dart';
 import '../appresources/app_strings.dart';
 import 'dart:async';
@@ -31,6 +32,10 @@ class SignInView extends StatefulWidget {
 }
 
 class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
+  String initialCountry = 'US';
+  PhoneNumber number = PhoneNumber(isoCode: 'US');
+  bool isValidate = false;
+  bool isValidate2 = false;
   FirebaseMessaging _firebaseMessaging;
   BuildContext forgetPasswordBc;
   BuildContext otpPasswordBc;
@@ -163,7 +168,42 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     SizedBox(
                       height: 40.0,
                     ),
-                    phoneNoWidget(context),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 25.0),
+                      decoration: ShapeDecoration(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(
+                                  width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
+                      child: InternationalPhoneNumberInput(
+                        onInputChanged: (PhoneNumber number) {
+                          print(number.phoneNumber);
+                          phoneNo2 = number.phoneNumber;
+                        },
+                        onInputValidated: (bool value) {
+                          print(value);
+                          setState(() {
+                            isValidate = value;
+                          });
+                        },
+                        selectorConfig: SelectorConfig(
+                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                        ),
+                        formatInput: false,
+                        initialValue: number,
+                        ignoreBlank: false,
+                        selectorTextStyle: TextStyle(
+                            fontSize: 12.0,
+                            color: AppColors.COLOR_BLACK,
+                            fontFamily: AppFonts.POPPINS_MEDIUM,
+                            fontWeight: FontWeight.w400),
+                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        textFieldController: phoneNumberController,
+                        inputDecoration:
+                        AppStyles.decorationWithoutBorder("Phone Number"),
+                      ),
+                    ),
                     SizedBox(
                       height: 20.0,
                     ),
@@ -211,30 +251,22 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   _isInternetAvailable = true;
                                 });
                                 if (phoneNo2.isNotEmpty) {
-                                  if (phoneNo2.length < 10) {
-                                    setState(() {
-                                      flag = true;
-                                    });
-                                    ToastUtil.showToast(
-                                        context, "Phone number is too short ");
-                                  } else {
-                                    if (phoneNo2.length > 15) {
+                                  if (isValidate) {
+                                    if (password.isNotEmpty) {
+                                      callLoginApi();
+                                    } else {
                                       setState(() {
                                         flag = true;
                                       });
                                       ToastUtil.showToast(
-                                          context, "Phone number is too long ");
-                                    } else {
-                                      if (password.isNotEmpty) {
-                                        callLoginApi();
-                                      } else {
-                                        setState(() {
-                                          flag = true;
-                                        });
-                                        ToastUtil.showToast(
-                                            context, "Please enter your password");
-                                      }
+                                          context, "Please enter your password");
                                     }
+                                  } else {
+                                    setState(() {
+                                      flag = true;
+                                    });
+                                    Util.hideKeyBoard(context);
+                                    ToastUtil.showToast(context, "Invalid phone number");
                                   }
 
                                 } else {
@@ -316,7 +348,42 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
       context,
       "Forgot password",
       AppStrings.PHONE_NUMBER_DESC,
-      customWidget(context),
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 25.0),
+        decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(
+                    width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
+        child: InternationalPhoneNumberInput(
+          onInputChanged: (PhoneNumber number) {
+            print(number.phoneNumber);
+            phoneNo = number.phoneNumber;
+          },
+          onInputValidated: (bool value) {
+            print(value);
+            setState(() {
+              isValidate2 = value;
+            });
+          },
+          selectorConfig: SelectorConfig(
+            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+          ),
+          formatInput: false,
+          initialValue: number,
+          ignoreBlank: false,
+          selectorTextStyle: TextStyle(
+              fontSize: 12.0,
+              color: AppColors.COLOR_BLACK,
+              fontFamily: AppFonts.POPPINS_MEDIUM,
+              fontWeight: FontWeight.w400),
+          autoValidateMode: AutovalidateMode.onUserInteraction,
+          textFieldController: numberController,
+          inputDecoration:
+          AppStyles.decorationWithoutBorder("Phone Number"),
+        ),
+      ),
       AnimatedGradientButton(
         onAnimationTap: () {
           if (flag) {
@@ -440,7 +507,44 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         context,
         AppStrings.PHONE_NUMBER_TITLE,
         AppStrings.PHONE_NUMBER_DESC,
-        customWidget(context),
+
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 25.0),
+          decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                      width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
+          child: InternationalPhoneNumberInput(
+            onInputChanged: (PhoneNumber number) {
+              print(number.phoneNumber);
+              phoneNo = number.phoneNumber;
+            },
+            onInputValidated: (bool value) {
+              print(value);
+              setState(() {
+                isValidate2 = value;
+              });
+            },
+            selectorConfig: SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+            ),
+            formatInput: false,
+            initialValue: number,
+            ignoreBlank: false,
+            selectorTextStyle: TextStyle(
+                fontSize: 12.0,
+                color: AppColors.COLOR_BLACK,
+                fontFamily: AppFonts.POPPINS_MEDIUM,
+                fontWeight: FontWeight.w400),
+            autoValidateMode: AutovalidateMode.onUserInteraction,
+            textFieldController: numberController,
+            inputDecoration:
+            AppStyles.decorationWithoutBorder("Phone Number"),
+          ),
+        ),
+
         AnimatedGradientButton(
           onAnimationTap: () {
             if (flag) {
@@ -453,22 +557,15 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       _isInternetAvailable = true;
                     });
                     if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 10) {
+
+                      if (isValidate2) {
+                        callRegisterViaPhoneApi();
+                      } else {
                         setState(() {
                           flag = true;
                         });
-                        ToastUtil.showToast(
-                            context, "Phone number is too short ");
-                      } else {
-                        if (phoneNo.length > 15) {
-                          setState(() {
-                            flag = true;
-                          });
-                          ToastUtil.showToast(
-                              context, "Phone number is too long ");
-                        } else {
-                          callRegisterViaPhoneApi();
-                        }
+                        Util.hideKeyBoard(context);
+                        ToastUtil.showToast(context, "Invalid phone number");
                       }
 
                     } else {

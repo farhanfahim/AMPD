@@ -11,6 +11,7 @@ class AppColors {
   static const Color BUSINESS_INFO_BACKGROUND_COLOR = Color(0xFFF9F9F9);
   static const Color YELLOW_COLOR = Color(0xffF4AE00);
   static const Color WHITE_COLOR = Color(0xffFFFFFF);
+  static const Color TRANSPARENT_COLOR = Color(0xFF00000000);
   static const Color BLUE_COLOR = Color(0xff2491EB);
   static const Color AVATAR_BORDER_COLOR = Color(0xffE5F1FC);
 //  static const Color GREY_COLOR = Color(0xffE8EBEC);

@@ -5,6 +5,7 @@ import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
+import 'package:ampd/data/model/RedeemOfferModel.dart';
 import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/utils/LocationPermissionHandler.dart';
@@ -15,6 +16,8 @@ import 'package:ampd/viewmodel/saved_coupon2_viewmodel.dart';
 import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
+import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/flat_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
@@ -37,8 +40,11 @@ class SavedCoupons2View extends StatefulWidget {
   _SavedCoupons2ViewState createState() => _SavedCoupons2ViewState();
 }
 
-class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
+class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProviderStateMixin{
 
+  BuildContext dialogContext;
+  AnimationController _buttonController;
+  DataClass singleOfferModel;
   gcl.Position position;
   int pagekey = 0;
   int _totalPages = 0;
@@ -138,11 +144,16 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
   @override
   void initState()  {
 
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
     getCurrentLocation();
     this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
     this._appBarTitle = new TextFormField(
       autofocus: true,
-
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+      ],
       onFieldSubmitted: (value){
         setState(() {
           _filter.text = value;
@@ -182,7 +193,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
   }
   @override
   void dispose() {
-
+    _buttonController.dispose();
     _pagingController1.dispose();
     super.dispose();
   }
@@ -267,69 +278,243 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         SizedBox(
           height: 10.0,
         ),
-        InkWell(
+        GestureDetector(
           onTap: (){
-
+            Navigator.pushNamed(context, AppRoutes.REDEEM_NOW, arguments: {
+              'offer_id': data.id,
+            });
           },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0),
-            child: Row(
-              children: [
-                Container(
-                  width: 70.0,
-                  height: 70.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    child: Image.network(
-                      data.imageUrl,
-                      fit: BoxFit.cover,
+          child: Container(
+            color: AppColors.WHITE_COLOR,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 70.0,
+                    height: 70.0,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      child: Image.network(
+                        data.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 10.0,
-                ),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(data.productName,
-                          style:
-                              AppStyles.blackWithBoldFontTextStyle(context, 16.0)
-                                  .copyWith(color: AppColors.COLOR_BLACK)
-                                  .copyWith(fontWeight: FontWeight.w600)),
-                      SizedBox(
-                        height: 3.0,
-                      ),
-                      Text(
-                        formatUTCTime(data.expireAt),
-                        style: AppStyles.blackWithDifferentFontTextStyle(
-                                context, 11.0)
-                            .copyWith(
-                                color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Time to Avail:(${data.availTime } hour)",
-                            style: AppStyles.blackWithDifferentFontTextStyle(
-                                    context, 12.0)
-                                .copyWith(
-                                    color:
-                                        AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                          ),
-                          FlatButtonWidget(
-                              onTap: () {}, text: AppStrings.REDEEM_BTN,color: AppColors.BLUE_COLOR,),
-                        ],
-                      ),
-
-
-                    ],
+                  SizedBox(
+                    width: 10.0,
                   ),
-                ),
-              ],
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(data.productName,
+                            style:
+                                AppStyles.blackWithBoldFontTextStyle(context, 16.0)
+                                    .copyWith(color: AppColors.COLOR_BLACK)
+                                    .copyWith(fontWeight: FontWeight.w600)),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text(
+                          formatUTCTime(data.expireAt),
+                          style: AppStyles.blackWithDifferentFontTextStyle(
+                                  context, 11.0)
+                              .copyWith(
+                                  color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Time to Avail:(${data.availTime } hour)",
+                              style: AppStyles.blackWithDifferentFontTextStyle(
+                                      context, 12.0)
+                                  .copyWith(
+                                      color:
+                                          AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                            ),
+                            FlatButtonWidget(
+                              onTap: () {
+                                setState(() {
+                                  singleOfferModel = data;
+                                });
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context1) {
+                                      dialogContext = context1;
+                                      return Dialog(
+                                        insetPadding: EdgeInsets.symmetric(
+                                            horizontal: 0.0),
+                                        backgroundColor: Colors.transparent,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Stack(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 20),
+                                                  child: Container(
+                                                    margin:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 30.0),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border.all(
+                                                          color: Colors
+                                                              .transparent,
+                                                        ),
+                                                        borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0))),
+                                                    child: Padding(
+                                                      padding:
+                                                      const EdgeInsets
+                                                          .all(10.0),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                        MainAxisSize.min,
+                                                        //mainAxisAlignment: MainAxisAlignment.center,
+                                                        //crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Container(
+                                                            margin: EdgeInsets.symmetric(
+                                                                horizontal: MediaQuery.of(
+                                                                    context)
+                                                                    .size
+                                                                    .width *
+                                                                    .13),
+                                                            padding:
+                                                            EdgeInsets
+                                                                .fromLTRB(
+                                                                10,
+                                                                20,
+                                                                10,
+                                                                25),
+                                                            child: Text(
+                                                              "Redeem Offer Now",
+                                                              style: AppStyles
+                                                                  .blackWithSemiBoldFontTextStyle(
+                                                                  context,
+                                                                  18.0)
+                                                                  .copyWith(
+                                                                  fontWeight:
+                                                                  FontWeight.w600),
+                                                              textAlign:
+                                                              TextAlign
+                                                                  .center,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.symmetric(
+                                                                horizontal: MediaQuery.of(
+                                                                    context)
+                                                                    .size
+                                                                    .width *
+                                                                    0.1),
+                                                            child: Text(
+                                                              "Do you want to Redeem this offer right now?",
+                                                              style: AppStyles
+                                                                  .blackWithSemiBoldFontTextStyle(
+                                                                  context,
+                                                                  15.0)
+                                                                  .copyWith(
+                                                                  fontWeight:
+                                                                  FontWeight.w500),
+                                                              textAlign:
+                                                              TextAlign
+                                                                  .center,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 25.0,
+                                                          ),
+                                                          AnimatedGradientButton(
+                                                            onAnimationTap:
+                                                                () {
+                                                              redeemOffersApi(
+                                                                  data.id);
+                                                            },
+                                                            buttonController:
+                                                            _buttonController,
+                                                            text: AppStrings
+                                                                .REDEEM_NOW,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 20.0,
+                                                          ),
+                                                          ButtonBorder(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context1);
+                                                            },
+                                                            text: AppStrings
+                                                                .LATER,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 45.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned.fill(
+                                                  right: 15,
+                                                  child: Align(
+                                                    alignment:
+                                                    Alignment.topRight,
+                                                    child: Container(
+                                                        width: 50,
+                                                        height: 50,
+                                                        child:
+                                                        FloatingActionButton(
+                                                          heroTag: "tag",
+                                                          backgroundColor:
+                                                          AppColors
+                                                              .BLUE_COLOR,
+                                                          // backgroundColor:
+                                                          // AppColors.PRIMARY_COLORTWO,
+                                                          elevation: 2,
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color:
+                                                            Colors.white,
+                                                            size: 20.0,
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          // onPressed: widget.addClickListner
+                                                        )),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              },
+                              text: AppStrings.REDEEM_BTN,
+                              color: AppColors.BLUE_COLOR,
+                            ),
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -396,6 +581,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
             });
             _fetchPage(pagekey,value);
           },
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+          ],
           cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
           keyboardType: TextInputType.text,
           decoration: new InputDecoration(
@@ -421,7 +609,26 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
       }
     });
   }
+  Future<void> redeemOffersApi(int offerId) async {
+    _playAnimation();
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
 
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        _savedCoupon2ViewModel.redeemOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
   Future<void> callSavedCouponApi(String query) async {
 
     Util.check().then((value) {
@@ -474,15 +681,34 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
         .getSavedCoupon2Repository()
         .getRepositoryResponse()
         .listen((response) async {
-
+      _stopAnimation();
       if(mounted) {
         setState(() {
           _enabled = true;
           _isPaginationLoading = false;
         });
       }
+      if (response.data is RedeemOfferModel) {
+        ToastUtil.showToast(context, response.msg);
+        Navigator.pop(dialogContext);
+        Navigator.pushNamed(
+            context,
+            singleOfferModel.qrUrl != null
+                ? AppRoutes.QR_SCAN_VIEW
+                : AppRoutes.REDEEM_MESSAGE_VIEW,
+            arguments: {
+              'fromSavedCoupon': true,
+              'qrImage': singleOfferModel.qrUrl,
+              'redeemMessage': singleOfferModel.redeemMessage,
+              'offer_id': response.data.offerId,
+            });
+      }
+      else if (response.msg == "You have already availed this offer!") {
+        ToastUtil.showToast(context, response.msg);
+        Navigator.pop(dialogContext);
+      }
 
-      if(response.data is SavedCouponModel) {
+      else if(response.data is SavedCouponModel) {
         _isPaginationLoading = false;
 
         _pagingController1.itemList = [];
@@ -525,5 +751,17 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View> {
 
 
   }
+  Future<Null> _playAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _buttonController.reverse();
+    } on TickerCanceled {}
+  }
+
 
 }
