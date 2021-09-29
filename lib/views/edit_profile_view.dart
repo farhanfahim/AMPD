@@ -50,8 +50,7 @@ class EditProfileView extends StatefulWidget {
 }
 
 class _EditProfileViewState extends State<EditProfileView> with TickerProviderStateMixin {
-
-  String initialCountry = 'US';
+  //String initialCountry = 'US';
   PhoneNumber number = PhoneNumber(isoCode: 'US');
   bool isValidate = false;
   bool isValidate2 = false;
@@ -140,11 +139,13 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       print(userData.toJson());
 
       userDetails = userData;
-      setState(() {
+      setState(() async {
         emailController.text = userData.data.email;
         numberController.text = userData.data.phone;
         firstNameController.text = userData.data.firstName;
         lastNameController.text = userData.data.lastName;
+
+        number = await PhoneNumber.getRegionInfoFromPhoneNumber(userData.data.phone);
         if(userData.data.image!= null) {
           imageUrl = userData.data.imageUrl;
         }else{
@@ -1392,7 +1393,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('number ${editableNumberController.text}');
+        print('number ${phoneNo}');
 
         var map = Map<String, dynamic>();
         map['phone'] = phoneNo;
@@ -1444,7 +1445,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('number ${editableNumberController.text}');
+        print('number ${phoneNo}');
 
         var map = Map<String, dynamic>();
         map['phone'] = phoneNo;
@@ -1495,7 +1496,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 //          _isInAsyncCall = true;
         });
 
-        print('number ${editableNumberController.text}');
+        print('number ${phoneNo}');
 
         var map = Map<String, dynamic>();
         map['phone'] = phoneNo;
@@ -1590,7 +1591,8 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         } else if (response.data == 2) {  //verify phone otp response
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
-          Future.delayed(Duration(seconds: 1), () {
+          Future.delayed(Duration(seconds: 1), () async {
+            number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNo);
             showUpdatePhoneNoBottomSheet(context);
           });
         }  else if (response.data == 0) { //email/phone updated response
@@ -1603,10 +1605,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
             userDetails.data.email = editableEmailController.text.trim();
             emailController.text = editableEmailController.text.trim();
           } else if(_phoneChanged) {
-            print('response ${editableNumberController.text.trim()}');
+            print('response ${phoneNo}');
 
-            userDetails.data.phone = editableNumberController.text.trim();
-            numberController.text = editableNumberController.text.trim();
+            userDetails.data.phone = phoneNo;
+            numberController.text = phoneNo;
           }
           _appPreferences.setUserDetails(data: jsonEncode(userDetails));
           Navigator.pop(context);
