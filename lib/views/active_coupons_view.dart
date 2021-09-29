@@ -4,7 +4,7 @@ import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
 
-
+import 'dart:async';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
@@ -37,6 +37,7 @@ class ActiveCouponsView extends StatefulWidget {
 
 class _ActiveCouponsState extends State<ActiveCouponsView>
     with TickerProviderStateMixin {
+
   BuildContext dialogContext;
   BuildContext dialogContext1;
   AnimationController _buttonController;
@@ -56,14 +57,18 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
 
   @override
   void initState() {
+
     controller = SwipeActionController(selectedIndexPathsChangeCallback:
         (changedIndexPaths, selected, currentCount) {});
-
 
     _pagingController1.addPageRequestListener((pageKey) {
       print(pageKey);
       _fetchPage(pageKey);
     });
+
+
+
+
 
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
@@ -77,7 +82,10 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      callSavedCouponApi();
+      Timer(Duration(seconds: 1),
+              () =>   callSavedCouponApi());
+
+
     } catch (error) {
       _pagingController1.error = error;
     }
@@ -93,9 +101,6 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
 
   @override
   Widget build(BuildContext context) {
-    if(_pagingController1.itemList != null){
-      _pagingController1.itemList.clear();
-    }
 
     return Scaffold(
         backgroundColor: AppColors.WHITE_COLOR,
@@ -601,6 +606,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
           print('New Page: $_totalPages');
 
           _pagingController1.appendPage(response.data.dataClass, nextPageKey);
+
         }
       } else if (response.msg == "Saved offer has been removed successfully!") {
         setState(() {

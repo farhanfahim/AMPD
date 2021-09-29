@@ -185,8 +185,9 @@ class _HomeViewState extends State<HomeView>
                       itemBuilder: (BuildContext context, int index) {
                         if(index == _swipeItems.length - 1 && _currentPage < _totalPages) {
                           _currentPage++;
+                          Timer(Duration(seconds: 1),
+                                  () =>   callOffersApi());
 
-                          callOffersApi();
                         }
                         return Container(
 //                height: 550.0,
@@ -283,7 +284,8 @@ class _HomeViewState extends State<HomeView>
                   onTap: () {
                     _swipeItems.clear();
                     _currentPage = 1;
-                   callOffersApi();
+                    Timer(Duration(seconds: 1),
+                            () =>   callOffersApi());
                    setState(() {
                      _isInAsyncCall = true;
                      _stackFinished = false;
@@ -324,7 +326,8 @@ class _HomeViewState extends State<HomeView>
             });
 
             if (position != null) {
-              callOffersApi();
+              Timer(Duration(seconds: 1),
+                      () =>   callOffersApi());
             } else {
               getCurrentLocation();
             }

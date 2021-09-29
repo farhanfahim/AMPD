@@ -367,7 +367,7 @@ class _WelcomeViewState extends State<WelcomeView>
     );
   }
 
-  Stack customWidget(BuildContext context) {
+  /*Stack customWidget(BuildContext context) {
     return Stack(
       children: [
         Container(
@@ -406,12 +406,12 @@ class _WelcomeViewState extends State<WelcomeView>
               ],
 
               onFieldSubmitted: (texttt) {
-                /*final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+                *//*final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
                                 if (regExp.hasMatch(phoneNo)) {
                                   _isEmailValid = true;
                                 } else {
                                   _isEmailValid = false;
-                                }*/
+                                }*//*
               },
               textInputAction: TextInputAction.next,
               decoration:
@@ -425,7 +425,7 @@ class _WelcomeViewState extends State<WelcomeView>
         ),
       ],
     );
-  }
+  }*/
 
   void subscribeToViewModel() {
     _registerViewModel
@@ -484,7 +484,7 @@ class _WelcomeViewState extends State<WelcomeView>
         });
 
         var map = Map();
-        map['phone'] = number;
+        map['phone'] = phoneNo;
         _registerViewModel.registerViaPhone(map);
       } else {
         setState(() {
@@ -509,7 +509,7 @@ class _WelcomeViewState extends State<WelcomeView>
         });
 
         var map = Map();
-        map['phone'] = number;
+        map['phone'] = phoneNo;
         map['code'] = code;
         _registerViewModel.verifyOtp(map);
       } else {
