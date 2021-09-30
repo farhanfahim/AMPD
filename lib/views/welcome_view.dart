@@ -241,6 +241,7 @@ class _WelcomeViewState extends State<WelcomeView>
             },
             selectorConfig: SelectorConfig(
               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              showFlags: false
             ),
             formatInput: false,
             initialValue: number,
@@ -250,7 +251,7 @@ class _WelcomeViewState extends State<WelcomeView>
                 color: AppColors.COLOR_BLACK,
                 fontFamily: AppFonts.POPPINS_MEDIUM,
                 fontWeight: FontWeight.w400),
-            autoValidateMode: AutovalidateMode.onUserInteraction,
+            autoValidateMode: AutovalidateMode.disabled,
             textFieldController: numberController,
             inputDecoration:
             AppStyles.decorationWithoutBorder("Phone Number"),
@@ -367,66 +368,6 @@ class _WelcomeViewState extends State<WelcomeView>
     );
   }
 
-  /*Stack customWidget(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 25.0),
-          child: Focus(
-            onFocusChange: (value) {
-              if (value) {
-                numberController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: numberController.text.length));
-              }
-            },
-            child: TextFormField(
-              enableInteractiveSelection: false,
-              cursorColor: AppColors.ACCENT_COLOR,
-              onChanged: (String newVal) {
-                if (newVal.length <= numberValidation) {
-                  phoneNo = newVal;
-                } else {
-                  numberController.value = new TextEditingValue(
-                      text: phoneNo,
-                      selection: new TextSelection(
-                          baseOffset: numberValidation,
-                          extentOffset: numberValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing:
-                          new TextRange(start: 0, end: numberValidation));
-                  //  _emailController.text = text;
-                }
-              },
-              controller: numberController,
-              keyboardType: TextInputType.phone,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(numberValidation),
-              ],
-
-              onFieldSubmitted: (texttt) {
-                *//*final regExp = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
-                                if (regExp.hasMatch(phoneNo)) {
-                                  _isEmailValid = true;
-                                } else {
-                                  _isEmailValid = false;
-                                }*//*
-              },
-              textInputAction: TextInputAction.next,
-              decoration:
-                  AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
-              //   , iconData, (){
-              //
-              // }),
-              style: AppStyles.inputTextStyle(context),
-            ),
-          ),
-        ),
-      ],
-    );
-  }*/
-
   void subscribeToViewModel() {
     _registerViewModel
         .getCompleteRegisterRepository()
@@ -440,6 +381,7 @@ class _WelcomeViewState extends State<WelcomeView>
       }
 
       if (response.msg == "Verified") {
+        ToastUtil.showToast(context, response.msg);
         _stopVerifyBtnAnimation();
         if (otpPasswordBc != null) {
           Navigator.pop(otpPasswordBc);
@@ -449,6 +391,7 @@ class _WelcomeViewState extends State<WelcomeView>
               'phone': phoneNo,
             });
       } else if (response.msg == "Code has been sent to your phone number") {
+        ToastUtil.showToast(context, response.msg);
         _stopSubmitBtnAnimation();
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);

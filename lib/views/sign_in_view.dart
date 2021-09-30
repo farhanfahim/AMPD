@@ -189,6 +189,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                         },
                         selectorConfig: SelectorConfig(
                           selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                          showFlags: false
                         ),
                         formatInput: false,
                         initialValue: number,
@@ -198,7 +199,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                             color: AppColors.COLOR_BLACK,
                             fontFamily: AppFonts.POPPINS_MEDIUM,
                             fontWeight: FontWeight.w400),
-                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        autoValidateMode: AutovalidateMode.disabled,
                         textFieldController: phoneNumberController,
                         inputDecoration:
                         AppStyles.decorationWithoutBorder("Phone Number"),
@@ -369,6 +370,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           },
           selectorConfig: SelectorConfig(
             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+            showFlags: false
           ),
           formatInput: false,
           initialValue: number,
@@ -378,7 +380,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               color: AppColors.COLOR_BLACK,
               fontFamily: AppFonts.POPPINS_MEDIUM,
               fontWeight: FontWeight.w400),
-          autoValidateMode: AutovalidateMode.onUserInteraction,
+          autoValidateMode: AutovalidateMode.disabled,
           textFieldController: numberController,
           inputDecoration:
           AppStyles.decorationWithoutBorder("Phone Number"),
@@ -529,6 +531,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
             },
             selectorConfig: SelectorConfig(
               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              showFlags: false
             ),
             formatInput: false,
             initialValue: number,
@@ -538,7 +541,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 color: AppColors.COLOR_BLACK,
                 fontFamily: AppFonts.POPPINS_MEDIUM,
                 fontWeight: FontWeight.w400),
-            autoValidateMode: AutovalidateMode.onUserInteraction,
+            autoValidateMode: AutovalidateMode.disabled,
             textFieldController: numberController,
             inputDecoration:
             AppStyles.decorationWithoutBorder("Phone Number"),
@@ -608,30 +611,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     flag = true;
                     _isInternetAvailable = true;
                   });
-                  if (phoneNo.isNotEmpty) {
-                    if (phoneNo.length < 10) {
-                      setState(() {
-                        flag = true;
-                      });
-                      ToastUtil.showToast(
-                          context, "Phone number is too short ");
-                    } else {
-                      if (phoneNo.length > 15) {
-                        setState(() {
-                          flag = true;
-                        });
-                        ToastUtil.showToast(
-                            context, "Phone number is too long ");
-                      } else {
-                        callForgetPasswordApi();
-                      }
-                    }
-                  } else {
-                    setState(() {
-                      flag = true;
-                    });
-                    ToastUtil.showToast(context, "Please enter phone number");
-                  }
+                  callForgetPasswordApi();
                 } else {
                   setState(() {
                     flag = true;
@@ -645,6 +625,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
             Navigator.pop(bc1);
             if (code.isNotEmpty) {
               if (code.length == 4) {
+                
                 showResetPasswordBottomSheet(context);
               } else {
                 setState(() {
@@ -659,7 +640,11 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               ToastUtil.showToast(context, "Please enter otp code");
             }
           }, AppStrings.VERIFY_NOW, true)
-        : showBottomSheetWidgetWithAnimatedBtn(
+
+
+        :
+
+    showBottomSheetWidgetWithAnimatedBtn(
             context,
             AppStrings.ENTER_OTP_DIGIT,
             AppStrings.OTP_DESC,
@@ -701,30 +686,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       flag = true;
                       _isInternetAvailable = true;
                     });
-                    if (phoneNo.isNotEmpty) {
-                      if (phoneNo.length < 10) {
-                        setState(() {
-                          flag = true;
-                        });
-                        ToastUtil.showToast(
-                            context, "Phone number is too short ");
-                      } else {
-                        if (phoneNo.length > 15) {
-                          setState(() {
-                            flag = true;
-                          });
-                          ToastUtil.showToast(
-                              context, "Phone number is too long ");
-                        } else {
-                          callRegisterViaPhoneApi();
-                        }
-                      }
-                    } else {
-                      setState(() {
-                        flag = true;
-                      });
-                      ToastUtil.showToast(context, "Please enter phone number");
-                    }
+                    callRegisterViaPhoneApi();
                   } else {
                     setState(() {
                       flag = true;
@@ -1282,7 +1244,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         });
 
         var map = Map();
-        map['phone'] = number;
+        map['phone'] = phoneNo;
         _loginViewModel.registerViaPhone(map);
       } else {
         setState(() {
@@ -1306,7 +1268,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           _isInternetAvailable = true;
         });
         var map = Map();
-        map['phone'] = number;
+        map['phone'] = phoneNo;
         map['code'] = code;
         _loginViewModel.verifyOtp(map);
       } else {
@@ -1396,12 +1358,13 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           map['email'] = emailController.text.toString();
         }
       } else if (response.msg == "Code has been sent to your phone number") {
+        ToastUtil.showToast(context, response.msg);
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
         }
         showOtpBottomSheet(context);
-      } else if (response.msg ==
-          "Verification code has been send successfully") {
+      } else if (response.msg == "Verification code has been send successfully") {
+        ToastUtil.showToast(context, response.msg);
         if (forgetPasswordBc != null) {
           Navigator.pop(forgetPasswordBc);
         }

@@ -1040,6 +1040,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
             },
             selectorConfig: SelectorConfig(
               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                showFlags: false
             ),
             formatInput: false,
             initialValue: number,
@@ -1049,7 +1050,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 color: AppColors.COLOR_BLACK,
                 fontFamily: AppFonts.POPPINS_MEDIUM,
                 fontWeight: FontWeight.w400),
-            autoValidateMode: AutovalidateMode.onUserInteraction,
+            autoValidateMode: AutovalidateMode.disabled,
             textFieldController: numberController,
             inputDecoration:
             AppStyles.decorationWithoutBorder("Phone Number"),
@@ -1113,6 +1114,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
             },
             selectorConfig: SelectorConfig(
               selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                showFlags: false
             ),
             formatInput: false,
             initialValue: number,
@@ -1122,7 +1124,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 color: AppColors.COLOR_BLACK,
                 fontFamily: AppFonts.POPPINS_MEDIUM,
                 fontWeight: FontWeight.w400),
-            autoValidateMode: AutovalidateMode.onUserInteraction,
+            autoValidateMode: AutovalidateMode.disabled,
             textFieldController: editableNumberController,
             inputDecoration:
             AppStyles.decorationWithoutBorder("Phone Number"),

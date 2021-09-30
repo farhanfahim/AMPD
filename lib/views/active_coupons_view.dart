@@ -183,7 +183,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                     return CustomDialog(
                       showAnimatedBtn: true,
                       contex: context,
-                      subTitle: "Are you sure?",
+                      subTitle: "Are you sure you want to delete",
                       //title: "Your feedback will help us improve our services.",
 
                       btnWidget: AnimatedGradientButton(
