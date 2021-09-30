@@ -625,7 +625,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
             Navigator.pop(bc1);
             if (code.isNotEmpty) {
               if (code.length == 4) {
-                
+
                 showResetPasswordBottomSheet(context);
               } else {
                 setState(() {

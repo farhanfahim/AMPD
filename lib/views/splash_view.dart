@@ -53,7 +53,7 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
             alignment: Alignment.bottomCenter,
             margin: EdgeInsets.only(bottom: 15.0),
             child: Text(
-              "Version 2.0.7",
+              "Version 2.0.8",
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontSize: 12.0,
