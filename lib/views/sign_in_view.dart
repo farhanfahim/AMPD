@@ -255,6 +255,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   if (isValidate) {
                                     if (password.isNotEmpty) {
                                       callLoginApi();
+                                      isValidate = false;
                                     } else {
                                       setState(() {
                                         flag = true;
@@ -266,7 +267,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                     setState(() {
                                       flag = true;
                                     });
-                                    Util.hideKeyBoard(context);
                                     ToastUtil.showToast(context, "Invalid phone number");
                                   }
 
@@ -398,7 +398,16 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     _isInternetAvailable = true;
                   });
                   if (phoneNo.isNotEmpty) {
-                    callForgetPasswordApi();
+                    if (isValidate2) {
+                      callForgetPasswordApi();
+                      isValidate2 = false;
+                    }else{
+                      setState(() {
+                        flag = true;
+                      });
+                      ToastUtil.showToast(context, "Invalid phone number");
+                    }
+
                   } else {
                     setState(() {
                       flag = true;
@@ -563,6 +572,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
                       if (isValidate2) {
                         callRegisterViaPhoneApi();
+                        isValidate2= false;
                       } else {
                         setState(() {
                           flag = true;
