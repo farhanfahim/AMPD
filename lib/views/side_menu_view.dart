@@ -79,7 +79,9 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                       GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
-                              context, AppRoutes.SETTING_VIEW);
+                              context, AppRoutes.SETTING_VIEW ,arguments: {
+                            'from': "",
+                          });
                         },
                         child: Container(
                           color: AppColors.WHITE_COLOR,
@@ -128,7 +130,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                       SizedBox(
                         height: 30.0,
                       ),
-                      GestureDetector(
+                     /* GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
                               context, AppRoutes.TERMS_CONDITIONS);
@@ -235,7 +237,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                      ),
+                      ),*/
                       SizedBox(
                         height: 20.0,
                       ),

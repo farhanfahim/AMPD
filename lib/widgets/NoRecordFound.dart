@@ -23,8 +23,8 @@ class NoRecordFound extends StatelessWidget {
 
             SvgPicture.asset(
               image,
-              width: 240.0,
-              height: 100.0,
+              width: 80.0,
+              height: 80.0,
               color: AppColors.UNSELECTED_COLOR,
               matchTextDirection: true,
             ),

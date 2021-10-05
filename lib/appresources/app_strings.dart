@@ -358,13 +358,15 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String ENTER_OTP_DIGIT = 'Enter 4 Digits Code';
   static const String ENTER_NEW_EMAIL = 'Enter New Email';
   static const String ENTER_NEW_PHONE = 'Enter New Phone Number';
-  static const String PASSWORD_DESC = 'Set the new password for your account so you can login and access all the features.';
-  static const String OTP_DESC = 'Enter the 4 digit code sent to your Phone Number.';
+  static const String PASSWORD_DESC = 'Set the new password for your account';
+  static const String OTP_DESC = 'Please enter the code sent to your Phone Number.';
+  static const String OTP_DESC_EMAIL1 = 'Please enter the code sent to your Email.';
 
   static const String OTP_DESC_EMAIL =
       'Set the new email for your account so you can login and access all the features.';
   static const String OTP_DESC_PHONE =
       'Set the new phone number for your account so you can login and access all the features.';
+  static const String FORGET_PASSWORD_DESC ="Enter the phone number used to set up your account";
   static const String PHONE_NUMBER_DESC =
       'Enter the Phone number for the verification process, we will send a 4 digits code to your number.';
 
@@ -374,7 +376,7 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
       'Create account or sign in to start saving!';
   static const String CREATE_AN_ACCOUNT = 'Create Account';
   static const String CREATE_AN_ACCOUNT_AND =
-      'Create an account and get unlimited access to or app features!';
+      'Create An Ampd Account To Start Saving!';
   static const String LOGIN_TO_MY_ACCOUNT = 'Login to my account';
   static const String FORGET_PASSWORD = 'Forgot password?';
   static const String DIDNT_RECEIVE = ' Didn\'t receive the code?';

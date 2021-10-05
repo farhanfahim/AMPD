@@ -56,6 +56,7 @@ class _FilterState extends State<FilterView>{
         discountAmountSwitch = userData.data.highestDiscountAmount == 1? true : false;
         locationSwitch = userData.data.nearestLocation == 1? true : false;
         alphabetSwitch = userData.data.sortingAscending == 1? true : false;
+        min1 = userData.data.radius.toDouble();
       });
     });
 
@@ -129,6 +130,9 @@ class _FilterState extends State<FilterView>{
                                     print(value);
                                     setState(() {
                                       expirationSwitch = value;
+                                      discountAmountSwitch = false;
+                                      locationSwitch = false;
+                                      alphabetSwitch = false;
                                     });
                                     callUpdateProfileApi();
                                     //
@@ -164,6 +168,9 @@ class _FilterState extends State<FilterView>{
                                     print(value);
                                     setState(() {
                                       discountAmountSwitch = value;
+                                      expirationSwitch = false;
+                                      locationSwitch = false;
+                                      alphabetSwitch = false;
                                     });
                                     callUpdateProfileApi();
                                     //
@@ -199,6 +206,9 @@ class _FilterState extends State<FilterView>{
                                     print(value);
                                     setState(() {
                                       locationSwitch = value;
+                                      expirationSwitch = false;
+                                      discountAmountSwitch = false;
+                                      alphabetSwitch = false;
                                     });
                                     callUpdateProfileApi();
                                     //
@@ -234,6 +244,10 @@ class _FilterState extends State<FilterView>{
                                     print(value);
                                     setState(() {
                                       alphabetSwitch = value;
+                                      locationSwitch = false;
+                                      expirationSwitch = false;
+                                      discountAmountSwitch = false;
+
                                     });
                                     callUpdateProfileApi();
                                     //
@@ -245,7 +259,251 @@ class _FilterState extends State<FilterView>{
                           ),
                         ),
                         SizedBox(
-                          height: 20.0,
+                          height: 30.0,
+                        ),
+
+
+                        Container(
+                          width: double.maxFinite,
+                          child: Text(
+                            "Ammount",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                color: AppColors.COLOR_BLACK,
+                                fontFamily: AppFonts.POPPINS_MEDIUM,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        Container(
+
+                            child: Column(
+
+                              children: [
+                                Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right:15.0),
+                                        child: Text(
+                                          " \$ 1000",
+                                          style: AppStyles.blackWithBoldFontTextStyle(
+                                              context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                          textAlign: TextAlign.center,
+
+                                        ),
+                                      ),
+                                    ),
+
+                                    Container(
+                                      margin: EdgeInsets.only(top: 10, left: 0, right: 0),
+                                      child: FlutterSlider(
+                                        values: [min,max],
+                                        rangeSlider: true,
+                                        tooltip: FlutterSliderTooltip(
+                                          format: (String value) {
+                                            String newValue = value;
+                                            if (newValue.contains(".0")) {
+                                              newValue.replaceAll(".0", "123");
+                                              return "\$ "+newValue;
+                                            } else {
+                                              return "\$ 0";
+                                            }
+                                          },
+                                          textStyle: TextStyle(
+                                            color: AppColors.BLUE_COLOR,
+                                            fontSize: 11.0,
+                                            fontFamily: AppFonts.POPPINS,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+
+                                          alwaysShowTooltip: true,
+                                          direction: FlutterSliderTooltipDirection.top,
+                                          positionOffset:
+                                          FlutterSliderTooltipPositionOffset(top: -30),
+                                        ),
+                                        max: 1000,
+                                        min: 0,
+
+                                        onDragging: (handlerIndex, lowerValue, upperValue) {
+                                          min = lowerValue;
+                                          max = upperValue;
+
+                                          callUpdateProfileApi();
+                                          print("min $min");
+                                          print("max $max");
+                                          setState(() {});
+                                        },
+
+                                        trackBar: FlutterSliderTrackBar(
+                                          inactiveTrackBarHeight: 6,
+                                          activeTrackBarHeight: 6,
+                                          activeTrackBar:
+                                          BoxDecoration(color: AppColors.BLUE_COLOR),
+                                        ),
+                                        handler: FlutterSliderHandler(
+                                          decoration: BoxDecoration(),
+                                          child: Container(
+                                            height: 20.0,
+                                            width: 20.0,
+                                            decoration: BoxDecoration(
+                                                color: AppColors.BLUE_COLOR,
+                                                borderRadius: BorderRadius.circular(15)),
+                                            padding: EdgeInsets.all(5),
+                                          ),
+                                        ),
+                                        rightHandler: FlutterSliderHandler(
+                                          decoration: BoxDecoration(),
+                                          child: Container(
+                                            height: 20.0,
+                                            width: 20.0,
+                                            decoration: BoxDecoration(
+                                                color: AppColors.BLUE_COLOR,
+                                                borderRadius: BorderRadius.circular(15)),
+                                            padding: EdgeInsets.all(5),
+                                          ),
+                                        ),
+
+                                        /* onDragging: (handlerIndex, lowerValue, upperValue) {
+                                _lowerValue = lowerValue;
+                                _upperValue = upperValue;
+                                setState(() {
+
+                                });
+                              },*/
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                              ],
+                            )
+                        ),
+                        Container(
+                          width: double.maxFinite,
+                          child: Text(
+                            "Set Radius",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                color: AppColors.COLOR_BLACK,
+                                fontFamily: AppFonts.POPPINS_MEDIUM,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        Container(
+
+                            child: Column(
+
+                              children: [
+                                Stack(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right:15.0),
+                                        child: Text(
+                                          "1000\nmile",
+                                          style: AppStyles.blackWithBoldFontTextStyle(
+                                              context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                          textAlign: TextAlign.center,
+
+                                        ),
+                                      ),
+                                    ),
+
+                                    Container(
+                                      margin: EdgeInsets.only(top: 10, left: 0, right: 0),
+                                      child: FlutterSlider(
+                                        values: [min1],
+                                        rangeSlider: false,
+                                        tooltip: FlutterSliderTooltip(
+                                          format: (String value) {
+                                            String newValue = value;
+                                            if (newValue.contains(".0")) {
+                                              newValue.replaceAll(".0", "123");
+                                              return newValue + ' \nmile ';
+                                            } else {
+                                              return "0" + ' \nmile ';
+                                            }
+                                          },
+                                          textStyle: TextStyle(
+                                            color: AppColors.BLUE_COLOR,
+                                            fontSize: 11.0,
+                                            fontFamily: AppFonts.POPPINS,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+
+                                          alwaysShowTooltip: true,
+                                          direction: FlutterSliderTooltipDirection.top,
+                                          positionOffset:
+                                          FlutterSliderTooltipPositionOffset(top: -30),
+                                        ),
+                                        max: 1000,
+                                        min: 0,
+
+                                        onDragCompleted: (handlerIndex, lowerValue, upperValue) {
+                                          setState(() {
+                                            min1 = lowerValue;
+                                            max1 = upperValue;
+                                          });
+
+                                          callUpdateProfileApi();
+                                        },
+
+                                        trackBar: FlutterSliderTrackBar(
+                                          inactiveTrackBarHeight: 6,
+                                          activeTrackBarHeight: 6,
+                                          activeTrackBar:
+                                          BoxDecoration(color: AppColors.BLUE_COLOR),
+                                        ),
+                                        handler: FlutterSliderHandler(
+                                          decoration: BoxDecoration(),
+                                          child: Container(
+                                            height: 20.0,
+                                            width: 20.0,
+                                            decoration: BoxDecoration(
+                                                color: AppColors.BLUE_COLOR,
+                                                borderRadius: BorderRadius.circular(15)),
+                                            padding: EdgeInsets.all(5),
+                                          ),
+                                        ),
+                                        rightHandler: FlutterSliderHandler(
+                                          decoration: BoxDecoration(),
+                                          child: Container(
+                                            height: 20.0,
+                                            width: 20.0,
+                                            decoration: BoxDecoration(
+                                                color: AppColors.BLUE_COLOR,
+                                                borderRadius: BorderRadius.circular(15)),
+                                            padding: EdgeInsets.all(5),
+                                          ),
+                                        ),
+
+                                        /* onDragging: (handlerIndex, lowerValue, upperValue) {
+                                _lowerValue = lowerValue;
+                                _upperValue = upperValue;
+                                setState(() {
+
+                                });
+                              },*/
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                              ],
+                            )
                         ),
 
                       ],
@@ -321,15 +579,15 @@ class _FilterState extends State<FilterView>{
       }
 
       if (response.success) {
-        if(response.data == 0) {
+
           isApiCalling = true;
-          userDetails.data.sortingAscending = expirationSwitch? 1 : 0;
+          userDetails.data.soonestExpiration = expirationSwitch? 1 : 0;
           userDetails.data.highestDiscountAmount = discountAmountSwitch? 1 : 0;
           userDetails.data.nearestLocation = locationSwitch? 1 : 0;
-          userDetails.data.soonestExpiration = alphabetSwitch? 1 : 0;
+          userDetails.data.sortingAscending = alphabetSwitch? 1 : 0;
+          userDetails.data.radius = max1.toInt();
           _appPreferences.setUserDetails(data: jsonEncode(userDetails));
-          print(response.toString());
-        }
+          ToastUtil.showToast(context, "${userDetails.data.radius}");
       }else if (response.data is DioError) {
         if (response.statusCode == 401) {
           Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);

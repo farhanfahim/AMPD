@@ -166,7 +166,7 @@ class _WelcomeViewState extends State<WelcomeView>
                   },
                   text: AppStrings.SIGN_IN,
                 ),
-                SizedBox(
+          /*      SizedBox(
                   height: 15.0,
                 ),
                 ButtonBorder(
@@ -180,9 +180,9 @@ class _WelcomeViewState extends State<WelcomeView>
                         });
                   },
                   text: AppStrings.GUEST_LOGIN,
-                ),
+                ),*/
                 SizedBox(
-                  height: 70.0,
+                  height: 150.0,
                 )
               ],
             ),

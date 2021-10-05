@@ -1073,7 +1073,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
   showPhoneOtpBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC_PHONE, OtpTextField(onOtpCodeChanged: (otp) {
+        AppStrings.OTP_DESC, OtpTextField(onOtpCodeChanged: (otp) {
           code = otp;
         }),
         AnimatedGradientButton(
@@ -1148,7 +1148,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     showBottomSheetWidgetWithAnimatedBtn(
         context,
         AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC_EMAIL,
+        AppStrings.OTP_DESC_EMAIL1,
         OtpTextField(onOtpCodeChanged: (otp) {
           code = otp;
         }),

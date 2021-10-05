@@ -348,7 +348,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
     showBottomSheetWidgetWithAnimatedBtn(
       context,
       "Forgot password",
-      AppStrings.PHONE_NUMBER_DESC,
+      AppStrings.FORGET_PASSWORD_DESC,
       Container(
         margin: EdgeInsets.symmetric(horizontal: 25.0),
         decoration: ShapeDecoration(

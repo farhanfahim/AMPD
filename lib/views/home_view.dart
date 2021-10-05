@@ -232,13 +232,45 @@ class _HomeViewState extends State<HomeView>
                         }
                       },
                     )
-                  : Center(
-                    child: Text(
-                'No coupons available right  now',
+                  : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+                      Opacity(
+                          opacity: 0.3,
+                          child: SvgPicture.asset(
+                            AppImages.IC_COUPONS,
+                            width: 80.0,
+                            height: 80.0,
+                          )),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+
+                      Text(
+                'There are no more deals in your area.',
                 style: AppStyles.poppinsTextStyle(
-                      fontSize: 18.0, weight: FontWeight.w500)
-                      .copyWith(color: AppColors.UNSELECTED_COLOR),
+                        fontSize: 18.0, weight: FontWeight.w500)
+                        .copyWith(color: AppColors.UNSELECTED_COLOR),
                 ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20.0.w),
+                        child: GradientButton(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, AppRoutes.SETTING_VIEW ,arguments: {
+                            'from': "home",
+                            });
+
+                          },
+                          text: "Expand Search Area",
+                        ),
+                      ),
+
+                    ],
                   )
                   : Padding(
                 padding: EdgeInsets.all(5),
@@ -263,8 +295,8 @@ class _HomeViewState extends State<HomeView>
                   opacity: 0.3,
                   child: SvgPicture.asset(
                     AppImages.IC_COUPONS,
-                    width: 110.0,
-                    height: 110.0,
+                    width: 80.0,
+                    height: 80.0,
                   )),
               SizedBox(
                 height: 10.0,
@@ -499,8 +531,12 @@ class _HomeViewState extends State<HomeView>
                         return CustomDialog(
                           showAnimatedBtn: false,
                           contex: context,
-                          subTitle: "This offer has been marked Favorite!",
-                          child: SvgPicture.asset(AppImages.FAV_ICON),
+                          subTitle: "Offer has been saved!",
+                          child: SvgPicture.asset(
+                            AppImages.IC_COUPONS,
+                            width: 80.0,
+                            height: 80.0,
+                          ),
                           //title: "Your feedback will help us improve our services.",
                           buttonText1: AppStrings.REDEEM_NOW,
                           buttonText2: AppStrings.GO_BACK_TO_OFFER,

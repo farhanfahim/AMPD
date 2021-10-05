@@ -215,7 +215,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => SettingView(),
+            builder: (BuildContext context) => SettingView(routeSettings.arguments),
           );
         }
 
