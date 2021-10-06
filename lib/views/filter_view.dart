@@ -43,7 +43,7 @@ class _FilterState extends State<FilterView>{
   DateTime selectedDate = DateTime.now();
   bool isDateSelected = false;
   String startDate="Start Expiration",endDate="End Expiration";
-  double min=0.0,max=300.0,min1=0.0,max1=300.0;
+  double min1=0.0,max1=300.0,radius=0.0;
   AppPreferences _appPreferences = new AppPreferences();
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _FilterState extends State<FilterView>{
         discountAmountSwitch = userData.data.highestDiscountAmount == 1? true : false;
         locationSwitch = userData.data.nearestLocation == 1? true : false;
         alphabetSwitch = userData.data.sortingAscending == 1? true : false;
-        min1 = userData.data.radius.toDouble();
+        radius = userData.data.radius.toDouble();
       });
     });
 
@@ -70,465 +70,481 @@ class _FilterState extends State<FilterView>{
     super.dispose();
   }
 
+  Future<bool> _onBackPressed() {
+    Navigator.of(context).pop();
+    if(isApiCalling){
+      Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+        'isFromFilterScreen': true,
+        'minPrice': min1,
+        'maxPrice': max1,
+        'minRadius': radius,
+      });
+
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
 
-    return Scaffold(
-        appBar: appBar(
-            title: "",
-            onBackClick: () {
+    return WillPopScope(
+      onWillPop:_onBackPressed,
+      child: Scaffold(
+          appBar: appBar(
+              title: "",
+              onBackClick: () {
+                Navigator.of(context).pop();
+                if(isApiCalling){
+                  Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+                  'isFromFilterScreen': true,
+                  'minPrice': min1,
+                  'maxPrice': max1,
+                  'minRadius': radius,
+                  });
 
-              isApiCalling?Navigator.pushReplacementNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
-                'isFromFilterScreen': true,
-                'startDate': startDate,
-                'endDate': endDate,
-                'minPrice': min1,
-                'maxPrice': max1,
-                'minRadius': min,
-                'maxRadius': max,
-              }):Navigator.of(context).pop();
-            },
-            iconColor: AppColors.COLOR_BLACK),
-        backgroundColor: AppColors.WHITE_COLOR,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 0.0),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
+                }
+              },
+              iconColor: AppColors.COLOR_BLACK),
+          backgroundColor: AppColors.WHITE_COLOR,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 0.0),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
 
-                      children: [
-                        Header(
-                            heading1: AppStrings.FILTER,
-                            heading2: AppStrings.FILTER_YOUR),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Expiration (Soonest)",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: AppColors.COLOR_BLACK,
-                                    fontFamily: AppFonts.POPPINS_MEDIUM,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              Container(
-                                child: CupertinoSwitch(
-                                  activeColor: AppColors.BLUE_COLOR,
-                                  value: expirationSwitch,
-                                  onChanged: (value) {
-                                    print(value);
-                                    setState(() {
-                                      expirationSwitch = value;
-                                      discountAmountSwitch = false;
-                                      locationSwitch = false;
-                                      alphabetSwitch = false;
-                                    });
-                                    callUpdateProfileApi();
-                                    //
-                                  },
-                                  // activeColor: Colors.green,
-                                ),
-                              )
-                            ],
+                        children: [
+                          Header(
+                              heading1: AppStrings.FILTER,
+                              heading2: AppStrings.FILTER_YOUR),
+                          SizedBox(
+                            height: 30.0,
                           ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
 
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Discount Amount (Highest)",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: AppColors.COLOR_BLACK,
-                                    fontFamily: AppFonts.POPPINS_MEDIUM,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              Container(
-                                child: CupertinoSwitch(
-                                  activeColor: AppColors.BLUE_COLOR,
-                                  value: discountAmountSwitch,
-                                  onChanged: (value) {
-                                    print(value);
-                                    setState(() {
-                                      discountAmountSwitch = value;
-                                      expirationSwitch = false;
-                                      locationSwitch = false;
-                                      alphabetSwitch = false;
-                                    });
-                                    callUpdateProfileApi();
-                                    //
-                                  },
-                                  // activeColor: Colors.green,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Location (Nearest)",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: AppColors.COLOR_BLACK,
-                                    fontFamily: AppFonts.POPPINS_MEDIUM,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              Container(
-                                child: CupertinoSwitch(
-                                  activeColor: AppColors.BLUE_COLOR,
-                                  value: locationSwitch,
-                                  onChanged: (value) {
-                                    print(value);
-                                    setState(() {
-                                      locationSwitch = value;
-                                      expirationSwitch = false;
-                                      discountAmountSwitch = false;
-                                      alphabetSwitch = false;
-                                    });
-                                    callUpdateProfileApi();
-                                    //
-                                  },
-                                  // activeColor: Colors.green,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Alphabetically (A-Z)",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 14.0,
-                                    color: AppColors.COLOR_BLACK,
-                                    fontFamily: AppFonts.POPPINS_MEDIUM,
-                                    fontWeight: FontWeight.w400),
-                              ),
-                              Container(
-                                child: CupertinoSwitch(
-                                  activeColor: AppColors.BLUE_COLOR,
-                                  value: alphabetSwitch,
-                                  onChanged: (value) {
-                                    print(value);
-                                    setState(() {
-                                      alphabetSwitch = value;
-                                      locationSwitch = false;
-                                      expirationSwitch = false;
-                                      discountAmountSwitch = false;
-
-                                    });
-                                    callUpdateProfileApi();
-                                    //
-                                  },
-                                  // activeColor: Colors.green,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-
-
-                        Container(
-                          width: double.maxFinite,
-                          child: Text(
-                            "Ammount",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: AppColors.COLOR_BLACK,
-                                fontFamily: AppFonts.POPPINS_MEDIUM,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        Container(
-
-                            child: Column(
-
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(right:15.0),
-                                        child: Text(
-                                          " \$ 1000",
-                                          style: AppStyles.blackWithBoldFontTextStyle(
-                                              context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                                          textAlign: TextAlign.center,
-
-                                        ),
-                                      ),
-                                    ),
-
-                                    Container(
-                                      margin: EdgeInsets.only(top: 10, left: 0, right: 0),
-                                      child: FlutterSlider(
-                                        values: [min,max],
-                                        rangeSlider: true,
-                                        tooltip: FlutterSliderTooltip(
-                                          format: (String value) {
-                                            String newValue = value;
-                                            if (newValue.contains(".0")) {
-                                              newValue.replaceAll(".0", "123");
-                                              return "\$ "+newValue;
-                                            } else {
-                                              return "\$ 0";
-                                            }
-                                          },
-                                          textStyle: TextStyle(
-                                            color: AppColors.BLUE_COLOR,
-                                            fontSize: 11.0,
-                                            fontFamily: AppFonts.POPPINS,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-
-                                          alwaysShowTooltip: true,
-                                          direction: FlutterSliderTooltipDirection.top,
-                                          positionOffset:
-                                          FlutterSliderTooltipPositionOffset(top: -30),
-                                        ),
-                                        max: 1000,
-                                        min: 0,
-
-                                        onDragging: (handlerIndex, lowerValue, upperValue) {
-                                          min = lowerValue;
-                                          max = upperValue;
-
-                                          callUpdateProfileApi();
-                                          print("min $min");
-                                          print("max $max");
-                                          setState(() {});
-                                        },
-
-                                        trackBar: FlutterSliderTrackBar(
-                                          inactiveTrackBarHeight: 6,
-                                          activeTrackBarHeight: 6,
-                                          activeTrackBar:
-                                          BoxDecoration(color: AppColors.BLUE_COLOR),
-                                        ),
-                                        handler: FlutterSliderHandler(
-                                          decoration: BoxDecoration(),
-                                          child: Container(
-                                            height: 20.0,
-                                            width: 20.0,
-                                            decoration: BoxDecoration(
-                                                color: AppColors.BLUE_COLOR,
-                                                borderRadius: BorderRadius.circular(15)),
-                                            padding: EdgeInsets.all(5),
-                                          ),
-                                        ),
-                                        rightHandler: FlutterSliderHandler(
-                                          decoration: BoxDecoration(),
-                                          child: Container(
-                                            height: 20.0,
-                                            width: 20.0,
-                                            decoration: BoxDecoration(
-                                                color: AppColors.BLUE_COLOR,
-                                                borderRadius: BorderRadius.circular(15)),
-                                            padding: EdgeInsets.all(5),
-                                          ),
-                                        ),
-
-                                        /* onDragging: (handlerIndex, lowerValue, upperValue) {
-                                _lowerValue = lowerValue;
-                                _upperValue = upperValue;
-                                setState(() {
-
-                                });
-                              },*/
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  "Expiration (Soonest)",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: AppColors.COLOR_BLACK,
+                                      fontFamily: AppFonts.POPPINS_MEDIUM,
+                                      fontWeight: FontWeight.w400),
                                 ),
-
+                                Container(
+                                  child: CupertinoSwitch(
+                                    activeColor: AppColors.BLUE_COLOR,
+                                    value: expirationSwitch,
+                                    onChanged: (value) {
+                                      print(value);
+                                      setState(() {
+                                        expirationSwitch = value;
+                                        discountAmountSwitch = false;
+                                        locationSwitch = false;
+                                        alphabetSwitch = false;
+                                      });
+                                      callUpdateProfileApi();
+                                      //
+                                    },
+                                    // activeColor: Colors.green,
+                                  ),
+                                )
                               ],
-                            )
-                        ),
-                        Container(
-                          width: double.maxFinite,
-                          child: Text(
-                            "Set Radius",
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                color: AppColors.COLOR_BLACK,
-                                fontFamily: AppFonts.POPPINS_MEDIUM,
-                                fontWeight: FontWeight.w400),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 30.0,
-                        ),
-                        Container(
+                          SizedBox(
+                            height: 20.0,
+                          ),
 
-                            child: Column(
-
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(right:15.0),
-                                        child: Text(
-                                          "1000\nmile",
-                                          style: AppStyles.blackWithBoldFontTextStyle(
-                                              context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                                          textAlign: TextAlign.center,
-
-                                        ),
-                                      ),
-                                    ),
-
-                                    Container(
-                                      margin: EdgeInsets.only(top: 10, left: 0, right: 0),
-                                      child: FlutterSlider(
-                                        values: [min1],
-                                        rangeSlider: false,
-                                        tooltip: FlutterSliderTooltip(
-                                          format: (String value) {
-                                            String newValue = value;
-                                            if (newValue.contains(".0")) {
-                                              newValue.replaceAll(".0", "123");
-                                              return newValue + ' \nmile ';
-                                            } else {
-                                              return "0" + ' \nmile ';
-                                            }
-                                          },
-                                          textStyle: TextStyle(
-                                            color: AppColors.BLUE_COLOR,
-                                            fontSize: 11.0,
-                                            fontFamily: AppFonts.POPPINS,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-
-                                          alwaysShowTooltip: true,
-                                          direction: FlutterSliderTooltipDirection.top,
-                                          positionOffset:
-                                          FlutterSliderTooltipPositionOffset(top: -30),
-                                        ),
-                                        max: 1000,
-                                        min: 0,
-
-                                        onDragCompleted: (handlerIndex, lowerValue, upperValue) {
-                                          setState(() {
-                                            min1 = lowerValue;
-                                            max1 = upperValue;
-                                          });
-
-                                          callUpdateProfileApi();
-                                        },
-
-                                        trackBar: FlutterSliderTrackBar(
-                                          inactiveTrackBarHeight: 6,
-                                          activeTrackBarHeight: 6,
-                                          activeTrackBar:
-                                          BoxDecoration(color: AppColors.BLUE_COLOR),
-                                        ),
-                                        handler: FlutterSliderHandler(
-                                          decoration: BoxDecoration(),
-                                          child: Container(
-                                            height: 20.0,
-                                            width: 20.0,
-                                            decoration: BoxDecoration(
-                                                color: AppColors.BLUE_COLOR,
-                                                borderRadius: BorderRadius.circular(15)),
-                                            padding: EdgeInsets.all(5),
-                                          ),
-                                        ),
-                                        rightHandler: FlutterSliderHandler(
-                                          decoration: BoxDecoration(),
-                                          child: Container(
-                                            height: 20.0,
-                                            width: 20.0,
-                                            decoration: BoxDecoration(
-                                                color: AppColors.BLUE_COLOR,
-                                                borderRadius: BorderRadius.circular(15)),
-                                            padding: EdgeInsets.all(5),
-                                          ),
-                                        ),
-
-                                        /* onDragging: (handlerIndex, lowerValue, upperValue) {
-                                _lowerValue = lowerValue;
-                                _upperValue = upperValue;
-                                setState(() {
-
-                                });
-                              },*/
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  "Discount Amount (Highest)",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: AppColors.COLOR_BLACK,
+                                      fontFamily: AppFonts.POPPINS_MEDIUM,
+                                      fontWeight: FontWeight.w400),
                                 ),
-
-                                SizedBox(
-                                  height: 20.0,
-                                ),
+                                Container(
+                                  child: CupertinoSwitch(
+                                    activeColor: AppColors.BLUE_COLOR,
+                                    value: discountAmountSwitch,
+                                    onChanged: (value) {
+                                      print(value);
+                                      setState(() {
+                                        discountAmountSwitch = value;
+                                        expirationSwitch = false;
+                                        locationSwitch = false;
+                                        alphabetSwitch = false;
+                                      });
+                                      callUpdateProfileApi();
+                                      //
+                                    },
+                                    // activeColor: Colors.green,
+                                  ),
+                                )
                               ],
-                            )
-                        ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
 
-                      ],
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Location (Nearest)",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: AppColors.COLOR_BLACK,
+                                      fontFamily: AppFonts.POPPINS_MEDIUM,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Container(
+                                  child: CupertinoSwitch(
+                                    activeColor: AppColors.BLUE_COLOR,
+                                    value: locationSwitch,
+                                    onChanged: (value) {
+                                      print(value);
+                                      setState(() {
+                                        locationSwitch = value;
+                                        expirationSwitch = false;
+                                        discountAmountSwitch = false;
+                                        alphabetSwitch = false;
+                                      });
+                                      callUpdateProfileApi();
+                                      //
+                                    },
+                                    // activeColor: Colors.green,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+
+                          Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Alphabetically (A-Z)",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: AppColors.COLOR_BLACK,
+                                      fontFamily: AppFonts.POPPINS_MEDIUM,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Container(
+                                  child: CupertinoSwitch(
+                                    activeColor: AppColors.BLUE_COLOR,
+                                    value: alphabetSwitch,
+                                    onChanged: (value) {
+                                      print(value);
+                                      setState(() {
+                                        alphabetSwitch = value;
+                                        locationSwitch = false;
+                                        expirationSwitch = false;
+                                        discountAmountSwitch = false;
+
+                                      });
+                                      callUpdateProfileApi();
+                                      //
+                                    },
+                                    // activeColor: Colors.green,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30.0,
+                          ),
+
+
+                          Container(
+                            width: double.maxFinite,
+                            child: Text(
+                              "Ammount",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: AppColors.COLOR_BLACK,
+                                  fontFamily: AppFonts.POPPINS_MEDIUM,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30.0,
+                          ),
+                          Container(
+
+                              child: Column(
+
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right:15.0),
+                                          child: Text(
+                                            " \$ 1000",
+                                            style: AppStyles.blackWithBoldFontTextStyle(
+                                                context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                            textAlign: TextAlign.center,
+
+                                          ),
+                                        ),
+                                      ),
+
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10, left: 0, right: 0),
+                                        child: FlutterSlider(
+                                          values: [min1,max1],
+                                          rangeSlider: true,
+                                          tooltip: FlutterSliderTooltip(
+                                            format: (String value) {
+                                              String newValue = value;
+                                              if (newValue.contains(".0")) {
+                                                newValue.replaceAll(".0", "123");
+                                                return "\$ "+newValue;
+                                              } else {
+                                                return "\$ 0";
+                                              }
+                                            },
+                                            textStyle: TextStyle(
+                                              color: AppColors.BLUE_COLOR,
+                                              fontSize: 11.0,
+                                              fontFamily: AppFonts.POPPINS,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+
+                                            alwaysShowTooltip: true,
+                                            direction: FlutterSliderTooltipDirection.top,
+                                            positionOffset:
+                                            FlutterSliderTooltipPositionOffset(top: -30),
+                                          ),
+                                          max: 1000,
+                                          min: 0,
+
+                                          onDragCompleted: (handlerIndex, lowerValue, upperValue) {
+
+                                            setState(() {
+                                              min1 = lowerValue;
+                                              max1 = upperValue;
+                                            });
+                                            callUpdateProfileApi();
+                                          },
+
+                                          trackBar: FlutterSliderTrackBar(
+                                            inactiveTrackBarHeight: 6,
+                                            activeTrackBarHeight: 6,
+                                            activeTrackBar:
+                                            BoxDecoration(color: AppColors.BLUE_COLOR),
+                                          ),
+                                          handler: FlutterSliderHandler(
+                                            decoration: BoxDecoration(),
+                                            child: Container(
+                                              height: 20.0,
+                                              width: 20.0,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.BLUE_COLOR,
+                                                  borderRadius: BorderRadius.circular(15)),
+                                              padding: EdgeInsets.all(5),
+                                            ),
+                                          ),
+                                          rightHandler: FlutterSliderHandler(
+                                            decoration: BoxDecoration(),
+                                            child: Container(
+                                              height: 20.0,
+                                              width: 20.0,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.BLUE_COLOR,
+                                                  borderRadius: BorderRadius.circular(15)),
+                                              padding: EdgeInsets.all(5),
+                                            ),
+                                          ),
+
+                                          /* onDragging: (handlerIndex, lowerValue, upperValue) {
+                                  _lowerValue = lowerValue;
+                                  _upperValue = upperValue;
+                                  setState(() {
+
+                                  });
+                                },*/
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                ],
+                              )
+                          ),
+                          Container(
+                            width: double.maxFinite,
+                            child: Text(
+                              "Set Radius",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: AppColors.COLOR_BLACK,
+                                  fontFamily: AppFonts.POPPINS_MEDIUM,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30.0,
+                          ),
+                          Container(
+
+                              child: Column(
+
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(right:15.0),
+                                          child: Text(
+                                            "1000\nmile",
+                                            style: AppStyles.blackWithBoldFontTextStyle(
+                                                context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                            textAlign: TextAlign.center,
+
+                                          ),
+                                        ),
+                                      ),
+
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10, left: 0, right: 0),
+                                        child: FlutterSlider(
+                                          values: [radius],
+                                          rangeSlider: false,
+                                          tooltip: FlutterSliderTooltip(
+                                            format: (String value) {
+                                              String newValue = value;
+                                              if (newValue.contains(".0")) {
+                                                newValue.replaceAll(".0", "123");
+                                                return newValue + ' \nmile ';
+                                              } else {
+                                                return "0" + ' \nmile ';
+                                              }
+                                            },
+                                            textStyle: TextStyle(
+                                              color: AppColors.BLUE_COLOR,
+                                              fontSize: 11.0,
+                                              fontFamily: AppFonts.POPPINS,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+
+                                            alwaysShowTooltip: true,
+                                            direction: FlutterSliderTooltipDirection.top,
+                                            positionOffset:
+                                            FlutterSliderTooltipPositionOffset(top: -30),
+                                          ),
+                                          max: 1000,
+                                          min: 0,
+
+                                          onDragCompleted: (handlerIndex, lowerValue, upperValue) {
+                                            setState(() {
+                                              radius = lowerValue;
+                                              userDetails.data.radius = lowerValue.toInt();
+                                            });
+
+                                            callUpdateProfileApi();
+                                          },
+
+                                          trackBar: FlutterSliderTrackBar(
+                                            inactiveTrackBarHeight: 6,
+                                            activeTrackBarHeight: 6,
+                                            activeTrackBar:
+                                            BoxDecoration(color: AppColors.BLUE_COLOR),
+                                          ),
+                                          handler: FlutterSliderHandler(
+                                            decoration: BoxDecoration(),
+                                            child: Container(
+                                              height: 20.0,
+                                              width: 20.0,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.BLUE_COLOR,
+                                                  borderRadius: BorderRadius.circular(15)),
+                                              padding: EdgeInsets.all(5),
+                                            ),
+                                          ),
+                                          rightHandler: FlutterSliderHandler(
+                                            decoration: BoxDecoration(),
+                                            child: Container(
+                                              height: 20.0,
+                                              width: 20.0,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors.BLUE_COLOR,
+                                                  borderRadius: BorderRadius.circular(15)),
+                                              padding: EdgeInsets.all(5),
+                                            ),
+                                          ),
+
+                                          /* onDragging: (handlerIndex, lowerValue, upperValue) {
+                                  _lowerValue = lowerValue;
+                                  _upperValue = upperValue;
+                                  setState(() {
+
+                                  });
+                                },*/
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  SizedBox(
+                                    height: 20.0,
+                                  ),
+                                ],
+                              )
+                          ),
+
+                        ],
+                      ),
                     ),
-                  ),
-                  /*GradientButton(
-                    onTap: () {
+                    /*GradientButton(
+                      onTap: () {
 
-                      Navigator.pushReplacementNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
-                        'isFromFilterScreen': true,
-                        'startDate': startDate,
-                        'endDate': endDate,
-                        'minPrice': min1,
-                        'maxPrice': max1,
-                        'minRadius': min,
-                        'maxRadius': max,
-                      });
-                    },
-                    text: AppStrings.APPLY,
-                  ),*/
-                ],
+                        Navigator.pushReplacementNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+                          'isFromFilterScreen': true,
+                          'startDate': startDate,
+                          'endDate': endDate,
+                          'minPrice': min1,
+                          'maxPrice': max1,
+                          'minRadius': min,
+                          'maxRadius': max,
+                        });
+                      },
+                      text: AppStrings.APPLY,
+                    ),*/
+                  ],
+                ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
 
 
   }
@@ -585,9 +601,7 @@ class _FilterState extends State<FilterView>{
           userDetails.data.highestDiscountAmount = discountAmountSwitch? 1 : 0;
           userDetails.data.nearestLocation = locationSwitch? 1 : 0;
           userDetails.data.sortingAscending = alphabetSwitch? 1 : 0;
-          userDetails.data.radius = max1.toInt();
           _appPreferences.setUserDetails(data: jsonEncode(userDetails));
-          ToastUtil.showToast(context, "${userDetails.data.radius}");
       }else if (response.data is DioError) {
         if (response.statusCode == 401) {
           Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);

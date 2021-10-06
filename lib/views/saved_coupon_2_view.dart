@@ -29,19 +29,20 @@ import 'package:flutter_svg/svg.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart' as gcl;
-import 'package:location_permissions/location_permissions.dart' as locationPermission;
+import 'package:location_permissions/location_permissions.dart'
+    as locationPermission;
 
 class SavedCoupons2View extends StatefulWidget {
-
   final Map<String, dynamic> map;
+
   SavedCoupons2View(this.map);
 
   @override
   _SavedCoupons2ViewState createState() => _SavedCoupons2ViewState();
 }
 
-class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProviderStateMixin{
-
+class _SavedCoupons2ViewState extends State<SavedCoupons2View>
+    with TickerProviderStateMixin {
   BuildContext dialogContext;
   AnimationController _buttonController;
   DataClass singleOfferModel;
@@ -51,7 +52,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
   int resultCount = 0;
   int _currentPage = 1;
   int _selectedIndex = 0;
-  final PagingController<int, DataClass> _pagingController1 =  PagingController(firstPageKey: 1);
+  final PagingController<int, DataClass> _pagingController1 =
+      PagingController(firstPageKey: 1);
 
   List<DataClass> dataList = List<DataClass>();
 
@@ -69,9 +71,11 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
   String _searchText = "";
   List names = new List();
   List filteredNames = new List();
-  Icon _searchIcon = new Icon(Icons.search_rounded, color: AppColors.APP__DETAILS_TEXT_COLOR,);
-  Widget _appBarTitle = new Text( '' );
-
+  Icon _searchIcon = new Icon(
+    Icons.search_rounded,
+    color: AppColors.APP__DETAILS_TEXT_COLOR,
+  );
+  Widget _appBarTitle = new Text('');
 
   _SavedCoupons2ViewState() {
     _filter.addListener(() {
@@ -94,7 +98,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
         setState(() {
           _openSetting = true;
           gcl.Geolocator.getCurrentPosition(
-              desiredAccuracy: gcl.LocationAccuracy.medium)
+                  desiredAccuracy: gcl.LocationAccuracy.medium)
               .then((value) {
             position = value;
 
@@ -113,7 +117,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
               setState(() {
                 _openSetting = true;
                 gcl.Geolocator.getCurrentPosition(
-                    desiredAccuracy: gcl.LocationAccuracy.medium)
+                        desiredAccuracy: gcl.LocationAccuracy.medium)
                     .then((value) {
                   position = value;
 
@@ -141,25 +145,28 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
       }
     });
   }
-  @override
-  void initState()  {
 
+  @override
+  void initState() {
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
 
     getCurrentLocation();
-    this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
+    this._searchIcon = new Icon(
+      Icons.close,
+      color: AppColors.APP__DETAILS_TEXT_COLOR,
+    );
     this._appBarTitle = new TextFormField(
       autofocus: true,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
       ],
-      onFieldSubmitted: (value){
+      onFieldSubmitted: (value) {
         setState(() {
           _filter.text = value;
           isSearching = true;
         });
-        _fetchPage(pagekey,value);
+        _fetchPage(pagekey, value);
       },
       cursorColor: AppColors.APP__DETAILS_TEXT_COLOR,
       keyboardType: TextInputType.text,
@@ -172,8 +179,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
           hintText: "Search..."),
     );
 
-
-    if(_filter.text.isNotEmpty) {
+    if (_filter.text.isNotEmpty) {
       _pagingController1.addPageRequestListener((pageKey) {
         print(pageKey);
         pagekey = pageKey;
@@ -183,14 +189,17 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
     subscribeToViewModel();
     super.initState();
   }
-  Future<void> _fetchPage(int pageKey,String query) async {
-    try {
 
-      callSavedCouponApi(query);
+  Future<void> _fetchPage(int pageKey, String query) async {
+    try {
+      widget.map['isFromFilterScreen']
+          ? callFilterSavedCouponApi(query)
+          : callSavedCouponApi(query);
     } catch (error) {
       _pagingController1.error = error;
     }
   }
+
   @override
   void dispose() {
     _buttonController.dispose();
@@ -198,78 +207,93 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
     super.dispose();
   }
 
-
   static String formatUTCTime(String time) {
-    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
-        time);
+    DateTime tempDate =
+        new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(time);
     return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
   }
 
+  Future<bool> _onBackPressed() {
+    if (_enabled) {
+      Navigator.of(context).pop();
+
+      if (widget.map['isFromFilterScreen']) {
+        Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: searchAppBar(context),
-        backgroundColor: AppColors.WHITE_COLOR,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 15.0,
-                ),
-                Header(
-                    heading1: AppStrings.SAVED_COUPONS,
-                    heading2: AppStrings.SAVED_COUPONS_RESULT +": (${dataList != null?dataList.length:0})"),
-                SizedBox(
-                  height: 30.0,
-                ),
-                isSearching?Container(
-                  child: Expanded(
-                    child: PagedListView<int, DataClass>(
-                      pagingController: _pagingController1,
-                      builderDelegate: PagedChildBuilderDelegate<DataClass>(
-                        itemBuilder: (context, item, index) {
+    return WillPopScope(
+        onWillPop:_onBackPressed,
+      child: Scaffold(
+          appBar: searchAppBar(context),
+          backgroundColor: AppColors.WHITE_COLOR,
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  Header(
+                      heading1: AppStrings.SAVED_COUPONS,
+                      heading2: AppStrings.SAVED_COUPONS_RESULT +
+                          ": (${dataList != null ? dataList.length : 0})"),
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  isSearching
+                      ? Container(
+                          child: Expanded(
+                            child: PagedListView<int, DataClass>(
+                              pagingController: _pagingController1,
+                              builderDelegate:
+                                  PagedChildBuilderDelegate<DataClass>(
+                                itemBuilder: (context, item, index) {
+                                  print('Item index: $index');
 
-                          print('Item index: $index');
-
-                          return SavedCouponTileView(item);
-                        },
-                        noItemsFoundIndicatorBuilder: (context) => Center(
-                            child: NoRecordFound(
-                                "No Result Found", AppImages.NO_TEETIMES_IMAGE)),
-                        firstPageProgressIndicatorBuilder: (context) => Container(
-                          height: MediaQuery.of(context).size.height * 0.4,
-                          child: Center(
-                            child: Container(
-                              height: 60.0,
-                              child: Loader(
-                                  isLoading: true,
-                                  color: AppColors.ACCENT_COLOR
+                                  return SavedCouponTileView(item);
+                                },
+                                noItemsFoundIndicatorBuilder: (context) => Center(
+                                    child: NoRecordFound(
+                                        "No Result Found", AppImages.IC_COUPONS)),
+                                firstPageProgressIndicatorBuilder: (context) =>
+                                    Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.4,
+                                  child: Center(
+                                    child: Container(
+                                      height: 60.0,
+                                      child: Loader(
+                                          isLoading: true,
+                                          color: AppColors.ACCENT_COLOR),
+                                    ),
+                                  ),
+                                ),
+                                newPageProgressIndicatorBuilder: (context) =>
+                                    Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Container(
+                                    height: 30.0,
+                                    child: Loader(
+                                      isLoading: true,
+                                      color: AppColors.APP_PRIMARY_COLOR,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        newPageProgressIndicatorBuilder: (context) => Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            height: 30.0,
-                            child: Loader(
-                              isLoading: true,
-                              color: AppColors.APP_PRIMARY_COLOR,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ):NoRecordFound(
-                    "Search Coupons", AppImages.NO_TEETIMES_IMAGE),
-              ],
+                        )
+                      : NoRecordFound("Search Coupons", AppImages.IC_COUPONS),
+                ],
+              ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   Widget SavedCouponTileView(DataClass data) {
@@ -279,7 +303,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
           height: 10.0,
         ),
         GestureDetector(
-          onTap: (){
+          onTap: () {
             Navigator.pushNamed(context, AppRoutes.REDEEM_NOW, arguments: {
               'offer_id': data.id,
             });
@@ -309,10 +333,10 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(data.productName,
-                            style:
-                                AppStyles.blackWithBoldFontTextStyle(context, 16.0)
-                                    .copyWith(color: AppColors.COLOR_BLACK)
-                                    .copyWith(fontWeight: FontWeight.w600)),
+                            style: AppStyles.blackWithBoldFontTextStyle(
+                                    context, 16.0)
+                                .copyWith(color: AppColors.COLOR_BLACK)
+                                .copyWith(fontWeight: FontWeight.w600)),
                         SizedBox(
                           height: 3.0,
                         ),
@@ -321,19 +345,19 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
                           style: AppStyles.blackWithDifferentFontTextStyle(
                                   context, 11.0)
                               .copyWith(
-                                  color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                  color:
+                                      AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                         ),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Time to Avail:(${data.availTime } hour)",
+                              "Time to Avail:(${data.availTime} hour)",
                               style: AppStyles.blackWithDifferentFontTextStyle(
                                       context, 12.0)
                                   .copyWith(
-                                      color:
-                                          AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                      color: AppColors
+                                          .APP__DETAILS_TEXT_COLOR_LIGHT),
                             ),
                             FlatButtonWidget(
                               onTap: () {
@@ -350,19 +374,19 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
                                         backgroundColor: Colors.transparent,
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
                                             Stack(
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 20),
+                                                  padding:
+                                                      EdgeInsets.only(top: 20),
                                                   child: Container(
                                                     margin:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 30.0),
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 30.0),
                                                     decoration: BoxDecoration(
                                                         color: Colors.white,
                                                         border: Border.all(
@@ -370,79 +394,76 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
                                                               .transparent,
                                                         ),
                                                         borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0))),
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    20.0))),
                                                     child: Padding(
                                                       padding:
-                                                      const EdgeInsets
-                                                          .all(10.0),
+                                                          const EdgeInsets.all(
+                                                              10.0),
                                                       child: Column(
                                                         mainAxisSize:
-                                                        MainAxisSize.min,
+                                                            MainAxisSize.min,
                                                         //mainAxisAlignment: MainAxisAlignment.center,
                                                         //crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Container(
                                                             margin: EdgeInsets.symmetric(
                                                                 horizontal: MediaQuery.of(
-                                                                    context)
-                                                                    .size
-                                                                    .width *
+                                                                            context)
+                                                                        .size
+                                                                        .width *
                                                                     .13),
-                                                            padding:
-                                                            EdgeInsets
-                                                                .fromLTRB(
-                                                                10,
-                                                                20,
-                                                                10,
-                                                                25),
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(10,
+                                                                    20, 10, 25),
                                                             child: Text(
                                                               "Redeem Offer Now",
                                                               style: AppStyles
-                                                                  .blackWithSemiBoldFontTextStyle(
-                                                                  context,
-                                                                  18.0)
+                                                                      .blackWithSemiBoldFontTextStyle(
+                                                                          context,
+                                                                          18.0)
                                                                   .copyWith(
-                                                                  fontWeight:
-                                                                  FontWeight.w600),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
                                                               textAlign:
-                                                              TextAlign
-                                                                  .center,
+                                                                  TextAlign
+                                                                      .center,
                                                             ),
                                                           ),
                                                           Container(
                                                             margin: EdgeInsets.symmetric(
                                                                 horizontal: MediaQuery.of(
-                                                                    context)
-                                                                    .size
-                                                                    .width *
+                                                                            context)
+                                                                        .size
+                                                                        .width *
                                                                     0.1),
                                                             child: Text(
                                                               "Do you want to Redeem this offer right now?",
                                                               style: AppStyles
-                                                                  .blackWithSemiBoldFontTextStyle(
-                                                                  context,
-                                                                  15.0)
+                                                                      .blackWithSemiBoldFontTextStyle(
+                                                                          context,
+                                                                          15.0)
                                                                   .copyWith(
-                                                                  fontWeight:
-                                                                  FontWeight.w500),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
                                                               textAlign:
-                                                              TextAlign
-                                                                  .center,
+                                                                  TextAlign
+                                                                      .center,
                                                             ),
                                                           ),
                                                           SizedBox(
                                                             height: 25.0,
                                                           ),
                                                           AnimatedGradientButton(
-                                                            onAnimationTap:
-                                                                () {
+                                                            onAnimationTap: () {
                                                               redeemOffersApi(
                                                                   data.id);
                                                             },
                                                             buttonController:
-                                                            _buttonController,
+                                                                _buttonController,
                                                             text: AppStrings
                                                                 .REDEEM_NOW,
                                                           ),
@@ -469,23 +490,22 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
                                                   right: 15,
                                                   child: Align(
                                                     alignment:
-                                                    Alignment.topRight,
+                                                        Alignment.topRight,
                                                     child: Container(
                                                         width: 50,
                                                         height: 50,
                                                         child:
-                                                        FloatingActionButton(
+                                                            FloatingActionButton(
                                                           heroTag: "tag",
                                                           backgroundColor:
-                                                          AppColors
-                                                              .BLUE_COLOR,
+                                                              AppColors
+                                                                  .BLUE_COLOR,
                                                           // backgroundColor:
                                                           // AppColors.PRIMARY_COLORTWO,
                                                           elevation: 2,
                                                           child: Icon(
                                                             Icons.close,
-                                                            color:
-                                                            Colors.white,
+                                                            color: Colors.white,
                                                             size: 20.0,
                                                           ),
                                                           onPressed: () {
@@ -508,8 +528,6 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
                             ),
                           ],
                         ),
-
-
                       ],
                     ),
                   ),
@@ -535,7 +553,12 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
       title: _appBarTitle,
       leading: IconButton(
         onPressed: () {
-          if(_enabled){ Navigator.of(context).pop(); }
+          if (_enabled) {
+            Navigator.of(context).pop();
+            if (widget.map['isFromFilterScreen']) {
+              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+            }
+          }
         },
         icon: Transform.rotate(
           angle: 180 * pi / 180,
@@ -550,16 +573,15 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
         IconButton(
           icon: _searchIcon,
           onPressed: _searchPressed,
-
         ),
-
         Container(
           margin: EdgeInsets.only(right: 20.0),
           child: GestureDetector(
             child: SvgPicture.asset(
               AppImages.FILTER,
             ),
-            onTap: (){
+            onTap: () {
+              Navigator.of(context).pop();
               Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
             },
           ),
@@ -571,15 +593,18 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
   void _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
-        this._searchIcon = new Icon(Icons.close,color: AppColors.APP__DETAILS_TEXT_COLOR,);
+        this._searchIcon = new Icon(
+          Icons.close,
+          color: AppColors.APP__DETAILS_TEXT_COLOR,
+        );
         this._appBarTitle = new TextFormField(
           autofocus: true,
-          onFieldSubmitted: (value){
+          onFieldSubmitted: (value) {
             setState(() {
               _filter.text = value;
               isSearching = true;
             });
-            _fetchPage(pagekey,value);
+            _fetchPage(pagekey, value);
           },
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
@@ -594,21 +619,22 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
               disabledBorder: InputBorder.none,
               hintText: "Search..."),
         );
-
       } else {
-        this._searchIcon = new Icon(Icons.search ,color: AppColors.APP__DETAILS_TEXT_COLOR,);
+        this._searchIcon = new Icon(
+          Icons.search,
+          color: AppColors.APP__DETAILS_TEXT_COLOR,
+        );
         this._appBarTitle = new Text(
           '',
-          style: AppStyles.blackWithDifferentFontTextStyle(
-              context, 15.0)
-              .copyWith(
-              color: AppColors.APP__DETAILS_TEXT_COLOR),
+          style: AppStyles.blackWithDifferentFontTextStyle(context, 15.0)
+              .copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR),
         );
         filteredNames = names;
         _filter.clear();
       }
     });
   }
+
   Future<void> redeemOffersApi(int offerId) async {
     _playAnimation();
     Util.check().then((value) {
@@ -629,8 +655,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
       }
     });
   }
-  Future<void> callSavedCouponApi(String query) async {
 
+  Future<void> callSavedCouponApi(String query) async {
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -652,8 +678,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
       }
     });
   }
-  Future<void> callFilterSavedCouponApi(String query) async {
 
+  Future<void> callFilterSavedCouponApi(String query) async {
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -667,6 +693,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
         map['latitude'] = userLocation.latitude;
         map['longitude'] = userLocation.longitude;
         map['offset'] = _currentPage;
+        map['max_amount'] = widget.map['minPrice'];
+        map['min_amount'] = widget.map['maxPrice'];
+        map['radius'] = widget.map['minRadius'];
         _savedCoupon2ViewModel.savedCoupons(map);
       } else {
         setState(() {
@@ -682,7 +711,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
         .getRepositoryResponse()
         .listen((response) async {
       _stopAnimation();
-      if(mounted) {
+      if (mounted) {
         setState(() {
           _enabled = true;
           _isPaginationLoading = false;
@@ -702,13 +731,10 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
             });
-      }
-      else if (response.msg == "You have already availed this offer!") {
+      } else if (response.msg == "You have already availed this offer!") {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
-      }
-
-      else if(response.data is SavedCouponModel) {
+      } else if (response.data is SavedCouponModel) {
         _isPaginationLoading = false;
 
         _pagingController1.itemList = [];
@@ -726,7 +752,6 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
           // 3
           _pagingController1.appendLastPage(response.data.dataClass);
           dataList = _pagingController1.itemList;
-
         } else {
           final nextPageKey = _currentPage + 1;
           _currentPage = _currentPage + 1;
@@ -735,22 +760,19 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
           dataList = _pagingController1.itemList;
           _pagingController1.appendPage(response.data.dataClass, nextPageKey);
         }
-      }
-      else if(response.data is DioError){
+      } else if (response.data is DioError) {
         if (response.statusCode == 401) {
-          Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
-        }else{
+          Navigator.pushNamedAndRemoveUntil(
+              context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
+        } else {
           _isInternetAvailable = Util.showErrorMsg(context, response.data);
         }
-      }
-      else {
+      } else {
         ToastUtil.showToast(context, response.msg);
       }
     });
-
-
-
   }
+
   Future<Null> _playAnimation() async {
     try {
       await _buttonController.forward();
@@ -762,6 +784,4 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>  with TickerProvi
       await _buttonController.reverse();
     } on TickerCanceled {}
   }
-
-
 }

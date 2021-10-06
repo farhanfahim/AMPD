@@ -55,6 +55,8 @@ class NetworkConfig {
   static const String API_KEY_NEAREST_LOCATION= "nearest_location";
   static const String API_KEY_SORTING= "sorting_ascending";
   static const String API_KEY_RADIUS= "radius";
+  static const String API_KEY_MAX_AMOUNT= "max_amount";
+  static const String API_KEY_MIN_AMOUNT= "min_amount";
   static const String API_KEY_METHOD= "_method";
   static const String API_KEY_STATUS= "status";
 
