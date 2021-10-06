@@ -1107,10 +1107,4 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
   }
 
 
-  static String formatUTCTime(String time) {
-    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
-        time);
-    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
-  }
-
 }

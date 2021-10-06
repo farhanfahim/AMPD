@@ -13,6 +13,7 @@ import 'package:ampd/data/model/SavedCouponModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/widgets/NoRecordFound.dart';
 import 'package:ampd/widgets/animated_gradient_button.dart';
@@ -141,11 +142,6 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
         ));
   }
 
-  static String formatUTCTime(String time) {
-    DateTime tempDate =
-        new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(time);
-    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
-  }
 
   bool checkExpiry(String expiry) {
     DateTime now = DateTime.now();
@@ -257,7 +253,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                             height: 3.0,
                           ),
                           Text(
-                            formatUTCTime(data.expireAt),
+                            TimerUtils.formatUTCTime(data.expireAt),
                             style: AppStyles.blackWithDifferentFontTextStyle(
                                     context, 11.0)
                                 .copyWith(

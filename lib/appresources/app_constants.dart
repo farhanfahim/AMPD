@@ -3,6 +3,9 @@ class AppConstants{
 
   static const int APP_VERSION = 202;
 
+  static const String DATE_TIME_FORMAT_1 = "yyyy-MM-dd HH:mm:ss";
+  static const String DATE_TIME_FORMAT_2 = "yyyy-MM-ddTHH:mm:ss.SSS'Z'";
+
   static const double LOGO_TEXT_SIZE = 55.0;
   static const double SLOGAN_TEXT_SIZE = 13.0;
   static const double MAIN_HEADING_SIZE = 22.0;

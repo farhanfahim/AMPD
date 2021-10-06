@@ -147,13 +147,6 @@ class _ReviewsViewState extends State<ReviewsView> {
   }
 
 
-
-  static String formatUTCTime(String time) {
-    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
-        time);
-    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
-  }
-
   Future<void> callOfferReviewsApi() async {
 
     Util.check().then((value) {

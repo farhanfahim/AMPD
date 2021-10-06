@@ -1,3 +1,4 @@
+import 'package:ampd/appresources/app_constants.dart';
 import 'package:intl/intl.dart';
 
 class TimerUtils {
@@ -14,7 +15,7 @@ class TimerUtils {
 
 
   static String formatUTCTime(String time) {
-    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
+    DateTime tempDate = new DateFormat(AppConstants.DATE_TIME_FORMAT_1).parse(
         time);
     return DateFormat("yyyy-MM-dd HH:mm:ss").format(tempDate);
   }

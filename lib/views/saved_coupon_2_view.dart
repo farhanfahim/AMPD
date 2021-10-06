@@ -12,6 +12,7 @@ import 'package:ampd/utils/LocationPermissionHandler.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:ampd/viewmodel/saved_coupon2_viewmodel.dart';
 import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
@@ -207,12 +208,6 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
     super.dispose();
   }
 
-  static String formatUTCTime(String time) {
-    DateTime tempDate =
-        new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(time);
-    return DateFormat("MMM dd, yyyy - HH:mm").format(tempDate);
-  }
-
   Future<bool> _onBackPressed() {
     if (_enabled) {
       Navigator.of(context).pop();
@@ -341,7 +336,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                           height: 3.0,
                         ),
                         Text(
-                          formatUTCTime(data.expireAt),
+                          TimerUtils.formatUTCTime(data.expireAt),
                           style: AppStyles.blackWithDifferentFontTextStyle(
                                   context, 11.0)
                               .copyWith(

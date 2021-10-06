@@ -33,6 +33,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:sizer/sizer.dart';
 import 'package:ampd/utils/LocationPermissionHandler.dart';
@@ -482,6 +483,13 @@ class _HomeViewState extends State<HomeView>
         });
       }
     });
+  }
+
+
+  static String formatUTCTime(String time) {
+    DateTime tempDate = new DateFormat("yyyy-MM-ddTHH:mm:ss.SSS'Z'").parse(
+        time);
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(tempDate);
   }
 
   void subscribeToViewModel() {
