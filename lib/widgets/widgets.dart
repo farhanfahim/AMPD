@@ -1204,6 +1204,7 @@ Widget appBar(
     Function onBackClick,
     Function onActionClick,
     Color iconColor,
+    bool showCloseIcon,
     bool hasLeading = true,
     bool showAction = false,
     bool showActionIcon = false,
@@ -1218,7 +1219,22 @@ Widget appBar(
           .copyWith(fontWeight: FontWeight.w600),
     ),
     leading: hasLeading
-        ? Padding(
+        ? showCloseIcon?Padding(
+      padding: const EdgeInsets.only(left: 10.0),
+      child: GestureDetector(
+        onTap: () {
+          onBackClick();
+        },
+        child: Transform.rotate(
+          angle: 180 * pi / 180,
+          child: Icon(
+            Icons.clear,
+            size: 32.0,
+            color: iconColor, // add custom icons also
+          ),
+        ),
+      ),
+    ):Padding(
             padding: const EdgeInsets.only(left: 10.0),
             child: GestureDetector(
               onTap: () {

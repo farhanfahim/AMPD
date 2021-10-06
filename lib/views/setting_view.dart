@@ -13,7 +13,9 @@ import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/edit_profile_viewmodel.dart';
 import 'package:ampd/viewmodel/settings_viewmodel.dart';
+import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
+import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,16 +25,14 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 
 class SettingView extends StatefulWidget {
-  Map<String, dynamic> map;
-  SettingView(this.map);
   @override
   _SettingState createState() => _SettingState();
 }
 
-class _SettingState extends State<SettingView> {
+class _SettingState extends State<SettingView> with TickerProviderStateMixin{
 
   SettingsViewModel _settingsViewModel;
-
+  AnimationController _buttonController;
   bool pushNotificationSwitch = false;
   int a = 0;
   double min=0.0,max=100.0;
@@ -46,7 +46,8 @@ class _SettingState extends State<SettingView> {
   @override
   void initState() {
     super.initState();
-
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
     _settingsViewModel = SettingsViewModel(App());
 
     _appPreferences.getUserDetails().then((userData) {
@@ -60,21 +61,24 @@ class _SettingState extends State<SettingView> {
   }
 
   @override
+  void dispose() {
+    _buttonController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: appBar(
             title: "",
+            showCloseIcon: true,
             onBackClick: () {
-              if(widget.map['from'] == "home"){
-                Navigator.pushNamedAndRemoveUntil(
-                    context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-                  'isGuestLogin': false,
-                  'tab_index': 1,
-                  'show_tutorial': false
-                });
-              }else{
-                Navigator.of(context).pop();
-              }
+              Navigator.pushNamedAndRemoveUntil(
+                  context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
+                'isGuestLogin': false,
+                'tab_index': 1,
+                'show_tutorial': false
+              });
 
             },
             iconColor: AppColors.COLOR_BLACK),
@@ -82,25 +86,201 @@ class _SettingState extends State<SettingView> {
         body: SafeArea(
           child: Column(
             children: [
-              Expanded(
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
                   children: [
+                    Header(
+                        heading1: AppStrings.SETTING,
+                        heading2: AppStrings.MANAGE_YOUR_ACCOUNT_SETTING),
+                    SizedBox(
+                      height: 20.0,
+                    ),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Header(
-                              heading1: AppStrings.SETTING,
-                              heading2: AppStrings.MANAGE_YOUR_ACCOUNT_SETTING),
-                          SizedBox(
-                            height: 20.0,
+                          Text(
+                            AppStrings.NOTIFICATIONS,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                color: AppColors.COLOR_BLACK,
+                                fontFamily: AppFonts.POPPINS_MEDIUM,
+                                fontWeight: FontWeight.w400),
                           ),
                           Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: CupertinoSwitch(
+                              activeColor: AppColors.BLUE_COLOR,
+                              value: pushNotificationSwitch,
+                              onChanged: (value) {
+                                print(value);
+                                setState(() {
+                                  pushNotificationSwitch = value;
+                                });
+                                callUpdateProfileApi();
+                              },
+                              // activeColor: Colors.green,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    divider(),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                      width: double.maxFinite,
+                      child: Text(
+                        "Set Radius",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: AppColors.COLOR_BLACK,
+                            fontFamily: AppFonts.POPPINS_MEDIUM,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
+                    Container(
+
+                        child: Column(
+
+                          children: [
+                            Stack(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right:15.0),
+                                    child: Text(
+                                      "1000\nmile",
+                                      style: AppStyles.blackWithBoldFontTextStyle(
+                                          context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                                      textAlign: TextAlign.center,
+
+                                    ),
+                                  ),
+                                ),
+
+                                Container(
+                                  margin: EdgeInsets.only(top: 10, left: 0, right: 0),
+                                  child: FlutterSlider(
+                                    values: [min],
+                                    rangeSlider: false,
+                                    tooltip: FlutterSliderTooltip(
+                                      format: (String value) {
+                                        String newValue = value;
+                                        if (newValue.contains(".0")) {
+                                          newValue.replaceAll(".0", "123");
+                                          return newValue + ' \nmile ';
+                                        } else {
+                                          return "0" + ' \nmile ';
+                                        }
+                                      },
+                                      textStyle: TextStyle(
+                                        color: AppColors.BLUE_COLOR,
+                                        fontSize: 11.0,
+                                        fontFamily: AppFonts.POPPINS,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+
+                                      alwaysShowTooltip: true,
+                                      direction: FlutterSliderTooltipDirection.top,
+                                      positionOffset:
+                                      FlutterSliderTooltipPositionOffset(top: -30),
+                                    ),
+                                    max: 1000,
+                                    min: 0,
+
+                                    onDragging: (handlerIndex, lowerValue, upperValue) {
+                                      min = lowerValue;
+                                      max = upperValue;
+
+                                      callUpdateProfileApi();
+                                      print("min $min");
+                                      print("max $max");
+                                      setState(() {});
+                                    },
+                                    trackBar: FlutterSliderTrackBar(
+                                      inactiveTrackBarHeight: 6,
+                                      activeTrackBarHeight: 6,
+                                      activeTrackBar:
+                                      BoxDecoration(color: AppColors.BLUE_COLOR),
+                                    ),
+                                    handler: FlutterSliderHandler(
+                                      decoration: BoxDecoration(),
+                                      child: Container(
+                                        height: 20.0,
+                                        width: 20.0,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.BLUE_COLOR,
+                                            borderRadius: BorderRadius.circular(15)),
+                                        padding: EdgeInsets.all(5),
+                                      ),
+                                    ),
+                                    rightHandler: FlutterSliderHandler(
+                                      decoration: BoxDecoration(),
+                                      child: Container(
+                                        height: 20.0,
+                                        width: 20.0,
+                                        decoration: BoxDecoration(
+                                            color: AppColors.BLUE_COLOR,
+                                            borderRadius: BorderRadius.circular(15)),
+                                        padding: EdgeInsets.all(5),
+                                      ),
+                                    ),
+
+                                    /* onDragging: (handlerIndex, lowerValue, upperValue) {
+                          _lowerValue = lowerValue;
+                          _upperValue = upperValue;
+                          setState(() {
+
+                          });
+                        },*/
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                          ],
+                        )
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, AppRoutes.MY_PROFILE_VIEW);
+                      },
+                      child: Container(
+                        color: AppColors.WHITE_COLOR,
+                        width: double.maxFinite,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          //crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  AppStrings.NOTIFICATIONS,
+                                  "My Profile",
+                                  style: AppStyles.blackWithDifferentFontTextStyle(
+                                          context, 12.0)
+                                      .copyWith(
+                                          color: AppColors
+                                              .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                ),
+                                SizedBox(
+                                  height: 6.0,
+                                ),
+                                Text(
+                                  "Manage your profile",
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                       fontSize: 14.0,
@@ -108,269 +288,23 @@ class _SettingState extends State<SettingView> {
                                       fontFamily: AppFonts.POPPINS_MEDIUM,
                                       fontWeight: FontWeight.w400),
                                 ),
-                                Container(
-                                  child: CupertinoSwitch(
-                                    activeColor: AppColors.BLUE_COLOR,
-                                    value: pushNotificationSwitch,
-                                    onChanged: (value) {
-                                      print(value);
-                                      setState(() {
-                                        pushNotificationSwitch = value;
-                                      });
-                                      callUpdateProfileApi();
-                                    },
-                                    // activeColor: Colors.green,
-                                  ),
-                                )
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          divider(),
-                          SizedBox(
-                            height: 30.0,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.MY_PROFILE_VIEW);
-                            },
-                            child: Container(
-                              color: AppColors.WHITE_COLOR,
-                              width: double.maxFinite,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "My Profile",
-                                        style: AppStyles.blackWithDifferentFontTextStyle(
-                                                context, 12.0)
-                                            .copyWith(
-                                                color: AppColors
-                                                    .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                      ),
-                                      SizedBox(
-                                        height: 6.0,
-                                      ),
-                                      Text(
-                                        "Manage your profile",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 14.0,
-                                            color: AppColors.COLOR_BLACK,
-                                            fontFamily: AppFonts.POPPINS_MEDIUM,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    size: 16.0,
-                                    color:
-                                        AppColors.COLOR_BLACK, // add custom icons also
-                                  ),
-                                ],
-                              ),
+                            Spacer(),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 16.0,
+                              color:
+                                  AppColors.COLOR_BLACK, // add custom icons also
                             ),
-                          ),
-                          SizedBox(
-                            height: 30.0,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.CHANGE_PASSWORD_VIEW);
-                            },
-                            child: Container(
-                              color: AppColors.WHITE_COLOR,
-                              width: double.maxFinite,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                //crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Change Password",
-                                        style: AppStyles.blackWithDifferentFontTextStyle(
-                                            context, 12.0)
-                                            .copyWith(
-                                            color: AppColors
-                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
-                                      ),
-                                      SizedBox(
-                                        height: 6.0,
-                                      ),
-                                      Text(
-                                        "Update your password",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            fontSize: 14.0,
-                                            color: AppColors.COLOR_BLACK,
-                                            fontFamily: AppFonts.POPPINS_MEDIUM,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    size: 16.0,
-                                    color:
-                                    AppColors.COLOR_BLACK, // add custom icons also
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30.0,
-                          ),
-                          Container(
-                            width: double.maxFinite,
-                            child: Text(
-                              "Set Radius",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: AppColors.COLOR_BLACK,
-                                  fontFamily: AppFonts.POPPINS_MEDIUM,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30.0,
-                          ),
-
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Column(
+                    SizedBox(
+                      height: 30.0,
+                    ),
 
-                        children: [
-                          Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right:15.0),
-                                  child: Text(
-                                    "1000\nmile",
-                                    style: AppStyles.blackWithBoldFontTextStyle(
-                                        context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                                    textAlign: TextAlign.center,
-
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                margin: EdgeInsets.only(top: 10, left: 0, right: 0),
-                                child: FlutterSlider(
-                                  values: [min],
-                                  rangeSlider: false,
-                                  tooltip: FlutterSliderTooltip(
-                                    format: (String value) {
-                                      String newValue = value;
-                                      if (newValue.contains(".0")) {
-                                        newValue.replaceAll(".0", "123");
-                                        return newValue + ' \nmile ';
-                                      } else {
-                                        return "0" + ' \nmile ';
-                                      }
-                                    },
-                                    textStyle: TextStyle(
-                                      color: AppColors.BLUE_COLOR,
-                                      fontSize: 11.0,
-                                      fontFamily: AppFonts.POPPINS,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-
-                                    alwaysShowTooltip: true,
-                                    direction: FlutterSliderTooltipDirection.top,
-                                    positionOffset:
-                                    FlutterSliderTooltipPositionOffset(top: -30),
-                                  ),
-                                  max: 1000,
-                                  min: 0,
-
-                                  onDragging: (handlerIndex, lowerValue, upperValue) {
-                                    min = lowerValue;
-                                    max = upperValue;
-
-                                    callUpdateProfileApi();
-                                    print("min $min");
-                                    print("max $max");
-                                    setState(() {});
-                                  },
-                                  trackBar: FlutterSliderTrackBar(
-                                    inactiveTrackBarHeight: 6,
-                                    activeTrackBarHeight: 6,
-                                    activeTrackBar:
-                                    BoxDecoration(color: AppColors.BLUE_COLOR),
-                                  ),
-                                  handler: FlutterSliderHandler(
-                                    decoration: BoxDecoration(),
-                                    child: Container(
-                                      height: 20.0,
-                                      width: 20.0,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.BLUE_COLOR,
-                                          borderRadius: BorderRadius.circular(15)),
-                                      padding: EdgeInsets.all(5),
-                                    ),
-                                  ),
-                                  rightHandler: FlutterSliderHandler(
-                                    decoration: BoxDecoration(),
-                                    child: Container(
-                                      height: 20.0,
-                                      width: 20.0,
-                                      decoration: BoxDecoration(
-                                          color: AppColors.BLUE_COLOR,
-                                          borderRadius: BorderRadius.circular(15)),
-                                      padding: EdgeInsets.all(5),
-                                    ),
-                                  ),
-
-                                  /* onDragging: (handlerIndex, lowerValue, upperValue) {
-                                _lowerValue = lowerValue;
-                                _upperValue = upperValue;
-                                setState(() {
-
-                                });
-                              },*/
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                        ],
-                      )
-                    )
-
-
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20),
-                child: Column(
-                  children: [
                     GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(
@@ -481,9 +415,81 @@ class _SettingState extends State<SettingView> {
                         ],
                       ),
                     ),
+
                   ],
                 ),
               ),
+              Spacer(),
+              Row(
+                children: [
+
+                  Expanded(flex:1,child: Container()),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: (){
+
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context1) {
+                              return CustomDialog(
+                                showAnimatedBtn: true,
+                                contex: context,
+                                subTitle: "Are you sure?",
+                                //title: "Your feedback will help us improve our services.",
+
+                                btnWidget: AnimatedGradientButton(
+                                  onAnimationTap: () {
+                                    callLogoutApi();
+                                  },
+                                  buttonController: _buttonController,
+                                  text: AppStrings.YES,
+                                ),
+                                buttonText2: AppStrings.NO,
+                                onPressed2: () {
+                                  Navigator.pop(context1);
+                                },
+                                onPressed3:(){
+                                  Navigator.pop(context1);
+                                },
+                                showImage: false,
+                              );
+                            });
+
+
+
+                      },
+                      child: Container(
+
+
+                        decoration: ShapeDecoration(
+                          color: AppColors.RED_COLOR2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30.0),
+                                bottomLeft: Radius.circular(30.0)),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15,bottom: 15),
+                          child: Text(
+                            "LOG OUT",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 16.0,
+                                color: AppColors.WHITE_COLOR,
+                                fontFamily: AppFonts.POPPINS_MEDIUM,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 50,
+              )
 
 
             ],
@@ -513,18 +519,44 @@ class _SettingState extends State<SettingView> {
     });
   }
 
+
+
+
+  Future<void> callLogoutApi() async {
+    _playAnimation();
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+        });
+
+        var map = Map<String, dynamic>();
+        _settingsViewModel.logout(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
   void subscribeToViewModel() {
     _settingsViewModel
         .getSettingsRepository()
         .getRepositoryResponse()
         .listen((response) async {
+      _stopAnimation();
       if (mounted) {
         setState(() {
           _isInAsyncCall = false;
         });
       }
+      if (response.msg == "Logged out successfully") {
+        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
 
-      if (response.success) {
+      }
+      else if (response.success) {
         if(response.data == 0) {
           userDetails.data.radius = min.toInt();
           userDetails.data.pushNotifications = pushNotificationSwitch? 1 : 0;
@@ -541,6 +573,18 @@ class _SettingState extends State<SettingView> {
         ToastUtil.showToast(context, response.msg);
       }
     });
+  }
+
+  Future<Null> _playAnimation() async {
+    try {
+      await _buttonController.forward();
+    } on TickerCanceled {}
+  }
+
+  Future<Null> _stopAnimation() async {
+    try {
+      await _buttonController.reverse();
+    } on TickerCanceled {}
   }
 }
 

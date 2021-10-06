@@ -54,6 +54,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
     return Scaffold(
         appBar: appBar(
             title: "",
+            showCloseIcon: true,
             onBackClick: () {Navigator.of(context).pop();},
             onActionClick: () { Navigator.pushNamed(context, AppRoutes.NOTIFICATIONS_VIEW);},
             iconColor: AppColors.COLOR_BLACK,
@@ -80,7 +81,7 @@ class _SideMenuState extends State<SideMenuView> with TickerProviderStateMixin {
                         onTap: () {
                           Navigator.pushNamed(
                               context, AppRoutes.SETTING_VIEW ,arguments: {
-                            'from': "",
+                            'from': false,
                           });
                         },
                         child: Container(

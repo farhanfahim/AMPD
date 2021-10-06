@@ -222,6 +222,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         child: Scaffold(
             appBar: appBar(
                 title: "",
+                showCloseIcon: false,
                 onBackClick: () {
                   Navigator.of(context).pop();
                 },

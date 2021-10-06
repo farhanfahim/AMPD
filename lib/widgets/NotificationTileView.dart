@@ -35,7 +35,7 @@ class _NotificationTileViewState extends State<NotificationTileView> {
         )
             : Container(),
 
-        InkWell(
+        GestureDetector(
           onTap: () {},
           child: Row(
             children: [
@@ -77,7 +77,7 @@ class _NotificationTileViewState extends State<NotificationTileView> {
                         Padding(
                           padding: const EdgeInsets.only(left: 5.0),
                           child: Text(
-                            widget.data.rating,
+                            widget.data.rating.contains(".")?widget.data.rating:"${widget.data.rating}.0",
                             style: AppStyles.blackWithBoldFontTextStyle(
                                 context, 13.0)
                                 .copyWith(color: AppColors.COLOR_GREEN_RATING),
@@ -101,7 +101,7 @@ class _NotificationTileViewState extends State<NotificationTileView> {
 //      ),
 
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
           child: Align(
             alignment: Alignment.centerLeft,
             child: ReadMoreText(

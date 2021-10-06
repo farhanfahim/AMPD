@@ -119,7 +119,9 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     final appBar1 = appBar(
-        title: _appBarTitle, onBackClick: (){
+        title: _appBarTitle,
+        showCloseIcon:false,
+        onBackClick: (){
       Navigator.of(context).pop();
     },
         iconColor:AppColors.COLOR_BLACK,
@@ -174,7 +176,7 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
                       return CustomDialog(
                         showAnimatedBtn: true,
                         contex: context,
-                        subTitle: "Are you sure?",
+                        subTitle: "Are you sure?\n\nOnly redeem offers at checkout",
                         //title: "Your feedback will help us improve our services.",
 
                         buttonText2: AppStrings

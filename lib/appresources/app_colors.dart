@@ -80,6 +80,7 @@ class AppColors {
   static const Color LIGHT_GREY_TEXT_COLOR = Color(0xFF8E9CA2);
 
   static const Color RED_COLOR2= Color(0xFFF52E57);
+  static const Color RED_DELETE= Color(0xFFFF0C2C);
   static const Color APP_MAIN_SPLASH_COLOR_LIGHT = Color(0xFFB4DBB8);
   static const Color INDICTOR_UNSELECT = Color(0xFFAAB7A5);
 

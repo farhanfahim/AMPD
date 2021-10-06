@@ -59,6 +59,7 @@ class _AboutState extends State<AboutView> {
     return Scaffold(
         appBar: appBar(
             title: "",
+            showCloseIcon: false,
             onBackClick: () {
               Navigator.of(context).pop();
             },

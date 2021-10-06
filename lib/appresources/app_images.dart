@@ -20,6 +20,7 @@ class AppImages {
   static const String NOTIFICATION = BASE_IMAGE_PATH + "notification.svg";
   static const String CALENDER = BASE_IMAGE_PATH + "calendar.svg";
   static const String FAV_ICON = BASE_IMAGE_PATH + "fav.svg";
+  static const String DELETE_ICON = BASE_IMAGE_PATH + "round_delete.svg";
   static const String QR_CODE = BASE_IMAGE_PATH + "qr_code.svg";
   static const String QR_IMAGE = BASE_IMAGE_PATH + "qr_image.svg";
   static const String CANCEL_POPUP = BASE_IMAGE_PATH + "cancel_popup.svg";

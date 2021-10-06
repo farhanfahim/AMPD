@@ -81,6 +81,7 @@ class _HomeViewState extends State<HomeView>
   String _appBarTitle = 'Home';
   bool _stackFinished = false;
   List<SwipeItem> _swipeItems = <SwipeItem>[];
+  SwipeItem _tempSwipeItems = SwipeItem();
   List<Dataclass> dataList = <Dataclass>[];
   MatchEngine _matchEngine;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -257,12 +258,12 @@ class _HomeViewState extends State<HomeView>
                         height: 20.0,
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20.0.w),
+                        margin: EdgeInsets.symmetric(horizontal: 10.0.w),
                         child: GradientButton(
                           onTap: () {
                             Navigator.pushNamed(
                                 context, AppRoutes.SETTING_VIEW ,arguments: {
-                            'from': "home",
+                            'from': true,
                             });
 
                           },
@@ -503,15 +504,14 @@ class _HomeViewState extends State<HomeView>
 
         print('total ${responseRegister.data.lastPage}');
         _totalPages = responseRegister.data.lastPage;
-
         dataList.clear();
-//        dataList.addAll(responseRegister.data.dataclass);
         dataList.addAll(responseRegister.data.dataclass.where((a) => dataList.every((b) => a.id != b.id)));
 
 
         if (dataList.isNotEmpty) {
           for (int i = 0; i < dataList.length; i++) {
             print("index $i, length ${dataList.length}");
+
             _swipeItems.add(SwipeItem(
               content: Content(
                   text: dataList[i].value.toString(),
@@ -533,7 +533,7 @@ class _HomeViewState extends State<HomeView>
                           contex: context,
                           subTitle: "Offer has been saved!",
                           child: SvgPicture.asset(
-                            AppImages.IC_COUPONS,
+                            AppImages.FAV_ICON,
                             width: 80.0,
                             height: 80.0,
                           ),
@@ -593,7 +593,7 @@ class _HomeViewState extends State<HomeView>
                                                             .fromLTRB(10, 20,
                                                             10, 25),
                                                         child: Text(
-                                                          "Redeem Offer Now",
+                                                          "Redeem Offer Now\n\nOnly redeem offers at checkout.",
                                                           style:
                                                           AppStyles
                                                               .blackWithSemiBoldFontTextStyle(
@@ -601,26 +601,6 @@ class _HomeViewState extends State<HomeView>
                                                               .copyWith(
                                                               fontWeight: FontWeight
                                                                   .w600),
-                                                          textAlign: TextAlign
-                                                              .center,
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                            horizontal: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .width * 0.1),
-                                                        child: Text(
-                                                          "Do you want to Redeem this offer right now?",
-                                                          style:
-                                                          AppStyles
-                                                              .blackWithSemiBoldFontTextStyle(
-                                                              context, 15.0)
-                                                              .copyWith(
-                                                              fontWeight: FontWeight
-                                                                  .w500),
                                                           textAlign: TextAlign
                                                               .center,
                                                         ),
@@ -638,7 +618,7 @@ class _HomeViewState extends State<HomeView>
                                                                 return CustomDialog(
                                                                   showAnimatedBtn: true,
                                                                   contex: context,
-                                                                  subTitle: "Are you sure?",
+                                                                  subTitle: "Are you sure?\n\nOnly redeem offers at checkout",
                                                                   //title: "Your feedback will help us improve our services.",
 
                                                                   btnWidget: AnimatedGradientButton(
@@ -739,7 +719,317 @@ class _HomeViewState extends State<HomeView>
                 if (widget.isGuestLogin) {
                   Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
                 }else{
-                  callDisLikeOffersApi(dataList[i].id);
+                  _tempSwipeItems = SwipeItem(
+                    content: Content(
+                        text: dataList[i].value.toString(),
+                        offer: dataList[i].imageUrl,
+                        offerName: dataList[i].productName,
+                        time: TimerUtils.formatUTCTime(dataList[i].expireAt),
+                        image: dataList[i].imageUrl,
+                        coord: dataList[i].user.latitude != null ?Coords(double.parse(dataList[i].user.latitude),
+                            double.parse(dataList[i].user.longitude)):Coords(0.0,0.0),
+                        locationTitle: dataList[i].store != null?dataList[i].store.name:"-",
+                        data: dataList[i]),
+
+                    likeAction: () {
+                      if (!widget.isGuestLogin) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context1) {
+                              return CustomDialog(
+                                showAnimatedBtn: false,
+                                contex: context,
+                                subTitle: "Offer has been saved!",
+                                child: SvgPicture.asset(
+                                  AppImages.FAV_ICON,
+                                  width: 80.0,
+                                  height: 80.0,
+                                ),
+                                //title: "Your feedback will help us improve our services.",
+                                buttonText1: AppStrings.REDEEM_NOW,
+                                buttonText2: AppStrings.GO_BACK_TO_OFFER,
+                                onPressed1: () {
+                                  Navigator.pop(context1);
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context2) {
+
+                                        return Dialog(
+                                          insetPadding: EdgeInsets.symmetric(
+                                              horizontal: 0.0),
+                                          backgroundColor: Colors.transparent,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment
+                                                .center,
+                                            mainAxisAlignment: MainAxisAlignment
+                                                .center,
+                                            children: [
+                                              Stack(
+                                                children: [
+                                                  Padding(
+                                                    padding: EdgeInsets.only(top: 20),
+                                                    child: Container(
+                                                      margin: EdgeInsets.symmetric(
+                                                          horizontal: 30.0),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          border: Border.all(
+                                                            color: Colors.transparent,
+                                                          ),
+                                                          borderRadius: BorderRadius
+                                                              .all(
+                                                              Radius.circular(20.0))
+                                                      ),
+
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(
+                                                            10.0),
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize
+                                                              .min,
+                                                          //mainAxisAlignment: MainAxisAlignment.center,
+                                                          //crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal: MediaQuery
+                                                                      .of(context)
+                                                                      .size
+                                                                      .width * .13),
+                                                              padding: EdgeInsets
+                                                                  .fromLTRB(10, 20,
+                                                                  10, 25),
+                                                              child: Text(
+                                                                "Redeem Offer Now\n\nOnly redeem offers at checkout.",
+                                                                style:
+                                                                AppStyles
+                                                                    .blackWithSemiBoldFontTextStyle(
+                                                                    context, 18.0)
+                                                                    .copyWith(
+                                                                    fontWeight: FontWeight
+                                                                        .w600),
+                                                                textAlign: TextAlign
+                                                                    .center,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 25.0,
+                                                            ),
+                                                            GradientButton(
+                                                              onTap: (){
+                                                                Navigator.pop(context2);
+                                                                showDialog(
+                                                                    context: context,
+                                                                    builder: (BuildContext context3) {
+                                                                      dialogContext = context3;
+                                                                      return CustomDialog(
+                                                                        showAnimatedBtn: true,
+                                                                        contex: context,
+                                                                        subTitle: "Are you sure?\n\nOnly redeem offers at checkout",
+                                                                        //title: "Your feedback will help us improve our services.",
+
+                                                                        btnWidget: AnimatedGradientButton(
+                                                                          onAnimationTap: () {
+                                                                            redeemOffersApi(dataList[i].id,dataList[i].qrUrl,dataList[i].redeemMessage);
+
+                                                                          },
+                                                                          buttonController: _buttonController,
+                                                                          text: AppStrings.YES,
+                                                                        ),
+                                                                        buttonText2: AppStrings.NO,
+                                                                        onPressed2: () {
+                                                                          Navigator.pop(context3);
+                                                                        },
+                                                                        onPressed3:(){
+                                                                          Navigator.pop(context3);
+                                                                        },
+                                                                        showImage: false,
+                                                                      );
+                                                                    });
+                                                              },
+                                                              text: AppStrings
+                                                                  .REDEEM_NOW,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 20.0,
+                                                            ),
+                                                            ButtonBorder(
+                                                              onTap: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              text: AppStrings.LATER,
+                                                            ),
+                                                            SizedBox(
+                                                              height: 45.0,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+
+                                                    ),
+                                                  ),
+                                                  Positioned.fill(
+                                                    right: 15,
+                                                    child: Align(
+                                                      alignment: Alignment.topRight,
+
+                                                      child: Container(
+                                                          width: 50,
+                                                          height: 50,
+                                                          child:
+                                                          FloatingActionButton(
+                                                            heroTag: "tag",
+                                                            backgroundColor: AppColors
+                                                                .BLUE_COLOR,
+                                                            // backgroundColor:
+                                                            // AppColors.PRIMARY_COLORTWO,
+                                                            elevation: 2,
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              color: Colors.white,
+                                                              size: 20.0,
+                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.pop(context);
+                                                            },
+                                                            // onPressed: widget.addClickListner
+                                                          )
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      });
+
+                                },
+                                onPressed3:(){
+                                  Navigator.pop(context1);
+
+                                },
+                                onPressed2: () {
+                                  Navigator.pop(context1);
+                                },
+                                showImage: true,
+                              );
+                            });
+                        callLikeOffersApi(dataList[i].id);
+                      } else {
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
+                      }
+
+                    },
+                    nopeAction: () {
+                      if (widget.isGuestLogin) {
+                        Navigator.pushNamedAndRemoveUntil(context, AppRoutes.SIGN_IN_VIEW,(route) => false);
+                      }else{
+                        _tempSwipeItems = SwipeItem(
+                          content: Content(
+                              text: dataList[i].value.toString(),
+                              offer: dataList[i].imageUrl,
+                              offerName: dataList[i].productName,
+                              time: TimerUtils.formatUTCTime(dataList[i].expireAt),
+                              image: dataList[i].imageUrl,
+                              coord: dataList[i].user.latitude != null ?Coords(double.parse(dataList[i].user.latitude),
+                                  double.parse(dataList[i].user.longitude)):Coords(0.0,0.0),
+                              locationTitle: dataList[i].store != null?dataList[i].store.name:"-",
+                              data: dataList[i]),
+
+                        );
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context1) {
+                              return CustomDialog(
+                                showAnimatedBtn: false,
+                                contex: context,
+                                subTitle: "Are you sure you want to remove this offer?",
+                                child: SvgPicture.asset(
+                                  AppImages.DELETE_ICON,
+                                  width: 80.0,
+                                  height: 80.0,
+                                ),
+                                //title: "Your feedback will help us improve our services.",
+                                buttonText1: AppStrings.YES,
+                                buttonText2: AppStrings.NO,
+                                onPressed1: () {
+                                  callDisLikeOffersApi(dataList[i].id);
+                                  Navigator.pop(context1);
+
+                                },
+                                onPressed3:(){
+
+                                  setState(() {
+                                    _swipeItems.insert(0,_tempSwipeItems);
+                                  });
+
+                                  Navigator.pop(context1);
+
+                                },
+                                onPressed2: () {
+
+                                  setState(() {
+                                    _swipeItems.insert(0,_tempSwipeItems);
+                                  });
+
+                                  Navigator.pop(context1);
+
+                                },
+                                showImage: true,
+                              );
+                            });
+
+                      }
+
+//            ToastUtil.showToast(context, "Disliked ${_names[i]}");
+                    },
+
+                  );
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context1) {
+                        return CustomDialog(
+                          showAnimatedBtn: false,
+                          contex: context,
+                          subTitle: "Are you sure you want to remove this offer?",
+                          child: SvgPicture.asset(
+                            AppImages.DELETE_ICON,
+                            width: 80.0,
+                            height: 80.0,
+                          ),
+                          //title: "Your feedback will help us improve our services.",
+                          buttonText1: AppStrings.YES,
+                          buttonText2: AppStrings.NO,
+                          onPressed1: () {
+                            callDisLikeOffersApi(dataList[i].id);
+                            Navigator.pop(context1);
+
+                          },
+                          onPressed3:(){
+
+                            setState(() {
+                              _swipeItems.insert(0,_tempSwipeItems);
+                            });
+
+                            Navigator.pop(context1);
+
+                          },
+                          onPressed2: () {
+
+                            setState(() {
+                              _swipeItems.insert(0,_tempSwipeItems);
+                            });
+
+                            Navigator.pop(context1);
+
+                          },
+                          showImage: true,
+                        );
+                      });
+
                 }
 
 //            ToastUtil.showToast(context, "Disliked ${_names[i]}");
@@ -755,7 +1045,8 @@ class _HomeViewState extends State<HomeView>
             _matchEngine = MatchEngine(swipeItems: _swipeItems);
           }
         }
-      } else if (response.data is RedeemOfferModel) {
+      }
+      else if (response.data is RedeemOfferModel) {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(context);
         Navigator.pushNamed(context, qrUrl != null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW, arguments: {
@@ -764,13 +1055,15 @@ class _HomeViewState extends State<HomeView>
           'redeemMessage': redeemMessage,
           'offer_id': response.data.offerId,
         });
-      } else if (response.msg == "You have already availed this offer!") {
+      }
+      else if (response.msg == "You have already availed this offer!") {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
       }
       else if (response.data is LikeDislikeModel) {
         ToastUtil.showToast(context, response.msg);
-      } else if (response.data is DioError) {
+      }
+      else if (response.data is DioError) {
         if (response.statusCode == 401) {
           Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
         }else{

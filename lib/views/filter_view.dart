@@ -93,6 +93,7 @@ class _FilterState extends State<FilterView>{
       child: Scaffold(
           appBar: appBar(
               title: "",
+              showCloseIcon: false,
               onBackClick: () {
                 Navigator.of(context).pop();
                 if(isApiCalling){

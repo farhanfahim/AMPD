@@ -339,7 +339,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                                                                           10,
                                                                           25),
                                                               child: Text(
-                                                                "Redeem Offer Now",
+                                                                "Redeem Offer Now\n\nOnly redeem offers at checkout.",
                                                                 style: AppStyles
                                                                         .blackWithSemiBoldFontTextStyle(
                                                                             context,
@@ -352,27 +352,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                                                                         .center,
                                                               ),
                                                             ),
-                                                            Container(
-                                                              margin: EdgeInsets.symmetric(
-                                                                  horizontal: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      0.1),
-                                                              child: Text(
-                                                                "Do you want to Redeem this offer right now?",
-                                                                style: AppStyles
-                                                                        .blackWithSemiBoldFontTextStyle(
-                                                                            context,
-                                                                            15.0)
-                                                                    .copyWith(
-                                                                        fontWeight:
-                                                                            FontWeight.w500),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                              ),
-                                                            ),
+
                                                             SizedBox(
                                                               height: 25.0,
                                                             ),

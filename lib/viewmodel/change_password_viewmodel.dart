@@ -29,4 +29,14 @@ class ChangePasswordViewModel {
   void changePassword(Map<String, dynamic> map) {
     _changePasswordRepository.changePassword(map);
   }
+
+  void resetPassword(Map map) {
+    _changePasswordRepository.resetPassword(map);
+  }
+
+
+  void forgetPassword(Map map) {
+    _changePasswordRepository.forgetPassword(map);
+  }
+
 }

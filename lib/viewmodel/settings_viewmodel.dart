@@ -29,4 +29,8 @@ class SettingsViewModel {
   void updateSettings(Map<String, dynamic> map) {
     _settingsRepository.updateSettings(map);
   }
+
+  void logout(Map<String, dynamic> map) {
+    _settingsRepository.logout(map);
+  }
 }

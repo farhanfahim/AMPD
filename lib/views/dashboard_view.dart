@@ -8,7 +8,7 @@ import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/model/UserLocation.dart';
 import 'package:ampd/views/home_view.dart';
 import 'package:ampd/views/saved_coupon_1_view.dart';
-import 'package:ampd/views/side_menu_view.dart';
+import 'package:ampd/views/setting_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:app_settings/app_settings.dart';
@@ -28,6 +28,7 @@ import 'package:location_permissions/location_permissions.dart'
 class DashboardView extends StatefulWidget {
   bool isGuestLogin;
   Map<String, dynamic> map;
+  Map<String, dynamic> map1 = {'from':false};
 
   DashboardView(this.map);
 
@@ -79,6 +80,7 @@ class _DashboardViewState extends State<DashboardView> {
 
     final appBar1 = appBar(
         title: "Home",
+        showCloseIcon: false,
         onBackClick: () {},
         iconColor: AppColors.WHITE_COLOR,
         hasLeading: pos == 1 ? false : true);
@@ -88,7 +90,7 @@ class _DashboardViewState extends State<DashboardView> {
         children: [
           Expanded(
             child: Container(
-              child:  pos == 1 ?HomeView(widget.map['isGuestLogin']):pos == 0?SavedCoupons1View():  SideMenuView(),
+              child:  pos == 1 ?HomeView(widget.map['isGuestLogin']):pos == 0?SavedCoupons1View(): SettingView(),
             ),
           ),
         ],
@@ -283,7 +285,7 @@ class _DashboardViewState extends State<DashboardView> {
     }else if(pos == 1){
       return  HomeView(widget.map['isGuestLogin']);
     }else if(pos ==2){
-      return SideMenuView();
+      return SettingView();
     }
   }
   void updateAppDialog() {

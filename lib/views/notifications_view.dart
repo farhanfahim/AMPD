@@ -70,6 +70,7 @@ class _NotificationsViewState extends State<NotificationsView> {
     return Scaffold(
         appBar: appBar(
             title: "",
+            showCloseIcon: false,
             onBackClick: () {
               Navigator.of(context).pop();
             },iconColor:AppColors.COLOR_BLACK),

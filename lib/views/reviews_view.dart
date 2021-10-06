@@ -80,7 +80,9 @@ class _ReviewsViewState extends State<ReviewsView> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        appBar: appBar(title:AppStrings.REVIEWS,onBackClick: (){
+        appBar: appBar(title:AppStrings.REVIEWS,
+            showCloseIcon: false,
+            onBackClick: (){
           Navigator.of(context).pop();
         },iconColor:AppColors.COLOR_BLACK),
         backgroundColor: AppColors.WHITE_COLOR,

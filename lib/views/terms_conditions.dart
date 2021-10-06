@@ -61,6 +61,7 @@ class _TermsConditionsState extends State<TermsConditionsView> {
     return Scaffold(
         appBar: appBar(
             title: "",
+            showCloseIcon: false,
             onBackClick: () {
               Navigator.of(context).pop();
             },

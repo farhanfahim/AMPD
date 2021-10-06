@@ -225,6 +225,19 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       text: AppStrings.DONE,
                     ),
                     SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * .10),
+                      padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                      child: Text(
+                        "Offer will vanish if page is closed.",
+                        style:
+                        AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0).copyWith(fontWeight: FontWeight.w600),textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(
                       height: 40.0,
                     )
                   ],

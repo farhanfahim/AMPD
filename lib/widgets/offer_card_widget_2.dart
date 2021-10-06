@@ -595,7 +595,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                                               .fromLTRB(10, 20,
                                                               10, 25),
                                                           child: Text(
-                                                            "Redeem Offer Now",
+                                                            "Redeem Offer Now\n\nOnly redeem offers at checkout.",
                                                             style:
                                                             AppStyles
                                                                 .blackWithSemiBoldFontTextStyle(
@@ -603,26 +603,6 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                                                 .copyWith(
                                                                 fontWeight: FontWeight
                                                                     .w600),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          margin: EdgeInsets
-                                                              .symmetric(
-                                                              horizontal: MediaQuery
-                                                                  .of(context)
-                                                                  .size
-                                                                  .width * 0.1),
-                                                          child: Text(
-                                                            "Do you want to Redeem this offer right now?",
-                                                            style:
-                                                            AppStyles
-                                                                .blackWithSemiBoldFontTextStyle(
-                                                                context, 15.0)
-                                                                .copyWith(
-                                                                fontWeight: FontWeight
-                                                                    .w500),
                                                             textAlign: TextAlign
                                                                 .center,
                                                           ),
@@ -1071,7 +1051,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
                         SizedBox(height: 5.0,),
 
-                        widget.data.reviews.length > 5 ? InkWell(
+                        widget.data.reviews.length > 4 ? InkWell(
                           onTap: () {
                             Navigator.pushNamed(context, AppRoutes.REVIEWS_VIEW,
                                 arguments: {'offerId': widget.data.id});
@@ -1097,6 +1077,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                             ],
                           ),
                         ) : Container(),
+                                  SizedBox(height: 15.0,),
                       ],
                     ),
                   ): Container(),

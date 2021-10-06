@@ -57,6 +57,7 @@ class _MyProfileViewState extends State<MyProfileView> {
       child: Scaffold(
           appBar: appBar(
               title: "",
+              showCloseIcon: false,
               onBackClick: () {Navigator.of(context).pop();},
               onActionClick: () { Navigator.pushNamed(context, AppRoutes.EDIT_PROFILE_VIEW).then((value) {
                 _appPreferences.getUserDetails().then((userData) {
@@ -222,7 +223,79 @@ class _MyProfileViewState extends State<MyProfileView> {
                           divider(),
                         ],
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      height: 25.0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, AppRoutes.CHANGE_PASSWORD_VIEW);
+                      },
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                        child: Column(
+
+                          children: [
+
+                            Container(
+                              color: AppColors.WHITE_COLOR,
+                              width: double.maxFinite,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                //crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Change Password",
+                                        style: AppStyles.blackWithDifferentFontTextStyle(
+                                            context, 12.0)
+                                            .copyWith(
+                                            color: AppColors
+                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                      ),
+                                      SizedBox(
+                                        height: 6.0,
+                                      ),
+                                      Text(
+                                        "Update your password",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 14.0,
+                                            color: AppColors.COLOR_BLACK,
+                                            fontFamily: AppFonts.POPPINS_MEDIUM,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    size: 16.0,
+                                    color:
+                                    AppColors.COLOR_BLACK, // add custom icons also
+                                  ),
+
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25.0,
+                            ),
+                            divider(),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30.0,
+                    ),
 
                   ],
                 ),
