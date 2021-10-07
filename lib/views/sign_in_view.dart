@@ -67,8 +67,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   int cPasswordValidation = AppConstants.PASSWORD_VALIDATION;
 
   bool _enabled = true;
-  bool _enabled1 = true;
-  bool _enabled2 = true;
+
 
   var phoneNumberFocus = FocusNode();
   var emailFocus = FocusNode();
@@ -210,7 +209,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     ),
                     customPasswordTextField(context),
                     SizedBox(
-                      height: 25.0,
+                      height: 20.0,
                     ),
                     Align(
                         alignment: Alignment.centerRight,
@@ -218,27 +217,31 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           padding: const EdgeInsets.symmetric(
                             horizontal: 25.0,
                           ),
-                          child: GestureDetector(
-                            onTap: () {
-                              numberController.clear();
-                              showForgetBottomSheet(context);
-                              setState(() {
-                                isForgetPasswordFlow = true;
-                              });
-                            },
-                            child: Text(
-                              AppStrings.FORGET_PASSWORD,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontSize: 12.0,
-                                  color: AppColors.COLOR_BLACK,
-                                  fontFamily: AppFonts.POPPINS_MEDIUM,
-                                  fontWeight: FontWeight.w600),
+                          child: Container(
+                            color: AppColors.WHITE_COLOR,
+                            padding: const EdgeInsets.fromLTRB(0.0,5.0,0.0,5.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                numberController.clear();
+                                showForgetBottomSheet(context);
+                                setState(() {
+                                  isForgetPasswordFlow = true;
+                                });
+                              },
+                              child: Text(
+                                AppStrings.FORGET_PASSWORD,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: AppColors.COLOR_BLACK,
+                                    fontFamily: AppFonts.POPPINS_MEDIUM,
+                                    fontWeight: FontWeight.w600),
+                              ),
                             ),
                           ),
                         )),
                     SizedBox(
-                      height: 25.0,
+                      height: 20.0,
                     ),
                     AnimatedGradientButton(
                       onAnimationTap: () {
@@ -346,7 +349,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   showForgetBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
       context,
-      "Forgot password",
+      "Forgot Password",
       AppStrings.FORGET_PASSWORD_DESC,
       Container(
         margin: EdgeInsets.symmetric(horizontal: 25.0),
@@ -464,7 +467,16 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                       if (nPassword.length > 7) {
                         if (cPassword.isNotEmpty) {
                           if (cPassword.length > 7) {
-                            callResetPasswordApi();
+                            if(nPassword == cPassword){
+                              callResetPasswordApi();
+                            }else{
+                              setState(() {
+                                flag = true;
+                              });
+                              ToastUtil.showToast(
+                                  context, "Password and password confirmation values don't match");
+                            }
+
                           } else {
                             setState(() {
                               flag = true;
@@ -1029,7 +1041,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 },
                 child: TextFormField(
 //                                enableInteractiveSelection: false,
-                  enabled: _enabled1,
+                  enabled: _enabled,
                   focusNode: nPasswordNode,
                   cursorColor: AppColors.ACCENT_COLOR,
                   toolbarOptions: ToolbarOptions(
@@ -1084,7 +1096,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     color: AppColors.LIGHT_GREY_TEXT_COLOR,
                   ),
                   onPressed: () {
-                    if (_enabled1) {
+                    if (_enabled) {
                       setStates(() {
                         if (nPasswordObscureText) {
                           nPasswordObscureText = false;
@@ -1119,7 +1131,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 },
                 child: TextFormField(
 //                                enableInteractiveSelection: false,
-                  enabled: _enabled2,
+                  enabled: _enabled,
                   focusNode: cPasswordNode,
                   cursorColor: AppColors.ACCENT_COLOR,
                   toolbarOptions: ToolbarOptions(
@@ -1173,7 +1185,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     color: AppColors.LIGHT_GREY_TEXT_COLOR,
                   ),
                   onPressed: () {
-                    if (_enabled2) {
+                    if (_enabled) {
                       setStates(() {
                         if (cPasswordObscureText) {
                           cPasswordObscureText = false;

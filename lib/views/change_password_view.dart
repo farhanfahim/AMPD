@@ -220,7 +220,7 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
   showForgetBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
       context,
-      "Forgot password",
+      "Forgot Password",
       AppStrings.FORGET_PASSWORD_DESC,
       Container(
         margin: EdgeInsets.symmetric(horizontal: 25.0),
@@ -338,7 +338,16 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
                       if (nPassword1.length > 7) {
                         if (cPassword1.isNotEmpty) {
                           if (cPassword1.length > 7) {
-                            callResetPasswordApi();
+
+                            if(nPassword1 == cPassword1){
+                              callResetPasswordApi();
+                            }else{
+                              setState(() {
+                                flag = true;
+                              });
+                              ToastUtil.showToast(
+                                  context, "Password and password confirmation values don't match");
+                            }
                           } else {
                             setState(() {
                               flag = true;

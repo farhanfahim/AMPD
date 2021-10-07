@@ -378,7 +378,7 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
   static const String CREATE_AN_ACCOUNT_AND =
       'Create An Ampd Account To Start Saving!';
   static const String LOGIN_TO_MY_ACCOUNT = 'Login to my account';
-  static const String FORGET_PASSWORD = 'Forgot password?';
+  static const String FORGET_PASSWORD = 'Forgot Password?';
   static const String DIDNT_RECEIVE = ' Didn\'t receive the code?';
   static const String RESEND = 'Resend';
   static const String SEND = 'Send';
