@@ -15,6 +15,7 @@ class CustomRatingDialog extends StatefulWidget {
   bool showImage;
   String buttonText1;
   ValueChanged<String> onPressed1;
+  Function onPressed2;
   Widget child,btnWidget;
   Widget ratingBar;
   BuildContext contex;
@@ -23,6 +24,7 @@ class CustomRatingDialog extends StatefulWidget {
       {this.title = "",
         this.buttonText1 = "",
         this.onPressed1,
+        this.onPressed2,
         this.child,
         this.btnWidget,
         this.contex,
@@ -170,9 +172,7 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                             color: Colors.white,
                             size: 20.0,
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: widget.onPressed2,
                           // onPressed: widget.addClickListner
                         )),
                   ),

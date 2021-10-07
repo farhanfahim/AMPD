@@ -272,7 +272,6 @@ class _WelcomeViewState extends State<WelcomeView>
 
                       if (isValidate) {
                         callRegisterViaPhoneApi();
-                        isValidate = false;
                       } else {
                         setState(() {
                           flag = true;

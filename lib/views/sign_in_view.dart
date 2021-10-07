@@ -255,7 +255,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                   if (isValidate) {
                                     if (password.isNotEmpty) {
                                       callLoginApi();
-                                      isValidate = false;
                                     } else {
                                       setState(() {
                                         flag = true;
@@ -400,7 +399,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                   if (phoneNo.isNotEmpty) {
                     if (isValidate2) {
                       callForgetPasswordApi();
-                      isValidate2 = false;
                     }else{
                       setState(() {
                         flag = true;
@@ -572,7 +570,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
 
                       if (isValidate2) {
                         callRegisterViaPhoneApi();
-                        isValidate2= false;
                       } else {
                         setState(() {
                           flag = true;

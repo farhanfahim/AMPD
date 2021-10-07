@@ -180,6 +180,20 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                                   onPressed1: (message) {
                                     reviewMessage = message;
                                   },
+                                  onPressed2: () {
+                                    if (widget.map['fromSavedCoupon']) {
+                                      Navigator.pop(customDialogBoxContext);
+                                      Navigator.pushNamedAndRemoveUntil(
+                                          customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                                          route) => false, arguments: {
+                                        'isGuestLogin': false,
+                                        'tab_index': 0,
+                                        'show_tutorial': false
+                                      });
+                                    } else {
+                                      Navigator.pop(customDialogBoxContext);
+                                    }
+                                  },
                                   btnWidget:AnimatedGradientButton(
                                     onAnimationTap: () {
                                       if(offerRating > 0.0) {
@@ -280,21 +294,23 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
           _enabled = true;
         });
       }
-
-      if (response.msg == "Review created successfully!") {
-        ToastUtil.showToast(customDialogBoxContext, response.msg);
-        if(widget.map['fromSavedCoupon']){
-          Navigator.pop( customDialogBoxContext);
-          Navigator.pushNamedAndRemoveUntil(customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-            'isGuestLogin' : false,
-            'tab_index' : 0,
-            'show_tutorial' : false
-          });
-        }else{
-          Navigator.pop( customDialogBoxContext);
+      if (response.success) {
+        if (response.msg == "Review created successfully!") {
+          ToastUtil.showToast(customDialogBoxContext, response.msg);
+          if (widget.map['fromSavedCoupon']) {
+            Navigator.pop(customDialogBoxContext);
+            Navigator.pushNamedAndRemoveUntil(
+                customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                route) => false, arguments: {
+              'isGuestLogin': false,
+              'tab_index': 0,
+              'show_tutorial': false
+            });
+          } else {
+            Navigator.pop(customDialogBoxContext);
+          }
         }
-
-      } else if (response.data is DioError) {
+      }else if (response.data is DioError) {
         if (response.statusCode == 401) {
           Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);
         }else{

@@ -8,6 +8,7 @@ import 'package:ampd/appresources/app_constants.dart';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
+import 'package:ampd/data/model/SubmitReviewModel.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/viewmodel/qr_scan_viewmodel.dart';
@@ -198,6 +199,20 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                                 onPressed1: (message) {
                                   reviewMessage = message;
                                 },
+                                onPressed2: () {
+                                  if (widget.map['fromSavedCoupon']) {
+                                    Navigator.pop(customDialogBoxContext);
+                                    Navigator.pushNamedAndRemoveUntil(
+                                        customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                                        route) => false, arguments: {
+                                      'isGuestLogin': false,
+                                      'tab_index': 0,
+                                      'show_tutorial': false
+                                    });
+                                  } else {
+                                    Navigator.pop(customDialogBoxContext);
+                                  }
+                                },
                                 btnWidget:AnimatedGradientButton(
                                   onAnimationTap: () {
                                     if(offerRating > 0.0) {
@@ -298,19 +313,22 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
         });
       }
 
-      if (response.msg == "Review created successfully!") {
-        ToastUtil.showToast(customDialogBoxContext, response.msg);
-        if(widget.map['fromSavedCoupon']){
-          Navigator.pop( customDialogBoxContext);
-          Navigator.pushNamedAndRemoveUntil(customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
-            'isGuestLogin' : false,
-            'tab_index' : 0,
-            'show_tutorial' : false
-          });
-        }else{
-          Navigator.pop( customDialogBoxContext);
+      if (response.success) {
+        if (response.msg == "Review created successfully!") {
+          ToastUtil.showToast(customDialogBoxContext, response.msg);
+          if (widget.map['fromSavedCoupon']) {
+            Navigator.pop(customDialogBoxContext);
+            Navigator.pushNamedAndRemoveUntil(
+                customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                route) => false, arguments: {
+              'isGuestLogin': false,
+              'tab_index': 0,
+              'show_tutorial': false
+            });
+          } else {
+            Navigator.pop(customDialogBoxContext);
+          }
         }
-
       } else if (response.data is DioError) {
         if (response.statusCode == 401) {
           Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);

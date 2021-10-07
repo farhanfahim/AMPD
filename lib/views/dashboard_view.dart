@@ -44,7 +44,7 @@ class _DashboardViewState extends State<DashboardView> {
   ];
 
   int _tutorialCount = 0;
-  int pos = 1;
+  int pos = 0;
 
 
   List<String> bottomBarIcons = [
@@ -57,6 +57,7 @@ class _DashboardViewState extends State<DashboardView> {
   void initState() {
     updateAppDialog();
     super.initState();
+    pos = widget.map['tab_index'];
   }
 
   @override
