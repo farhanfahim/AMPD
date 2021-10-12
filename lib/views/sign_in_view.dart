@@ -644,7 +644,8 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
             Navigator.pop(bc1);
             if (code.isNotEmpty) {
               if (code.length == 4) {
-
+                nPasswordController.clear();
+                cPasswordController.clear();
                 showResetPasswordBottomSheet(context);
               } else {
                 setState(() {
@@ -1371,7 +1372,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         if (responseRegister != null) {
           App().getAppPreferences().setIsLoggedIn(loggedIn: true);
           Navigator.pushNamedAndRemoveUntil(
-              context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false);
+              context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false,arguments: {
+            'afterLogin': true,
+          });
         } else {
           Map map = Map<String, String>();
           map['email'] = emailController.text.toString();

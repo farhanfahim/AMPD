@@ -90,7 +90,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => LocationSettingView(),
+            builder: (BuildContext context) => LocationSettingView(routeSettings.arguments),
           );
         }
 

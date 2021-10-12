@@ -12,6 +12,10 @@ import 'package:sizer/sizer.dart';
 import 'package:geolocator/geolocator.dart' as gcl;
 
 class LocationSettingView extends StatefulWidget {
+  Map<String, dynamic> map;
+
+  LocationSettingView(this.map);
+
   @override
   _LocationSettingViewState createState() => _LocationSettingViewState();
 }
@@ -87,7 +91,7 @@ class _LocationSettingViewState extends State<LocationSettingView> with WidgetsB
         context, AppRoutes.DASHBOARD_VIEW, (route) => false, arguments: {
       'isGuestLogin': false,
       'tab_index': 1,
-      'show_tutorial': false
+      'show_tutorial': widget.map['afterLogin']?true:false
     });
   }
 

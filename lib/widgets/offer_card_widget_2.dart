@@ -38,11 +38,11 @@ class OfferCardWidget2 extends StatefulWidget {
   UserLocation currentCoords;
   ValueChanged<bool> changeDetailTitle;
   bool isRedeemNow;
-  Function onRedeemTap;
+  Widget popUpBtn;
   Dataclass data;
 
   OfferCardWidget2(
-      {this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.currentCoords, this.locationTitle, this.changeDetailTitle, this.isRedeemNow, this.data,this.onRedeemTap});
+      {this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.currentCoords, this.locationTitle, this.changeDetailTitle, this.isRedeemNow, this.data,this.popUpBtn});
 
   @override
   _OfferCardWidget2State createState() => _OfferCardWidget2State();
@@ -595,7 +595,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                                               .fromLTRB(10, 20,
                                                               10, 25),
                                                           child: Text(
-                                                            "Redeem Offer Now\n\nOnly redeem offers at checkout.",
+                                                            "Redeem Offer Now",
                                                             style:
                                                             AppStyles
                                                                 .blackWithSemiBoldFontTextStyle(
@@ -607,14 +607,33 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                                                 .center,
                                                           ),
                                                         ),
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                              horizontal: MediaQuery
+                                                                  .of(context)
+                                                                  .size
+                                                                  .width * .13),
+                                                          padding: EdgeInsets
+                                                              .fromLTRB(10, 0,
+                                                              10, 0),
+                                                          child: Text(
+                                                            "Only redeem offers at checkout.",
+                                                            style:
+                                                            AppStyles
+                                                                .blackWithSemiBoldFontTextStyle(
+                                                                context, 15.0)
+                                                                .copyWith(
+                                                                fontWeight: FontWeight
+                                                                    .w400),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
                                                         SizedBox(
                                                           height: 25.0,
                                                         ),
-                                                        GradientButton(
-                                                          onTap: widget.onRedeemTap,
-                                                          text: AppStrings
-                                                              .REDEEM_NOW,
-                                                        ),
+                                                        widget.popUpBtn,
                                                         SizedBox(
                                                           height: 20.0,
                                                         ),

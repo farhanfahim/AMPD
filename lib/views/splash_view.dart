@@ -53,7 +53,7 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
             alignment: Alignment.bottomCenter,
             margin: EdgeInsets.only(bottom: 15.0),
             child: Text(
-              "Version 2.0.10",
+              "Version 2.1.1",
               textAlign: TextAlign.left,
               style: TextStyle(
                   fontSize: 12.0,
@@ -76,7 +76,9 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
       if(value) {
         //   ToastUtil.showToast(context, "value: "+value.toString());
         Navigator.pushNamedAndRemoveUntil(
-            context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false);
+            context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false,arguments: {
+          'afterLogin': false,
+        });
       }else{
         Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (route) => false);
       }

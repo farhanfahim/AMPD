@@ -172,6 +172,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
             ),
             onTap: (handler) async {
               await handler(true);
+
               showDialog(
                   context: context,
                   builder: (BuildContext context3) {
@@ -179,9 +180,13 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                     return CustomDialog(
                       showAnimatedBtn: true,
                       contex: context,
-                      subTitle: "Are you sure you want to delete",
+                      subTitle: "Are you sure you want to remove this offer?",
                       //title: "Your feedback will help us improve our services.",
-
+                      child: SvgPicture.asset(
+                        AppImages.DELETE_ICON,
+                        width: 80.0,
+                        height: 80.0,
+                      ),
                       btnWidget: AnimatedGradientButton(
                         onAnimationTap: () {
 
@@ -203,9 +208,49 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                         _pagingController1.refresh();
                         Navigator.pop(context3);
                       },
-                      showImage: false,
+                      showImage: true,
                     );
                   });
+             /* showDialog(
+                  context: context,
+                  builder: (BuildContext context1) {
+                    return CustomDialog(
+                      showAnimatedBtn: false,
+                      contex: dialogContext1,
+                      subTitle: "Are you sure you want to remove this offer?",
+                      child: SvgPicture.asset(
+                        AppImages.DELETE_ICON,
+                        width: 80.0,
+                        height: 80.0,
+                      ),
+                      //title: "Your feedback will help us improve our services.",
+                      buttonText1: AppStrings.YES,
+                      buttonText2: AppStrings.NO,
+                      onPressed1: () {
+                        deleteOffersApi(data.userOffers[0].id);
+                        setState(() {
+                          deletedItem = pos;
+                        });
+                        Navigator.pop(context1);
+
+                      },
+                      onPressed3:(){
+
+                        _pagingController1.refresh();
+
+                        Navigator.pop(context1);
+
+                      },
+                      onPressed2: () {
+
+                        _pagingController1.refresh();
+                        Navigator.pop(context1);
+
+                      },
+                      showImage: true,
+                    );
+                  });*/
+
 
             }),
       ],
@@ -335,7 +380,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                                                                           10,
                                                                           25),
                                                               child: Text(
-                                                                "Redeem Offer Now\n\nOnly redeem offers at checkout.",
+                                                                "Redeem Offer Now",
                                                                 style: AppStyles
                                                                         .blackWithSemiBoldFontTextStyle(
                                                                             context,
@@ -348,7 +393,29 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                                                                         .center,
                                                               ),
                                                             ),
-
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal: MediaQuery
+                                                                      .of(context)
+                                                                      .size
+                                                                      .width * .13),
+                                                              padding: EdgeInsets
+                                                                  .fromLTRB(10, 0,
+                                                                  10, 0),
+                                                              child: Text(
+                                                                "Only redeem offers at checkout.",
+                                                                style:
+                                                                AppStyles
+                                                                    .blackWithSemiBoldFontTextStyle(
+                                                                    context, 15.0)
+                                                                    .copyWith(
+                                                                    fontWeight: FontWeight
+                                                                        .w400),
+                                                                textAlign: TextAlign
+                                                                    .center,
+                                                              ),
+                                                            ),
                                                             SizedBox(
                                                               height: 25.0,
                                                             ),

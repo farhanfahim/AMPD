@@ -164,43 +164,13 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
                   longitude: position.longitude),
               locationTitle: singleOfferModel.user.address,
               data: singleOfferModel,
-              onRedeemTap: (){
-                //
-                Navigator.pop(
-                    context);
-                showDialog(
-                    context: context,
-                    builder: (
-                        BuildContext context1) {
-                      dialogContext = context;
-                      return CustomDialog(
-                        showAnimatedBtn: true,
-                        contex: context,
-                        subTitle: "Are you sure?\n\nOnly redeem offers at checkout",
-                        //title: "Your feedback will help us improve our services.",
-
-                        buttonText2: AppStrings
-                            .NO,
-                        btnWidget: AnimatedGradientButton(
-                          onAnimationTap: () {
-                            redeemOffersApi(singleOfferModel.id);
-                          },
-                          buttonController: _buttonController,
-                          text: AppStrings.YES,
-                        ),
-
-                        onPressed2: () {
-                          Navigator
-                              .pop(
-                              context1);
-                        },
-                        onPressed3:(){
-                          Navigator.pop(context1);
-                        },
-                        showImage: false,
-                      );
-                    });
-              },
+                popUpBtn: AnimatedGradientButton(
+                  onAnimationTap: () {
+                    redeemOffersApi(singleOfferModel.id);
+                  },
+                  buttonController: _buttonController,
+                  text: AppStrings.YES,
+                ),
               changeDetailTitle: (value) {
                 setState(() {
                   if(value) {

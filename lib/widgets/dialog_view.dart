@@ -62,21 +62,53 @@ class _CustomDialogState extends State<CustomDialog> {
                       //crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(
-                              horizontal: MediaQuery.of(context).size.width * .10),
-                          padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                          margin: EdgeInsets
+                              .symmetric(
+                              horizontal: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .13),
+                          padding: EdgeInsets
+                              .fromLTRB(10, 20,
+                              10, 25),
                           child: Text(
                             widget.subTitle,
                             style:
-                            AppStyles.blackWithSemiBoldFontTextStyle(context, 18.0).copyWith(fontWeight: FontWeight.w600),textAlign: TextAlign.center,
+                            AppStyles
+                                .blackWithSemiBoldFontTextStyle(
+                                context, 18.0)
+                                .copyWith(
+                                fontWeight: FontWeight
+                                    .w600),
+                            textAlign: TextAlign
+                                .center,
                           ),
                         ),
-                        widget.showImage?   Container(
-//                          height: 15.0.h,
-                          height: 100.0,
-                          margin: EdgeInsets.fromLTRB(0.0, 40.0, 0, 30),
-                          child: widget.child,
+
+                        widget.title.isNotEmpty?Container(
+                          margin: EdgeInsets
+                              .symmetric(
+                              horizontal: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * .13),
+                          padding: EdgeInsets
+                              .fromLTRB(10, 0,
+                              10, 0),
+                          child: Text(
+                            widget.title,
+                            style:
+                            AppStyles
+                                .blackWithSemiBoldFontTextStyle(
+                                context, 15.0)
+                                .copyWith(
+                                fontWeight: FontWeight
+                                    .w400),
+                            textAlign: TextAlign
+                                .center,
+                          ),
                         ):Container(),
+                        widget.showImage?   widget.child:Container(),
                         SizedBox(
                           height: 35.0,
                         ),
