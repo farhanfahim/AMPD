@@ -21,6 +21,7 @@ import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/flat_button.dart';
 import 'package:ampd/widgets/widgets.dart';
+import 'package:ampd/widgets/gradient_button.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -419,14 +420,39 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                                                             SizedBox(
                                                               height: 25.0,
                                                             ),
-                                                            AnimatedGradientButton(
-                                                              onAnimationTap:
-                                                                  () {
-                                                                redeemOffersApi(
-                                                                    data.id);
+
+                                                            GradientButton(
+                                                              onTap: (){
+                                                                Navigator.pop(context1);
+                                                                showDialog(
+                                                                    context: context,
+                                                                    builder: (BuildContext context3) {
+                                                                      dialogContext = context3;
+                                                                      return CustomDialog(
+                                                                        showAnimatedBtn: true,
+                                                                        contex: context,
+                                                                        subTitle: "Are you sure?",
+                                                                        title: "Only redeem offers at checkout.",
+
+                                                                        btnWidget: AnimatedGradientButton(
+                                                                          onAnimationTap: () {
+                                                                            redeemOffersApi(data.id);
+
+                                                                          },
+                                                                          buttonController: _buttonController,
+                                                                          text: AppStrings.YES,
+                                                                        ),
+                                                                        buttonText2: AppStrings.NO,
+                                                                        onPressed2: () {
+                                                                          Navigator.pop(context3);
+                                                                        },
+                                                                        onPressed3:(){
+                                                                          Navigator.pop(context3);
+                                                                        },
+                                                                        showImage: false,
+                                                                      );
+                                                                    });
                                                               },
-                                                              buttonController:
-                                                                  _buttonController,
                                                               text: AppStrings
                                                                   .REDEEM_NOW,
                                                             ),
