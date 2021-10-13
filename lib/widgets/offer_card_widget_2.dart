@@ -38,11 +38,13 @@ class OfferCardWidget2 extends StatefulWidget {
   UserLocation currentCoords;
   ValueChanged<bool> changeDetailTitle;
   bool isRedeemNow;
-  Widget popUpBtn;
+
+  Function onRedeemTap;
+
   Dataclass data;
 
   OfferCardWidget2(
-      {this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.currentCoords, this.locationTitle, this.changeDetailTitle, this.isRedeemNow, this.data,this.popUpBtn});
+      {this.text, this.image, this.offer, this.offerName, this.time, this.coord, this.currentCoords, this.locationTitle, this.changeDetailTitle, this.isRedeemNow, this.data,this.onRedeemTap});
 
   @override
   _OfferCardWidget2State createState() => _OfferCardWidget2State();
@@ -633,7 +635,12 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                                         SizedBox(
                                                           height: 25.0,
                                                         ),
-                                                        widget.popUpBtn,
+                                                        GradientButton(
+                                                          onTap: widget.onRedeemTap,
+                                                          text: AppStrings
+                                                              .REDEEM_NOW,
+                                                        ),
+
                                                         SizedBox(
                                                           height: 20.0,
                                                         ),

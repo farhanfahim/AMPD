@@ -630,7 +630,10 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     flag = true;
                     _isInternetAvailable = true;
                   });
+
                   callForgetPasswordApi();
+
+
                 } else {
                   setState(() {
                     flag = true;
@@ -641,9 +644,10 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
               });
             }
           }, (bc1) {
-            Navigator.pop(bc1);
+
             if (code.isNotEmpty) {
               if (code.length == 4) {
+                Navigator.pop(bc1);
                 nPasswordController.clear();
                 cPasswordController.clear();
                 showResetPasswordBottomSheet(context);
@@ -651,12 +655,14 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                 setState(() {
                   flag = true;
                 });
+                Util.hideKeyBoard(context);
                 ToastUtil.showToast(context, "Please enter valid otp code");
               }
             } else {
               setState(() {
                 flag = true;
               });
+              Util.hideKeyBoard(context);
               ToastUtil.showToast(context, "Please enter otp code");
             }
           }, AppStrings.VERIFY_NOW, true)

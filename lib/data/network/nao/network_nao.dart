@@ -108,7 +108,7 @@ class NetworkNAO {
   static Future<dynamic> offerReview(String accessToken,Map map) =>
       NetworkUtil().post(
           url: NetworkEndpoints.OFFER_REVIEW,
-          hasHeader: false,
+          hasHeader: true,
           token: accessToken,
           formData: FormData.fromMap({
             NetworkConfig.API_OFFER_ID: map['offer_id'],
@@ -126,7 +126,7 @@ class NetworkNAO {
   static Future<dynamic> redeemOffer(String accessToken,Map map) =>
       NetworkUtil().post(
           url: NetworkEndpoints.REDEEM_OFFER,
-          hasHeader: false,
+          hasHeader: true,
           token: accessToken,
           formData: FormData.fromMap({
             NetworkConfig.API_OFFER_ID: map['offer_id']
@@ -142,11 +142,11 @@ class NetworkNAO {
 
       NetworkUtil().delete(
           url: '${NetworkEndpoints.DELETE_OFFERS}/${map['offer_id']}',
-          hasHeader: false,
+          hasHeader: true,
           token: accessToken,
-          formData: null,
+          map: null,
       ).then((dynamic response) {
-        //print(response);
+        print(response);
         return response;
       }); //
 

@@ -133,7 +133,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         duration: const Duration(milliseconds: 3000), vsync: this);
     _updateProfileButtonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
-    
+
     _appPreferences.isPreferenceReady;
     _appPreferences.getUserDetails().then((userData) {
       print(userData.toJson());
@@ -243,7 +243,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+                            const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
                             child: Container(
                               decoration: ShapeDecoration(
                                   color: Colors.white,
@@ -260,27 +260,27 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                                         Radius.circular(80.0)),
                                     child: circularNetworkCacheImageWithShimmerWithHeightWidth(
                                         imagePath: imageUrl,
-                                      radius: 120.0,
-                                      boxFit: BoxFit.cover
+                                        radius: 120.0,
+                                        boxFit: BoxFit.cover
                                     )
-                                  ) : _image != null
+                                ) : _image != null
                                     ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(80),
-                                        child: Image.file(
-                                          _image,
-                                          width: 120,
-                                          height: 120,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
+                                  borderRadius: BorderRadius.circular(80),
+                                  child: Image.file(
+                                    _image,
+                                    width: 120,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
                                     : ClipRRect(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(80.0)),
-                                        child: Image.asset(
-                                          "assets/images/user.png",
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(80.0)),
+                                  child: Image.asset(
+                                    "assets/images/user.png",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -319,7 +319,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                       Text(
                         _fullName,
                         style:
-                            AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
+                        AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
                         height: 20.0,
@@ -594,7 +594,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
               onFieldSubmitted: (texttt) {
                 bool emailValid = RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                     .hasMatch(email);
                 if (emailValid) {
                   setState(() {
@@ -609,7 +609,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               },
               textInputAction: TextInputAction.next,
               decoration:
-                  AppStyles.decorationWithBorder(AppStrings.EMAIL_ADDRESS),
+              AppStyles.decorationWithBorder(AppStrings.EMAIL_ADDRESS),
               //   , iconData, (){
               //
               // }),
@@ -618,25 +618,25 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           ),
         ),
         Positioned(
-                top: 20.0,
-                bottom: 0.0,
-                right: 40.0,
-                child: GestureDetector(
-                  onTap: (){
+          top: 20.0,
+          bottom: 0.0,
+          right: 40.0,
+          child: GestureDetector(
+            onTap: (){
 
-                    showEmailBottomSheet(context);
-                  },
-                  child: Text(
-                    "Change",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        fontSize: 12.0,
-                        color: AppColors.BLUE_COLOR,
-                        fontFamily: AppFonts.POPPINS_MEDIUM,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ),
-              ),
+              showEmailBottomSheet(context);
+            },
+            child: Text(
+              "Change",
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                  fontSize: 12.0,
+                  color: AppColors.BLUE_COLOR,
+                  fontFamily: AppFonts.POPPINS_MEDIUM,
+                  fontWeight: FontWeight.w400),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -675,7 +675,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                           affinity: TextAffinity.downstream,
                           isDirectional: false),
                       composing:
-                          new TextRange(start: 0, end: numberValidation));
+                      new TextRange(start: 0, end: numberValidation));
                   //  _emailController.text = text;
                 }
               },
@@ -694,7 +694,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               },
               textInputAction: TextInputAction.next,
               decoration:
-                  AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
+              AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
               //   , iconData, (){
               //
               // }),
@@ -1040,7 +1040,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
               });
             },
             selectorConfig: SelectorConfig(
-              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                 showFlags: false
             ),
             formatInput: false,
@@ -1066,157 +1066,157 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           buttonController: _codeToPhoneButtonController,
           text: AppStrings.CHANGE,
         ),
-            null,(bc1) {
+        null,(bc1) {
 //          Navigator.pop(bc1);
 //          showPhoneOtpBottomSheet(context);
-        }, AppStrings.SEND, false);
+    }, AppStrings.SEND, false);
   }
 
   showPhoneOtpBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC, OtpTextField(onOtpCodeChanged: (otp) {
-          code = otp;
-        }),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (validatePhone()) {
-              callVerifyPhoneOtpApi();
-            }
-          },
-          buttonController: _phoneOtpButtonController,
-          text: AppStrings.VERIFY_NOW,
-        ),
+      AppStrings.OTP_DESC, OtpTextField(onOtpCodeChanged: (otp) {
+        code = otp;
+      }),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (validatePhone()) {
+            callVerifyPhoneOtpApi();
+          }
+        },
+        buttonController: _phoneOtpButtonController,
+        text: AppStrings.VERIFY_NOW,
+      ),
           () { callVerificationCodeToPhoneApi();},(bc2) {
 //          Navigator.pop(bc2);
 //          showUpdatePhoneNoBottomSheet(context);
-        }, AppStrings.VERIFY_NOW, true,);
+      }, AppStrings.VERIFY_NOW, true,);
   }
 
   showUpdatePhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(context, AppStrings.ENTER_NEW_PHONE,
-        "", Container(
-          margin: EdgeInsets.symmetric(horizontal: 25.0),
-          decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  side: BorderSide(
-                      width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
-          child: InternationalPhoneNumberInput(
-            onInputChanged: (PhoneNumber number) {
-              print(number.phoneNumber);
-              phoneNo = number.phoneNumber;
-            },
-            onInputValidated: (bool value) {
-              print(value);
-              setState(() {
-                isValidate = value;
-              });
-            },
-            selectorConfig: SelectorConfig(
-              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                showFlags: false
-            ),
-            formatInput: false,
-            initialValue: number,
-            ignoreBlank: false,
-            selectorTextStyle: TextStyle(
-                fontSize: 12.0,
-                color: AppColors.COLOR_BLACK,
-                fontFamily: AppFonts.POPPINS_MEDIUM,
-                fontWeight: FontWeight.w400),
-            autoValidateMode: AutovalidateMode.disabled,
-            textFieldController: editableNumberController,
-            inputDecoration:
-            AppStyles.decorationWithoutBorder("Phone Number"),
-          ),
-        ),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (validatePhone()) {
-              callChangePhoneApi();
-            }
+      "", Container(
+        margin: EdgeInsets.symmetric(horizontal: 25.0),
+        decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(
+                    width: 0.5, color: AppColors.LIGHT_GREY_ARROW_COLOR))),
+        child: InternationalPhoneNumberInput(
+          onInputChanged: (PhoneNumber number) {
+            print(number.phoneNumber);
+            phoneNo = number.phoneNumber;
           },
-          buttonController: _changePhoneButtonController,
-          text: AppStrings.UPDATE,
+          onInputValidated: (bool value) {
+            print(value);
+            setState(() {
+              isValidate = value;
+            });
+          },
+          selectorConfig: SelectorConfig(
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              showFlags: false
+          ),
+          formatInput: false,
+          initialValue: number,
+          ignoreBlank: false,
+          selectorTextStyle: TextStyle(
+              fontSize: 12.0,
+              color: AppColors.COLOR_BLACK,
+              fontFamily: AppFonts.POPPINS_MEDIUM,
+              fontWeight: FontWeight.w400),
+          autoValidateMode: AutovalidateMode.disabled,
+          textFieldController: editableNumberController,
+          inputDecoration:
+          AppStyles.decorationWithoutBorder("Phone Number"),
         ),
-            null,(bc3) {
+      ),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (validatePhone()) {
+            callChangePhoneApi();
+          }
+        },
+        buttonController: _changePhoneButtonController,
+        text: AppStrings.UPDATE,
+      ),
+      null,(bc3) {
 //          Navigator.pop(bc3);
-        }, AppStrings.CHANGE, false,);
+      }, AppStrings.CHANGE, false,);
   }
 
   showEmailOtpBottomSheet(BuildContextcontext) {
     showBottomSheetWidgetWithAnimatedBtn(
-        context,
-        AppStrings.ENTER_OTP_DIGIT,
-        AppStrings.OTP_DESC_EMAIL1,
-        OtpTextField(onOtpCodeChanged: (otp) {
-          code = otp;
-        }),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (validateEmail()) {
-              callVerifyEmailOtpApi();
-            }
-          },
-          buttonController: _emailOtpButtonController,
-          text: AppStrings.VERIFY_NOW,
-        ),() {callVerificationCodeToEmailApi();},
-        (bc4) {
+      context,
+      AppStrings.ENTER_OTP_DIGIT,
+      AppStrings.OTP_DESC_EMAIL1,
+      OtpTextField(onOtpCodeChanged: (otp) {
+        code = otp;
+      }),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (validateEmail()) {
+            callVerifyEmailOtpApi();
+          }
+        },
+        buttonController: _emailOtpButtonController,
+        text: AppStrings.VERIFY_NOW,
+      ),() {callVerificationCodeToEmailApi();},
+          (bc4) {
 //          Navigator.pop(bc4);
 //          showUpdateEmailBottomSheet(context);
-        },
-        AppStrings.VERIFY_NOW,
-        true,
+      },
+      AppStrings.VERIFY_NOW,
+      true,
     );
   }
-  
+
   showEmailBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
-        context,
-        AppStrings.REQUEST_TO_EMAIL_TITLE,
-        AppStrings.EMAIL_DESC,
-        // emailWidget(context),
-        customEditableEmailWidget(editableEmailController),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (validateEmail()) {
-              callVerificationCodeToEmailApi();
-            }
-          },
-          buttonController: _codeToEmailButtonController,
-          text: AppStrings.CHANGE,
-        ),
-           null, (bc5) {
-          // Navigator.pop(bc5);
-          // showEmailOtpBottomSheet(context);
-//          callVerificationCodeToEmailApi();
+      context,
+      AppStrings.REQUEST_TO_EMAIL_TITLE,
+      AppStrings.EMAIL_DESC,
+      // emailWidget(context),
+      customEditableEmailWidget(editableEmailController),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (validateEmail()) {
+            callVerificationCodeToEmailApi();
+          }
         },
-        AppStrings.CHANGE,
-        false,);
+        buttonController: _codeToEmailButtonController,
+        text: AppStrings.CHANGE,
+      ),
+      null, (bc5) {
+      // Navigator.pop(bc5);
+      // showEmailOtpBottomSheet(context);
+//          callVerificationCodeToEmailApi();
+    },
+      AppStrings.CHANGE,
+      false,);
   }
 
   showUpdateEmailBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
-        context,
-        AppStrings.ENTER_NEW_EMAIL,
-        "",
-        customEditableEmailWidget(editableEmailController),
-        AnimatedGradientButton(
-          onAnimationTap: () {
-            if (validateEditableEmail()) {
-              callChangeEmailApi();
-            }
-          },
-          buttonController: _changeEmailButtonController,
-          text: AppStrings.UPDATE,
-        ),
-            null,(bc6) {
+      context,
+      AppStrings.ENTER_NEW_EMAIL,
+      "",
+      customEditableEmailWidget(editableEmailController),
+      AnimatedGradientButton(
+        onAnimationTap: () {
+          if (validateEditableEmail()) {
+            callChangeEmailApi();
+          }
+        },
+        buttonController: _changeEmailButtonController,
+        text: AppStrings.UPDATE,
+      ),
+      null,(bc6) {
 //          Navigator.pop(bc6);
 
-        },
-        AppStrings.CHANGE,
-        false,);
+    },
+      AppStrings.CHANGE,
+      false,);
   }
 
   profilePictureOptionsBottomSheet() {
@@ -1560,7 +1560,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         .getEditProfileRepository()
         .getRepositoryResponse()
         .listen((response) async {
-          _stopAnimation();
+      _stopAnimation();
       if (mounted) {
         setState(() {
           _enabled = true;
@@ -1574,10 +1574,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
           //        print('field ${model.data[0].field}');
           ToastUtil.showToast(context, response.msg);
-           Navigator.pop(context);
-           Future.delayed(Duration(seconds: 1), () {
-             showEmailOtpBottomSheet(context);
-           });
+          Navigator.pop(context);
+          Future.delayed(Duration(seconds: 1), () {
+            showEmailOtpBottomSheet(context);
+          });
         } else if (response.data is LoginResponseModel) {  //update profile response
           ToastUtil.showToast(context, response.msg);
           print('response ${response.data}');
@@ -1650,8 +1650,8 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
       return false;
     }
-    
-    return true;    
+
+    return true;
   }
 
   bool validateEditableEmail() {
@@ -1857,4 +1857,3 @@ class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
     );
   }
 }
-

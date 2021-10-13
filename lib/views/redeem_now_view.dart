@@ -164,13 +164,42 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
                   longitude: position.longitude),
               locationTitle: singleOfferModel.user.address,
               data: singleOfferModel,
-                popUpBtn: AnimatedGradientButton(
-                  onAnimationTap: () {
-                    redeemOffersApi(singleOfferModel.id);
-                  },
-                  buttonController: _buttonController,
-                  text: AppStrings.YES,
-                ),
+              onRedeemTap: (){
+                //
+                Navigator.pop(
+                    context);
+
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context1) {
+                      dialogContext = context;
+                      return CustomDialog(
+                        showAnimatedBtn: true,
+                        contex: context,
+                        subTitle: "Are you sure?",
+                        title: "Only redeem offers at checkout.",
+
+                        btnWidget: AnimatedGradientButton(
+                          onAnimationTap: () {
+                            redeemOffersApi(singleOfferModel.id);
+
+                          },
+                          buttonController: _buttonController,
+                          text: AppStrings.YES,
+                        ),
+                        buttonText2: AppStrings.NO,
+                        onPressed2: () {
+                          Navigator.pop(context1);
+                        },
+                        onPressed3:(){
+                          Navigator.pop(context1);
+                        },
+                        showImage: false,
+                      );
+                    });
+
+              },
+
               changeDetailTitle: (value) {
                 setState(() {
                   if(value) {

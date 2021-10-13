@@ -45,7 +45,6 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
   int cPasswordValidation = AppConstants.PASSWORD_VALIDATION;
 
   bool _enabled = true;
-  bool _enabled2 = true;
   bool flag = true;
   var firstNameFocus = FocusNode();
   var lastNameFocus = FocusNode();
@@ -224,7 +223,17 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
                                           if(password.length > 7) {
                                             if(cPassword.isNotEmpty) {
                                               if(cPassword.length > 7) {
-                                                callRegisterApi();
+
+                                                if(password == cPassword){
+                                                  callRegisterApi();
+                                                }else{
+                                                  setState(() {
+                                                    flag = true;
+                                                  });
+                                                  ToastUtil.showToast(
+                                                      context, "Password and password confirmation values don't match");
+                                                }
+
 
                                               }else{
                                                 setState(() {
@@ -661,7 +670,7 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
                 color: AppColors.LIGHT_GREY_TEXT_COLOR,
               ),
               onPressed: () {
-                if (_enabled2) {
+                if (_enabled) {
                   setState(() {
                     if (cPasswordObscureText) {
                       cPasswordObscureText = false;

@@ -418,9 +418,10 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
         });
       }
     }, (bc1) {
-      Navigator.pop(bc1);
+
       if (code.isNotEmpty) {
         if (code.length == 4) {
+          Navigator.pop(bc1);
           nPasswordController1.clear();
           cPasswordController1.clear();
           showResetPasswordBottomSheet(context);
@@ -428,12 +429,14 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
           setState(() {
             flag = true;
           });
+          Util.hideKeyBoard(context);
           ToastUtil.showToast(context, "Please enter valid otp code");
         }
       } else {
         setState(() {
           flag = true;
         });
+        Util.hideKeyBoard(context);
         ToastUtil.showToast(context, "Please enter otp code");
       }
     }, AppStrings.VERIFY_NOW, true);

@@ -138,11 +138,11 @@ class NetworkUtil {
   ///        -> encoding -> dynamic
   ///  @usage -> Make HTTP-POST request to specified URL and returns the response in JSON format
   Future<dynamic> delete(
-      {@required String url, Map headers, FormData formData, encoding, bool hasHeader, String token}) =>
+      {@required String url, Map headers, Map<String, dynamic> map, encoding, bool hasHeader, String token}) =>
       Network.getDio(hasHeader: hasHeader, token: token)
           .delete(
         url,
-        data: formData,
+        data: map,
 
         options: Options(
             followRedirects: false,

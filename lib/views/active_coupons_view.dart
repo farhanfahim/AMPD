@@ -651,7 +651,8 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
           _pagingController1.appendPage(response.data.dataClass, nextPageKey);
 
         }
-      } else if (response.msg == "Saved offer has been removed successfully!") {
+      }
+      else if (response.msg == "Saved offer has been removed successfully!") {
         setState(() {
           _pagingController1.itemList.removeAt(deletedItem);
         });

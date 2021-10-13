@@ -405,26 +405,52 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                                                           Container(
                                                             margin: EdgeInsets.symmetric(
                                                                 horizontal: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
+                                                                    context)
+                                                                    .size
+                                                                    .width *
                                                                     .13),
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(10,
-                                                                    20, 10, 25),
+                                                            padding:
+                                                            EdgeInsets
+                                                                .fromLTRB(
+                                                                10,
+                                                                20,
+                                                                10,
+                                                                25),
                                                             child: Text(
-                                                              "Redeem Offer Now\n\nOnly redeem offers at checkout.",
+                                                              "Redeem Offer Now",
                                                               style: AppStyles
-                                                                      .blackWithSemiBoldFontTextStyle(
-                                                                          context,
-                                                                          18.0)
+                                                                  .blackWithSemiBoldFontTextStyle(
+                                                                  context,
+                                                                  18.0)
                                                                   .copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600),
+                                                                  fontWeight:
+                                                                  FontWeight.w600),
                                                               textAlign:
-                                                                  TextAlign
-                                                                      .center,
+                                                              TextAlign
+                                                                  .center,
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: MediaQuery
+                                                                    .of(context)
+                                                                    .size
+                                                                    .width * .13),
+                                                            padding: EdgeInsets
+                                                                .fromLTRB(10, 0,
+                                                                10, 0),
+                                                            child: Text(
+                                                              "Only redeem offers at checkout.",
+                                                              style:
+                                                              AppStyles
+                                                                  .blackWithSemiBoldFontTextStyle(
+                                                                  context, 15.0)
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight
+                                                                      .w400),
+                                                              textAlign: TextAlign
+                                                                  .center,
                                                             ),
                                                           ),
 

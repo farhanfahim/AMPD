@@ -101,7 +101,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        height: 40.0,
+                        height: 30.0,
                       ),
                       Text(
                         AppStrings.REDEEM_MESSAGE,
@@ -109,7 +109,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                             AppStyles.blackWithBoldFontTextStyle(context, 20.0),
                       ),
                       SizedBox(
-                        height: 30.0,
+                        height: 25.0,
                       ),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.10,
@@ -130,7 +130,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                         ),
                       ),
                       SizedBox(
-                        height: 70.0,
+                        height: 60.0,
                       ),
                       Text(
                         AppStrings.TIME_REMAINING,
@@ -138,7 +138,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                             AppStyles.blackWithBoldFontTextStyle(context, 16.0),
                       ),
                       SizedBox(
-                        height: 30.0,
+                        height: 25.0,
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.min,

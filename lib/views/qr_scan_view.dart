@@ -116,14 +116,14 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 40.0,
+                      height: 30.0,
                     ),
                     Text(
                       AppStrings.SCAN_QR_CODE,
                       style: AppStyles.blackWithBoldFontTextStyle(context, 20.0),
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: 25.0,
                     ),
                     Container(
                       height: 30.0.h,
@@ -136,7 +136,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(
-                      height: 50.0,
+                      height: 40.0,
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(
@@ -155,7 +155,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(
-                      height: 30.0,
+                      height: 25.0,
                     ),
                     Row(
                       mainAxisSize: MainAxisSize.min,
