@@ -62,20 +62,3 @@ class Data {
     return data;
   }
 }
-
-
-class Meta {
-  int isReviewed;
-
-  Meta({this.isReviewed});
-
-  Meta.fromJson(Map<String, dynamic> json) {
-    isReviewed = json['is_reviewed'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['is_reviewed'] = this.isReviewed;
-    return data;
-  }
-}

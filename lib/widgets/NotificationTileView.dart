@@ -4,6 +4,7 @@ import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/data/model/OffeReviewsModel.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
@@ -39,7 +40,13 @@ class _NotificationTileViewState extends State<NotificationTileView> {
           onTap: () {},
           child: Row(
             children: [
-              circularAvatar(55.0, 55.0, widget.data.user.imageUrl, 30.0),
+              SvgPicture.asset(
+                widget.data.user.imageUrl,
+                width: 55.0,
+                height: 55.0,
+                fit: BoxFit.cover,
+              ),
+
               SizedBox(
                 width: 10.0,
               ),

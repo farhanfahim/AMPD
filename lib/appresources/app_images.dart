@@ -13,6 +13,13 @@ class AppImages {
   static const String GOOGLE_PAY = BASE_IMAGE_PATH + "GooglePay.svg";
   static const String APPLE_PAY = BASE_IMAGE_PATH + "ApplePay.svg";
   static const String CREDIT_CARD = BASE_IMAGE_PATH + "CreditCard.svg";
+  static const String DUMMY_OFFER_IMAGE = BASE_IMAGE_PATH + "dummy_offer_image.png";
+  static const String DUMMY_PROFILE = BASE_IMAGE_PATH + "dummy_profile.png";
+  static const String DUMMY_REVIEW_PROFILE = BASE_IMAGE_PATH + "dummy_review_profile.svg";
+  static const String DUMMY_STORE_LOGO = BASE_IMAGE_PATH + "dummy_store_logo.svg";
+  static const String DUMMY_SAVED_OFFER_1 = BASE_IMAGE_PATH + "dummy_saved_offer_1.png";
+  static const String DUMMY_SAVED_OFFER_2 = BASE_IMAGE_PATH + "dummy_saved_offer_2.png";
+  static const String DUMMY_SAVED_OFFER_3 = BASE_IMAGE_PATH + "dummy_saved_offer_2.png";
 
   static const String NO_IMAGE_PLACEHOLDER = BASE_IMAGE_PATH + "noImage.png";
   static const String MAIN_LOGO = BASE_IMAGE_PATH + "logo.svg";

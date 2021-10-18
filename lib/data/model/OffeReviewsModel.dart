@@ -42,7 +42,7 @@ class ReviewsData {
   int status;
   String createdAt;
   String updatedAt;
-  User user;
+  ReviewUser user;
 
   ReviewsData(
       {this.id,
@@ -64,7 +64,7 @@ class ReviewsData {
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? new ReviewUser.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -84,7 +84,7 @@ class ReviewsData {
   }
 }
 
-class User {
+class ReviewUser {
   int id;
   String firstName;
   String lastName;
@@ -93,7 +93,7 @@ class User {
   String mediumImageUrl;
   String smallImageUrl;
 
-  User(
+  ReviewUser(
       {this.id,
         this.firstName,
         this.lastName,
@@ -102,7 +102,7 @@ class User {
         this.mediumImageUrl,
         this.smallImageUrl});
 
-  User.fromJson(Map<String, dynamic> json) {
+  ReviewUser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['first_name'];
     lastName = json['last_name'];

@@ -1,34 +1,34 @@
 import 'dart:async';
 
-import 'package:ampd/repo/saved_coupon_repository.dart';
+import 'package:ampd/repo/expired_coupon_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:ampd/app/app.dart';
 
 class ExpiredCouponViewModel {
-  SavedCouponRepository _savedCouponRepository;
+  ExpiredCouponRepository _expiredCouponRepository;
 
   static ExpiredCouponViewModel _instance;
 
   factory ExpiredCouponViewModel(App app) {
-    _instance ??= ExpiredCouponViewModel._internal(savedCouponRepository: app.getSavedCouponRepository(
+    _instance ??= ExpiredCouponViewModel._internal(expiredCouponRepository: app.getExpiredCouponRepository(
         appPreferences: app.getAppPreferences()));
     return _instance;
   }
 
   ExpiredCouponViewModel._internal(
-      {@required SavedCouponRepository savedCouponRepository}) {
-    _savedCouponRepository = savedCouponRepository;
+      {@required ExpiredCouponRepository expiredCouponRepository}) {
+    _expiredCouponRepository = expiredCouponRepository;
   }
 
-  SavedCouponRepository getSavedCouponRepository() => _savedCouponRepository;
+  ExpiredCouponRepository getSavedCouponRepository() => _expiredCouponRepository;
 
-  SavedCouponRepository clearRepositroyResponse() {
-    _savedCouponRepository = null;
+  ExpiredCouponRepository clearRepositroyResponse() {
+    _expiredCouponRepository = null;
   }
 
 
   void savedCoupons(Map<String, dynamic> map) {
-    _savedCouponRepository.getSavedCoupons(map);
+    _expiredCouponRepository.getSavedCoupons(map);
   }
 
 

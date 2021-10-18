@@ -89,14 +89,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
             builderDelegate: PagedChildBuilderDelegate<DataClass>(
               itemBuilder: (context, item, index) {
 
-                return checkExpiry(item.expireAt)?SavedCouponExpiredTileView(item):Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: NoRecordFound(
-                        "No Expired Coupon Found", AppImages.IC_COUPONS),
-                  ),
-                );
+                return SavedCouponExpiredTileView(item);
               },
               noItemsFoundIndicatorBuilder: (context) => Center(
                   child: NoRecordFound(
@@ -155,7 +148,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
                 height: 70.0,
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  child: Image.network(
+                  child: Image.asset(
                     data.imageUrl,
                     fit: BoxFit.cover,
                   ),

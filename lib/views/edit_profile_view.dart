@@ -359,7 +359,8 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                         onAnimationTap: () {
                           if(firstName.isNotEmpty){
                             if(lastName.isNotEmpty){
-                              callUpdateProfileApi();
+                              ToastUtil.showToast(context, "profile Updated Successfully!");
+                              Navigator.pop(context);
                             }else{
                               Util.hideKeyBoard(context);
                               ToastUtil.showToast(
@@ -1569,36 +1570,34 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       }
 
       if (response.success) {
-        if (response.data is VerficationCodeToEmailModel) {
-          VerficationCodeToEmailModel model = response.data;
-
-          //        print('field ${model.data[0].field}');
+        if (response.data == 0) {
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
           Future.delayed(Duration(seconds: 1), () {
             showEmailOtpBottomSheet(context);
           });
-        } else if (response.data is LoginResponseModel) {  //update profile response
-          ToastUtil.showToast(context, response.msg);
-          print('response ${response.data}');
-          LoginResponseModel newDetails = response.data;
-          print('response ${newDetails.data.imageUrl}');
-          _appPreferences.setUserDetails(data: jsonEncode(newDetails));
-          Navigator.pop(context);
-        } else if (response.data == 1) {  //verfication code to phone response
+        } else if (response.data == 2) {  //verfication code to phone response
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
           Future.delayed(Duration(seconds: 1), () {
             showPhoneOtpBottomSheet(context);
           });
-        } else if (response.data == 2) {  //verify phone otp response
+        } else if (response.data == 1) {  //verify phone otp response
+          ToastUtil.showToast(context, response.msg);
+          Navigator.pop(context);
+          Future.delayed(Duration(seconds: 1), () async {
+            email = emailController.text.toString();
+            showUpdateEmailBottomSheet(context);
+          });
+        }
+        else if (response.data == 3) {  //verify phone otp response
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
           Future.delayed(Duration(seconds: 1), () async {
             number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNo);
             showUpdatePhoneNoBottomSheet(context);
           });
-        }  else if (response.data == 0) { //email/phone updated response
+        }else if (response.data == 6) { //email/phone updated response
 
           ToastUtil.showToast(context, response.msg);
 

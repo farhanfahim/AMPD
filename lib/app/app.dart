@@ -15,7 +15,7 @@ import 'package:ampd/repo/login_repository.dart';
 import 'package:ampd/repo/reviews_repository.dart';
 import 'package:ampd/repo/saved_coupon2_repository.dart';
 import 'package:ampd/repo/side_menu_repository.dart';
-import 'package:ampd/repo/saved_coupon_repository.dart';
+import 'package:ampd/repo/expired_coupon_repository.dart';
 import 'package:ampd/repo/settings_repository.dart';
 import 'package:ampd/repo/terms_condition_repository.dart';
 import 'package:ampd/repo/filter_repository.dart';
@@ -114,8 +114,8 @@ class App extends StatelessWidget {
     return HomeRepository(appPreferences: appPreferences);
   }
 
-  SavedCouponRepository getSavedCouponRepository({@required AppPreferences appPreferences}) {
-    return SavedCouponRepository(appPreferences: appPreferences);
+  ExpiredCouponRepository getExpiredCouponRepository({@required AppPreferences appPreferences}) {
+    return ExpiredCouponRepository(appPreferences: appPreferences);
   }
 
   SavedCoupon2Repository getSavedCoupon2Repository({@required AppPreferences appPreferences}) {

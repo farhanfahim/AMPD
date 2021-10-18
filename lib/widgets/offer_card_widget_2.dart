@@ -19,6 +19,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
@@ -155,26 +156,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                           ),
 
                           SizedBox(height: 20.0,),
-                          CachedNetworkImage(
-                            imageUrl: widget.data.imageUrl,
-                            fit: BoxFit.cover,
-                            height: 300.0,
-                            // fadeInCurve: Curves.easeIn,
-                            imageBuilder: (BuildContext context,
-                                ImageProvider<dynamic> imageProvider) {
-                              return Image(
-                                // width: constraints.maxWidth,
-                                image: imageProvider,
-                                colorBlendMode: BlendMode.srcATop,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                            placeholder: (context, url) => Skeleton(),
-//              errorWidget: (context, url, error){
-//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-//              },
-                          ),
 
+                          Image.asset(AppImages.DUMMY_OFFER_IMAGE,fit: BoxFit.cover,   height: 300.0,),
                         ],
                       ),
                     ),
@@ -183,25 +166,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                 back: Stack(
                   fit: StackFit.expand,
                   children: [
-                    CachedNetworkImage(
-                      imageUrl: widget.data.imageUrl,
-                      fit: BoxFit.cover,
-                      // fadeInCurve: Curves.easeIn,
-                      imageBuilder: (BuildContext context,
-                          ImageProvider<dynamic> imageProvider) {
-                        return Image(
-                          // width: constraints.maxWidth,
-                          image: imageProvider,
-                          color: Colors.black45,
-                          colorBlendMode: BlendMode.srcATop,
-                          fit: BoxFit.cover,
-                        );
-                      },
-                      placeholder: (context, url) => Skeleton(),
-//              errorWidget: (context, url, error){
-//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-//              },
-                    ),
+
 
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -731,12 +696,10 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              circularAvatar(
-                                  60.0,
-                                  60.0,
-//                                "https://i1.wp.com/www.logoworks.com/blog/wp-content/uploads/2017/06/Untitled-2.png?fit=1280%2C800&ssl=1",
-                                  widget.image,
-                                  28.0
+
+                              SvgPicture.asset(
+                                AppImages.DUMMY_STORE_LOGO,width: 60.0,
+                                height: 60.0,
                               ),
 
                               SizedBox(width: 10.0,),

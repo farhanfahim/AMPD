@@ -16,6 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:sizer/sizer.dart';
@@ -128,24 +129,9 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                     front: Stack(
                       fit: StackFit.expand,
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: widget.image,
-                          fit: BoxFit.cover,
-                          // fadeInCurve: Curves.easeIn,
-                          imageBuilder: (BuildContext context,
-                              ImageProvider<dynamic> imageProvider) {
-                            return Image(
-                              // width: constraints.maxWidth,
-                              image: imageProvider,
-                              color: Colors.black38,
-                              colorBlendMode: BlendMode.srcATop,
-                              fit: BoxFit.cover,
-                            );
-                          },
-                          placeholder: (context, url) => Skeleton(),
-//              errorWidget: (context, url, error){
-//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-//              },
+                        SvgPicture.asset(
+                          AppImages.DUMMY_STORE_LOGO,width: 80.0,
+                          height: 80.0,
                         ),
 
                       Container(
@@ -162,13 +148,13 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
                             SizedBox(height: 20.0,),
 
-                            Image.asset(
-                              widget.offer,
+                            /*Image.asset(
+                              widget.image,
 //                              width: 45.0.w,
                               height: 300.0,
 //                              width: 45.0.w,
 //                              height: 80.0.w,
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
@@ -177,24 +163,8 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                   back: Stack(
                     fit: StackFit.expand,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: widget.image,
-                        fit: BoxFit.cover,
-                        // fadeInCurve: Curves.easeIn,
-                        imageBuilder: (BuildContext context,
-                            ImageProvider<dynamic> imageProvider) {
-                          return Image(
-                            // width: constraints.maxWidth,
-                            image: imageProvider,
-                            color: Colors.black45,
-                            colorBlendMode: BlendMode.srcATop,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                        placeholder: (context, url) => Skeleton(),
-//              errorWidget: (context, url, error){
-//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
-//              },
+                      SvgPicture.asset(
+                        AppImages.DUMMY_STORE_LOGO,
                       ),
 
                       Container(
@@ -483,14 +453,8 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            circularAvatar(
-                                60.0,
-                                60.0,
-//                                "https://i1.wp.com/www.logoworks.com/blog/wp-content/uploads/2017/06/Untitled-2.png?fit=1280%2C800&ssl=1",
-                                widget.image,
-                                28.0
-                            ),
-
+                            Image.asset(widget.image,fit: BoxFit.cover, width: 60.0,
+                              height: 60.0,),
                             SizedBox(width: 10.0,),
 
                             Expanded(

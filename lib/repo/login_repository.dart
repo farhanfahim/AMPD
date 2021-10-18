@@ -5,6 +5,7 @@ import 'package:ampd/data/model/repo_response_model.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
 import 'package:dio/dio.dart';
 import 'package:ampd/app/app.dart';
+import 'package:ampd/appresources/app_images.dart';
 import 'package:meta/meta.dart';
 import 'package:ampd/data/database/app_preferences.dart';
 
@@ -17,169 +18,95 @@ class LoginRepository {
 
   LoginRepository._internal(this._appPreferences);
 
-  void login(Map map){
+  Future<void> login(Map map) async {
     var repositoryResponse = RepositoryResponse();
-    repositoryResponse.success = false;
 
-    NetworkNAO.login(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-      var loginResponse = LoginResponseModel.fromJson(data);
+    AccessToken dummyToken = AccessToken(
+      type : "bearer",
+      token :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEwMCwiaWF0IjoxNjM0NTQ2NTAzfQ.Vtj_vFW2vsaLkuRoVCT7MT_JmoIdz5tsV3tpvkZNbLc",
+      refreshToken :"2831c15ab7f1f562557e9eaae9c352f3mqC1f/tq3rAFYvD64lpujl+yFG5QxU3yoVKsnr5UUIj6iBK3rrMpRj9JrQxm+bGQ",
+    );
 
-      await _appPreferences.isPreferenceReady;
-      _appPreferences.setUserId(id: loginResponse.data.id.toString());
-      _appPreferences.setUserDetails(data: jsonEncode(loginResponse));
-      _appPreferences.setFcmToken(token: map['device_token']);
-      _appPreferences.setAccessToken(token: loginResponse.data.accessToken.token);
+    Meta dummyMeta = Meta(rolesCsv : "User");
 
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = loginResponse;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) async {
-      if(onError is DioError){
-        if (onError.response.statusCode == 401) {
-          repositoryResponse.statusCode = 401;
-          await App().getAppPreferences().isPreferenceReady;
-          await App().getAppPreferences().clearPreference();
-        }
-      }
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
+    Data dummyData = Data(
+        id: 100,
+        firstName : "Yusuf ",
+        lastName : "Nahass",
+        email : "Yusufnahass@email.com",
+        phone: "(800) 362-9239",
+        image: null,
+        address: null,
+        latitude: null,
+        longitude: null,
+        pushNotifications :1,
+        sortingAscending:1,
+        nearestLocation:1,
+        highestDiscountAmount:1,
+        soonestExpiration:1,
+        radius:0,
+        socialPlatform: null,
+        clientId: null,
+        token: null,
+        verificationCode: "0000",
+        isSocialLogin:1,
+        isVerified:1,
+        isApproved:0,
+        createdAt : "2021-08-24 00:34:51",
+        updatedAt: "2021-08-24 00:34:51",
+        accessToken: dummyToken,
+        imageUrl : AppImages.DUMMY_PROFILE,
+        mediumImageUrl : AppImages.DUMMY_PROFILE,
+        smallImageUrl : AppImages.DUMMY_PROFILE,
+        mMeta: dummyMeta);
 
-      _repositoryResponse.add(repositoryResponse);
-    });
+    var loginResponse = LoginResponseModel(status:true,data: dummyData,message: "Login Successfully.");
+
+    await _appPreferences.isPreferenceReady;
+    _appPreferences.setUserId(id: loginResponse.data.id.toString());
+    _appPreferences.setUserDetails(data: jsonEncode(loginResponse));
+    _appPreferences.setFcmToken(token: map['device_token']);
+    _appPreferences.setAccessToken(token: loginResponse.data.accessToken.token);
+
+    repositoryResponse.success = true;
+    repositoryResponse.msg = loginResponse.message;
+    repositoryResponse.data = loginResponse;
+    _repositoryResponse.add(repositoryResponse);
   }
 
   void forgetPassword(Map map){
     var repositoryResponse = RepositoryResponse();
-    repositoryResponse.success = false;
 
-    NetworkNAO.forgotPassword(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        //  var loginResponse = LoginResponse.fromJson(data);
-
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) async {
-      if(onError is DioError){
-        if (onError.response.statusCode == 401) {
-          repositoryResponse.statusCode = 401;
-          await App().getAppPreferences().isPreferenceReady;
-          await App().getAppPreferences().clearPreference();
-        }
-      }
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
-
-      _repositoryResponse.add(repositoryResponse);
-    });
+    repositoryResponse.success = true;
+    repositoryResponse.msg = "Verification code has been send successfully";
+    repositoryResponse.data = null;
+    _repositoryResponse.add(repositoryResponse);
   }
 
   void resetPassword(Map map){
     var repositoryResponse = RepositoryResponse();
-    repositoryResponse.success = false;
-
-    NetworkNAO.resetPassword(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        //  var loginResponse = LoginResponse.fromJson(data);
-
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) {
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
-
-      _repositoryResponse.add(repositoryResponse);
-    });
+    repositoryResponse.success = true;
+    repositoryResponse.msg = "Password Changed Successfully";
+    repositoryResponse.data = null;
+    _repositoryResponse.add(repositoryResponse);
   }
 
   void verifyOtp(Map map){
     var repositoryResponse = RepositoryResponse();
-    repositoryResponse.success = false;
 
-    NetworkNAO.verifyOTP(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        //  var loginResponse = LoginResponse.fromJson(data);
-
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) {
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
-
-      _repositoryResponse.add(repositoryResponse);
-    });
+    repositoryResponse.success = true;
+    repositoryResponse.msg = "Verified";
+    repositoryResponse.data = null;
+    _repositoryResponse.add(repositoryResponse);
   }
 
   void registerViaPhone(Map map){
     var repositoryResponse = RepositoryResponse();
-    repositoryResponse.success = false;
 
-    NetworkNAO.signUpViaPhone(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        //  var loginResponse = LoginResponse.fromJson(data);
-
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) {
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
-
-      _repositoryResponse.add(repositoryResponse);
-    });
+    repositoryResponse.success = true;
+    repositoryResponse.msg = "Code has been sent to your phone number";
+    repositoryResponse.data = null;
+    _repositoryResponse.add(repositoryResponse);
   }
 
 

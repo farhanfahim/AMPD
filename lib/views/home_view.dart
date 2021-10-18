@@ -427,7 +427,7 @@ class _HomeViewState extends State<HomeView>
        var map = Map<String, dynamic>();
        map['offer_id'] = offerId;
        map['status'] = 10;
-       _homeViewModel.likeDislikeOffer(map);
+       _homeViewModel.likeOffer(map);
      } else {
        setState(() {
          _isInternetAvailable = false;
@@ -512,7 +512,7 @@ class _HomeViewState extends State<HomeView>
         print('total ${responseRegister.data.lastPage}');
         _totalPages = responseRegister.data.lastPage;
         dataList.clear();
-        dataList.addAll(responseRegister.data.dataclass.where((a) => dataList.every((b) => a.id != b.id)));
+        dataList.addAll(responseRegister.data.dataclass);
 
 
         if (dataList.isNotEmpty) {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/data/model/repo_response_model.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
@@ -16,111 +17,59 @@ class RegisterRepository {
 
   RegisterRepository._internal(this._appPreferences);
 
+
   void register(Map map){
+
+
+
+    AccessToken dummyToken = AccessToken(
+      type : "bearer",
+      token :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEwMCwiaWF0IjoxNjM0NTQ2NTAzfQ.Vtj_vFW2vsaLkuRoVCT7MT_JmoIdz5tsV3tpvkZNbLc",
+      refreshToken :"2831c15ab7f1f562557e9eaae9c352f3mqC1f/tq3rAFYvD64lpujl+yFG5QxU3yoVKsnr5UUIj6iBK3rrMpRj9JrQxm+bGQ",
+    );
+
+    Data dummyData = Data(
+
+        firstName : "Yusuf ",
+        lastName : "Nahass",
+        email : "Yusufnahass@email.com",
+        phone: "(800) 362-9239",
+        id: 100,
+        radius: 100,
+        isVerified:1,
+        isApproved:1,
+        createdAt : "2021-08-24 00:34:51",
+        updatedAt: "2021-08-24 00:34:51",
+        accessToken: dummyToken,
+        imageUrl : AppImages.DUMMY_PROFILE,);
+
+
+    var registerResponse = RegisterResponseModel(status:true,data: dummyData,message: "Registered Successfully.");
+
     var repositoryResponse = RepositoryResponse();
-    repositoryResponse.success = false;
-
-    NetworkNAO.signUp(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        var registerResponse = RegisterResponseModel.fromJson(data);
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = registerResponse;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) async {
-      if(onError is DioError){
-        if (onError.response.statusCode == 401) {
-          repositoryResponse.statusCode = 401;
-          await App().getAppPreferences().isPreferenceReady;
-          await App().getAppPreferences().clearPreference();
-        }
-      }
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
-
-      _repositoryResponse.add(repositoryResponse);
-    });
+    repositoryResponse.success = true;
+    repositoryResponse.msg = registerResponse.message;
+    repositoryResponse.data = registerResponse;
+    _repositoryResponse.add(repositoryResponse);
   }
 
   void registerViaPhone(Map map){
     var repositoryResponse = RepositoryResponse();
-    repositoryResponse.success = false;
-
-    NetworkNAO.signUpViaPhone(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        //  var loginResponse = LoginResponse.fromJson(data);
-
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) async {
-      if(onError is DioError){
-        if (onError.response.statusCode == 401) {
-          repositoryResponse.statusCode = 401;
-          await App().getAppPreferences().isPreferenceReady;
-          await App().getAppPreferences().clearPreference();
-        }
-      }
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
-
-      _repositoryResponse.add(repositoryResponse);
-    });
+    repositoryResponse.success = true;
+    repositoryResponse.msg = "Code has been sent to your phone number";
+    repositoryResponse.data = null;
+    _repositoryResponse.add(repositoryResponse);
   }
 
   void verifyOtp(Map map){
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = false;
 
-    NetworkNAO.verifyOTP(map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        //  var loginResponse = LoginResponse.fromJson(data);
 
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) async {
-      if(onError is DioError){
-        if (onError.response.statusCode == 401) {
-          repositoryResponse.statusCode = 401;
-          await App().getAppPreferences().isPreferenceReady;
-          await App().getAppPreferences().clearPreference();
-        }
-      }
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
-
-      _repositoryResponse.add(repositoryResponse);
-    });
+    repositoryResponse.success = true;
+    repositoryResponse.msg = "Verified";
+    repositoryResponse.data = null;
+    _repositoryResponse.add(repositoryResponse);
   }
 
   Stream<RepositoryResponse> getRepositoryResponse() {
