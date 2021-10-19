@@ -48,18 +48,6 @@ class _FilterState extends State<FilterView>{
   @override
   void initState() {
     super.initState();
-
-    _appPreferences.getUserDetails().then((userData) {
-      setState(() {
-        userDetails = userData;
-        expirationSwitch = userData.data.soonestExpiration == 1? true : false;
-        discountAmountSwitch = userData.data.highestDiscountAmount == 1? true : false;
-        locationSwitch = userData.data.nearestLocation == 1? true : false;
-        alphabetSwitch = userData.data.sortingAscending == 1? true : false;
-        radius = userData.data.radius.toDouble();
-      });
-    });
-
     _filterViewModel = FilterViewModel(App());
     subscribeToViewModel();
   }
@@ -151,7 +139,7 @@ class _FilterState extends State<FilterView>{
                                         locationSwitch = false;
                                         alphabetSwitch = false;
                                       });
-                                      callUpdateProfileApi();
+
                                       //
                                     },
                                     // activeColor: Colors.green,
@@ -189,7 +177,7 @@ class _FilterState extends State<FilterView>{
                                         locationSwitch = false;
                                         alphabetSwitch = false;
                                       });
-                                      callUpdateProfileApi();
+
                                       //
                                     },
                                     // activeColor: Colors.green,
@@ -227,7 +215,7 @@ class _FilterState extends State<FilterView>{
                                         discountAmountSwitch = false;
                                         alphabetSwitch = false;
                                       });
-                                      callUpdateProfileApi();
+
                                       //
                                     },
                                     // activeColor: Colors.green,
@@ -266,7 +254,7 @@ class _FilterState extends State<FilterView>{
                                         discountAmountSwitch = false;
 
                                       });
-                                      callUpdateProfileApi();
+
                                       //
                                     },
                                     // activeColor: Colors.green,
@@ -352,7 +340,7 @@ class _FilterState extends State<FilterView>{
                                               min1 = lowerValue;
                                               max1 = upperValue;
                                             });
-                                            callUpdateProfileApi();
+
                                           },
 
                                           trackBar: FlutterSliderTrackBar(
@@ -471,7 +459,7 @@ class _FilterState extends State<FilterView>{
                                               userDetails.data.radius = lowerValue.toInt();
                                             });
 
-                                            callUpdateProfileApi();
+
                                           },
 
                                           trackBar: FlutterSliderTrackBar(
@@ -559,29 +547,7 @@ class _FilterState extends State<FilterView>{
   }
 
 
-  Future<void> callUpdateProfileApi() async {
-    Util.check().then((value) {
-      if (value != null && value) {
-        // Internet Present Case
-        setState(() {
-          _isInternetAvailable = true;
-//          _isInAsyncCall = true;
-        });
 
-        var map = Map<String, dynamic>();
-        map['soonest_expiration'] = expirationSwitch? 1 : 0;
-        map['highest_discount_amount'] = discountAmountSwitch? 1 : 0;
-        map['nearest_location'] = locationSwitch? 1 : 0;
-        map['sorting_ascending'] = alphabetSwitch? 1 : 0;
-        _filterViewModel.updateProfile(map);
-      } else {
-        setState(() {
-          _isInternetAvailable = false;
-          ToastUtil.showToast(context, "No internet");
-        });
-      }
-    });
-  }
 
   void subscribeToViewModel() {
     _filterViewModel

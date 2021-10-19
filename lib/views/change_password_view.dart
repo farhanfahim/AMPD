@@ -1011,7 +1011,7 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
         });
       }
 
-      if (response.data is ChangePasswordModel) {
+      if (response.msg == "Password has been Changed Successfully") {
 
         ToastUtil.showToast(context, response.msg);
         Navigator.of(context).pop();

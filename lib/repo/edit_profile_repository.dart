@@ -24,21 +24,21 @@ class EditProfileRepository {
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = true;
     repositoryResponse.msg = "Code has been sent to your email";
-    repositoryResponse.data = 0;
+    repositoryResponse.data = 3;
     _repositoryResponse.add(repositoryResponse);
   }
   void verifyEmailOtp(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = true;
     repositoryResponse.msg = "Verified";
-    repositoryResponse.data = 1;
+    repositoryResponse.data = null;
     _repositoryResponse.add(repositoryResponse);
   }
   void changeEmail(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = true;
     repositoryResponse.msg = "Email address updated successfully!";
-    repositoryResponse.data = 6;
+    repositoryResponse.data = 0;
     _repositoryResponse.add(repositoryResponse);
   }
 
@@ -49,21 +49,21 @@ class EditProfileRepository {
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = true;
     repositoryResponse.msg = "Code has been sent to your phone number";
-    repositoryResponse.data = 2;
+    repositoryResponse.data = 1;
     _repositoryResponse.add(repositoryResponse);
   }
   void verifyPhoneOtp(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = true;
     repositoryResponse.msg = "Verified";
-    repositoryResponse.data = 3;
+    repositoryResponse.data = 2;
     _repositoryResponse.add(repositoryResponse);
   }
   void changePhone(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = true;
     repositoryResponse.msg = "Phone number updated successfully!";
-    repositoryResponse.data = 6;
+    repositoryResponse.data = 0;
     _repositoryResponse.add(repositoryResponse);
   }
 
@@ -150,3 +150,4 @@ class EditProfileRepository {
     return _repositoryResponse.stream;
   }
 }
+

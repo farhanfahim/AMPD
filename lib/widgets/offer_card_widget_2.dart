@@ -157,7 +157,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
                           SizedBox(height: 20.0,),
 
-                          Image.asset(AppImages.DUMMY_OFFER_IMAGE,fit: BoxFit.cover,   height: 300.0,),
+                          Image.asset(AppImages.STARBUCKS_OFFER,fit: BoxFit.cover,   height: 300.0,),
                         ],
                       ),
                     ),
@@ -696,10 +696,17 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-
-                              SvgPicture.asset(
-                                AppImages.DUMMY_STORE_LOGO,width: 60.0,
+                              Container(
+                                width: 60.0,
                                 height: 60.0,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                                  child: Image.asset(
+                                    AppImages.DUMMY_STORE_LOGO,
+                                    fit: BoxFit.cover,
+                                  ),
+
+                                ),
                               ),
 
                               SizedBox(width: 10.0,),

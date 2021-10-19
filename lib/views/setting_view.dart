@@ -130,7 +130,6 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
                                   setState(() {
                                     pushNotificationSwitch = value;
                                   });
-                                  callUpdateProfileApi();
                                 },
                                 // activeColor: Colors.green,
                               ),
@@ -215,7 +214,6 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
                                         min = lowerValue;
                                         max = upperValue;
 
-                                        callUpdateProfileApi();
                                         print("min $min");
                                         print("max $max");
                                         setState(() {});
@@ -510,27 +508,6 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
     );
   }
 
-  Future<void> callUpdateProfileApi() async {
-    Util.check().then((value) {
-      if (value != null && value) {
-        // Internet Present Case
-        setState(() {
-          _isInternetAvailable = true;
-//          _isInAsyncCall = true;
-        });
-
-        var map = Map<String, dynamic>();
-        map['push_notifications'] = pushNotificationSwitch? 1 : 0;
-        map['radius'] = min;
-        _settingsViewModel.updateSettings(map);
-      } else {
-        setState(() {
-          _isInternetAvailable = false;
-          ToastUtil.showToast(context, "No internet");
-        });
-      }
-    });
-  }
 
 
 

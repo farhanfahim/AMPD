@@ -210,7 +210,7 @@ class HomeRepository {
     );
 
     repositoryResponse.success = true;
-    repositoryResponse.msg = "Offer has been disliked";
+    repositoryResponse.msg = "Offer has been saved";
     repositoryResponse.data = likeDislikeOfferResponse;
     _repositoryResponse.add(repositoryResponse);
   }

@@ -1081,7 +1081,19 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       AnimatedGradientButton(
         onAnimationTap: () {
           if (validatePhone()) {
-            callVerifyPhoneOtpApi();
+            if (code.isNotEmpty) {
+              if (code.length == 4) {
+                callVerifyPhoneOtpApi();
+              } else {
+
+                Util.hideKeyBoard(context);
+                ToastUtil.showToast(context, "Please enter valid otp code");
+              }
+            } else {
+              Util.hideKeyBoard(context);
+              ToastUtil.showToast(context, "Please enter otp code");
+            }
+
           }
         },
         buttonController: _phoneOtpButtonController,
@@ -1157,7 +1169,20 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       AnimatedGradientButton(
         onAnimationTap: () {
           if (validateEmail()) {
-            callVerifyEmailOtpApi();
+            if (code.isNotEmpty) {
+              if (code.length == 4) {
+                callVerifyEmailOtpApi();
+              } else {
+
+                Util.hideKeyBoard(context);
+                ToastUtil.showToast(context, "Please enter valid otp code");
+              }
+            } else {
+              Util.hideKeyBoard(context);
+              ToastUtil.showToast(context, "Please enter otp code");
+            }
+
+
           }
         },
         buttonController: _emailOtpButtonController,
@@ -1570,34 +1595,27 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       }
 
       if (response.success) {
-        if (response.data == 0) {
+        if (response.data == 3) {
+
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
           Future.delayed(Duration(seconds: 1), () {
             showEmailOtpBottomSheet(context);
           });
-        } else if (response.data == 2) {  //verfication code to phone response
+        } else if (response.data == 1) {  //verfication code to phone response
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
           Future.delayed(Duration(seconds: 1), () {
             showPhoneOtpBottomSheet(context);
           });
-        } else if (response.data == 1) {  //verify phone otp response
-          ToastUtil.showToast(context, response.msg);
-          Navigator.pop(context);
-          Future.delayed(Duration(seconds: 1), () async {
-            email = emailController.text.toString();
-            showUpdateEmailBottomSheet(context);
-          });
-        }
-        else if (response.data == 3) {  //verify phone otp response
+        } else if (response.data == 2) {  //verify phone otp response
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
           Future.delayed(Duration(seconds: 1), () async {
             number = await PhoneNumber.getRegionInfoFromPhoneNumber(phoneNo);
             showUpdatePhoneNoBottomSheet(context);
           });
-        }else if (response.data == 6) { //email/phone updated response
+        }  else if (response.data == 0) { //email/phone updated response
 
           ToastUtil.showToast(context, response.msg);
 
@@ -1630,6 +1648,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       } else {
         ToastUtil.showToast(context, response.msg);
       }
+
     });
   }
 

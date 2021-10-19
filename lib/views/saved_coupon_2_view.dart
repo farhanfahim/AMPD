@@ -316,10 +316,11 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                     height: 70.0,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      child: Image.network(
+                      child: Image.asset(
                         data.imageUrl,
                         fit: BoxFit.cover,
                       ),
+
                     ),
                   ),
                   SizedBox(

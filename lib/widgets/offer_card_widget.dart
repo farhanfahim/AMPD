@@ -129,10 +129,6 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                     front: Stack(
                       fit: StackFit.expand,
                       children: [
-                        SvgPicture.asset(
-                          AppImages.DUMMY_STORE_LOGO,width: 80.0,
-                          height: 80.0,
-                        ),
 
                       Container(
                         margin: EdgeInsets.only(top: 25.0, bottom: 80.0),
@@ -163,9 +159,6 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                   back: Stack(
                     fit: StackFit.expand,
                     children: [
-                      SvgPicture.asset(
-                        AppImages.DUMMY_STORE_LOGO,
-                      ),
 
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
@@ -453,8 +446,18 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset(widget.image,fit: BoxFit.cover, width: 60.0,
-                              height: 60.0,),
+                            Container(
+                              width: 60.0,
+                              height: 60.0,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                                child: Image.asset(
+                                  AppImages.DUMMY_STORE_LOGO,
+                                  fit: BoxFit.cover,
+                                ),
+
+                              ),
+                            ),
                             SizedBox(width: 10.0,),
 
                             Expanded(
