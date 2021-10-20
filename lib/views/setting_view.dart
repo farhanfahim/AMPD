@@ -49,14 +49,7 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     _settingsViewModel = SettingsViewModel(App());
-
-    _appPreferences.getUserDetails().then((userData) {
-      setState(() {
-        userDetails = userData;
-        pushNotificationSwitch = userData.data.pushNotifications == 1? true : false;
-        min = userData.data.radius.toDouble();
-      });
-    });
+    
     subscribeToViewModel();
   }
 

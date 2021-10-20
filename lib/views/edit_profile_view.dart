@@ -1168,7 +1168,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       }),
       AnimatedGradientButton(
         onAnimationTap: () {
-          if (validateEmail()) {
             if (code.isNotEmpty) {
               if (code.length == 4) {
                 callVerifyEmailOtpApi();
@@ -1183,7 +1182,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
             }
 
 
-          }
+
         },
         buttonController: _emailOtpButtonController,
         text: AppStrings.VERIFY_NOW,
@@ -1207,6 +1206,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       AnimatedGradientButton(
         onAnimationTap: () {
           if (validateEmail()) {
+
             callVerificationCodeToEmailApi();
           }
         },
@@ -1402,6 +1402,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         var map = Map<String, dynamic>();
         map['email'] = editableEmailController.text.trim().toString();
         _editProfileViewModel.verificationCodeToEmail(map);
+        editableEmailController.clear();
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -1505,6 +1506,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         map['email'] = editableEmailController.text.trim().toString();
         map['code'] = code;
         _editProfileViewModel.verifyEmailOtp(map);
+        editableEmailController.clear();
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -1655,41 +1657,46 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
   bool validateEmail() {
     Util.hideKeyBoard(context);
 
-    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    var emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
-    var email = emailController.text.trim().toString();
+    var email = editableEmailController.text.trim().toString();
 
-    if(email.isEmpty || email == "") {
+    if(email.isEmpty) {
       ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
       return false;
+    }else{
+      if(!emailRegex.hasMatch(email)) {
+        ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+        return false;
+      }else{
+        return true;
+      }
     }
 
-    if(!emailRegex.hasMatch(email)) {
-      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
-      return false;
-    }
 
-    return true;
+
+
   }
 
   bool validateEditableEmail() {
     Util.hideKeyBoard(context);
 
-    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+    var emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
     var email = editableEmailController.text.trim().toString();
 
-    if(email.isEmpty || email == "") {
+    if(email.isEmpty) {
       ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
       return false;
+    }else{
+      if(!emailRegex.hasMatch(email)) {
+        ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+        return false;
+      }else{
+        return true;
+      }
     }
 
-    if(!emailRegex.hasMatch(email)) {
-      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
-      return false;
-    }
-
-    return true;
   }
 
   bool validatePhone() {
@@ -1698,8 +1705,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     var phone = editableNumberController.text.trim();
 
     if (phoneNo.isEmpty || phoneNo == "") {
-
-      //ToastUtil.showToast(context, "Please provide your phone number");
       return false;
     }else if (isValidate) {
       return true;

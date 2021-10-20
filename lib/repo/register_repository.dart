@@ -33,7 +33,7 @@ class RegisterRepository {
         firstName : "Yusuf ",
         lastName : "Nahass",
         email : "Yusufnahass@email.com",
-        phone: "(800) 362-9239",
+        phone: "+12063456545",
         id: 100,
         radius: 100,
         isVerified:1,
@@ -41,7 +41,7 @@ class RegisterRepository {
         createdAt : "2021-08-24 00:34:51",
         updatedAt: "2021-08-24 00:34:51",
         accessToken: dummyToken,
-        imageUrl : AppImages.DUMMY_PROFILE,);
+      imageUrl : "https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_170,w_170,f_auto,g_faces,z_0.7,b_white,q_auto:eco,dpr_1/v1425465847/ffllgzbmsh1u6bfdkyow.jpg",);
 
 
     var registerResponse = RegisterResponseModel(status:true,data: dummyData,message: "Registered Successfully.");

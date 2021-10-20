@@ -34,7 +34,7 @@ class LoginRepository {
         firstName : "Yusuf ",
         lastName : "Nahass",
         email : "Yusufnahass@email.com",
-        phone: "(800) 362-9239",
+        phone: "+12063456545",
         image: null,
         address: null,
         latitude: null,
@@ -55,9 +55,9 @@ class LoginRepository {
         createdAt : "2021-08-24 00:34:51",
         updatedAt: "2021-08-24 00:34:51",
         accessToken: dummyToken,
-        imageUrl : AppImages.DUMMY_PROFILE,
-        mediumImageUrl : AppImages.DUMMY_PROFILE,
-        smallImageUrl : AppImages.DUMMY_PROFILE,
+        imageUrl : "https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_170,w_170,f_auto,g_faces,z_0.7,b_white,q_auto:eco,dpr_1/v1425465847/ffllgzbmsh1u6bfdkyow.jpg",
+        mediumImageUrl : "https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_170,w_170,f_auto,g_faces,z_0.7,b_white,q_auto:eco,dpr_1/v1425465847/ffllgzbmsh1u6bfdkyow.jpg",
+        smallImageUrl :"https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_170,w_170,f_auto,g_faces,z_0.7,b_white,q_auto:eco,dpr_1/v1425465847/ffllgzbmsh1u6bfdkyow.jpg",
         mMeta: dummyMeta);
 
     var loginResponse = LoginResponseModel(status:true,data: dummyData,message: "Login Successfully.");
