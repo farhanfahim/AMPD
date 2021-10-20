@@ -149,7 +149,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                         children: [
                           Center(
                             child: Text(
-                              widget.data.type == 10?"\$"+widget.text:widget.text+"%",
+                              "Offer ${widget.text}% Off",
                               style: AppStyles.poppinsTextStyle(
                                   fontSize: 30.0.sp, weight: FontWeight.w400),
                             ),

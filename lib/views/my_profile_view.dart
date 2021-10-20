@@ -24,7 +24,8 @@ class _MyProfileViewState extends State<MyProfileView> {
   String _name = "--";
   String _email = "--";
   String _phone = "--";
-  String _imageUrl = "";
+  String _imageUrl = "https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_170,w_170,f_auto,g_faces,z_0.7,b_white,q_auto:eco,dpr_1/v1425465847/ffllgzbmsh1u6bfdkyow.jpg";
+
 
   @override
   void initState() {
@@ -37,11 +38,7 @@ class _MyProfileViewState extends State<MyProfileView> {
       setState(() {
         _email = userData.data.email;
         _phone = userData.data.phone;
-        if(userData.data.image!= null) {
-          _imageUrl = userData.data.imageUrl;
-        }else{
-          _imageUrl = "";
-        }
+
         _name = "${userData.data.firstName} ${userData.data.lastName}";
       });
     });
@@ -66,11 +63,6 @@ class _MyProfileViewState extends State<MyProfileView> {
                   setState(() {
                     _email = userData.data.email;
                     _phone = userData.data.phone;
-                    if(userData.data.image!= null) {
-                      _imageUrl = userData.data.imageUrl;
-                    }else{
-                      _imageUrl = "";
-                    }
                     _name = "${userData.data.firstName} ${userData.data.lastName}";
                   });
                 });

@@ -257,7 +257,15 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                                 if (phoneNo2.isNotEmpty) {
                                   if (isValidate) {
                                     if (password.isNotEmpty) {
-                                      callLoginApi();
+                                      if (password.length > 7) {
+                                        callLoginApi();
+                                      } else {
+                                        setState(() {
+                                          flag = true;
+                                        });
+                                        ToastUtil.showToast(
+                                            context, "Password is too short");
+                                      }
                                     } else {
                                       setState(() {
                                         flag = true;

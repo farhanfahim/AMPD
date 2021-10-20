@@ -7,6 +7,7 @@ import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/widgets/animated_gradient_button.dart';
+import 'package:ampd/widgets/widgets.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:ampd/data/model/register_response_model.dart';
 import 'package:ampd/utils/ToastUtil.dart';
@@ -130,6 +131,11 @@ class _CreateAnAccountViewState extends State<CreateAnAccountView> with TickerPr
         FocusScope.of(context).requestFocus(new FocusNode());
       },
       child: Scaffold(
+          appBar: appBar(title:"",
+              showCloseIcon: false,
+              onBackClick: (){
+                Navigator.of(context).pop();
+              },iconColor:AppColors.COLOR_BLACK),
           backgroundColor: AppColors.WHITE_COLOR,
           body: SafeArea(
             child: SingleChildScrollView(

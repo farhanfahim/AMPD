@@ -292,6 +292,7 @@ class _HomeViewState extends State<HomeView>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
               Opacity(
                   opacity: 0.3,
                   child: SvgPicture.asset(
@@ -300,38 +301,32 @@ class _HomeViewState extends State<HomeView>
                     height: 80.0,
                   )),
               SizedBox(
-                height: 10.0,
+                height: 20.0,
               ),
+
               Text(
-                'No more coupons left',
+                'There are no more deals in your area.',
                 style: AppStyles.poppinsTextStyle(
                     fontSize: 18.0, weight: FontWeight.w500)
                     .copyWith(color: AppColors.UNSELECTED_COLOR),
               ),
               SizedBox(
-                height: 30.0,
+                height: 20.0,
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 25.0.w),
+                margin: EdgeInsets.symmetric(horizontal: 10.0.w),
                 child: GradientButton(
                   onTap: () {
-                    _swipeItems.clear();
-                    _currentPage = 1;
-                    Timer(Duration(seconds: 1),
-                            () =>   callOffersApi());
-                   setState(() {
-                     _isInAsyncCall = true;
-                     _stackFinished = false;
-                   });
-
-                   _matchEngine = MatchEngine(swipeItems: _swipeItems);
-////                      print('length ${_matchEngine.currentItem}');
-//                    _matchEngine.rewindMatch();
+                    Navigator.pushNamed(
+                        context, AppRoutes.SETTING_VIEW ,arguments: {
+                      'from': true,
+                    });
 
                   },
-                  text: "Fetch More",
+                  text: "Expand Search Area",
                 ),
-              )
+              ),
+
             ],
           ),
         ),

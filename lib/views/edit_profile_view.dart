@@ -91,7 +91,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
   String email = "";
   String address = "";
   String phoneNo = "";
-  String imageUrl = "";
+  String imageUrl = "https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_170,w_170,f_auto,g_faces,z_0.7,b_white,q_auto:eco,dpr_1/v1425465847/ffllgzbmsh1u6bfdkyow.jpg";
 
   bool _isEmailValid = false;
   IconData checkIconData = Icons.check;
