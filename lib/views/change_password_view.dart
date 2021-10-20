@@ -880,34 +880,22 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
       return false;
     }
 
-    // if(currentPassword.length < 6) {
-    //   ToastUtil.showToast(context, "Current Password is really short please enter atleast 6 characters.");
-    //   return false;
-    // }
-
     if(newPassword.isEmpty || newPassword == "") {
       ToastUtil.showToast(context, "Please provide your new password");
       return false;
     }
 
-    if(newPassword.length < 6) {
-      ToastUtil.showToast(context, "Your password must be 6 characters or more");
+    if(currentPassword.length < 8 || newPassword.length < 8 || passwordConfirmation.length < 8) {
+      ToastUtil.showToast(context, "Password is too short");
       return false;
     }
 
-    // if(!Util.isPasswordCompliant(context, newPassword, "Password")){
-    //   return false;
-    // }
 
     if(passwordConfirmation.isEmpty || passwordConfirmation == "") {
       ToastUtil.showToast(context, "Please provide your confirm password");
       return false;
     }
 
-    // if(passwordConfirmation.length < 6) {
-    //   ToastUtil.showToast(context, "Please provide");
-    //   return false;
-    // }
 
     if(newPassword != passwordConfirmation){
       ToastUtil.showToast(context, "Password and password confirmation values don't match");
