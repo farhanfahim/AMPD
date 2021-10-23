@@ -247,7 +247,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                           Row(
                             children: [
                               Text(
-                                "Number of Uses :",
+                                "Number of Users :",
                                 style: AppStyles.poppinsTextStyle(
                                     fontSize: 12.0.sp,
                                     weight: FontWeight.w300),

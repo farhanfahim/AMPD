@@ -230,7 +230,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                             Row(
                               children: [
                                 Text(
-                                  "Number of Uses :",
+                                  "Number of Users :",
                                   style: AppStyles.poppinsTextStyle(fontSize: 12.0.sp, weight: FontWeight.w300),
                                 ),
 

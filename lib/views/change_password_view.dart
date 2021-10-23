@@ -875,32 +875,45 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
     var newPassword = nPasswordController.text.trim().toString();
     var passwordConfirmation = cPasswordController.text.trim().toString();
 
-    if(currentPassword.isEmpty || currentPassword == "") {
-      ToastUtil.showToast(context, "Please provide your current password");
+
+    if(currentPassword.length < 8 ) {
+      if (currentPassword.isEmpty || currentPassword == "") {
+        ToastUtil.showToast(context, "Please provide your current password");
+        return false;
+      }
+      ToastUtil.showToast(context, "Current password is too short");
+      return false;
+    }
+    if(newPassword.length < 8 ) {
+
+      if(newPassword.isEmpty || newPassword == "") {
+
+        ToastUtil.showToast(context, "Please provide your new password");
+        return false;
+      }
+
+      ToastUtil.showToast(context, "New password is too short");
       return false;
     }
 
-    if(newPassword.isEmpty || newPassword == "") {
-      ToastUtil.showToast(context, "Please provide your new password");
+    if(passwordConfirmation.length < 8 ) {
+      if (passwordConfirmation.isEmpty || passwordConfirmation == "") {
+        ToastUtil.showToast(context, "Please provide your confirm password");
+        return false;
+      }
+      ToastUtil.showToast(context, "Confirm password is too short");
       return false;
     }
-
-    if(currentPassword.length < 8 || newPassword.length < 8 || passwordConfirmation.length < 8) {
-      ToastUtil.showToast(context, "Password is too short");
-      return false;
-    }
-
-
-    if(passwordConfirmation.isEmpty || passwordConfirmation == "") {
-      ToastUtil.showToast(context, "Please provide your confirm password");
-      return false;
-    }
-
 
     if(newPassword != passwordConfirmation){
       ToastUtil.showToast(context, "Password and password confirmation values don't match");
       return false;
     }
+
+
+
+
+
 
     return true;
   }

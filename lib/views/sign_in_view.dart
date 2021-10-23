@@ -355,6 +355,12 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   }
 
   showForgetBottomSheet(BuildContext context) {
+
+    setState(() {
+      phoneNo = "";
+      isValidate = false;
+      isValidate2 = false;
+    });
     showBottomSheetWidgetWithAnimatedBtn(
       context,
       "Forgot Password",
@@ -532,6 +538,11 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
+    setState(() {
+      phoneNo = "";
+      isValidate = false;
+      isValidate2 = false;
+    });
     showBottomSheetWidgetWithAnimatedBtn(
         context,
         AppStrings.PHONE_NUMBER_TITLE,
@@ -624,6 +635,9 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   }
 
   showOtpBottomSheet(BuildContext context) {
+    setState(() {
+      code = "";
+    });
     isForgetPasswordFlow
         ? showBottomSheetWidget(
             context, AppStrings.ENTER_OTP_DIGIT, AppStrings.OTP_DESC,
@@ -638,9 +652,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                     flag = true;
                     _isInternetAvailable = true;
                   });
-
                   callForgetPasswordApi();
-
 
                 } else {
                   setState(() {
@@ -696,7 +708,24 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
                           flag = true;
                           _isInternetAvailable = true;
                         });
-                        callVerifyOtpApi();
+                        if (code.isNotEmpty) {
+                          if (code.length == 4) {
+                            callVerifyOtpApi();
+                          } else {
+                            setState(() {
+                              flag = true;
+                            });
+                            Util.hideKeyBoard(context);
+                            ToastUtil.showToast(context, "Please enter valid otp code");
+                          }
+                        } else {
+                          setState(() {
+                            flag = true;
+                          });
+                          Util.hideKeyBoard(context);
+                          ToastUtil.showToast(context, "Please enter otp code");
+                        }
+
                       } else {
                         setState(() {
                           flag = true;
@@ -1293,7 +1322,6 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
   Future<void> callVerifyOtpApi() async {
     _playVerifyBtnAnimation();
     String number = numberController.text.trim();
-
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -1398,6 +1426,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
         if (submitPhoneBc != null) {
           Navigator.pop(submitPhoneBc);
         }
+
         showOtpBottomSheet(context);
       } else if (response.msg == "Verification code has been send successfully") {
         ToastUtil.showToast(context, response.msg);

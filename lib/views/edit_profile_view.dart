@@ -1828,7 +1828,6 @@ class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
 
                   setState(() {
                     _isEmailValid = true;
-                    editableEmailController.text = newVal;
                   });
                 } else {
                   setState(() {
