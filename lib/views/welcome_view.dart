@@ -216,6 +216,10 @@ class _WelcomeViewState extends State<WelcomeView>
   }
 
   showPhoneNoBottomSheet(BuildContext context) {
+    setState(() {
+      phoneNo = "";
+      isValidate = false;
+    });
     showBottomSheetWidgetWithAnimatedBtn(
         context,
         AppStrings.PHONE_NUMBER_TITLE,
@@ -325,7 +329,24 @@ class _WelcomeViewState extends State<WelcomeView>
                     flag = true;
                     _isInternetAvailable = true;
                   });
-                  callVerifyOtpApi();
+                  if (code.isNotEmpty) {
+                    if (code.length == 4) {
+                      callVerifyOtpApi();
+                    } else {
+                      setState(() {
+                        flag = true;
+                      });
+                      Util.hideKeyBoard(context);
+                      ToastUtil.showToast(context, "Please enter valid otp code");
+                    }
+                  } else {
+                    setState(() {
+                      flag = true;
+                    });
+                    Util.hideKeyBoard(context);
+                    ToastUtil.showToast(context, "Please enter otp code");
+                  }
+
                 } else {
                   setState(() {
                     flag = true;
@@ -350,11 +371,13 @@ class _WelcomeViewState extends State<WelcomeView>
                 _isInternetAvailable = true;
               });
               callRegisterViaPhoneApi();
+              ToastUtil.showToast(context, "Verification code has been send successfully");
             } else {
               setState(() {
                 flag = true;
                 _isInternetAvailable = false;
                 ToastUtil.showToast(context, "No internet");
+
               });
             }
           });

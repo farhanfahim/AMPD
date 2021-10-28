@@ -139,19 +139,18 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       print(userData.toJson());
 
       userDetails = userData;
-      setState(() async {
+      setState(() {
         emailController.text = userData.data.email;
         numberController.text = userData.data.phone;
         firstNameController.text = userData.data.firstName;
         lastNameController.text = userData.data.lastName;
-
-        number = await PhoneNumber.getRegionInfoFromPhoneNumber(userData.data.phone);
-        if(userData.data.image!= null) {
+        _fullName = "${userData.data.firstName} ${userData.data.lastName}";
+       /* if(userData.data.image!= null) {
           imageUrl = userData.data.imageUrl;
         }else{
           imageUrl = "";
-        }
-        _fullName = "${userData.data.firstName} ${userData.data.lastName}";
+        }*/
+
       });
     });
 
