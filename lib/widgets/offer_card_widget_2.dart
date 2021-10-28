@@ -57,7 +57,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
   int _selectedTab = 0;
   bool _isDetail = false;
-  String _time = "2021-06-30 09:00:00";
+  String _time = "2021-12-30 09:00:00";
   String _days = "00";
   String _hours = "00";
   String _min = "00";
@@ -70,7 +70,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
   void initState() {
     String color = widget.data.backgroundColor.replaceAll('#', '0xff');
     clr  =int.parse(color);
-    _time = widget.time;
+    //_time = widget.time;
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
@@ -89,7 +89,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
           _timer.cancel();
           if (mounted) {
             setState(() {
-              _days = "00";
+              _days = "10";
               _hours = "00";
               _min = "00";
               _sec = "00";
@@ -511,156 +511,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                       child: Column(
                         children: [
                           widget.isRedeemNow ? GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context1) {
-                                    return Dialog(
-                                      insetPadding: EdgeInsets.symmetric(
-                                          horizontal: 0.0),
-                                      backgroundColor: Colors.transparent,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment
-                                            .center,
-                                        mainAxisAlignment: MainAxisAlignment
-                                            .center,
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(top: 20),
-                                                child: Container(
-                                                  margin: EdgeInsets.symmetric(
-                                                      horizontal: 30.0),
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(
-                                                        color: Colors.transparent,
-                                                      ),
-                                                      borderRadius: BorderRadius
-                                                          .all(
-                                                          Radius.circular(20.0))
-                                                  ),
-
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(
-                                                        10.0),
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize
-                                                          .min,
-                                                      //mainAxisAlignment: MainAxisAlignment.center,
-                                                      //crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Container(
-                                                          margin: EdgeInsets
-                                                              .symmetric(
-                                                              horizontal: MediaQuery
-                                                                  .of(context)
-                                                                  .size
-                                                                  .width * .13),
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(10, 20,
-                                                              10, 25),
-                                                          child: Text(
-                                                            "Redeem Offer Now",
-                                                            style:
-                                                            AppStyles
-                                                                .blackWithSemiBoldFontTextStyle(
-                                                                context, 18.0)
-                                                                .copyWith(
-                                                                fontWeight: FontWeight
-                                                                    .w600),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          margin: EdgeInsets
-                                                              .symmetric(
-                                                              horizontal: MediaQuery
-                                                                  .of(context)
-                                                                  .size
-                                                                  .width * .13),
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(10, 0,
-                                                              10, 0),
-                                                          child: Text(
-                                                            "Only redeem offers at checkout.",
-                                                            style:
-                                                            AppStyles
-                                                                .blackWithSemiBoldFontTextStyle(
-                                                                context, 15.0)
-                                                                .copyWith(
-                                                                fontWeight: FontWeight
-                                                                    .w400),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 25.0,
-                                                        ),
-                                                        GradientButton(
-                                                          onTap: widget.onRedeemTap,
-                                                          text: AppStrings
-                                                              .REDEEM_NOW,
-                                                        ),
-
-                                                        SizedBox(
-                                                          height: 20.0,
-                                                        ),
-                                                        ButtonBorder(
-                                                          onTap: () {
-                                                            Navigator.pop(
-                                                                context1);
-                                                          },
-                                                          text: AppStrings.LATER,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 45.0,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-
-                                                ),
-                                              ),
-                                              Positioned.fill(
-                                                right: 15,
-                                                child: Align(
-                                                  alignment: Alignment.topRight,
-
-                                                  child: Container(
-                                                      width: 50,
-                                                      height: 50,
-                                                      child:
-                                                      FloatingActionButton(
-                                                        heroTag: "tag",
-                                                        backgroundColor: AppColors
-                                                            .BLUE_COLOR,
-                                                        // backgroundColor:
-                                                        // AppColors.PRIMARY_COLORTWO,
-                                                        elevation: 2,
-                                                        child: Icon(
-                                                          Icons.close,
-                                                          color: Colors.white,
-                                                          size: 20.0,
-                                                        ),
-                                                        onPressed: () {
-                                                          Navigator.pop(context);
-                                                        },
-                                                        // onPressed: widget.addClickListner
-                                                      )
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  });
-                            },
+                            onTap: widget.onRedeemTap,
                             child: Container(
                               height: 50.0,
                               width: double.maxFinite,

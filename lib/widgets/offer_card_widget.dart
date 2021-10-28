@@ -43,7 +43,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
   int _selectedTab = 0;
   bool _isDetail = false;
-  String _time = "2021-06-30 09:00:00";
+  String _time = "2021-12-30 09:00:00";
   String _days = "00";
   String _hours = "00";
   String _min = "00";
@@ -54,7 +54,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
   @override
   void initState() {
 
-    _time = widget.time;
+    //_time = widget.time;
     if(!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1),(timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {

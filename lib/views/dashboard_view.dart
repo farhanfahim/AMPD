@@ -103,7 +103,7 @@ class _DashboardViewState extends State<DashboardView> {
         Scaffold(
           body: body,
           floatingActionButton: FloatingActionButton(
-            elevation: 15,
+            elevation: 1,
             backgroundColor: Colors.white,
             child: Container(
               height: 80,
@@ -249,8 +249,8 @@ class _DashboardViewState extends State<DashboardView> {
                                     children: [
                                       Image.asset(
                                         _tutorialIcons[1],
-                                        width: 250.0,
-                                        height: 250.0,
+                                        width: 200.0,
+                                        height: 200.0,
                                       ),
                                     ],
                                   )
@@ -261,8 +261,8 @@ class _DashboardViewState extends State<DashboardView> {
                                     children: [
                                       Image.asset(
                                         _tutorialIcons[2],
-                                        width: 250.0,
-                                        height: 250.0,
+                                        width: 200.0,
+                                        height: 200.0,
                                       ),
                                     ],
                                   )
