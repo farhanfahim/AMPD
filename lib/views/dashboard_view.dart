@@ -102,36 +102,7 @@ class _DashboardViewState extends State<DashboardView> {
       children: [
         Scaffold(
           body: body,
-          floatingActionButton: FloatingActionButton(
-            elevation: 1,
-            backgroundColor: Colors.white,
-            child: Container(
-              height: 80,
-              width: 80,
-              padding: EdgeInsets.all(15.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: pos == 1
-                    ? AppColors.ACCENT_COLOR
-                    : AppColors.UNSELECTED_COLOR,
-                //border: Border.all(color: darkBlueColor, width: 1.7)
-              ),
-              child: SvgPicture.asset(
-                AppImages.IC_HOME,
-                width: 20.0,
-                height: 20.0,
-                color: Colors.white,
-                //Theme.of(context).iconTheme.color,
-                matchTextDirection: true,
-              ),
-            ),
-            onPressed: () {
-              print('1 tapped');
-              setState(() {
-                pos = 1;
-              });
-            },
-          ),
+
           bottomNavigationBar: BottomAppBar(
             shape: CircularNotchedRectangle(),
             notchMargin: 4,
@@ -170,6 +141,55 @@ class _DashboardViewState extends State<DashboardView> {
                       "Title",
                       style: TextStyle(fontSize: 1),
                     )),
+                BottomNavigationBarItem(
+                    icon: GestureDetector(
+                      onTap: () {
+                        print('2 tapped');
+                        if (!widget.map['isGuestLogin']) {
+                          setState(() {
+                            pos = 0;
+                          });
+                        } else {
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              AppRoutes.SIGN_IN_VIEW, (route) => false);
+                        }
+                      },
+                      child: FloatingActionButton(
+                        elevation: 1,
+                        backgroundColor: Colors.white,
+                        child: Container(
+                          height: 80,
+                          width: 80,
+                          padding: EdgeInsets.all(15.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: pos == 1
+                                ? AppColors.ACCENT_COLOR
+                                : AppColors.UNSELECTED_COLOR,
+                            //border: Border.all(color: darkBlueColor, width: 1.7)
+                          ),
+                          child: SvgPicture.asset(
+                            AppImages.IC_HOME,
+                            width: 20.0,
+                            height: 20.0,
+                            color: Colors.white,
+                            //Theme.of(context).iconTheme.color,
+                            matchTextDirection: true,
+                          ),
+                        ),
+                        onPressed: () {
+                          print('1 tapped');
+                          setState(() {
+                            pos = 1;
+                          });
+                        },
+                      ),
+                    ),
+                    title: Text(
+                      "Title",
+                      style: TextStyle(fontSize: 1),
+                    )),
+
                 BottomNavigationBarItem(
                     icon: GestureDetector(
                       onTap: () {
