@@ -165,9 +165,6 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
               locationTitle: singleOfferModel.user.address,
               data: singleOfferModel,
               onRedeemTap: (){
-                //
-                Navigator.pop(
-                    context);
 
                 showDialog(
                     context: context,

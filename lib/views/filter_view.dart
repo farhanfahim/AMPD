@@ -414,7 +414,7 @@ class _FilterState extends State<FilterView>{
                                         child: Padding(
                                           padding: const EdgeInsets.only(right:15.0),
                                           child: Text(
-                                            "1000\nmile",
+                                            "100\nmile",
                                             style: AppStyles.blackWithBoldFontTextStyle(
                                                 context, 11.0).copyWith(color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                                             textAlign: TextAlign.center,
@@ -450,7 +450,7 @@ class _FilterState extends State<FilterView>{
                                             positionOffset:
                                             FlutterSliderTooltipPositionOffset(top: -30),
                                           ),
-                                          max: 1000,
+                                          max: 100,
                                           min: 0,
 
                                           onDragCompleted: (handlerIndex, lowerValue, upperValue) {
