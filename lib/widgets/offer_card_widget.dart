@@ -121,7 +121,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                   cardKey.currentState.toggleCard();
                 },
                 child: Container(
-                  height: !_isDetail? 550.0 : 520.0,
+                  height: !_isDetail? 550.0 : 550.0,
                   child: FlipCard(
                     direction: FlipDirection.HORIZONTAL, // default
                     flipOnTouch: false,
@@ -420,7 +420,7 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
 
             Positioned(
 //              top: !_isDetail? 115.0.w : 130.0.w,
-              top: !_isDetail? 450.0: 500.0,
+              top: !_isDetail? 450.0: 450.0,
               left: 0.0,
               right: 0.0,
               child: Column(
