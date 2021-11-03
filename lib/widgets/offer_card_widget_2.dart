@@ -130,7 +130,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                 cardKey.currentState.toggleCard();
               },
               child: new Container(
-              height: !_isDetail ? 550.0 : 520.0,
+              height: !_isDetail ? 550.0 : 550.0,
               color: Color(clr),
                 child: FlipCard(
                 direction: FlipDirection.HORIZONTAL,
@@ -481,7 +481,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
             ),
             Container(
               margin: EdgeInsets.only(
-                  top: !_isDetail ? 450.0 : 500.0, left: 0.0, right: 0.0),
+                  top: !_isDetail ? 450.0 : 450.0, left: 0.0, right: 0.0),
               padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -491,7 +491,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                 children: [
                   AnimatedSize(
                     curve: Curves.fastOutSlowIn, child: new Container(
-                    height: !_isDetail ? 350.0 : 0.0,
+                    height: !_isDetail ? 350.0 : 350.0,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
