@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'package:ampd/app/app.dart';
-import 'package:ampd/data/model/LikeDislikeModel.dart';
-import 'package:ampd/data/model/OffeReviewsModel.dart';
-import 'package:ampd/data/model/OfferModel.dart';
-import 'package:ampd/data/model/PageModel.dart';
-import 'package:ampd/data/model/RedeemOfferModel.dart';
+
 import 'package:ampd/data/model/repo_response_model.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
 import 'package:dio/dio.dart';

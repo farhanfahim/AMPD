@@ -49,7 +49,14 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     _settingsViewModel = SettingsViewModel(App());
-    
+
+    _appPreferences.getUserDetails().then((userData) {
+      setState(() {
+        userDetails = userData;
+        pushNotificationSwitch = userData.data.pushNotifications == 1? true : false;
+        min = userData.data.radius.toDouble();
+      });
+    });
     subscribeToViewModel();
   }
 
@@ -123,6 +130,7 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
                                   setState(() {
                                     pushNotificationSwitch = value;
                                   });
+                                  callUpdateProfileApi();
                                 },
                                 // activeColor: Colors.green,
                               ),
@@ -207,6 +215,7 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
                                         min = lowerValue;
                                         max = upperValue;
 
+                                        callUpdateProfileApi();
                                         print("min $min");
                                         print("max $max");
                                         setState(() {});
@@ -274,10 +283,10 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
                                   Text(
                                     "My Profile",
                                     style: AppStyles.blackWithDifferentFontTextStyle(
-                                            context, 12.0)
+                                        context, 12.0)
                                         .copyWith(
-                                            color: AppColors
-                                                .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                        color: AppColors
+                                            .APP__DETAILS_TEXT_COLOR_LIGHT),
                                   ),
                                   SizedBox(
                                     height: 6.0,
@@ -298,7 +307,7 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
                                 Icons.arrow_forward_ios_rounded,
                                 size: 16.0,
                                 color:
-                                    AppColors.COLOR_BLACK, // add custom icons also
+                                AppColors.COLOR_BLACK, // add custom icons also
                               ),
                             ],
                           ),
@@ -501,6 +510,27 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
     );
   }
 
+  Future<void> callUpdateProfileApi() async {
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+//          _isInAsyncCall = true;
+        });
+
+        var map = Map<String, dynamic>();
+        map['push_notifications'] = pushNotificationSwitch? 1 : 0;
+        map['radius'] = min;
+        _settingsViewModel.updateSettings(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
+  }
 
 
 

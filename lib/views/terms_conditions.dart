@@ -51,6 +51,7 @@ class _TermsConditionsState extends State<TermsConditionsView> {
 
     _termsConditionViewModel = TermsConditionViewModel(App());
     subscribeToViewModel();
+    callPageApi();
   }
 
   @override
@@ -67,26 +68,52 @@ class _TermsConditionsState extends State<TermsConditionsView> {
             iconColor: AppColors.COLOR_BLACK),
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-              children: [
-                Header(
-                    heading1: AppStrings.TERMS_CONDITION,
-                    heading2: AppStrings.TERMS_AND_CONDITIONS_HELP),
-                SizedBox(
-                  height: 30.0,
-                ),
+          child: StreamBuilder<PageModel>(
+              stream: _streamController.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.9,
+                    child: Center(
+                      child: Container(
+                        height: 60.0,
+                        child: Loader(
+                            isLoading: isDataLoad,
+                            color: AppColors.ACCENT_COLOR
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
 
-                Expanded(
-                  child: aboutUsText(context),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-              ],
-            ),
-          ),
+                  return snapshot.data!= null ? Container(
+                    margin: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Column(
+                      children: [
+                        Header(
+                            heading1: AppStrings.TERMS_CONDITION,
+                            heading2: AppStrings.TERMS_AND_CONDITIONS_HELP),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+
+                        Expanded(
+                          child: aboutUsText(snapshot.data.content,context),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                      ],
+                    ),
+                  ): Center(
+                      child: NoRecordFound("No t&c",
+                          AppImages.NO_NOTIFICATIONS_IMAGE)
+                  );
+                }
+              }),
         ));
   }
 
@@ -95,6 +122,7 @@ class _TermsConditionsState extends State<TermsConditionsView> {
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+
           _isInternetAvailable = true;
         });
 
@@ -180,10 +208,10 @@ class Header extends StatelessWidget {
 
 }
 
-Widget aboutUsText(BuildContext ctx) {
+Widget aboutUsText(String content,BuildContext ctx) {
   return Container(
     child: Html(
-      data: "<p><strong>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, <a href=\"http://google.com\">google.com</a> discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of &quot;de Finibus Bonorum et Malorum&quot; (The Extremes of Good and Evil) by <a href=\"tel:123213123\">123123123 </a>Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, <a href=\"mailto:abcd@xyz.com\">abcd@xyz.com</a> &quot;Lorem ipsum dolor sit amet..&quot;, comes from a line in section 1.10.32.</strong></p>\r\n\r\n<p><em>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from &quot;de Finibus Bonorum et Malorum&quot; by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</em></p>\r\n",
+      data: content,
       onLinkTap: (val){
         Util.launchInWebViewWithJavaScript(val);
       },

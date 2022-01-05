@@ -1,9 +1,5 @@
 import 'dart:async';
-import 'package:ampd/data/model/LikeDislikeModel.dart';
-import 'package:ampd/data/model/OfferModel.dart';
-import 'package:ampd/data/model/changePasswordModel.dart';
 import 'package:ampd/data/model/repo_response_model.dart';
-import 'package:ampd/data/model/verificationCodeToEmailModel.dart';
 import 'package:ampd/data/network/nao/network_nao.dart';
 import 'package:dio/dio.dart';
 import 'package:ampd/app/app.dart';
@@ -21,20 +17,77 @@ class SettingsRepository {
 
   void updateSettings(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
+    repositoryResponse.success = false;
+    _appPreferences.isPreferenceReady;
+    _appPreferences.getAccessToken().then((value) {
 
-      repositoryResponse.success = true;
-      repositoryResponse.msg = "User updated successfully!";
-      repositoryResponse.data = 0;
-      _repositoryResponse.add(repositoryResponse);
+      NetworkNAO.updateProfile(value, map).then((response) async {
+        final data = (response as Response<dynamic>).data;
+        if (!data['status']) {
+          repositoryResponse.success = false;
+          repositoryResponse.msg = data['message'];
+          repositoryResponse.data = null;
+          _repositoryResponse.add(repositoryResponse);
+        } else {
+//          var changePasswordResponse = VerficationCodeToEmailModel.fromJson(data);
+          repositoryResponse.success = true;
+          repositoryResponse.msg = data['message'];
+          repositoryResponse.data = 0;
+          _repositoryResponse.add(repositoryResponse);
+        }
+      }).catchError((onError) async {
+        if(onError is DioError){
+          if (onError.response.statusCode == 401) {
+            repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
+          }
+        }
+        repositoryResponse.success = false;
+        repositoryResponse.msg = onError.toString();
+        repositoryResponse.data = onError;
+
+        _repositoryResponse.add(repositoryResponse);
+      });
+    });
   }
 
   void logout(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
-    _appPreferences.clearPreference();
-    repositoryResponse.success = true;
-    repositoryResponse.msg = "Logged out successfully";
-    repositoryResponse.data = null;
-    _repositoryResponse.add(repositoryResponse);
+    repositoryResponse.success = false;
+    _appPreferences.isPreferenceReady;
+    _appPreferences.getAccessToken().then((value) {
+
+      NetworkNAO.logout(value, map).then((response) async {
+        final data = (response as Response<dynamic>).data;
+        if (!data['status']) {
+          repositoryResponse.success = false;
+          repositoryResponse.msg = data['message'];
+          repositoryResponse.data = null;
+          _repositoryResponse.add(repositoryResponse);
+        } else {
+
+          _appPreferences.clearPreference();
+          repositoryResponse.success = true;
+          repositoryResponse.msg = data['message'];
+          repositoryResponse.data = null;
+          _repositoryResponse.add(repositoryResponse);
+        }
+      }).catchError((onError) async {
+        if(onError is DioError){
+          if (onError.response.statusCode == 401) {
+            repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
+          }
+        }
+        repositoryResponse.success = false;
+        repositoryResponse.msg = onError.toString();
+        repositoryResponse.data = onError;
+
+        _repositoryResponse.add(repositoryResponse);
+      });
+    });
   }
 
   Stream<RepositoryResponse> getRepositoryResponse() {

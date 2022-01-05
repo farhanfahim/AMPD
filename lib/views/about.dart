@@ -49,6 +49,7 @@ class _AboutState extends State<AboutView> {
 
     _aboutViewModel = AboutViewModel(App());
     subscribeToViewModel();
+    callPageApi();
   }
 
   @override
@@ -65,30 +66,56 @@ class _AboutState extends State<AboutView> {
             iconColor: AppColors.COLOR_BLACK),
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 30.0),
-            child: Column(
-        children: [
-        Header(
-        heading1: AppStrings.ABOUT,
-              heading2: AppStrings.WHO_WE_ARE),
-      SizedBox(
-        height: 30.0,
-      ),
-      Expanded(
-        child: aboutUsText(context),
-      ),
+          child: StreamBuilder<PageModel>(
+              stream: _streamController.stream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.9,
+                    child: Center(
+                      child: Container(
+                        height: 60.0,
+                        child: Loader(
+                            isLoading: isDataLoad,
+                            color: AppColors.ACCENT_COLOR
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
 
-      ],
-    ),
-          ),
+                  return snapshot.data!= null ? Container(
+                    margin: EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Column(
+                      children: [
+                        Header(
+                            heading1: AppStrings.ABOUT,
+                            heading2: AppStrings.WHO_WE_ARE),
+                        SizedBox(
+                          height: 30.0,
+                        ),
+                        Expanded(
+                          child: aboutUsText(snapshot.data.content,context),
+                        ),
+
+                      ],
+                    ),
+                  ): Center(
+                      child: NoRecordFound("No about us",
+                          AppImages.NO_NOTIFICATIONS_IMAGE)
+                  );
+                }
+              }),
         ));
   }
 
-  Widget aboutUsText(BuildContext ctx) {
+  Widget aboutUsText(String content,BuildContext ctx) {
     return Container(
       child: Html(
-        data: "<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of &quot;de Finibus Bonorum et Malorum&quot; <em>(The Extremes of Good and Evil)</em> by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, &quot;Lorem ipsum dolor sit amet..&quot;, comes from a line in section 1.10.32.</p>\r\n\r\n<p><strong>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from &quot;de Finibus Bonorum et Malorum&quot; by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</strong></p>\r\n",
+        data: content,
         onLinkTap: (val){
           Util.launchInWebViewWithJavaScript(val);
         },

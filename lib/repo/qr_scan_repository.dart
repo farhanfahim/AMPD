@@ -20,37 +20,37 @@ class QrScanRepository {
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = false;
     _appPreferences.getAccessToken().then((value) {
-    NetworkNAO.offerReview(value,map)
-        .then((response) async {
-      final data = (response as Response<dynamic>).data;
-      if(!data['status']) {
-        repositoryResponse.success = false;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      } else {
-        //  var loginResponse = LoginResponse.fromJson(data);
+      NetworkNAO.offerReview(value,map)
+          .then((response) async {
+        final data = (response as Response<dynamic>).data;
+        if(!data['status']) {
+          repositoryResponse.success = false;
+          repositoryResponse.msg = data['message'];
+          repositoryResponse.data = null;
+          _repositoryResponse.add(repositoryResponse);
+        } else {
+          //  var loginResponse = LoginResponse.fromJson(data);
 
-        repositoryResponse.success = true;
-        repositoryResponse.msg = data['message'];
-        repositoryResponse.data = null;
-        _repositoryResponse.add(repositoryResponse);
-      }
-    }).catchError((onError) async {
-      if(onError is DioError){
-        if (onError.response.statusCode == 401) {
-          repositoryResponse.statusCode = 401;
-          await App().getAppPreferences().isPreferenceReady;
-          await App().getAppPreferences().clearPreference();
+          repositoryResponse.success = true;
+          repositoryResponse.msg = data['message'];
+          repositoryResponse.data = null;
+          _repositoryResponse.add(repositoryResponse);
         }
-      }
-      repositoryResponse.success = false;
-      repositoryResponse.msg = onError.toString();
-      repositoryResponse.data = onError;
+      }).catchError((onError) async {
+        if(onError is DioError){
+          if (onError.response.statusCode == 401) {
+            repositoryResponse.statusCode = 401;
+            await App().getAppPreferences().isPreferenceReady;
+            await App().getAppPreferences().clearPreference();
+          }
+        }
+        repositoryResponse.success = false;
+        repositoryResponse.msg = onError.toString();
+        repositoryResponse.data = onError;
 
-      _repositoryResponse.add(repositoryResponse);
-    });
-  });}
+        _repositoryResponse.add(repositoryResponse);
+      });
+    });}
 
 
   Stream<RepositoryResponse> getRepositoryResponse() {

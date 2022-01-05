@@ -91,7 +91,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
   String email = "";
   String address = "";
   String phoneNo = "";
-  String imageUrl = "https://res.cloudinary.com/crunchbase-production/image/upload/c_thumb,h_170,w_170,f_auto,g_faces,z_0.7,b_white,q_auto:eco,dpr_1/v1425465847/ffllgzbmsh1u6bfdkyow.jpg";
+  String imageUrl = "";
 
   bool _isEmailValid = false;
   IconData checkIconData = Icons.check;
@@ -139,18 +139,19 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       print(userData.toJson());
 
       userDetails = userData;
-      setState(() {
+      setState(() async {
         emailController.text = userData.data.email;
         numberController.text = userData.data.phone;
         firstNameController.text = userData.data.firstName;
         lastNameController.text = userData.data.lastName;
-        _fullName = "${userData.data.firstName} ${userData.data.lastName}";
-       /* if(userData.data.image!= null) {
+
+        //number = await PhoneNumber.getRegionInfoFromPhoneNumber(userData.data.phone);
+        if(userData.data.image!= null) {
           imageUrl = userData.data.imageUrl;
         }else{
           imageUrl = "";
-        }*/
-
+        }
+        _fullName = "${userData.data.firstName} ${userData.data.lastName}";
       });
     });
 
@@ -358,8 +359,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                         onAnimationTap: () {
                           if(firstName.isNotEmpty){
                             if(lastName.isNotEmpty){
-                              ToastUtil.showToast(context, "profile Updated Successfully!");
-                              Navigator.pop(context);
+                              callUpdateProfileApi();
                             }else{
                               Util.hideKeyBoard(context);
                               ToastUtil.showToast(
@@ -1080,19 +1080,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       AnimatedGradientButton(
         onAnimationTap: () {
           if (validatePhone()) {
-            if (code.isNotEmpty) {
-              if (code.length == 4) {
-                callVerifyPhoneOtpApi();
-              } else {
-
-                Util.hideKeyBoard(context);
-                ToastUtil.showToast(context, "Please enter valid otp code");
-              }
-            } else {
-              Util.hideKeyBoard(context);
-              ToastUtil.showToast(context, "Please enter otp code");
-            }
-
+            callVerifyPhoneOtpApi();
           }
         },
         buttonController: _phoneOtpButtonController,
@@ -1167,21 +1155,9 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       }),
       AnimatedGradientButton(
         onAnimationTap: () {
-            if (code.isNotEmpty) {
-              if (code.length == 4) {
-                callVerifyEmailOtpApi();
-              } else {
-
-                Util.hideKeyBoard(context);
-                ToastUtil.showToast(context, "Please enter valid otp code");
-              }
-            } else {
-              Util.hideKeyBoard(context);
-              ToastUtil.showToast(context, "Please enter otp code");
-            }
-
-
-
+          if (validateEmail()) {
+            callVerifyEmailOtpApi();
+          }
         },
         buttonController: _emailOtpButtonController,
         text: AppStrings.VERIFY_NOW,
@@ -1205,7 +1181,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       AnimatedGradientButton(
         onAnimationTap: () {
           if (validateEmail()) {
-
             callVerificationCodeToEmailApi();
           }
         },
@@ -1401,7 +1376,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         var map = Map<String, dynamic>();
         map['email'] = editableEmailController.text.trim().toString();
         _editProfileViewModel.verificationCodeToEmail(map);
-        editableEmailController.clear();
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -1505,7 +1479,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         map['email'] = editableEmailController.text.trim().toString();
         map['code'] = code;
         _editProfileViewModel.verifyEmailOtp(map);
-        editableEmailController.clear();
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -1596,13 +1569,22 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       }
 
       if (response.success) {
-        if (response.data == 3) {
+        if (response.data is VerficationCodeToEmailModel) {
+          VerficationCodeToEmailModel model = response.data;
 
+          //        print('field ${model.data[0].field}');
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
           Future.delayed(Duration(seconds: 1), () {
             showEmailOtpBottomSheet(context);
           });
+        } else if (response.data is LoginResponseModel) {  //update profile response
+          ToastUtil.showToast(context, response.msg);
+          print('response ${response.data}');
+          LoginResponseModel newDetails = response.data;
+          print('response ${newDetails.data.imageUrl}');
+          _appPreferences.setUserDetails(data: jsonEncode(newDetails));
+          Navigator.pop(context);
         } else if (response.data == 1) {  //verfication code to phone response
           ToastUtil.showToast(context, response.msg);
           Navigator.pop(context);
@@ -1649,53 +1631,47 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
       } else {
         ToastUtil.showToast(context, response.msg);
       }
-
     });
   }
 
   bool validateEmail() {
     Util.hideKeyBoard(context);
 
-    var emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
-    var email = editableEmailController.text.trim().toString();
+    var email = emailController.text.trim().toString();
 
-    if(email.isEmpty) {
+    if(email.isEmpty || email == "") {
       ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
       return false;
-    }else{
-      if(!emailRegex.hasMatch(email)) {
-        ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
-        return false;
-      }else{
-        return true;
-      }
     }
 
+    if(!emailRegex.hasMatch(email)) {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
 
-
-
+    return true;
   }
 
   bool validateEditableEmail() {
     Util.hideKeyBoard(context);
 
-    var emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    var emailRegex = RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
     var email = editableEmailController.text.trim().toString();
 
-    if(email.isEmpty) {
+    if(email.isEmpty || email == "") {
       ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
       return false;
-    }else{
-      if(!emailRegex.hasMatch(email)) {
-        ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
-        return false;
-      }else{
-        return true;
-      }
     }
 
+    if(!emailRegex.hasMatch(email)) {
+      ToastUtil.showToast(context, AppStrings.EMAIL_VALIDATION);
+      return false;
+    }
+
+    return true;
   }
 
   bool validatePhone() {
@@ -1704,6 +1680,8 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     var phone = editableNumberController.text.trim();
 
     if (phoneNo.isEmpty || phoneNo == "") {
+
+      //ToastUtil.showToast(context, "Please provide your phone number");
       return false;
     }else if (isValidate) {
       return true;
@@ -1827,6 +1805,7 @@ class _customEditableEmailWidgetState extends State<customEditableEmailWidget> {
 
                   setState(() {
                     _isEmailValid = true;
+                    editableEmailController.text = newVal;
                   });
                 } else {
                   setState(() {

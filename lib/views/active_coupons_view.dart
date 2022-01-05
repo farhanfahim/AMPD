@@ -188,13 +188,11 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                       ),
                       btnWidget: AnimatedGradientButton(
                         onAnimationTap: () {
-
+                          deleteOffersApi(data.userOffers[0].id);
                           setState(() {
                             deletedItem = pos;
                             _pagingController1.itemList.removeAt(deletedItem);
                           });
-                          Navigator.pop(dialogContext1);
-                          ToastUtil.showToast(context, "Saved offer has been removed successfully!");
 
                         },
                         buttonController: _buttonController1,

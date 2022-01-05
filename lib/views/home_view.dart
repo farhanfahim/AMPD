@@ -421,8 +421,8 @@ class _HomeViewState extends State<HomeView>
 
        var map = Map<String, dynamic>();
        map['offer_id'] = offerId;
-       map['status'] = 10;
-       _homeViewModel.likeOffer(map);
+       map['status'] = 20;
+       _homeViewModel.likeDislikeOffer(map);
      } else {
        setState(() {
          _isInternetAvailable = false;
