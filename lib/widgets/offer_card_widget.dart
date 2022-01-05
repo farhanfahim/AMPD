@@ -642,9 +642,10 @@ class _OfferCardWidgetState extends State<OfferCardWidget> with SingleTickerProv
                     padding: EdgeInsets.symmetric(horizontal: 40.0),
                     child: Column(
                       children: [
-                        !_isDetail? SizedBox(height: 10.0,) : Container(),
+                        SizedBox(height: 10.0,),
 
-                        !_isDetail? Divider(color: Colors.grey[400], height: 1.0, thickness: 0.5,) : Container(),
+                        Divider(
+                          color: Colors.grey[400], height: 1.0, thickness: 0.5,),
 
                         SizedBox(height: 10.0,),
 
