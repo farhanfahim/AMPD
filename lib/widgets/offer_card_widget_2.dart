@@ -68,9 +68,10 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
   int clr;
   @override
   void initState() {
-    String color = widget.data.backgroundColor.replaceAll('#', '0xff');
+    String color = widget.data.backgroundColor!="undefined"?
+    widget.data.backgroundColor.replaceAll('#', '0xff'):"#2491EB".replaceAll('#', '0xff');
     clr  =int.parse(color);
-    //_time = widget.time;
+    _time = widget.time;
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {

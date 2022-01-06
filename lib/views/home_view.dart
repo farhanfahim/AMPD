@@ -411,48 +411,49 @@ class _HomeViewState extends State<HomeView>
   }
 
   Future<void> callLikeOffersApi(int offerId) async {
-   Util.check().then((value) {
-     if (value != null && value) {
-       // Internet Present Case
-       setState(() {
-         _isInternetAvailable = true;
-           _isInAsyncCall = true;
-       });
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _isInAsyncCall = true;
+        });
 
-       var map = Map<String, dynamic>();
-       map['offer_id'] = offerId;
-       map['status'] = 20;
-       _homeViewModel.likeDislikeOffer(map);
-     } else {
-       setState(() {
-         _isInternetAvailable = false;
-         ToastUtil.showToast(context, "No internet");
-       });
-     }
-   });
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        map['status'] = 10;
+        _homeViewModel.likeDislikeOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
   }
 
   Future<void> callDisLikeOffersApi(int offerId) async {
-   Util.check().then((value) {
-     if (value != null && value) {
-       // Internet Present Case
-       setState(() {
-         _isInternetAvailable = true;
-           _isInAsyncCall = true;
-       });
+    Util.check().then((value) {
+      if (value != null && value) {
+        // Internet Present Case
+        setState(() {
+          _isInternetAvailable = true;
+          _isInAsyncCall = true;
+        });
 
-       var map = Map<String, dynamic>();
-       map['offer_id'] = offerId;
-       map['status'] = 20;
-       _homeViewModel.likeDislikeOffer(map);
-     } else {
-       setState(() {
-         _isInternetAvailable = false;
-         ToastUtil.showToast(context, "No internet");
-       });
-     }
-   });
+        var map = Map<String, dynamic>();
+        map['offer_id'] = offerId;
+        map['status'] = 20;
+        _homeViewModel.likeDislikeOffer(map);
+      } else {
+        setState(() {
+          _isInternetAvailable = false;
+          ToastUtil.showToast(context, "No internet");
+        });
+      }
+    });
   }
+
 
   Future<void> redeemOffersApi(int offerId,String qr,String rMessage) async {
     _playAnimation();

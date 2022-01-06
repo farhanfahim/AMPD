@@ -55,6 +55,7 @@ class HomeRepository {
       });
     });
   }
+
   void offersWithoutToken(Map<String, dynamic> map){
     var repositoryResponse = RepositoryResponse();
     repositoryResponse.success = false;

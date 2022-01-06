@@ -517,9 +517,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
         }
       }
       else if (response.msg == "Saved offer has been removed successfully!") {
-        setState(() {
-          _pagingController1.itemList.removeAt(deletedItem);
-        });
+
         Navigator.pop(dialogContext1);
         ToastUtil.showToast(context, response.msg);
       }  else if (response.data is DioError) {
