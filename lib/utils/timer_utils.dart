@@ -9,7 +9,7 @@ class TimerUtils {
   }
 
   static bool isAheadOrBefore(String time) {
-    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal().difference(DateTime.now());
+    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time).difference(DateTime.now());
     return timeParsed.isNegative;
   }
 
@@ -21,7 +21,7 @@ class TimerUtils {
   }
 
   static String getDays(String time, String type) {
-    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal().difference(DateTime.now());
+    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time).difference(DateTime.now());
 //    print('timeParsed ${DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal()}');
 //    var converted = DateFormat("dd").format(timeParsed);
     switch(type) {
@@ -37,19 +37,19 @@ class TimerUtils {
   }
 
   static String getHours(String time) {
-    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal();
+    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
     var converted = DateFormat("hh").format(timeParsed);
     return converted;
   }
 
   static String getMin(String time) {
-    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal();
+    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
     var converted = DateFormat("mm").format(timeParsed);
     return converted;
   }
 
   static String getSec(String time) {
-    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal();
+    var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
     var converted = DateFormat("ss").format(timeParsed);
     return converted;
   }
