@@ -76,7 +76,7 @@ class AppStyles {
 
   static TextStyle detailWithSmallTextSizeTextStyle() {
     return TextStyle(
-        fontSize: 14.0,
+        fontSize: 12.0.sp,
         color: AppColors.APP__DETAILS_TEXT_COLOR,
         height: 1.5,
         fontFamily: AppFonts.POPPINS,

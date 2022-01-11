@@ -96,7 +96,7 @@ class _SettingState extends State<SettingView> with TickerProviderStateMixin{
               iconColor: AppColors.COLOR_BLACK),
           backgroundColor: AppColors.WHITE_COLOR,
           body: SafeArea(
-            child: Column(
+            child: ListView(
               children: [
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 20.0),

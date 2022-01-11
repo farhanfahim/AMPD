@@ -143,16 +143,25 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
           padding: EdgeInsets.symmetric(vertical: 10.0),
           child: Row(
             children: [
-              Container(
-                width: 70.0,
-                height: 70.0,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              CircleAvatar(
+                radius: 30.0,
+                backgroundColor: AppColors.WHITE_COLOR,
+                child: data.imageUrl.isNotEmpty? ClipRRect(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(30.0)),
+                    child: circularNetworkCacheImageWithShimmerWithHeightWidth(
+                        imagePath: data.imageUrl,
+                        radius: 60.0,
+                        boxFit: BoxFit.cover
+                    )
+                ) : ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
                   child: Image.asset(
-                    data.imageUrl,
-                    fit: BoxFit.cover,
+                    "assets/images/user.png",
+                    fit: BoxFit.fill,
                   ),
                 ),
+
               ),
               SizedBox(
                 width: 10.0,

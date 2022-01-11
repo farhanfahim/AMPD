@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:sizer/sizer.dart';
 class RedeemMessageView extends StatefulWidget {
   Map<String, dynamic> map;
   RedeemMessageView(this.map);
@@ -29,7 +30,7 @@ class RedeemMessageView extends StatefulWidget {
 class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderStateMixin {
   double offerRating = 0.0;
   Timer _timer1;
-  int _sec = 10;
+  int _sec = 1000;
   int _secc = 1;
   AnimationController _buttonController;
   QrScanViewModel _qrScanViewModel;
@@ -84,7 +85,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
         body: SafeArea(
             child: Center(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.66,
+                height: MediaQuery.of(context).size.height * 0.70,
                 margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                 constraints:
                     BoxConstraints(maxWidth: double.maxFinite, minHeight: 50.0),
@@ -101,15 +102,15 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
-                        height: 30.0,
+                        height: MediaQuery.of(context).size.height * 0.03,
                       ),
                       Text(
                         AppStrings.REDEEM_MESSAGE,
                         style:
-                            AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                            AppStyles.blackWithBoldFontTextStyle(context, 15.0.sp),
                       ),
                       SizedBox(
-                        height: 25.0,
+                        height: MediaQuery.of(context).size.height * 0.025,
                       ),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.10,
@@ -129,16 +130,14 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 60.0,
-                      ),
+
                       Text(
                         AppStrings.TIME_REMAINING,
                         style:
-                            AppStyles.blackWithBoldFontTextStyle(context, 16.0),
+                            AppStyles.blackWithBoldFontTextStyle(context, 12.0.sp),
                       ),
                       SizedBox(
-                        height: 25.0,
+                        height: MediaQuery.of(context).size.height * 0.025,
                       ),
                       Row(
                         mainAxisSize: MainAxisSize.min,
@@ -153,12 +152,12 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                       ),
 
                       SizedBox(
-                        height: 30.0,
+                        height: MediaQuery.of(context).size.height * 0.03,
                       ),
                       Text(AppStrings.SECONDS,
                           style: AppStyles.detailWithSmallTextSizeTextStyle()),
                       SizedBox(
-                        height: 50.0,
+                        height: MediaQuery.of(context).size.height * 0.04,
                       ),
                       GradientButton(
                         onTap: () {
@@ -221,7 +220,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                         text: AppStrings.DONE,
                       ),
                       SizedBox(
-                        height: 10.0,
+                        height: MediaQuery.of(context).size.height * 0.01,
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(
@@ -230,11 +229,11 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                         child: Text(
                           "Offer will vanish if page is closed.",
                           style:
-                          AppStyles.blackWithSemiBoldFontTextStyle(context, 16.0).copyWith(fontWeight: FontWeight.w400),textAlign: TextAlign.center,
+                          AppStyles.blackWithSemiBoldFontTextStyle(context, 13.0.sp).copyWith(fontWeight: FontWeight.w400),textAlign: TextAlign.center,
                         ),
                       ),
                       SizedBox(
-                        height: 20.0,
+                        height: MediaQuery.of(context).size.height * 0.02,
                       )
                     ],
                   ),

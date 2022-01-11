@@ -113,11 +113,11 @@ class _MyProfileViewState extends State<MyProfileView> {
                               )
                           ) : ClipRRect(
                             borderRadius: BorderRadius.circular(60),
-                            child: Image.asset(
-                              "assets/images/user.png",
-                              fit: BoxFit.fill,
-                            ),
+                          child: Image.asset(
+                            "assets/images/user.png",
+                            fit: BoxFit.fill,
                           ),
+                        ),
 
                         ),
                       ),

@@ -10,9 +10,9 @@ class Dataclass {
   int type;
   int value;
   String expireAt;
-  int numberOfUses;
-  int dislikeTime;
-  int recurrenceTime;
+  Object numberOfUses;
+  Object dislikeTime;
+  Object recurrenceTime;
   int availTime;
   String qrCode;
   String redeemMessage;
@@ -23,7 +23,7 @@ class Dataclass {
   String createdAt;
   String updatedAt;
   Object averageRating;
-  int totalReviews;
+  Object totalReviews;
   String imageUrl;
   String mediumImageUrl;
   String smallImageUrl;

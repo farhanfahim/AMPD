@@ -40,12 +40,27 @@ class _NotificationTileViewState extends State<NotificationTileView> {
           onTap: () {},
           child: Row(
             children: [
-              SvgPicture.asset(
-                widget.data.user.imageUrl,
-                width: 55.0,
-                height: 55.0,
-                fit: BoxFit.cover,
+
+              CircleAvatar(
+                backgroundColor: AppColors.WHITE_COLOR,
+                child: widget.data.user.imageUrl.isNotEmpty? ClipRRect(
+                    child: circularNetworkCacheImageWithShimmerWithHeightWidth(
+                        imagePath: widget.data.user.imageUrl,
+                        radius: 40.0,
+                        boxFit: BoxFit.cover
+                    )
+                ) : ClipRRect(
+                  child: Image.asset(
+
+                    "assets/images/user.png",
+                    fit: BoxFit.fill,
+                    width: 60,
+                    height: 60,
+                  ),
+                ),
+
               ),
+
 
               SizedBox(
                 width: 10.0,

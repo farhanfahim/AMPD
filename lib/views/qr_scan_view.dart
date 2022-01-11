@@ -43,8 +43,9 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
   BuildContext customDialogBoxContext;
   String reviewMessage = "";
   Timer _timer1;
-  int _sec = 30;
+  int _sec = 3030;
   int _secc = 3;
+  ScrollController controller = ScrollController();
 
   @override
   void initState() {
@@ -116,18 +117,18 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     SizedBox(
-                      height: 30.0,
+                      height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     Text(
                       AppStrings.SCAN_QR_CODE,
-                      style: AppStyles.blackWithBoldFontTextStyle(context, 20.0),
+                      style: AppStyles.blackWithBoldFontTextStyle(context, 15.0.sp),
                     ),
                     SizedBox(
-                      height: 25.0,
+                      height: MediaQuery.of(context).size.height * 0.025,
                     ),
                     Container(
-                      height: 30.0.h,
-                      margin: EdgeInsets.fromLTRB(0.0, 30.0, 0, 0),
+                      height: MediaQuery.of(context).size.height * 0.25,
+
                       child: Center(
                         child: Image.network(
                           widget.map['qrImage'] != null ? widget.map['qrImage']:"",
@@ -136,7 +137,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       ),
                     ),
                     SizedBox(
-                      height: 40.0,
+                      height: MediaQuery.of(context).size.height * 0.04,
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(
@@ -148,14 +149,14 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                               child: Text(
                                 AppStrings.TIME_REMAINING_TO_SCAN,
                                 style: AppStyles.blackWithBoldFontTextStyle(
-                                    context, 16.0),
+                                    context, 12.0.sp),
                                 textAlign: TextAlign.center,
                               )),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 25.0,
+                      height: MediaQuery.of(context).size.height * 0.025,
                     ),
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -170,12 +171,12 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                     ),
 
                     SizedBox(
-                      height: 30.0,
+                      height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     Text(AppStrings.SECONDS,
                         style: AppStyles.detailWithSmallTextSizeTextStyle()),
                     SizedBox(
-                      height: 20.0,
+                      height: MediaQuery.of(context).size.height * 0.02,
                     ),
                     GradientButton(
                       onTap: () {
@@ -240,7 +241,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       text: AppStrings.DONE,
                     ),
                     SizedBox(
-                      height: 10.0,
+                      height: MediaQuery.of(context).size.height * 0.01,
                     ),
                     Container(
                       margin: EdgeInsets.symmetric(
@@ -249,11 +250,11 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                       child: Text(
                         "Offer will vanish if page is closed.",
                         style:
-                        AppStyles.blackWithSemiBoldFontTextStyle(context, 16.0).copyWith(fontWeight: FontWeight.w400),textAlign: TextAlign.center,
+                        AppStyles.blackWithSemiBoldFontTextStyle(context, 13.0.sp).copyWith(fontWeight: FontWeight.w400),textAlign: TextAlign.center,
                       ),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: MediaQuery.of(context).size.height * 0.02,
                     )
                   ],
                 ),
