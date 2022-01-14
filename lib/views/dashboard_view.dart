@@ -104,10 +104,12 @@ class _DashboardViewState extends State<DashboardView> {
           body: body,
 
           bottomNavigationBar: BottomAppBar(
+            elevation: 0,
             shape: CircularNotchedRectangle(),
             notchMargin: 4,
             child: BottomNavigationBar(
               backgroundColor: Colors.white,
+              elevation: 0,
               items: [
                 BottomNavigationBarItem(
                     icon: GestureDetector(
