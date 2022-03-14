@@ -85,6 +85,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
         : "#2491EB".replaceAll('#', '0xff');
     clr = int.parse(color);
     _time = widget.time;
+
+    print("{widget.data.store.openingTime}");
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
@@ -805,7 +807,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                       child: Text(
                                         widget.data.store != null &&
                                                 widget.data.store != null
-                                            ? "Hours: Opens ${DateFormat.jm().format(DateFormat("hh:mm:ss").parse(widget.data.store.openingTime))} - Closed ${DateFormat.jm().format(DateFormat("hh:mm:ss").parse(widget.data.store.closingTime))}"
+                                            ? "Hours: Opens ${widget.data.store.openingTime} - Closed ${widget.data.store.closingTime}"
                                             : "-",
                                         style: AppStyles.poppinsTextStyle(
                                                 fontSize: 13.0,
