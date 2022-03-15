@@ -43,7 +43,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
   BuildContext customDialogBoxContext;
   String reviewMessage = "";
   Timer _timer1;
-  int _sec = 3030;
+  int _sec = 30;
   int _secc = 3;
   ScrollController controller = ScrollController();
 

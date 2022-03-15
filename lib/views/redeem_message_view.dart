@@ -30,7 +30,7 @@ class RedeemMessageView extends StatefulWidget {
 class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderStateMixin {
   double offerRating = 0.0;
   Timer _timer1;
-  int _sec = 1000;
+  int _sec = 10;
   int _secc = 1;
   AnimationController _buttonController;
   QrScanViewModel _qrScanViewModel;
