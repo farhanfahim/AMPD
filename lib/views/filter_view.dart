@@ -24,6 +24,11 @@ import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:intl/intl.dart';
 import 'package:ampd/viewmodel/filter_viewmodel.dart';
 class FilterView extends StatefulWidget {
+
+  final Map<String, dynamic> map;
+
+  FilterView(this.map);
+
   @override
   _FilterState createState() => _FilterState();
 }
@@ -60,6 +65,7 @@ class _FilterState extends State<FilterView>{
       });
     });
 
+    print(radius);
     _filterViewModel = FilterViewModel(App());
     subscribeToViewModel();
   }
@@ -71,15 +77,24 @@ class _FilterState extends State<FilterView>{
   }
 
   Future<bool> _onBackPressed() {
-    Navigator.of(context).pop();
     if(isApiCalling){
-      Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
-        'isFromFilterScreen': true,
-        'minPrice': min1,
-        'maxPrice': max1,
-        'minRadius': radius,
-      });
+      if(widget.map['isFromSearch']){
+        Navigator.of(context).pop();
+        Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+          'isFromFilterScreen': true,
+          'minPrice': min1,
+          'maxPrice': max1,
+          'minRadius': radius,
+        });
+      }else{
+        var map = {'minPrice': min1,
+          'maxPrice': max1,'minRadius': radius};
+        Navigator.of(context).pop(map);
+      }
 
+    }else{
+
+      Navigator.of(context).pop();
     }
   }
 
@@ -95,15 +110,25 @@ class _FilterState extends State<FilterView>{
               title: "",
               showCloseIcon: false,
               onBackClick: () {
-                Navigator.of(context).pop();
-                if(isApiCalling){
-                  Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
-                    'isFromFilterScreen': true,
-                    'minPrice': min1,
-                    'maxPrice': max1,
-                    'minRadius': radius,
-                  });
 
+                if(isApiCalling){
+                  if(widget.map['isFromSearch']){
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+                      'isFromFilterScreen': true,
+                      'minPrice': min1,
+                      'maxPrice': max1,
+                      'minRadius': radius,
+                    });
+                  }else{
+                    var map = {'minPrice': min1,
+                      'maxPrice': max1,'minRadius': radius};
+                    Navigator.of(context).pop(map);
+                  }
+
+                }else{
+
+                  Navigator.of(context).pop();
                 }
               },
               iconColor: AppColors.COLOR_BLACK),
@@ -469,6 +494,7 @@ class _FilterState extends State<FilterView>{
                                             setState(() {
                                               radius = lowerValue;
                                               userDetails.data.radius = lowerValue.toInt();
+                                              print(userDetails.data.radius);
                                             });
 
                                             callUpdateProfileApi();
@@ -573,6 +599,7 @@ class _FilterState extends State<FilterView>{
         map['highest_discount_amount'] = discountAmountSwitch? 1 : 0;
         map['nearest_location'] = locationSwitch? 1 : 0;
         map['sorting_ascending'] = alphabetSwitch? 1 : 0;
+        map['radius'] = radius;
         _filterViewModel.updateProfile(map);
       } else {
         setState(() {

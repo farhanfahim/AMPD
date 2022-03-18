@@ -1415,7 +1415,7 @@ class _SignInViewState extends State<SignInView> with TickerProviderStateMixin {
           App().getAppPreferences().setIsLoggedIn(loggedIn: true);
           Navigator.pushNamedAndRemoveUntil(
               context, AppRoutes.LOCATION_SETTING_VIEW, (route) => false,arguments: {
-            'afterLogin': true,
+            'afterLogin': responseRegister.data.isFirstLogin == 1?true:false,
           });
         } else {
           Map map = Map<String, String>();

@@ -95,7 +95,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
     });
   }
 
-  bool getCurrentLocation() {
+  bool getCurrentLocation(String query) {
     LocationPermissionHandler.checkLocationPermission().then((permission) {
       if (permission == locationPermission.PermissionStatus.granted) {
         setState(() {
@@ -104,9 +104,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                   desiredAccuracy: gcl.LocationAccuracy.medium)
               .then((value) {
             position = value;
-
-            userLocation.latitude = position.latitude;
-            userLocation.longitude = position.longitude;
+            widget.map['isFromFilterScreen']
+                ? callFilterSavedCouponApi(query,position.latitude,position.longitude)
+                : callSavedCouponApi(query,position.latitude,position.longitude);
 
             return true;
           });
@@ -154,7 +154,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
 
-    getCurrentLocation();
+
     this._searchIcon = new Icon(
       Icons.close,
       color: AppColors.APP__DETAILS_TEXT_COLOR,
@@ -195,9 +195,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
 
   Future<void> _fetchPage(int pageKey, String query) async {
     try {
-      widget.map['isFromFilterScreen']
-          ? callFilterSavedCouponApi(query)
-          : callSavedCouponApi(query);
+      getCurrentLocation(query);
+
+
     } catch (error) {
       _pagingController1.error = error;
     }
@@ -215,7 +215,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
       Navigator.of(context).pop();
 
       if (widget.map['isFromFilterScreen']) {
-        Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+        Navigator.pushNamed(context, AppRoutes.FILTER_VIEW,arguments: {
+          'isFromSearch': true,
+        });
       }
     }
   }
@@ -432,7 +434,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
           if (_enabled) {
             Navigator.of(context).pop();
             if (widget.map['isFromFilterScreen']) {
-              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW,arguments: {
+                'isFromSearch': true,
+              });
             }
           }
         },
@@ -458,7 +462,9 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
             ),
             onTap: () {
               Navigator.of(context).pop();
-              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW,arguments: {
+                'isFromSearch': true,
+              });
             },
           ),
         ),
@@ -532,7 +538,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
     });
   }
 
-  Future<void> callSavedCouponApi(String query) async {
+  Future<void> callSavedCouponApi(String query,double lat,double lng) async {
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -543,8 +549,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
         var map = Map<String, dynamic>();
         map['status'] = 10;
         map['query'] = query;
-        map['latitude'] = userLocation.latitude;
-        map['longitude'] = userLocation.longitude;
+        map['latitude'] = lat;
+        map['longitude'] = lng;
         map['offset'] = _currentPage;
         _savedCoupon2ViewModel.savedCoupons(map);
       } else {
@@ -555,7 +561,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
     });
   }
 
-  Future<void> callFilterSavedCouponApi(String query) async {
+  Future<void> callFilterSavedCouponApi(String query,double lat,double lng) async {
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -564,15 +570,18 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
         });
 
         var map = Map<String, dynamic>();
+
         map['status'] = 10;
         map['query'] = query;
-        map['latitude'] = userLocation.latitude;
-        map['longitude'] = userLocation.longitude;
+        map['latitude'] = lat;
+        map['longitude'] = lng;
         map['offset'] = _currentPage;
         map['max_amount'] = widget.map['minPrice'];
         map['min_amount'] = widget.map['maxPrice'];
         map['radius'] = widget.map['minRadius'];
+        print(map);
         _savedCoupon2ViewModel.savedCoupons(map);
+
       } else {
         setState(() {
           _isInternetAvailable = false;
@@ -607,18 +616,17 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
             });
-      } else if (response.msg == "You have already availed this offer!") {
+      }
+      else if (response.msg == "You have already availed this offer!") {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
-      } else if (response.data is SavedCouponModel) {
+      } else if(response.data is SavedCouponModel) {
         _isPaginationLoading = false;
 
-        _pagingController1.itemList = [];
-
         _totalPages = response.data.lastPage;
-
-        print('Last Page: $_totalPages');
-        print('map data: ${widget.map}');
+        // SavedCouponModel responseRegister = responseRegister;
+        dataList.clear();
+        dataList.addAll(response.data.dataClass);
 
         final isNotLastPage = _currentPage + 1 <= _totalPages;
         print('_currentPage $_currentPage');
@@ -626,15 +634,13 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
 
         if (!isNotLastPage) {
           // 3
-          _pagingController1.appendLastPage(response.data.dataClass);
-          dataList = _pagingController1.itemList;
+          _pagingController1.appendLastPage(dataList);
+
         } else {
           final nextPageKey = _currentPage + 1;
           _currentPage = _currentPage + 1;
 
-          print('New Page: $_totalPages');
-          dataList = _pagingController1.itemList;
-          _pagingController1.appendPage(response.data.dataClass, nextPageKey);
+          _pagingController1.appendPage(dataList, nextPageKey);
         }
       } else if (response.data is DioError) {
         if (response.statusCode == 401) {

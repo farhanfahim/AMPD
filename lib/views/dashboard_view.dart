@@ -301,16 +301,6 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
 
-  Widget updateScreen(int pos){
-
-    if(pos == 0){
-      return SavedCoupons1View();
-    }else if(pos == 1){
-      return  HomeView(widget.map['isGuestLogin']);
-    }else if(pos ==2){
-      return SettingView();
-    }
-  }
   void updateAppDialog() {
     Map<String, dynamic> appData = null;
 

@@ -78,13 +78,6 @@ class AppRoutes {
          );
        }
 
-      case ACTIVE_COUPONS_VIEW:
-        {
-          return MaterialPageRoute<void>(
-            settings: routeSettings,
-            builder: (BuildContext context) => ActiveCouponsView(),
-          );
-        }
 
       case LOCATION_SETTING_VIEW:
         {
@@ -94,13 +87,6 @@ class AppRoutes {
           );
         }
 
-      case EXPIRE_COUPONS_VIEW:
-        {
-          return MaterialPageRoute<void>(
-            settings: routeSettings,
-            builder: (BuildContext context) => ExpireCouponsView(),
-          );
-        }
 
      case HOME_VIEW:
        {
@@ -123,7 +109,7 @@ class AppRoutes {
         {
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) => FilterView(),
+            builder: (BuildContext context) => FilterView(routeSettings.arguments),
           );
         }
 

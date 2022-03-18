@@ -24,6 +24,7 @@ class LoginResponseModel {
 
 class Data {
   int id;
+  int isFirstLogin;
   String firstName;
   String lastName;
   String email;
@@ -55,6 +56,7 @@ class Data {
 
   Data(
       {this.id,
+        this.isFirstLogin,
         this.firstName,
         this.lastName,
         this.email,
@@ -86,6 +88,7 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    isFirstLogin = json['is_first_login'];
     firstName = json['first_name'];
     lastName = json['last_name'];
     email = json['email'];
@@ -122,6 +125,7 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['is_first_login'] = this.isFirstLogin;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;
     data['email'] = this.email;

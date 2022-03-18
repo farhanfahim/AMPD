@@ -191,7 +191,7 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                               customDialogBoxContext = context1;
                               return CustomRatingDialog(
                                 contex: context,
-                                subTitle: "How was Starbucks?",
+                                subTitle: "How was ${widget.map['storeName']}?",
                                 title: "Help other AMPD users by leaving a store review",
                                 ratingBar: RatingBarWidget(onRatingChange: (onRatingChanged){
                                   offerRating = onRatingChanged;

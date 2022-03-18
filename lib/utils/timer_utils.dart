@@ -20,6 +20,12 @@ class TimerUtils {
     return DateFormat("yyyy-MM-dd HH:mm:ss").format(tempDate);
   }
 
+  static String formatUTCTimeForSavedOffers(String time) {
+    DateTime tempDate = new DateFormat(AppConstants.DATE_TIME_FORMAT_1).parse(
+        time);
+    return DateFormat("MMM dd, yyyy").format(tempDate);
+  }
+
   static String getDays(String time, String type) {
     var timeParsed = DateFormat("yyyy-MM-dd HH:mm:ss").parse(time).difference(DateTime.now());
 //    print('timeParsed ${DateFormat("yyyy-MM-dd HH:mm:ss").parse(time, true).toLocal()}');

@@ -21,7 +21,6 @@ import 'package:ampd/widgets/animated_gradient_button.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:ampd/widgets/dialog_view.dart';
 import 'package:ampd/widgets/gradient_button.dart';
-import 'package:ampd/widgets/offer_card_widget.dart';
 import 'package:ampd/widgets/offer_card_widget_2.dart';
 import 'package:ampd/widgets/swipe_cards/swipe_cards.dart';
 import 'package:ampd/widgets/widgets.dart';
@@ -56,7 +55,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView>
     with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin {
   gcl.Position position;
-
+  String storeName = '';
   BuildContext dialogContext;
   int _totalPages = 0;
   int _currentPage = 1;
@@ -557,6 +556,9 @@ class _HomeViewState extends State<HomeView>
 
                                     btnWidget: AnimatedGradientButton(
                                       onAnimationTap: () {
+                                        setState(() {
+                                          storeName = dataList[i].store.name;
+                                        });
                                         redeemOffersApi(dataList[i].id,dataList[i].qrUrl,dataList[i].redeemMessage);
 
                                       },
@@ -619,6 +621,7 @@ class _HomeViewState extends State<HomeView>
         Navigator.pushNamed(context, qrUrl != null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW, arguments: {
           'fromSavedCoupon': false,
           'qrImage': qrUrl,
+          'storeName': storeName,
           'redeemMessage': redeemMessage,
           'offer_id': response.data.offerId,
         });

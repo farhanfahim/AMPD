@@ -33,14 +33,18 @@ as locationPermission;
 import 'package:geolocator/geolocator.dart' as gcl;
 
 class SavedCoupons1View extends StatefulWidget {
+
   @override
   _SavedCoupons1ViewState createState() => _SavedCoupons1ViewState();
 }
 
-class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKeepAliveClientMixin<SavedCoupons1View>, SingleTickerProviderStateMixin, WidgetsBindingObserver {
-
+class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  final GlobalKey<ActiveCouponsState> _activeState = GlobalKey<ActiveCouponsState>();
+  final GlobalKey<ExpireCouponsState> _expiredState = GlobalKey<ExpireCouponsState>();
+  Map<String, dynamic> map = null;
   int _selectedIndex = 0;
   bool _enabled = true;
+  bool reloadScreen = false;
   TabController tabController;
   gcl.Position position;
   UserLocation userLocation = UserLocation();
@@ -68,9 +72,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
   }
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   void initState()  {
     WidgetsBinding.instance.addObserver(this);
 
@@ -87,25 +88,6 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
 
   }
 
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        print("adasdasdapp in resumed");
-
-        break;
-      case AppLifecycleState.inactive:
-        print("app in inactive");
-        break;
-      case AppLifecycleState.paused:
-        print("app in paused");
-        break;
-      case AppLifecycleState.detached:
-        print("app in detached");
-        break;
-    }
-  }
 
 
   bool getCurrentLocation() {
@@ -219,8 +201,8 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
                     physics: NeverScrollableScrollPhysics(),
                     controller: tabController,
                     children: [
-                      ActiveCouponsView(),
-                      ExpireCouponsView(),
+                      ActiveCouponsView(_activeState),
+                      ExpireCouponsView(_expiredState)
 
 
                     ],
@@ -273,7 +255,25 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with AutomaticKee
               AppImages.FILTER,
             ),
             onTap: (){
-              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW);
+              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW,arguments: {
+                'isFromSearch': false,
+              }).then((value) {
+                print(value);
+                setState(() {
+                  if (value != null && value is Map<String, dynamic>) {
+                    print('value $value');
+
+                    map = value;
+                    if (_selectedIndex == 0) {
+                      _activeState.currentState.applyFilter(map);
+                    } else {
+                      _expiredState.currentState.applyFilter(map);
+                    }
+                    // });
+                  }
+                });
+
+              });
             },
           ),
         ),

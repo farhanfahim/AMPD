@@ -1073,7 +1073,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
             widget.currentCoords.longitude) /
         1000;
 
-    double convertKmToMile = _distanceInMeters / 0.6213;
+    double convertKmToMile = _distanceInMeters * 0.6213;
     return convertKmToMile.roundToDouble();
   }
 }

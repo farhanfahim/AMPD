@@ -3,7 +3,15 @@ import 'dart:math';
 import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
-
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:dio/dio.dart';
+import 'package:geolocator/geolocator.dart' as gcl;
+import 'package:location_permissions/location_permissions.dart';
+import 'package:ampd/data/model/UserLocation.dart';
+import 'package:location_permissions/location_permissions.dart'
+as locationPermission;
+import 'package:ampd/utils/LocationPermissionHandler.dart';
 import 'dart:async';
 import 'package:ampd/appresources/app_images.dart';
 import 'package:ampd/appresources/app_strings.dart';
@@ -32,14 +40,24 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
 
+import 'package:ampd/data/database/app_preferences.dart';
 class ActiveCouponsView extends StatefulWidget {
+
+
+  ActiveCouponsView(Key key): super(key: key);
   @override
-  _ActiveCouponsState createState() => _ActiveCouponsState();
+  ActiveCouponsState createState() => ActiveCouponsState();
 }
 
-class _ActiveCouponsState extends State<ActiveCouponsView>
+class ActiveCouponsState extends State<ActiveCouponsView>
     with TickerProviderStateMixin {
 
+  double minPrice = 0.0;
+  double maxPrice = 0.0;
+
+  bool _openSetting = false;
+  UserLocation userLocation = UserLocation();
+  gcl.Position position;
   BuildContext dialogContext;
   BuildContext dialogContext1;
   AnimationController _buttonController;
@@ -57,9 +75,21 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
   SwipeActionController controller;
   ActiveCouponViewModel _activeCouponViewModel;
 
+  double radius = 0.0;
+  AppPreferences _appPreferences = new AppPreferences();
   @override
   void initState() {
 
+    super.initState();
+
+
+    _appPreferences.getUserDetails().then((userData) {
+        setState(() {
+
+          print("radius: ${userData.data.radius.toDouble()}");
+          radius = userData.data.radius.toDouble();
+        });
+    });
     controller = SwipeActionController(selectedIndexPathsChangeCallback:
         (changedIndexPaths, selected, currentCount) {});
 
@@ -69,9 +99,6 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
     });
 
 
-
-
-
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     _buttonController1 = AnimationController(
@@ -79,12 +106,25 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
 
     _activeCouponViewModel = ActiveCouponViewModel(App());
     subscribeToViewModel();
-    super.initState();
   }
 
+  void applyFilter(Map<String, dynamic> map){
+
+    setState(() {
+      minPrice = map['minPrice'];
+      maxPrice = map['maxPrice'];
+      radius = map['minRadius'];
+      print(map);
+      _pagingController1.itemList.clear();
+      setState(() {
+        _isPaginationLoading = true;
+      });
+      getCurrentLocation();
+    });
+  }
   Future<void> _fetchPage(int pageKey) async {
     try {
-      callSavedCouponApi();
+      getCurrentLocation();
 
     } catch (error) {
       _pagingController1.error = error;
@@ -105,13 +145,22 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
     return Scaffold(
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
-          child: PagedListView<int, DataClass>(
+          child: _isPaginationLoading?Container(
+            height: MediaQuery.of(context).size.height ,
+            child: Center(
+              child: Container(
+                height: 60.0,
+                child: Loader(
+                    isLoading: true,
+                    color: AppColors.ACCENT_COLOR
+                ),
+              ),
+            ),
+          ):PagedListView<int, DataClass>(
             pagingController: _pagingController1,
             builderDelegate: PagedChildBuilderDelegate<DataClass>(
               itemBuilder: (context, item, index) {
-                return checkExpiry(item.expireAt)
-                    ? Container()
-                    : SavedCouponActiveTileView(item, index);
+                return SavedCouponActiveTileView(item, index);
               },
               noItemsFoundIndicatorBuilder: (context) => Center(
                   child: NoRecordFound(
@@ -306,7 +355,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                             height: 3.0,
                           ),
                           Text(
-                            TimerUtils.formatUTCTime(data.expireAt),
+                            TimerUtils.formatUTCTimeForSavedOffers(data.expireAt),
                             style: AppStyles.blackWithDifferentFontTextStyle(
                                     context, 11.0)
                                 .copyWith(
@@ -317,7 +366,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Time to Avail:(${data.availTime} hour)",
+                                "Time to Avail: ${data.availTime} hour",
                                 style:
                                     AppStyles.blackWithDifferentFontTextStyle(
                                             context, 12.0)
@@ -405,7 +454,7 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
     } on TickerCanceled {}
   }
 
-  Future<void> callSavedCouponApi() async {
+  Future<void> callSavedCouponApi(double lat,double lng) async {
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -413,13 +462,74 @@ class _ActiveCouponsState extends State<ActiveCouponsView>
           _isInternetAvailable = true;
         });
 
-        var map = Map<String, dynamic>();
-        map['status'] = 10;
-        map['offset'] = _currentPage;
-        _activeCouponViewModel.savedCoupons(map);
+
+          var map = Map<String, dynamic>();
+          map['status'] = 10;
+          map['offset'] = _currentPage;
+          map['latitude'] = lat;
+          map['longitude'] = lng;
+          map['is_expired'] = 0;
+          map['min_amount'] = minPrice;
+          if(maxPrice!= 0.0)map['max_amount'] = maxPrice;
+          map['radius'] = radius;
+          print(map);
+          _activeCouponViewModel.savedCoupons(map);
+
+
       } else {
         setState(() {
           _isInternetAvailable = false;
+        });
+      }
+    });
+  }
+
+  bool getCurrentLocation() {
+    LocationPermissionHandler.checkLocationPermission().then((permission) {
+      if (permission == locationPermission.PermissionStatus.granted) {
+        setState(() {
+          _openSetting = true;
+          gcl.Geolocator.getCurrentPosition(
+              desiredAccuracy: gcl.LocationAccuracy.medium)
+              .then((value) {
+            position = value;
+
+
+            callSavedCouponApi(position.latitude,position.longitude);
+            return true;
+          });
+        });
+      } else if (permission == locationPermission.PermissionStatus.unknown ||
+          permission == locationPermission.PermissionStatus.denied ||
+          permission == locationPermission.PermissionStatus.restricted) {
+        try {
+          LocationPermissionHandler.requestPermissoin().then((value) {
+            if (permission == locationPermission.PermissionStatus.granted) {
+              setState(() {
+                _openSetting = true;
+                gcl.Geolocator.getCurrentPosition(
+                    desiredAccuracy: gcl.LocationAccuracy.medium)
+                    .then((value) {
+                  position = value;
+
+                  callSavedCouponApi(position.latitude,position.longitude);
+                  return true;
+                });
+              });
+            } else {
+              setState(() {
+                _openSetting = false;
+              });
+            }
+          });
+        } on PlatformException catch (err) {
+          print(err);
+        } catch (err) {
+          print(err);
+        }
+      } else {
+        setState(() {
+          _openSetting = false;
         });
       }
     });

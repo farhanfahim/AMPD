@@ -170,7 +170,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                                 customDialogBoxContext = context1;
                                 return CustomRatingDialog(
                                   contex: context,
-                                  subTitle: "How was Starbucks?",
+                                  subTitle: "How was ${widget.map['storeName']}?",
                                   title: "Help other AMPD users by leaving a store review",
                                   ratingBar: RatingBarWidget(onRatingChange: (onRatingChanged){
                                     offerRating = onRatingChanged;

@@ -26,26 +26,39 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:intl/intl.dart';
-
+import 'package:flutter/services.dart';
+import 'package:dio/dio.dart';
+import 'package:geolocator/geolocator.dart' as gcl;
+import 'package:location_permissions/location_permissions.dart';
+import 'package:ampd/data/model/UserLocation.dart';
+import 'package:location_permissions/location_permissions.dart'
+as locationPermission;
+import 'package:ampd/utils/LocationPermissionHandler.dart';
+import 'package:ampd/data/database/app_preferences.dart';
 class ExpireCouponsView extends StatefulWidget {
 
+  ExpireCouponsView(Key key): super(key: key);
   @override
-  _ExpireCouponsState createState() => _ExpireCouponsState();
+  ExpireCouponsState createState() => ExpireCouponsState();
 }
 
-class _ExpireCouponsState extends State<ExpireCouponsView> {
-
+class ExpireCouponsState extends State<ExpireCouponsView> with TickerProviderStateMixin  {
+  double minPrice = 0.0;
+  double maxPrice = 0.0;
   int _totalPages = 0;
   int _currentPage = 1;
   int _selectedIndex = 0;
   final PagingController<int, DataClass> _pagingController1 =  PagingController(firstPageKey: 1);
-
+  double radius = 0.0;
   List<DataClass> dataList = List<DataClass>();
-
+  AppPreferences _appPreferences = new AppPreferences();
   bool _enabled = true;
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
 
+  bool _openSetting = false;
+  UserLocation userLocation = UserLocation();
+  gcl.Position position;
   ExpiredCouponViewModel _expiredCouponViewModel;
 
 
@@ -60,15 +73,42 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
     _expiredCouponViewModel = ExpiredCouponViewModel(App());
     subscribeToViewModel();
     super.initState();
+
+    _appPreferences.getUserDetails().then((userData) {
+      setState(() {
+
+        print("radius: ${userData.data.radius.toDouble()}");
+        radius = userData.data.radius.toDouble();
+      });
+    });
+
   }
+
+  void applyFilter(Map<String, dynamic> map){
+
+    setState(() {
+      minPrice = map['minPrice'];
+      maxPrice = map['maxPrice'];
+      radius = map['minRadius'];
+      print(map);
+      _pagingController1.itemList.clear();
+      setState(() {
+        _isPaginationLoading = true;
+      });
+      getCurrentLocation();
+    });
+  }
+
 
   Future<void> _fetchPage(int pageKey) async {
     try {
-      callSavedCouponApi();
+      getCurrentLocation();
+
     } catch (error) {
       _pagingController1.error = error;
     }
   }
+
   @override
   void dispose() {
 
@@ -84,7 +124,18 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
 
         backgroundColor: AppColors.WHITE_COLOR,
         body: SafeArea(
-          child: PagedListView<int, DataClass>(
+          child: _isPaginationLoading?Container(
+            height: MediaQuery.of(context).size.height ,
+            child: Center(
+              child: Container(
+                height: 60.0,
+                child: Loader(
+                    isLoading: true,
+                    color: AppColors.ACCENT_COLOR
+                ),
+              ),
+            ),
+          ):PagedListView<int, DataClass>(
             pagingController: _pagingController1,
             builderDelegate: PagedChildBuilderDelegate<DataClass>(
               itemBuilder: (context, item, index) {
@@ -179,7 +230,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
                       height: 3.0,
                     ),
                     Text(
-                      TimerUtils.formatUTCTime(data.expireAt),
+                      TimerUtils.formatUTCTimeForSavedOffers(data.expireAt),
                       style: AppStyles.blackWithDifferentFontTextStyle(
                           context, 11.0)
                           .copyWith(
@@ -190,7 +241,7 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Time to Avail:(${data.availTime } hour)",
+                          "Time to Avail: ${data.availTime } hour",
                           style: AppStyles.blackWithDifferentFontTextStyle(
                               context, 12.0)
                               .copyWith(
@@ -216,8 +267,57 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
     );
   }
 
+  bool getCurrentLocation() {
+    LocationPermissionHandler.checkLocationPermission().then((permission) {
+      if (permission == locationPermission.PermissionStatus.granted) {
+        setState(() {
+          _openSetting = true;
+          gcl.Geolocator.getCurrentPosition(
+              desiredAccuracy: gcl.LocationAccuracy.medium)
+              .then((value) {
+            position = value;
 
-  Future<void> callSavedCouponApi() async {
+
+            callSavedCouponApi(position.latitude,position.longitude);
+            return true;
+          });
+        });
+      } else if (permission == locationPermission.PermissionStatus.unknown ||
+          permission == locationPermission.PermissionStatus.denied ||
+          permission == locationPermission.PermissionStatus.restricted) {
+        try {
+          LocationPermissionHandler.requestPermissoin().then((value) {
+            if (permission == locationPermission.PermissionStatus.granted) {
+              setState(() {
+                _openSetting = true;
+                gcl.Geolocator.getCurrentPosition(
+                    desiredAccuracy: gcl.LocationAccuracy.medium)
+                    .then((value) {
+                  position = value;
+
+                  callSavedCouponApi(position.latitude,position.longitude);
+                  return true;
+                });
+              });
+            } else {
+              setState(() {
+                _openSetting = false;
+              });
+            }
+          });
+        } on PlatformException catch (err) {
+          print(err);
+        } catch (err) {
+          print(err);
+        }
+      } else {
+        setState(() {
+          _openSetting = false;
+        });
+      }
+    });
+  }
+  Future<void> callSavedCouponApi(double lat,double lng) async {
 
     Util.check().then((value) {
       if (value != null && value) {
@@ -225,11 +325,19 @@ class _ExpireCouponsState extends State<ExpireCouponsView> {
         setState(() {
           _isInternetAvailable = true;
         });
-
         var map = Map<String, dynamic>();
         map['status'] = 10;
-        map['page'] = _currentPage;
+        map['offset'] = _currentPage;
+        map['latitude'] = lat;
+        map['longitude'] = lng;
+        map['is_expired'] = 1;
+        map['min_amount'] = minPrice;
+        if(maxPrice!= 0.0)map['max_amount'] = maxPrice;
+        map['radius'] = radius;
+        print(map);
         _expiredCouponViewModel.savedCoupons(map);
+
+
       } else {
         setState(() {
           _isInternetAvailable = false;
