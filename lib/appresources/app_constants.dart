@@ -26,8 +26,8 @@ class AppConstants{
   static const int ACCEPT = 20;
   static const int DECLINED = 30;
 
-  static const int EMAIL_VALIDATION = 255;
-  static const int NAME_VALIDATION = 50;
+  static const int EMAIL_VALIDATION = 50;
+  static const int NAME_VALIDATION = 20;
   static const int DESCRIPTION_VALIDATION = 100;
   static const int PASSWORD_VALIDATION = 15;
   static const int ADDRESS_VALIDATION = 250;

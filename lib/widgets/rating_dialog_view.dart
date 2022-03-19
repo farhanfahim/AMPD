@@ -131,11 +131,9 @@ class _CustomRatingState extends State<CustomRatingDialog> {
                                 widget.onPressed1(message);
                               },
                               keyboardType: TextInputType.multiline,
-                              maxLength: 150,
+                              maxLength: null,
                               maxLines: 3,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
-                              ],
+
                               decoration: InputDecoration(
                                   border: InputBorder.none, hintText: "Comments...",hintStyle: AppStyles.inputHintStyle(context)),
                               style: AppStyles.inputTextStyle2(context),

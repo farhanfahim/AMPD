@@ -387,14 +387,12 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     );
   }
 
-  getImage(String type) async {
-    var permissionResult = (type == 'camera')
-        ? await MediaPermissionHandler.checkCameraPermission()
-        : await MediaPermissionHandler.checkGalleryPermission();
-    print(permissionResult);
-    if (permissionResult) {
+  getImageFromCamera() async {
+    var permissionResult1 = await MediaPermissionHandler.checkCameraPermission();
+    var permissionResult2 = await MediaPermissionHandler.checkGalleryPermission();
+    if(permissionResult1 && permissionResult2){
       final PickedFile pickedFile = await _picker.getImage(
-          source: type == 'camera' ? ImageSource.camera : ImageSource.gallery);
+          source:ImageSource.camera);
 
       File rotatedImage =
       await FlutterExifRotation.rotateImage(path: pickedFile.path);
@@ -410,11 +408,38 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
           print('No image selected.');
         }
       });
-    } else {
-      Platform.isIOS
-          ? AppSettings.openLocationSettings()
-          : AppSettings.openAppSettings();
+    }else{
+      AppSettings.openAppSettings();
     }
+
+
+  }
+  getImageFromGallery() async {
+    var permissionResult1 = await MediaPermissionHandler.checkCameraPermission();
+    var permissionResult2 = await MediaPermissionHandler.checkGalleryPermission();
+    if(permissionResult1 && permissionResult2){
+      final PickedFile pickedFile = await _picker.getImage(
+          source:ImageSource.gallery);
+
+      File rotatedImage =
+      await FlutterExifRotation.rotateImage(path: pickedFile.path);
+
+      setState(() {
+        if (rotatedImage != null) {
+          setState(() {
+            _image = null;
+            imageUrl = "";
+          });
+          _image = File(rotatedImage.path);
+        } else {
+          print('No image selected.');
+        }
+      });
+    }else{
+      AppSettings.openAppSettings();
+    }
+
+
   }
 
   Stack firstNameTextField(BuildContext context) {
@@ -528,10 +553,10 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 LengthLimitingTextInputFormatter(lastNameValidation),
               ],
               onEditingComplete: () =>
-                  FocusScope.of(context).requestFocus(emailFocus),
+                  FocusScope.of(context).unfocus(),
 
               onSubmitted: (texttt) {
-                FocusScope.of(context).requestFocus(emailFocus);
+                FocusScope.of(context).unfocus();
               },
               textInputAction: TextInputAction.done,
               decoration: AppStyles.decorationWithBorder(AppStrings.LAST_NAME),
@@ -1291,7 +1316,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                         onTap: () {
                           Navigator.pop(bc);
 
-                          getImage('gallery');
+                          getImageFromGallery();
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -1323,7 +1348,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                         onTap: () {
                           Navigator.pop(bc);
 
-                          getImage('camera');
+                          getImageFromCamera();
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
