@@ -12,6 +12,8 @@ import 'package:ampd/data/model/login_response_model.dart';
 import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/widgets/button_border.dart';
+
+import 'package:ampd/utils/loader.dart';
 import 'package:ampd/widgets/gradient_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
@@ -35,7 +37,7 @@ class FilterView extends StatefulWidget {
 
 class _FilterState extends State<FilterView>{
 
-  bool isApiCalling = false;
+  bool isApiCalling = true;
   FilterViewModel _filterViewModel;
   bool _isInternetAvailable = true;
   bool _enabled = true;
@@ -569,7 +571,7 @@ class _FilterState extends State<FilterView>{
                   ],
                 ),
               ),
-            ),
+            )
           )),
     );
 
@@ -590,6 +592,7 @@ class _FilterState extends State<FilterView>{
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          isApiCalling = false;
           _isInternetAvailable = true;
 //          _isInAsyncCall = true;
         });
@@ -623,13 +626,16 @@ class _FilterState extends State<FilterView>{
       }
 
       if (response.success) {
-
-        isApiCalling = true;
         userDetails.data.soonestExpiration = expirationSwitch? 1 : 0;
         userDetails.data.highestDiscountAmount = discountAmountSwitch? 1 : 0;
         userDetails.data.nearestLocation = locationSwitch? 1 : 0;
         userDetails.data.sortingAscending = alphabetSwitch? 1 : 0;
         _appPreferences.setUserDetails(data: jsonEncode(userDetails));
+
+        setState(() {
+          isApiCalling = true;
+        });
+
       }else if (response.data is DioError) {
         if (response.statusCode == 401) {
           Navigator.pushNamedAndRemoveUntil(context, AppRoutes.WELCOME_VIEW, (Route<dynamic> route) => false);

@@ -63,7 +63,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
   bool _openSetting = false;
   UserLocation userLocation = UserLocation();
   bool isSearching = false;
-  bool _enabled = true;
+  bool _enabled = false;
   bool _isPaginationLoading = false;
   bool _isInternetAvailable = false;
 
@@ -211,15 +211,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
   }
 
   Future<bool> _onBackPressed() {
-    if (_enabled) {
-      Navigator.of(context).pop();
-
-      if (widget.map['isFromFilterScreen']) {
-        Navigator.pushNamed(context, AppRoutes.FILTER_VIEW,arguments: {
-          'isFromSearch': true,
-        });
-      }
-    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -431,14 +423,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
       title: _appBarTitle,
       leading: IconButton(
         onPressed: () {
-          if (_enabled) {
-            Navigator.of(context).pop();
-            if (widget.map['isFromFilterScreen']) {
-              Navigator.pushNamed(context, AppRoutes.FILTER_VIEW,arguments: {
-                'isFromSearch': true,
-              });
-            }
-          }
+          Navigator.of(context).pop();
         },
         icon: Transform.rotate(
           angle: 180 * pi / 180,
@@ -576,8 +561,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
         map['latitude'] = lat;
         map['longitude'] = lng;
         map['offset'] = _currentPage;
-        map['max_amount'] = widget.map['minPrice'];
-        map['min_amount'] = widget.map['maxPrice'];
+        map['min_amount'] = widget.map['minPrice'];
+        map['max_amount'] = widget.map['maxPrice'];
         map['radius'] = widget.map['minRadius'];
         print(map);
         _savedCoupon2ViewModel.savedCoupons(map);
