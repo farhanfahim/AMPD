@@ -103,21 +103,18 @@ class _MyProfileViewState extends State<MyProfileView> {
                         child: CircleAvatar(
                           radius: 60.0,
                           backgroundColor: AppColors.WHITE_COLOR,
-                          child: _imageUrl.isNotEmpty? ClipRRect(
-                              borderRadius: BorderRadius.all(
-                                  Radius.circular(80.0)),
-                              child: circularNetworkCacheImageWithShimmerWithHeightWidth(
-                                  imagePath: _imageUrl,
-                                  radius: 120.0,
-                                  boxFit: BoxFit.cover
-                              )
-                          ) : ClipRRect(
+                          child:  _imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                              url: _imageUrl,
+                              context: context,
+                              width: 120,
+                              height: 120,
+                              radius: 80.0):ClipRRect(
                             borderRadius: BorderRadius.circular(60),
-                          child: Image.asset(
-                            "assets/images/user.png",
-                            fit: BoxFit.fill,
+                            child: Image.asset(
+                              "assets/images/user.png",
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        ),
 
                         ),
                       ),
@@ -129,6 +126,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                       _name,
                       style:
                       AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
                     ),
 
                     SizedBox(

@@ -8,6 +8,7 @@ import 'package:ampd/appresources/app_strings.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/widgets/button_border.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -147,6 +148,51 @@ Widget searchTextField({BuildContext context}) {
 //     decoration: AppStyles.decorationWithLeadingEdgeIconTeeTimes(context, "Search", Icons.search),
 //   );
 // }
+
+
+Widget cacheImageVIewWithCustomSize(
+    {BuildContext  context, String  url, double  height, double  width, double  radius}){
+  return Container(
+    width: width,
+    height: height,
+    child: ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        child: ExtendedImage.network(
+          url,
+          fit: BoxFit.cover,
+          cache: true,
+          scale: 1.0,
+          // shape: boxShape,
+          clearMemoryCacheIfFailed: true,
+          clearMemoryCacheWhenDispose: true,
+          timeLimit: const Duration(milliseconds: 100),
+          retries: 5,
+          timeRetry: const Duration(milliseconds: 100),
+          borderRadius: BorderRadius.circular(5.0),
+          // cacheHeight: 50,
+          // cacheWidth: 50,
+          enableMemoryCache: true,
+          mode: ExtendedImageMode.none,
+          gaplessPlayback: true,
+          enableLoadState: true,
+          handleLoadingProgress: true,
+          loadStateChanged: (ExtendedImageState state) {
+            if (state.extendedImageLoadState == LoadState.loading) {
+              return Container(  width: width, height: height, child: Skeleton());
+            } else if (state.extendedImageLoadState == LoadState.completed) {
+              // return Container( height: 200.0,child: Skeleton());
+              return null;
+            } else if (state.extendedImageLoadState == LoadState.failed) {
+              return Container( width: width, height: height, color: Colors.grey,);
+              // return null;
+            }
+            return null;
+          },
+          //cancelToken: cancellationToken,
+        )
+    ),
+  );
+}
 
 showBottomSheetWidgetWithAnimatedBtn(
     BuildContext context,

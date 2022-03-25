@@ -1,12 +1,10 @@
-import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
+
 class SavedCouponModel {
   int total;
   int perPage;
   int page;
   int lastPage;
-  @JsonKey(name: 'data')
   List<DataClass> dataClass;
 
   SavedCouponModel({this.total, this.perPage, this.page, this.lastPage, this.dataClass});
@@ -17,7 +15,7 @@ class SavedCouponModel {
     page = json['page'];
     lastPage = json['lastPage'];
     if (json['data'] != null) {
-      dataClass = new List<DataClass>();
+      dataClass = <DataClass>[];
       json['data'].forEach((v) {
         dataClass.add(new DataClass.fromJson(v));
       });
@@ -55,6 +53,7 @@ class DataClass {
   String backgroundColor;
   String description;
   int status;
+  int isActive;
   String createdAt;
   String updatedAt;
   String averageRating;
@@ -63,7 +62,9 @@ class DataClass {
   String mediumImageUrl;
   String smallImageUrl;
   String qrUrl;
-  List<UserOffer> userOffers;
+  int isExpire;
+  List<UserOffers> userOffers;
+  Store store;
 
   DataClass(
       {this.id,
@@ -83,6 +84,7 @@ class DataClass {
         this.backgroundColor,
         this.description,
         this.status,
+        this.isActive,
         this.createdAt,
         this.updatedAt,
         this.averageRating,
@@ -91,7 +93,9 @@ class DataClass {
         this.mediumImageUrl,
         this.smallImageUrl,
         this.qrUrl,
-        this.userOffers});
+        this.isExpire,
+        this.userOffers,
+        this.store});
 
   DataClass.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -111,6 +115,7 @@ class DataClass {
     backgroundColor = json['background_color'];
     description = json['description'];
     status = json['status'];
+    isActive = json['is_active'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     averageRating = json['average_rating'];
@@ -119,16 +124,15 @@ class DataClass {
     mediumImageUrl = json['medium_image_url'];
     smallImageUrl = json['small_image_url'];
     qrUrl = json['qr_url'];
+    isExpire = json['is_expire'];
     if (json['user_offers'] != null) {
-      userOffers = new List<UserOffer>();
+      userOffers = <UserOffers>[];
       json['user_offers'].forEach((v) {
-        userOffers.add(new UserOffer.fromJson(v));
+        userOffers.add(new UserOffers.fromJson(v));
       });
     }
+    store = json['store'] != null ? new Store.fromJson(json['store']) : null;
   }
-
-
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -149,6 +153,7 @@ class DataClass {
     data['background_color'] = this.backgroundColor;
     data['description'] = this.description;
     data['status'] = this.status;
+    data['is_active'] = this.isActive;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['average_rating'] = this.averageRating;
@@ -157,34 +162,69 @@ class DataClass {
     data['medium_image_url'] = this.mediumImageUrl;
     data['small_image_url'] = this.smallImageUrl;
     data['qr_url'] = this.qrUrl;
+    data['is_expire'] = this.isExpire;
     if (this.userOffers != null) {
       data['user_offers'] = this.userOffers.map((v) => v.toJson()).toList();
+    }
+    if (this.store != null) {
+      data['store'] = this.store.toJson();
     }
     return data;
   }
 }
 
-class UserOffer {
+class UserOffers {
   int id;
   int offerId;
 
+  UserOffers({this.id, this.offerId});
 
-  UserOffer(
-      {this.id,
-        this.offerId});
-
-  UserOffer.fromJson(Map<String, dynamic> json) {
+  UserOffers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     offerId = json['offer_id'];
   }
-
-
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['offer_id'] = this.offerId;
+    return data;
+  }
+}
+
+class Store {
+  int id;
+  int userId;
+  String name;
+  String about;
+  String openingTime;
+  String closingTime;
+
+  Store(
+      {this.id,
+        this.userId,
+        this.name,
+        this.about,
+        this.openingTime,
+        this.closingTime});
+
+  Store.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    userId = json['user_id'];
+    name = json['name'];
+    about = json['about'];
+    openingTime = json['opening_time'];
+    closingTime = json['closing_time'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_id'] = this.userId;
+    data['name'] = this.name;
+    data['about'] = this.about;
+    data['opening_time'] = this.openingTime;
+    data['closing_time'] = this.closingTime;
     return data;
   }
 }

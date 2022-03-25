@@ -43,21 +43,18 @@ class _NotificationTileViewState extends State<NotificationTileView> {
 
               CircleAvatar(
                 backgroundColor: AppColors.WHITE_COLOR,
-                child: widget.data.user.imageUrl.isNotEmpty? ClipRRect(
-                    child: circularNetworkCacheImageWithShimmerWithHeightWidth(
-                        imagePath: widget.data.user.imageUrl,
-                        radius: 40.0,
-                        boxFit: BoxFit.cover
-                    )
-                ) : ClipRRect(
-                  child: Image.asset(
-
-                    "assets/images/user.png",
-                    fit: BoxFit.fill,
+                child: widget.data.user.imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                    url: widget.data.user.imageUrl,
+                    context: context,
                     width: 60,
                     height: 60,
+                    radius: 80.0):ClipRRect(
+                  borderRadius: BorderRadius.circular(60),
+                  child: Image.asset(
+                    "assets/images/user.png",
+                    fit: BoxFit.fill,
                   ),
-                ),
+                )
 
               ),
 

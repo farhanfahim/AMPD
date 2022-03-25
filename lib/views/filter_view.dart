@@ -38,6 +38,7 @@ class FilterView extends StatefulWidget {
 class _FilterState extends State<FilterView>{
 
   bool isApiCalling = true;
+  bool apiCalling = false;
   FilterViewModel _filterViewModel;
   bool _isInternetAvailable = true;
   bool _enabled = true;
@@ -50,7 +51,7 @@ class _FilterState extends State<FilterView>{
   DateTime selectedDate = DateTime.now();
   bool isDateSelected = false;
   String startDate="Start Expiration",endDate="End Expiration";
-  double min1=0.0,max1=300.0,radius=0.0;
+  double min1=0.0,max1=1000.0,radius=0.0;
   AppPreferences _appPreferences = new AppPreferences();
   @override
   void initState() {
@@ -113,25 +114,28 @@ class _FilterState extends State<FilterView>{
               showCloseIcon: false,
               onBackClick: () {
 
-                if(isApiCalling){
-                  if(widget.map['isFromSearch']){
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
-                      'isFromFilterScreen': true,
-                      'minPrice': min1,
-                      'maxPrice': max1,
-                      'minRadius': radius,
-                    });
+                if(!apiCalling){
+                  if(isApiCalling){
+                    if(widget.map['isFromSearch']){
+                      Navigator.of(context).pop();
+                      Navigator.pushNamed(context, AppRoutes.SAVED_COUPONS_2,arguments: {
+                        'isFromFilterScreen': true,
+                        'minPrice': min1,
+                        'maxPrice': max1,
+                        'minRadius': radius,
+                      });
+                    }else{
+                      var map = {'minPrice': min1,
+                        'maxPrice': max1,'minRadius': radius};
+                      Navigator.of(context).pop(map);
+                    }
+
                   }else{
-                    var map = {'minPrice': min1,
-                      'maxPrice': max1,'minRadius': radius};
-                    Navigator.of(context).pop(map);
+
+                    Navigator.of(context).pop();
                   }
-
-                }else{
-
-                  Navigator.of(context).pop();
                 }
+
               },
               iconColor: AppColors.COLOR_BLACK),
           backgroundColor: AppColors.WHITE_COLOR,
@@ -592,6 +596,7 @@ class _FilterState extends State<FilterView>{
       if (value != null && value) {
         // Internet Present Case
         setState(() {
+          apiCalling = true;
           isApiCalling = false;
           _isInternetAvailable = true;
 //          _isInAsyncCall = true;
@@ -634,6 +639,7 @@ class _FilterState extends State<FilterView>{
 
         setState(() {
           isApiCalling = true;
+          apiCalling = false;
         });
 
       }else if (response.data is DioError) {

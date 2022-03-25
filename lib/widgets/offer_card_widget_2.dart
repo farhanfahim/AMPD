@@ -530,7 +530,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                       AnimatedSize(
                         curve: Curves.fastOutSlowIn,
                         child: new Container(
-                          height: !_isDetail ? 370.0 : 350.0,
+                          height: !_isDetail ? 420.0 : 420.0,
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -595,21 +595,18 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                     CircleAvatar(
                                       radius: 30.0,
                                       backgroundColor: AppColors.WHITE_COLOR,
-                                      child: widget.data.user.imageUrl.isNotEmpty? ClipRRect(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(30.0)),
-                                          child: circularNetworkCacheImageWithShimmerWithHeightWidth(
-                                              imagePath: widget.data.user.imageUrl,
-                                              radius: 60.0,
-                                              boxFit: BoxFit.cover
-                                          )
-                                      ) : ClipRRect(
-                                        borderRadius: BorderRadius.circular(30),
+                                      child: widget.data.imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                                          url: widget.data.imageUrl,
+                                          context: context,
+                                          width: 60,
+                                          height: 60,
+                                          radius: 80.0):ClipRRect(
+                                        borderRadius: BorderRadius.circular(60),
                                         child: Image.asset(
                                           "assets/images/user.png",
                                           fit: BoxFit.fill,
                                         ),
-                                      ),
+                                      )
 
                                     ),
                                     SizedBox(
@@ -650,6 +647,9 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                                             ? widget
                                                                 .data.store.name
                                                             : "-",
+                                                        maxLines: 2,
+                                                        softWrap: true,
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: AppStyles
                                                                 .poppinsTextStyle(
                                                                     fontSize:
@@ -776,6 +776,9 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                           widget.data.user.address != null
                                               ? widget.data.user.address
                                               : "-",
+                                          maxLines: 3,
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
                                           style: AppStyles.poppinsTextStyle(
                                                   fontSize: 13.0,
                                                   weight: FontWeight.w400)

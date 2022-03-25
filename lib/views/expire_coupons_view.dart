@@ -197,21 +197,18 @@ class ExpireCouponsState extends State<ExpireCouponsView> with TickerProviderSta
               CircleAvatar(
                 radius: 30.0,
                 backgroundColor: AppColors.WHITE_COLOR,
-                child: data.imageUrl.isNotEmpty? ClipRRect(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(30.0)),
-                    child: circularNetworkCacheImageWithShimmerWithHeightWidth(
-                        imagePath: data.imageUrl,
-                        radius: 60.0,
-                        boxFit: BoxFit.cover
-                    )
-                ) : ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
+                child: data.imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                    url: data.imageUrl,
+                    context: context,
+                    width: 60,
+                    height: 60,
+                    radius: 80.0):ClipRRect(
+                  borderRadius: BorderRadius.circular(60),
                   child: Image.asset(
                     "assets/images/user.png",
                     fit: BoxFit.fill,
                   ),
-                ),
+                )
 
               ),
               SizedBox(

@@ -252,38 +252,34 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                                       side: BorderSide(
                                           width: 10,
                                           color: AppColors.AVATAR_BORDER_COLOR))),
-                              child: CircleAvatar(
-                                radius: 60.0,
-                                backgroundColor: AppColors.WHITE_COLOR,
-                                child: imageUrl.isNotEmpty? ClipRRect(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(80.0)),
-                                    child: circularNetworkCacheImageWithShimmerWithHeightWidth(
-                                        imagePath: imageUrl,
-                                        radius: 120.0,
-                                        boxFit: BoxFit.cover
-                                    )
-                                ) : _image != null
-                                    ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(80),
-                                  child: Image.file(
-                                    _image,
-                                    width: 120,
-                                    height: 120,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                                    : ClipRRect(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(80.0)),
-                                  child: Image.asset(
-                                    "assets/images/user.png",
-                                    fit: BoxFit.cover,
-                                  ),
+                              child: _image == null
+                                  ?ClipRRect(
+                                  child:
+                                  imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                                      url: imageUrl,
+                                      context: context,
+                                      width: 120,
+                                      height: 120,
+                                      radius: 80.0):ClipRRect(
+                                    borderRadius: BorderRadius.circular(60),
+                                    child: Image.asset(
+                                      "assets/images/user.png",
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),)
+                                  : ClipRRect(
+                                child: Image.file(
+                                  _image,
+                                  fit: BoxFit.cover,
+                                  width: 120,
+                                  height: 120,
                                 ),
-                              ),
+                                borderRadius: BorderRadius.circular(80.0),
+                              )
                             ),
                           ),
+
+
                           Positioned.fill(
                             right: 5,
                             bottom: 20,
@@ -318,6 +314,8 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                       ),
                       Text(
                         _fullName,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
                         style:
                         AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(fontWeight: FontWeight.bold),
                       ),

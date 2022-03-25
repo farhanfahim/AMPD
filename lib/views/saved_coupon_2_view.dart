@@ -84,6 +84,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
+          dataList.clear();
+          _pagingController1.refresh();
           _searchText = "";
           filteredNames = names;
         });
@@ -308,21 +310,18 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                   CircleAvatar(
                     radius: 30.0,
                     backgroundColor: AppColors.WHITE_COLOR,
-                    child: data.imageUrl.isNotEmpty? ClipRRect(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(30.0)),
-                        child: circularNetworkCacheImageWithShimmerWithHeightWidth(
-                            imagePath: data.imageUrl,
-                            radius: 60.0,
-                            boxFit: BoxFit.cover
-                        )
-                    ) : ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
+                    child: data.imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                        url: data.imageUrl,
+                        context: context,
+                        width: 60,
+                        height: 60,
+                        radius: 80.0):ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
                       child: Image.asset(
                         "assets/images/user.png",
                         fit: BoxFit.fill,
                       ),
-                    ),
+                    )
 
                   ),
                   SizedBox(
@@ -341,7 +340,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                           height: 3.0,
                         ),
                         Text(
-                          TimerUtils.formatUTCTime(data.expireAt),
+                          TimerUtils.formatUTCTimeForSavedOffers(data.expireAt),
                           style: AppStyles.blackWithDifferentFontTextStyle(
                                   context, 11.0)
                               .copyWith(
@@ -598,6 +597,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
             arguments: {
               'fromSavedCoupon': true,
               'qrImage': singleOfferModel.qrUrl,
+              'storeName': singleOfferModel.store.name,
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
             });
@@ -610,8 +610,12 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
 
         _totalPages = response.data.lastPage;
         // SavedCouponModel responseRegister = responseRegister;
-        dataList.clear();
-        dataList.addAll(response.data.dataClass);
+        setState(() {
+          dataList.clear();
+          dataList.addAll(response.data.dataClass);
+          _pagingController1.refresh();
+        });
+
 
         final isNotLastPage = _currentPage + 1 <= _totalPages;
         print('_currentPage $_currentPage');
