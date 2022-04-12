@@ -595,8 +595,8 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                     CircleAvatar(
                                       radius: 30.0,
                                       backgroundColor: AppColors.WHITE_COLOR,
-                                      child: widget.data.imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
-                                          url: widget.data.imageUrl,
+                                      child: widget.data.user.imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                                          url: widget.data.user.imageUrl,
                                           context: context,
                                           width: 60,
                                           height: 60,

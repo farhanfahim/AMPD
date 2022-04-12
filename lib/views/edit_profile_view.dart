@@ -252,32 +252,34 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                                       side: BorderSide(
                                           width: 10,
                                           color: AppColors.AVATAR_BORDER_COLOR))),
-                              child: _image == null
-                                  ?ClipRRect(
-                                  child:
-                                  imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
-                                      url: imageUrl,
-                                      context: context,
-                                      width: 120,
-                                      height: 120,
-                                      radius: 80.0):ClipRRect(
-                                    borderRadius: BorderRadius.circular(60),
-                                    child: Image.asset(
-                                      "assets/images/user.png",
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),)
-                                  : ClipRRect(
-                                child: Image.file(
-                                  _image,
-                                  fit: BoxFit.cover,
-                                  width: 120,
-                                  height: 120,
+                              child: CircleAvatar(
+                                radius: 60.0,
+                                backgroundColor: AppColors.WHITE_COLOR,
+                                child:  _image == null?imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                                    url: imageUrl,
+                                    context: context,
+                                    width: 120,
+                                    height: 120,
+                                    radius: 80.0):ClipRRect(
+                                  borderRadius: BorderRadius.circular(60),
+                                  child: Image.asset(
+                                    "assets/images/user.png",
+                                    fit: BoxFit.cover,
+                                  ),
+                                ):ClipRRect(
+                                  child: Image.file(
+                                    _image,
+                                    fit: BoxFit.cover,
+                                    width: 120,
+                                    height: 120,
+                                  ),
+                                  borderRadius: BorderRadius.circular(80.0),
                                 ),
-                                borderRadius: BorderRadius.circular(80.0),
-                              )
+
+                              ),
                             ),
                           ),
+
 
 
                           Positioned.fill(

@@ -281,7 +281,8 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                             ),
                           ),
                         )
-                      : NoRecordFound("Search Coupons", AppImages.IC_COUPONS),
+                      : Container( height:
+                  MediaQuery.of(context).size.height * 0.4,child: Center(child: NoRecordFound("Search Coupons", AppImages.IC_COUPONS))),
                 ],
               ),
             ),
@@ -497,6 +498,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
         );
         filteredNames = names;
         _filter.clear();
+        isSearching = false;
       }
     });
   }
