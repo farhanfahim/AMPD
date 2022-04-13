@@ -31,6 +31,8 @@ class AppPreferences {
 
 
   static const String PREF_USER_ID = "USER_ID";
+  static const String PREF_MAX_VALUE = "MAX_VALUE";
+  static const String PREF_MIN_VALUE = "MIN_VALUE";
   static const String PREF_NOTIFICATOIN = "NOTIFICATION";
   static const String PREF_USER_DETAILS = "USER_DETAILS";
   static const String PREF_ACCESS_TOKEN = "ACCESS_TOKEN";
@@ -194,6 +196,24 @@ class AppPreferences {
     return userDetails;
   }
 
+
+  void setMinAmount({@required double value}) => _setPreference(
+      prefName: PREF_MIN_VALUE,
+      prefValue: value,
+      prefType: PREF_TYPE_DOUBLE
+  );
+
+  Future<double> getMinAmount() async =>
+      await _getPreference(prefName: PREF_MIN_VALUE);
+
+  void setMaxAmount({@required double value}) => _setPreference(
+      prefName: PREF_MAX_VALUE,
+      prefValue: value,
+      prefType: PREF_TYPE_DOUBLE
+  );
+
+  Future<double> getMaxAmount() async =>
+      await _getPreference(prefName: PREF_MAX_VALUE);
 
   void setUserId({@required String id}) => _setPreference(
       prefName: PREF_USER_ID,

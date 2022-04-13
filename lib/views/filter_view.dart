@@ -51,7 +51,7 @@ class _FilterState extends State<FilterView>{
   DateTime selectedDate = DateTime.now();
   bool isDateSelected = false;
   String startDate="Start Expiration",endDate="End Expiration";
-  double min1=0.0,max1=1000.0,radius=0.0;
+  double min1=0.0,max1=200.0,radius=0.0;
   AppPreferences _appPreferences = new AppPreferences();
   @override
   void initState() {
@@ -65,6 +65,22 @@ class _FilterState extends State<FilterView>{
         locationSwitch = userData.data.nearestLocation == 1? true : false;
         alphabetSwitch = userData.data.sortingAscending == 1? true : false;
         radius = userData.data.radius.toDouble();
+      });
+    });
+
+    _appPreferences.getMinAmount().then((value) {
+      setState(() {
+        print(value);
+        if(value>0)
+        min1 = value;
+      });
+    });
+
+    _appPreferences.getMaxAmount().then((value) {
+      setState(() {
+        print(value);
+        if(value>0)
+        max1 = value;
       });
     });
 
@@ -380,6 +396,9 @@ class _FilterState extends State<FilterView>{
                                           onDragCompleted: (handlerIndex, lowerValue, upperValue) {
 
                                             setState(() {
+
+                                              _appPreferences.setMinAmount(value: lowerValue);
+                                              _appPreferences.setMaxAmount(value: upperValue);
                                               min1 = lowerValue;
                                               max1 = upperValue;
                                             });

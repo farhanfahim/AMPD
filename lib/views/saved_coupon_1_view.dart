@@ -24,6 +24,7 @@ import 'package:ampd/widgets/flat_button.dart';
 import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/appresources/app_styles.dart';
 import 'package:ampd/appresources/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
@@ -56,6 +57,7 @@ class _SavedCoupons1ViewState extends State<SavedCoupons1View> with SingleTicker
   Icon _searchIcon = new Icon(Icons.search_rounded, color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT,);
   Widget _appBarTitle = new Text( '' );
 
+  AppPreferences _appPreferences = new AppPreferences();
   _SavedCoupons1ViewState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {

@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:open_appstore/open_appstore.dart';
 import 'package:provider/provider.dart';
+import 'package:ampd/data/database/app_preferences.dart';
 import 'package:geolocator/geolocator.dart' as gcl;
 import 'package:sizer/sizer.dart';
 import 'package:ampd/utils/LocationPermissionHandler.dart';
@@ -47,6 +48,7 @@ class _DashboardViewState extends State<DashboardView> {
   int pos = 0;
 
 
+  AppPreferences _appPreferences = new AppPreferences();
   List<String> bottomBarIcons = [
     AppImages.IC_COUPONS,
     AppImages.IC_MENU,
@@ -146,6 +148,8 @@ class _DashboardViewState extends State<DashboardView> {
                 BottomNavigationBarItem(
                     icon: GestureDetector(
                       onTap: () {
+                        _appPreferences.setMinAmount(value: 0);
+                        _appPreferences.setMaxAmount(value: 0);
                         print('2 tapped');
                         if (!widget.map['isGuestLogin']) {
                           setState(() {
@@ -195,6 +199,8 @@ class _DashboardViewState extends State<DashboardView> {
                 BottomNavigationBarItem(
                     icon: GestureDetector(
                       onTap: () {
+                        _appPreferences.setMinAmount(value: 0);
+                        _appPreferences.setMaxAmount(value: 0);
                         print('2 tapped');
                         if (!widget.map['isGuestLogin']) {
                           setState(() {

@@ -901,144 +901,6 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
     );
   }
 
-  Stack editableCustomEmailTextField(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 25.0),
-          child: Focus(
-            onFocusChange: (value) {
-              if (value) {
-                editableEmailController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: editableEmailController.text.length));
-              }
-            },
-            child: TextFormField(
-//
-              enabled: _enabled,
-              focusNode: emailFocus,
-              cursorColor: AppColors.ACCENT_COLOR,
-              onChanged: (String newVal) {
-                if (newVal.length <= emailValidation) {
-                  email = newVal;
-                }
-                else {
-                  editableEmailController.value = new TextEditingValue(
-                      text: email,
-                      selection: new TextSelection(
-                          baseOffset: emailValidation,
-                          extentOffset: emailValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing: new TextRange(start: 0, end: emailValidation));
-                }
-              },
-              controller: editableEmailController,
-              keyboardType: TextInputType.emailAddress,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(emailValidation),
-              ],
-
-              onFieldSubmitted: (texttt) {
-                bool emailValid = RegExp(
-                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(email);
-                if (emailValid) {
-                  setState(() {
-                    _isEmailValid = true;
-                    emailController.text = texttt;
-                  });
-                } else {
-                  setState(() {
-                    _isEmailValid = false;
-                  });
-                }
-              },
-              textInputAction: TextInputAction.next,
-              decoration:
-              AppStyles.decorationWithBorder(AppStrings.EMAIL_ADDRESS),
-              //   , iconData, (){
-              //
-              // }),
-              style: AppStyles.inputTextStyle(context),
-            ),
-          ),
-        ),
-        _isEmailValid
-            ? Positioned(
-          top: 5.0,
-          bottom: 0.0,
-          right: 35.0,
-          child: Icon(
-            checkIconData,
-            color: AppColors.BLUE_COLOR,
-          ),
-        )
-            : Container(),
-      ],
-    );
-  }
-
-  Stack editableCustomPhoneNoWidget(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 25.0),
-          child: Focus(
-            onFocusChange: (value) {
-              if (value) {
-                editableNumberController.selection = TextSelection.fromPosition(
-                    TextPosition(offset: editableNumberController.text.length));
-              }
-            },
-            child: TextFormField(
-              enableInteractiveSelection: false,
-              enabled: _enabled,
-              cursorColor: AppColors.ACCENT_COLOR,
-              toolbarOptions: ToolbarOptions(
-                copy: true,
-                cut: true,
-                paste: false,
-                selectAll: false,
-              ),
-              onChanged: (String newVal) {
-                if (newVal.length <= numberValidation) {
-                  phoneNo = newVal;
-                } else {
-                  editableNumberController.value = new TextEditingValue(
-                      text: phoneNo,
-                      selection: new TextSelection(
-                          baseOffset: numberValidation,
-                          extentOffset: numberValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
-                      composing:
-                      new TextRange(start: 0, end: numberValidation));
-                  //  _emailController.text = text;
-                }
-              },
-              controller: editableNumberController,
-              keyboardType: TextInputType.phone,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(numberValidation),
-              ],
-
-              onFieldSubmitted: (texttt) {
-                numberController.text = texttt;
-              },
-              textInputAction: TextInputAction.done,
-              decoration:
-              AppStyles.decorationWithBorder(AppStrings.PHONE_NUMBER),
-              //   , iconData, (){
-              //
-              // }),
-              style: AppStyles.inputTextStyle(context),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   showPhoneNoBottomSheet(BuildContext context) {
     showBottomSheetWidgetWithAnimatedBtn(
@@ -1077,7 +939,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
                 fontFamily: AppFonts.POPPINS_MEDIUM,
                 fontWeight: FontWeight.w400),
             autoValidateMode: AutovalidateMode.disabled,
-            textFieldController: numberController,
+            textFieldController: editableNumberController,
             inputDecoration:
             AppStyles.decorationWithoutBorder("Phone Number"),
           ),
@@ -1632,11 +1494,17 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
 
             userDetails.data.email = editableEmailController.text.trim();
             emailController.text = editableEmailController.text.trim();
+            editableEmailController.text = "";
           } else if(_phoneChanged) {
             print('response ${phoneNo}');
 
             userDetails.data.phone = phoneNo;
             numberController.text = phoneNo;
+            setState(() {
+              editableNumberController.text = "";
+              phoneNo = "";
+            });
+
           }
           _appPreferences.setUserDetails(data: jsonEncode(userDetails));
           Navigator.pop(context);

@@ -352,12 +352,12 @@ STRIPE_SECRET_KEY=sk_test_51IId8KClyE5SpfEmvtH7yWfsB1FzVpkGLVPuVFu6m12zUCyCfhZGB
       'Password cannot be less than 6 characters';
 
   static const String PHONE_NUMBER_TITLE = 'Phone Number';
-  static const String REQUEST_TO_PHONE_NUMBER_TITLE = 'Request to Change Phone Number';
-  static const String REQUEST_TO_EMAIL_TITLE = 'Request to Change Email';
+  static const String REQUEST_TO_PHONE_NUMBER_TITLE = 'Enter New Phone Number';
+  static const String REQUEST_TO_EMAIL_TITLE = 'Enter New Email';
   static const String PASSWORD_RESET_TITLE = 'Reset Password';
   static const String ENTER_OTP_DIGIT = 'Enter 4 Digits Code';
-  static const String ENTER_NEW_EMAIL = 'Enter New Email';
-  static const String ENTER_NEW_PHONE = 'Enter New Phone Number';
+  static const String ENTER_NEW_EMAIL = 'Update Your New Email';
+  static const String ENTER_NEW_PHONE = 'Update Your Phone Number';
   static const String PASSWORD_DESC = 'Set the new password for your account';
   static const String OTP_DESC = 'Please enter the code sent to your phone number.';
   static const String OTP_DESC_EMAIL1 = 'Please enter the code sent to your Email.';

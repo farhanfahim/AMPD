@@ -13,6 +13,7 @@ import 'package:ampd/utils/ToastUtil.dart';
 import 'package:ampd/utils/Util.dart';
 import 'package:ampd/utils/loader.dart';
 import 'package:ampd/utils/timer_utils.dart';
+import 'package:ampd/data/database/app_preferences.dart';
 import 'package:ampd/viewmodel/saved_coupon2_viewmodel.dart';
 import 'package:ampd/viewmodel/active_coupon_viewmodel.dart';
 import 'package:ampd/views/setting_view.dart';
@@ -80,6 +81,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
   );
   Widget _appBarTitle = new Text('');
 
+  AppPreferences _appPreferences = new AppPreferences();
   _SavedCoupons2ViewState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
@@ -155,7 +157,6 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
   void initState() {
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
-
 
     this._searchIcon = new Icon(
       Icons.close,
