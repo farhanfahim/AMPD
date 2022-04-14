@@ -186,6 +186,8 @@ class ExpireCouponsState extends State<ExpireCouponsView> with TickerProviderSta
 
   Widget SavedCouponExpiredTileView(DataClass data) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+
       children: [
         SizedBox(
           height: 10.0,
@@ -214,7 +216,7 @@ class ExpireCouponsState extends State<ExpireCouponsView> with TickerProviderSta
               SizedBox(
                 width: 10.0,
               ),
-              Flexible(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -224,8 +226,9 @@ class ExpireCouponsState extends State<ExpireCouponsView> with TickerProviderSta
                             .copyWith(color: AppColors.COLOR_BLACK)
                             .copyWith(fontWeight: FontWeight.w600)),
                     SizedBox(
-                      height: 3.0,
+                      height: 2.0,
                     ),
+
                     Text(
                       TimerUtils.formatUTCTimeForSavedOffers(data.expireAt),
                       style: AppStyles.blackWithDifferentFontTextStyle(
@@ -234,31 +237,19 @@ class ExpireCouponsState extends State<ExpireCouponsView> with TickerProviderSta
                           color: AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
                     ),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Time to Avail: ${data.availTime } hour",
-                          style: AppStyles.blackWithDifferentFontTextStyle(
-                              context, 12.0)
-                              .copyWith(
-                              color:
-                              AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
-                        ),
-                        FlatButtonWidget(
-                          onTap: () {}, text: AppStrings.EXPIRED,color: AppColors.RED_COLOR2,),
-                      ],
-                    ),
-
                   ],
                 ),
               ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FlatButtonWidget(
+                  onTap: () {}, text: AppStrings.EXPIRED,color: AppColors.RED_COLOR2,),
+              ),
             ],
           ),
+
         ),
-        SizedBox(
-          height: 10.0,
-        ),
+
         divider(),
       ],
     );

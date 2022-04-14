@@ -84,7 +84,11 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
         ? widget.data.backgroundColor.replaceAll('#', '0xff')
         : "#2491EB".replaceAll('#', '0xff');
     clr = int.parse(color);
-    _time = widget.time;
+    //_time = widget.time;
+
+    var today = new DateTime.now();
+    var updatedDate = today.add(new Duration(hours: int.parse(widget.data.availTime.toString())));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
 
     print("{widget.data.store.openingTime}");
     if (!TimerUtils.isAheadOrBefore(_time)) {
@@ -757,9 +761,10 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                                         launch(
                                             ('tel:${widget.data.user.phone}'));
                                       },
+
                                       child: Text(
                                         widget.data.user.phone != null
-                                            ? widget.data.user.phone
+                                            ? widget.data.user.phone.replaceAllMapped(RegExp(r'(\d{3})(\d{3})(\d+)'), (Match m) => "(${m[1]}) ${m[2]}-${m[3]}")
                                             : "-",
                                         style: AppStyles.poppinsTextStyle(
                                                 fontSize: 13.0,
