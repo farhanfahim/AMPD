@@ -55,6 +55,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView>
     with AutomaticKeepAliveClientMixin<HomeView>, TickerProviderStateMixin {
   gcl.Position position;
+  int availTime = 0;
   String storeName = '';
   BuildContext dialogContext;
   int _totalPages = 0;
@@ -557,6 +558,7 @@ class _HomeViewState extends State<HomeView>
                                     btnWidget: AnimatedGradientButton(
                                       onAnimationTap: () {
                                         setState(() {
+                                          availTime = int.parse(dataList[i].availTime.toString());
                                           storeName = dataList[i].store.name;
                                         });
                                         redeemOffersApi(dataList[i].id,dataList[i].qrUrl,dataList[i].redeemMessage);
@@ -621,6 +623,7 @@ class _HomeViewState extends State<HomeView>
         Navigator.pushNamed(context, qrUrl != null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW, arguments: {
           'fromSavedCoupon': false,
           'qrImage': qrUrl,
+          'availTime': availTime,
           'storeName': storeName,
           'redeemMessage': redeemMessage,
           'offer_id': response.data.offerId,

@@ -9,6 +9,7 @@ import 'package:ampd/appresources/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -20,9 +21,10 @@ class _SplashViewState extends State<SplashView> with WidgetsBindingObserver {
   @override
   void initState() {
 
+
     super.initState();
     Timer(Duration(seconds: 3),
-            () =>  checkIsLoggedIn());
+            () =>   checkIsLoggedIn());
       }
 
 

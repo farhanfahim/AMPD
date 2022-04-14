@@ -590,6 +590,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
         });
       }
       if (response.data is RedeemOfferModel) {
+
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
         Navigator.pushNamed(
@@ -600,6 +601,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
             arguments: {
               'fromSavedCoupon': true,
               'qrImage': singleOfferModel.qrUrl,
+              'availTime':int.parse(singleOfferModel.availTime.toString()),
               'storeName': singleOfferModel.store.name,
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,

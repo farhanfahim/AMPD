@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:intl/intl.dart';
 import 'package:ampd/app/app.dart';
 import 'package:ampd/app/app_routes.dart';
 import 'package:ampd/appresources/app_colors.dart';
@@ -21,6 +22,7 @@ import 'package:ampd/widgets/widgets.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ampd/utils/timer_utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,12 +48,58 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
   int _sec = 30;
   int _secc = 3;
   ScrollController controller = ScrollController();
+  Timer _timer;
+  String _time = "2022-4-15 09:00:00";
+  String _days = "00";
+  String _hours = "00";
+  String _newHours = "00";
+  String _min = "00";
+  String _secs = "00";
+
+  int _hoursDays = 0;
 
   @override
   void initState() {
     super.initState();
 
+    var today = new DateTime.now();
+    var updatedDate = today.add(new Duration(hours: widget.map['availTime']));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+
+
     startTimer();
+    if (!TimerUtils.isAheadOrBefore(_time)) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (!TimerUtils.isAheadOrBefore(_time)) {
+          if (mounted) {
+            setState(() {
+              _days = TimerUtils.getDays(_time, 'days');
+              int dayHour = int.parse(_days)*24;
+              _hours = TimerUtils.getDays(_time, 'hours');
+              _hoursDays = (int.parse(_hours)+dayHour);
+              if(_hoursDays>9){
+                _newHours ="$_hoursDays";
+              }else{
+                _newHours ="0$_hoursDays";
+              }
+              _min = TimerUtils.getDays(_time, 'min');
+              _secs = TimerUtils.getDays(_time, 'sec');
+            });
+          }
+        } else {
+          _timer.cancel();
+          if (mounted) {
+            setState(() {
+              _days = "10";
+              _hours = "00";
+              _min = "00";
+              _secs = "00";
+            });
+          }
+        }
+      });
+    }
+
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
 
@@ -158,23 +206,113 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.025,
                     ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CountDownWidget(counter: _secc.toString()),
-                        SizedBox(
-                          width: 8.0,
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 35),
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      decoration: ShapeDecoration(
+                          color:AppColors.colorLightGrey,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(
+                                  width: 0.5, color: AppColors.COLOR_BLACK))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
 
-                        ),
-                        CountDownWidget(counter: _sec > 9?_sec.toString().substring(1):_sec.toString().substring(0)),
-                      ],
-                    ),
+                          Column(
+                            children: [
 
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.03,
+                              Text(
+                                _newHours.toString(),
+                                style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
+                                ,
+                              ),
+                              Text(
+                                //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
+                                int.parse(_newHours) > 1 ? 'Hours' : 'Hour',
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 10.0.sp,
+                                    weight: FontWeight.w300).copyWith(color:AppColors.WHITE_COLOR),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              children: [
+
+                                Text(
+                                  ":",
+                                  style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
+                                  ,
+                                ),
+                                Text(
+                                  //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
+                                  ":",
+                                  style: AppStyles.poppinsTextStyle(
+                                      fontSize: 10.0.sp,
+                                      weight: FontWeight.w300).copyWith(color:AppColors.WHITE_COLOR),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          Column(
+                            children: [
+
+
+                              Text(
+                                _min,
+                                style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
+                                ,
+                              ),
+                              Text(
+                                'Mins',
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 10.0.sp,
+                                    weight: FontWeight.w300).copyWith(color:AppColors.WHITE_COLOR),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Column(
+                              children: [
+
+                                Text(
+                                  ":",
+                                  style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
+                                  ,
+                                ),
+                                Text(
+                                  //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
+                                  ":",
+                                  style: AppStyles.poppinsTextStyle(
+                                      fontSize: 10.0.sp,
+                                      weight: FontWeight.w300).copyWith(color:AppColors.WHITE_COLOR),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Column(
+                            children: [
+
+                              Text(
+                                _secs,
+                                style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
+                                ,
+                              ),
+                              Text(
+                                'Secs',
+                                style: AppStyles.poppinsTextStyle(
+                                    fontSize: 10.0.sp,
+                                    weight: FontWeight.w300).copyWith(color:AppColors.WHITE_COLOR),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(AppStrings.SECONDS,
-                        style: AppStyles.detailWithSmallTextSizeTextStyle()),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.02,
                     ),

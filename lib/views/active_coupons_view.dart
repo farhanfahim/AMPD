@@ -589,6 +589,9 @@ class ActiveCouponsState extends State<ActiveCouponsView>
       }
 
       if (response.data is RedeemOfferModel) {
+
+
+
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
         Navigator.pushNamed(
@@ -599,6 +602,7 @@ class ActiveCouponsState extends State<ActiveCouponsView>
             arguments: {
               'fromSavedCoupon': true,
               'qrImage': singleOfferModel.qrUrl,
+              'availTime': int.parse(singleOfferModel.availTime.toString()),
               'storeName': singleOfferModel.store.name,
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
