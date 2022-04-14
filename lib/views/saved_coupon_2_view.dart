@@ -246,11 +246,16 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                               pagingController: _pagingController1,
                               builderDelegate:
                                   PagedChildBuilderDelegate<DataClass>(
-                                itemBuilder: (context, item, index) {
-                                  print('Item index: $index');
+                                    itemBuilder: (context, item, index) {
+                                      return SavedCouponActiveTileView(data:item, pos:index,pagingController1: _pagingController1,redeemOffer: (v){
+                                        setState(() {
+                                          singleOfferModel = item;
+                                        });
 
-                                  return SavedCouponTileView(item);
-                                },
+                                        redeemOffersApi(item.id);
+                                      },);
+
+                                    },
                                 noItemsFoundIndicatorBuilder: (context) => Center(
                                     child: NoRecordFound(
                                         "No Result Found", AppImages.IC_COUPONS)),
@@ -661,3 +666,215 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
     } on TickerCanceled {}
   }
 }
+
+
+class SavedCouponActiveTileView extends StatefulWidget {
+  final PagingController<int, DataClass> pagingController1;
+  final DataClass data;
+  final int pos;
+  final ValueChanged<BuildContext> redeemOffer;
+  SavedCouponActiveTileView({Key key,this.data,this.pos,this.pagingController1,this.redeemOffer}) : super(key: key);
+
+  @override
+  _SavedCouponActiveTileViewState createState() => _SavedCouponActiveTileViewState();
+}
+
+class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> with TickerProviderStateMixin{
+  String _time = "2022-4-15 09:00:00";
+  String _days = "00";
+  String _hours = "00";
+  String _newHours = "00";
+  String _min = "00";
+  String _secs = "00";
+
+  int _hoursDays = 0;
+  Timer _timer;
+  AnimationController _buttonController;
+  AnimationController _buttonController1;
+  int deletedItem;
+
+  void initState() {
+
+    super.initState();
+    var today = new DateTime.now();
+    var updatedDate = today.add(new Duration(hours: widget.data.availTime));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+
+    if (!TimerUtils.isAheadOrBefore(_time)) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (!TimerUtils.isAheadOrBefore(_time)) {
+          if (mounted) {
+            setState(() {
+              _days = TimerUtils.getDays(_time, 'days');
+              int dayHour = int.parse(_days)*24;
+              _hours = TimerUtils.getDays(_time, 'hours');
+              _hoursDays = (int.parse(_hours)+dayHour);
+              if(_hoursDays>9){
+                _newHours ="$_hoursDays";
+              }else{
+                _newHours ="0$_hoursDays";
+              }
+              _min = TimerUtils.getDays(_time, 'min');
+              _secs = TimerUtils.getDays(_time, 'sec');
+            });
+          }
+        } else {
+          _timer.cancel();
+          if (mounted) {
+            setState(() {
+              _days = "10";
+              _hours = "00";
+              _min = "00";
+              _secs = "00";
+            });
+          }
+        }
+      });
+    }
+
+    _buttonController = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+    _buttonController1 = AnimationController(
+        duration: const Duration(milliseconds: 3000), vsync: this);
+
+  }
+
+
+  @override
+  void dispose() {
+    _buttonController.dispose();
+    _buttonController1.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Column(
+      children: [
+        SizedBox(
+          height: 10.0,
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.REDEEM_NOW, arguments: {
+              'offer_id': widget.data.id,
+            });
+          },
+          child: Container(
+            color: AppColors.WHITE_COLOR,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                      radius: 30.0,
+                      backgroundColor: AppColors.WHITE_COLOR,
+                      child: widget.data.imageUrl.isNotEmpty?cacheImageVIewWithCustomSize(
+                          url: widget.data.imageUrl,
+                          context: context,
+                          width: 60,
+                          height: 60,
+                          radius: 80.0):ClipRRect(
+                        borderRadius: BorderRadius.circular(60),
+                        child: Image.asset(
+                          "assets/images/user.png",
+                          fit: BoxFit.fill,
+                        ),
+                      )
+
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.data.productName,
+                            style: AppStyles.blackWithBoldFontTextStyle(
+                                context, 16.0)
+                                .copyWith(color: AppColors.COLOR_BLACK)
+                                .copyWith(fontWeight: FontWeight.w600)),
+                        SizedBox(
+                          height: 3.0,
+                        ),
+                        Text(
+                          TimerUtils.formatUTCTimeForSavedOffers(widget.data.expireAt),
+                          style: AppStyles.blackWithDifferentFontTextStyle(
+                              context, 11.0)
+                              .copyWith(
+                              color:
+                              AppColors.APP__DETAILS_TEXT_COLOR_LIGHT),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            int.parse(_newHours)>1?Text(
+                              "Time to Avail: More than an hour",
+                              style:
+                              AppStyles.blackWithDifferentFontTextStyle(
+                                  context, 12.0)
+                                  .copyWith(
+                                  color: AppColors
+                                      .APP__DETAILS_TEXT_COLOR_LIGHT),
+                            ):Text(
+                              "Time to Avail: $_min : $_secs ",
+                              style:
+                              AppStyles.blackWithDifferentFontTextStyle(
+                                  context, 12.0)
+                                  .copyWith(
+                                  color: AppColors
+                                      .APP__DETAILS_TEXT_COLOR_LIGHT),
+                            ),
+                            FlatButtonWidget(
+                              onTap: () {
+
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context3) {
+
+                                      return CustomDialog(
+                                        showAnimatedBtn: true,
+                                        contex: context,
+                                        subTitle: "Are you sure?",
+                                        title: "Only redeem offers at checkout.",
+
+                                        btnWidget: AnimatedGradientButton(
+                                          onAnimationTap: (){widget.redeemOffer(context3);Navigator.pop(context3);},
+                                          buttonController: _buttonController,
+                                          text: AppStrings.YES,
+                                        ),
+                                        buttonText2: AppStrings.NO,
+                                        onPressed2: () {
+                                          Navigator.pop(context3);
+                                        },
+                                        onPressed3:(){
+                                          Navigator.pop(context3);
+                                        },
+                                        showImage: false,
+                                      );
+                                    });
+                              },
+                              text: AppStrings.REDEEM_BTN,
+                              color: AppColors.BLUE_COLOR,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20.0,
+        ),
+        divider(),
+      ],
+    );
+  }
+}
+

@@ -44,9 +44,9 @@ class DataClass {
   int value;
   String expireAt;
   int numberOfUses;
-  int dislikeTime;
-  int recurrenceTime;
-  int availTime;
+  Object dislikeTime;
+  Object recurrenceTime;
+  Object availTime;
   String qrCode;
   String redeemMessage;
   String image;

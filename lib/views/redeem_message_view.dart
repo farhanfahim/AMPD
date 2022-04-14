@@ -179,7 +179,9 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                           ),
                         ),
                       ),
-
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.025,
+                      ),
                       Text(
                         AppStrings.TIME_REMAINING,
                         style:

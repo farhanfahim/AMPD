@@ -13,7 +13,7 @@ class Dataclass {
   Object numberOfUses;
   Object dislikeTime;
   Object recurrenceTime;
-  int availTime;
+  Object availTime;
   String qrCode;
   String redeemMessage;
   String image;
