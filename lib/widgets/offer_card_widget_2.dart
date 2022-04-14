@@ -158,42 +158,70 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                     fit: StackFit.expand,
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 25.0, bottom: 80.0),
-                        child: Column(
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        margin: EdgeInsets.only(top: 25.0, bottom: 0.0),
+                        child: Stack(
                           children: [
-                            Center(
-                              child: Text(
-                                widget.data.type == 10
-                                    ? "\$" + widget.text
-                                    : widget.text + "%",
-                                style: AppStyles.poppinsTextStyle(
-                                    fontSize: 30.0.sp, weight: FontWeight.w400),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            CachedNetworkImage(
-                              imageUrl: widget.data.imageUrl,
-                              fit: BoxFit.cover,
-                              height: 300.0,
-                              // fadeInCurve: Curves.easeIn,
-                              imageBuilder: (BuildContext context,
-                                  ImageProvider<dynamic> imageProvider) {
-                                return Image(
-                                  // width: constraints.maxWidth,
-                                  image: imageProvider,
-                                  colorBlendMode: BlendMode.srcATop,
-                                  fit: BoxFit.cover,
+                            widget.data.waterMarkImage!=null?Positioned(
+                              left: MediaQuery.of(context).size.width/2.5,
+                              child:CachedNetworkImage(
+                                imageUrl: widget.data.waterMarkImage,
+                                fit: BoxFit.cover,
+                                height: 500.0,
+                                // fadeInCurve: Curves.easeIn,
+                                imageBuilder: (BuildContext context,
+                                    ImageProvider<dynamic> imageProvider) {
+                                  return Image(
+                                    // width: constraints.maxWidth,
+                                    image: imageProvider,
+                                    colorBlendMode: BlendMode.srcATop,
+                                    fit: BoxFit.cover,
 
-                                );
-                              },
-                              placeholder: (context, url) => Skeleton(),
+                                  );
+                                },
+                                placeholder: (context, url) => Skeleton(),
 //              errorWidget: (context, url, error){
 //                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
 //              },
+                              ),
+                            ):Container(),
+                            Column(
+//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    widget.data.type == 10
+                                        ? "\$" + widget.text
+                                        : widget.text + "%",
+                                    style: AppStyles.poppinsTextStyle(
+                                        fontSize: 30.0.sp, weight: FontWeight.w400),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                CachedNetworkImage(
+                                  imageUrl: widget.data.imageUrl,
+                                  fit: BoxFit.cover,
+                                  height: 300.0,
+                                  // fadeInCurve: Curves.easeIn,
+                                  imageBuilder: (BuildContext context,
+                                      ImageProvider<dynamic> imageProvider) {
+                                    return Image(
+                                      // width: constraints.maxWidth,
+                                      image: imageProvider,
+                                      colorBlendMode: BlendMode.srcATop,
+                                      fit: BoxFit.cover,
+
+                                    );
+                                  },
+                                  placeholder: (context, url) => Skeleton(),
+//              errorWidget: (context, url, error){
+//                return Image.asset(AppImages.NO_IMAGE_PLACEHOLDER);
+//              },
+                                ),
+                              ],
                             ),
+
                           ],
                         ),
                       ),

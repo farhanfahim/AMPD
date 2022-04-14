@@ -25,6 +25,7 @@ class Dataclass {
   Object averageRating;
   Object totalReviews;
   String imageUrl;
+  String waterMarkImage;
   String mediumImageUrl;
   String smallImageUrl;
   String qrUrl;
@@ -55,6 +56,7 @@ class Dataclass {
         this.updatedAt,
         this.averageRating,
         this.totalReviews,
+        this.waterMarkImage,
         this.imageUrl,
         this.mediumImageUrl,
         this.smallImageUrl,
@@ -87,6 +89,7 @@ class Dataclass {
     averageRating = json['average_rating'];
     totalReviews = json['total_reviews'];
     imageUrl = json['image_url'];
+    waterMarkImage = json['watermark_image'];
     mediumImageUrl = json['medium_image_url'];
     smallImageUrl = json['small_image_url'];
     qrUrl = json['qr_url'];
@@ -125,6 +128,7 @@ class Dataclass {
     data['updated_at'] = this.updatedAt;
     data['average_rating'] = this.averageRating;
     data['total_reviews'] = this.totalReviews;
+    data['watermark_image'] = this.waterMarkImage;
     data['image_url'] = this.imageUrl;
     data['medium_image_url'] = this.mediumImageUrl;
     data['small_image_url'] = this.smallImageUrl;
