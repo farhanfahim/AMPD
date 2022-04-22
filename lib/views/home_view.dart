@@ -165,6 +165,10 @@ class _HomeViewState extends State<HomeView>
 
        child: RefreshIndicator(
             onRefresh: () async {
+              setState(() {
+                dataList.clear();
+                _swipeItems.clear();
+              });
               _isRefreshing = false;
               getCurrentLocation();
             },
@@ -507,9 +511,8 @@ class _HomeViewState extends State<HomeView>
 
         print('total ${responseRegister.data.lastPage}');
         _totalPages = responseRegister.data.lastPage;
-        dataList.clear();
-        dataList.addAll(responseRegister.data.dataclass);
 
+        dataList.addAll(responseRegister.data.dataclass);
 
         if (dataList.isNotEmpty) {
           for (int i = 0; i < dataList.length; i++) {
@@ -561,6 +564,8 @@ class _HomeViewState extends State<HomeView>
                                           availTime = int.parse(dataList[i].availTime.toString());
                                           storeName = dataList[i].store.name;
                                         });
+                                        //dataList.remove(dataList[i]);
+                                        //_swipeItems.removeAt(i);
                                         redeemOffersApi(dataList[i].id,dataList[i].qrUrl,dataList[i].redeemMessage);
 
                                       },
@@ -620,6 +625,9 @@ class _HomeViewState extends State<HomeView>
       else if (response.data is RedeemOfferModel) {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(context);
+        setState(() {
+
+        });
         Navigator.pushNamed(context, qrUrl != null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW, arguments: {
           'fromSavedCoupon': false,
           'qrImage': qrUrl,

@@ -92,7 +92,16 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
 
     print("{widget.data.store.openingTime}");
     if (!TimerUtils.isAheadOrBefore(_time)) {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _days = TimerUtils.getDays(_time, 'days');
+        _hours = TimerUtils.getDays(_time, 'hours');
+        _min = TimerUtils.getDays(_time, 'min');
+        _sec = TimerUtils.getDays(_time, 'sec');
+        //          if(int.parse(_sec) == 0) {
+        //            _timer.cancel();
+        //          }
+      });
+      /*_timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
           if (mounted) {
             setState(() {
@@ -116,7 +125,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
             });
           }
         }
-      });
+      });*/
     }
     // widget.changeDetailTitle(_isDetail);
     WidgetsBinding.instance
@@ -435,7 +444,7 @@ class _OfferCardWidget2State extends State<OfferCardWidget2>
                             ),
                             Center(
                               child: Text(
-                                "Offer redemption time limit",
+                                "Valid upto",
                                 style: AppStyles.poppinsTextStyle(
                                     fontSize: 15.0.sp, weight: FontWeight.w400),
                               ),

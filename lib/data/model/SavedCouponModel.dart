@@ -176,18 +176,21 @@ class DataClass {
 class UserOffers {
   int id;
   int offerId;
+  String createdAt;
 
-  UserOffers({this.id, this.offerId});
+  UserOffers({this.id, this.offerId,this.createdAt});
 
   UserOffers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     offerId = json['offer_id'];
+    createdAt = json['created_at'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['offer_id'] = this.offerId;
+    data['created_at'] = this.createdAt;
     return data;
   }
 }

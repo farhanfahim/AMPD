@@ -639,10 +639,8 @@ class _ChangePasswordState extends State<ChangePasswordView> with TickerProvider
                   cPasswordController.value = new TextEditingValue(
                       text: password,
                       selection: new TextSelection(
-                          baseOffset: cPasswordValidation,
-                          extentOffset: cPasswordValidation,
-                          affinity: TextAffinity.downstream,
-                          isDirectional: false),
+                          baseOffset: password.length,
+                          extentOffset: password.length,),
                       composing:
                       new TextRange(start: 0, end: cPasswordValidation));
                   //  _emailController.text = text;

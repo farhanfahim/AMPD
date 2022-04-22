@@ -696,10 +696,15 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
   void initState() {
 
     super.initState();
-    var today = new DateTime.now();
-    var updatedDate = today.add(new Duration(hours: widget.data.availTime));
+    var date = widget.data.userOffers[0].createdAt;
+    List<String> split1String = date.split(" ");
+    List<String> split2String = split1String[0].split("-");
+    List<String> split3String = split1String[1].split(":");
+    DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
+    var local = offerDate.toLocal();
+    print(local);
+    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()),minutes: int.parse(split3String[1])));
     _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
-
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
