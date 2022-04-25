@@ -711,21 +711,26 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
     DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
     var local = offerDate.toLocal();
 
-    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString())));
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()) ));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(local);
     print(local);
     print(updatedDate);
     print(split2String);
     print(split3String);
-    if (!TimerUtils.isAheadOrBefore(_time)) {
+    print(_time);
+    print(_days);
+    if (TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        if (!TimerUtils.isAheadOrBefore(_time)) {
+        if (TimerUtils.isAheadOrBefore(_time)) {
           if (mounted) {
             setState(() {
               _days = TimerUtils.getDays(_time, 'days');
               int dayHour = int.parse(_days)*24;
               _hours = TimerUtils.getDays(_time, 'hours');
-              _hoursDays = (int.parse(_hours)+dayHour);
+              _hoursDays = (int.parse(_hours) + dayHour + int.parse(widget.data.availTime.toString()));
+
+              print(_hours);
+              print(_hoursDays);
               if(_hoursDays>9){
                 _newHours ="$_hoursDays";
               }else{
@@ -748,7 +753,6 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
         }
       });
     }
-
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     _buttonController1 = AnimationController(
@@ -863,7 +867,8 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                                         title: "Only redeem offers at checkout.",
 
                                         btnWidget: AnimatedGradientButton(
-                                          onAnimationTap: (){widget.redeemOffer(context3);},
+                                          onAnimationTap: (){
+                                            widget.redeemOffer(context3);},
                                           buttonController: widget.buttonController1,
                                           text: AppStrings.YES,
                                         ),

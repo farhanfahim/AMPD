@@ -492,21 +492,25 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
     var local = offerDate.toLocal();
 
     var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()) ));
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(local);
     print(local);
     print(updatedDate);
     print(split2String);
     print(split3String);
     print(_time);
-    if (!TimerUtils.isAheadOrBefore(_time)) {
+    print(_days);
+    if (TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        if (!TimerUtils.isAheadOrBefore(_time)) {
+        if (TimerUtils.isAheadOrBefore(_time)) {
           if (mounted) {
             setState(() {
               _days = TimerUtils.getDays(_time, 'days');
               int dayHour = int.parse(_days)*24;
               _hours = TimerUtils.getDays(_time, 'hours');
-              _hoursDays = (int.parse(_hours)+dayHour);
+              _hoursDays = (int.parse(_hours) + dayHour + int.parse(widget.data.availTime.toString()));
+
+              print(_hours);
+              print(_hoursDays);
               if(_hoursDays>9){
                 _newHours ="$_hoursDays";
               }else{
@@ -529,7 +533,6 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
         }
       });
     }
-
     controller = SwipeActionController(selectedIndexPathsChangeCallback:
         (changedIndexPaths, selected, currentCount) {});
 
@@ -551,6 +554,8 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
 
   @override
   Widget build(BuildContext context) {
+
+
     return SwipeActionCell(
       controller: controller,
       index: widget.pos,
@@ -585,7 +590,8 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                         height: 80.0,
                       ),
                       btnWidget: AnimatedGradientButton(
-                        onAnimationTap:(){widget.deleteOffer(context3);},
+                        onAnimationTap:(){
+                          widget.deleteOffer(context3);},
                         buttonController: widget.buttonController,
                         text: AppStrings.YES,
                       ),
@@ -701,7 +707,9 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                                           title: "Only redeem offers at checkout.",
 
                                           btnWidget: AnimatedGradientButton(
-                                            onAnimationTap: (){widget.redeemOffer(context3);},
+                                            onAnimationTap: (){
+                                              widget.pagingController1.refresh();
+                                              widget.redeemOffer(context3);},
                                             buttonController: widget.buttonController1,
                                             text: AppStrings.YES,
                                           ),
