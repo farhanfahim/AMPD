@@ -600,6 +600,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
       }
       if (response.data is RedeemOfferModel) {
 
+        RedeemOfferModel model = response.data;
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
         Navigator.pushNamed(
@@ -614,7 +615,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
               'storeName': singleOfferModel.store.name,
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
-              'redeem_at': response.data.redeem_at,
+              'redeem_at': model.redeemAt,
             });
       }
       else if (response.msg == "You have already availed this offer!") {

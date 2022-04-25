@@ -497,6 +497,7 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
     print(updatedDate);
     print(split2String);
     print(split3String);
+    print(_time);
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {

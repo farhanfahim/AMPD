@@ -623,6 +623,7 @@ class _HomeViewState extends State<HomeView>
         }
       }
       else if (response.data is RedeemOfferModel) {
+        RedeemOfferModel model = response.data;
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(context);
         setState(() {
@@ -635,7 +636,7 @@ class _HomeViewState extends State<HomeView>
           'storeName': storeName,
           'redeemMessage': redeemMessage,
           'offer_id': response.data.offerId,
-          'redeem_at': response.data.redeem_at,
+          'redeem_at': model.redeemAt,
         });
       }
       else if (response.msg == "You have already availed this offer!") {

@@ -327,12 +327,13 @@ class _RedeemNowViewState extends State<RedeemNowView> with TickerProviderStateM
       }
 
       else if (response.data is RedeemOfferModel) {
+        RedeemOfferModel model = response.data;
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(context);
         Navigator.pushNamed(
             context, singleOfferModel.qrUrl!= null?AppRoutes.QR_SCAN_VIEW:AppRoutes.REDEEM_MESSAGE_VIEW,
             arguments: {'fromSavedCoupon':true, 'qrImage': singleOfferModel.qrUrl,'availTime':int.parse(singleOfferModel.availTime.toString()),'storeName': singleOfferModel.store.name,'redeemMessage':singleOfferModel.redeemMessage,'offer_id': response.data.offerId,
-              'redeem_at': response.data.redeem_at,});
+              'redeem_at': model.redeemAt,});
       }else if (response.msg == "You have already availed this offer!") {
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
