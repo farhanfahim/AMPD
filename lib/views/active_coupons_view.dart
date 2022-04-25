@@ -75,6 +75,8 @@ class ActiveCouponsState extends State<ActiveCouponsView>
   SwipeActionController controller;
   ActiveCouponViewModel _activeCouponViewModel;
 
+  BuildContext ctx1;
+  BuildContext ctx2;
   double radius = 0.0;
   AppPreferences _appPreferences = new AppPreferences();
   @override
@@ -168,12 +170,20 @@ class ActiveCouponsState extends State<ActiveCouponsView>
                   redeemOffersApi(item.id);
                 },
                 deleteOffer: (v){
+                  setState(() {
+                    ctx1 = v;
+                  });
                   deleteOffersApi(item.userOffers[0].id);
                   setState(() {
+                    setState(() {
+                      ctx2 = v;
+                    });
                     deletedItem = index;
                     _pagingController1.itemList.removeAt(deletedItem);
                   });
-                },);
+                },buttonController:_buttonController,
+                buttonController1: _buttonController1,)
+                ;
               },
               noItemsFoundIndicatorBuilder: (context) => Center(
                   child: NoRecordFound(
@@ -321,7 +331,7 @@ class ActiveCouponsState extends State<ActiveCouponsView>
   }
 
   Future<void> redeemOffersApi(int offerId) async {
-    _playAnimation();
+    _playAnimation1();
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -342,7 +352,7 @@ class ActiveCouponsState extends State<ActiveCouponsView>
   }
 
   Future<void> deleteOffersApi(int offerId) async {
-    _playAnimation1();
+    _playAnimation();
     Util.check().then((value) {
       if (value != null && value) {
         // Internet Present Case
@@ -377,7 +387,7 @@ class ActiveCouponsState extends State<ActiveCouponsView>
       }
 
       if (response.data is RedeemOfferModel) {
-
+        RedeemOfferModel model = response.data;
 
 
         ToastUtil.showToast(context, response.msg);
@@ -393,8 +403,10 @@ class ActiveCouponsState extends State<ActiveCouponsView>
               'storeName': singleOfferModel.store.name,
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
+              'redeem_at': model.redeemAt,
             });
       }else if (response.msg == "You have already availed this offer!") {
+        Navigator.pop(ctx2);
         ToastUtil.showToast(context, response.msg);
       }
 
@@ -424,6 +436,7 @@ class ActiveCouponsState extends State<ActiveCouponsView>
       }
       else if (response.msg == "Saved offer has been removed successfully!") {
 
+        Navigator.pop(ctx1);
         ToastUtil.showToast(context, response.msg);
       }  else if (response.data is DioError) {
         if (response.statusCode == 401) {
@@ -445,7 +458,9 @@ class SavedCouponActiveTileView extends StatefulWidget {
   final int pos;
   final ValueChanged<BuildContext> redeemOffer;
   final ValueChanged<BuildContext> deleteOffer;
-  SavedCouponActiveTileView({Key key,this.data,this.pos,this.pagingController1,this.deleteOffer,this.redeemOffer}) : super(key: key);
+  final AnimationController buttonController;
+  final AnimationController buttonController1;
+  SavedCouponActiveTileView({Key key,this.data,this.pos,this.pagingController1,this.deleteOffer,this.redeemOffer,this.buttonController,this.buttonController1}) : super(key: key);
 
   @override
   _SavedCouponActiveTileViewState createState() => _SavedCouponActiveTileViewState();
@@ -475,10 +490,13 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
     List<String> split3String = split1String[1].split(":");
     DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
     var local = offerDate.toLocal();
-    print(local);
-    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()),minutes: int.parse(split3String[1])));
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
 
+    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()) ));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+    print(local);
+    print(updatedDate);
+    print(split2String);
+    print(split3String);
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
@@ -557,7 +575,7 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
 
                     return CustomDialog(
                       showAnimatedBtn: true,
-                      contex: context,
+                      contex: context3,
                       subTitle: "Are you sure you want to remove this offer?",
                       //title: "Your feedback will help us improve our services.",
                       child: SvgPicture.asset(
@@ -566,8 +584,8 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                         height: 80.0,
                       ),
                       btnWidget: AnimatedGradientButton(
-                        onAnimationTap:(){widget.deleteOffer(context3);Navigator.pop(context3);},
-                        buttonController: _buttonController1,
+                        onAnimationTap:(){widget.deleteOffer(context3);},
+                        buttonController: widget.buttonController,
                         text: AppStrings.YES,
                       ),
                       onPressed3:(){
@@ -647,14 +665,20 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              int.parse(_newHours)>1?Text(
-                                "Time to Avail: More than an hour",
-                                style:
-                                AppStyles.blackWithDifferentFontTextStyle(
-                                    context, 12.0)
-                                    .copyWith(
-                                    color: AppColors
-                                        .APP__DETAILS_TEXT_COLOR_LIGHT),
+                              int.parse(_newHours)>1?Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 5),
+                                  child: Text(
+                                    "Time to Avail: More than an hour",
+                                    maxLines: 2,
+                                    style:
+                                    AppStyles.blackWithDifferentFontTextStyle(
+                                        context, 12.0)
+                                        .copyWith(
+                                        color: AppColors
+                                            .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                  ),
+                                ),
                               ):Text(
                                 "Time to Avail: $_min : $_secs ",
                                 style:
@@ -671,13 +695,13 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                                       builder: (BuildContext context3) {
                                         return CustomDialog(
                                           showAnimatedBtn: true,
-                                          contex: context,
+                                          contex: context3,
                                           subTitle: "Are you sure?",
                                           title: "Only redeem offers at checkout.",
 
                                           btnWidget: AnimatedGradientButton(
-                                            onAnimationTap: (){widget.redeemOffer(context3);Navigator.pop(context3);},
-                                            buttonController: _buttonController,
+                                            onAnimationTap: (){widget.redeemOffer(context3);},
+                                            buttonController: widget.buttonController1,
                                             text: AppStrings.YES,
                                           ),
                                           buttonText2: AppStrings.NO,

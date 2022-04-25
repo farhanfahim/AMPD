@@ -19,6 +19,11 @@ class TimerUtils {
         time);
     return DateFormat("yyyy-MM-dd HH:mm:ss").format(tempDate);
   }
+  static String formatUTCTime1(String time) {
+    DateTime tempDate = new DateFormat(AppConstants.DATE_TIME_FORMAT_2).parse(
+        time);
+    return DateFormat("yyyy-MM-dd HH:mm:ss").format(tempDate);
+  }
 
   static String formatUTCTimeForSavedOffers(String time) {
     DateTime tempDate = new DateFormat(AppConstants.DATE_TIME_FORMAT_1).parse(

@@ -59,6 +59,7 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
   final PagingController<int, DataClass> _pagingController1 =
       PagingController(firstPageKey: 1);
 
+  BuildContext ctx2;
   List<DataClass> dataList = List<DataClass>();
 
   bool _openSetting = false;
@@ -249,11 +250,14 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
                                     itemBuilder: (context, item, index) {
                                       return SavedCouponActiveTileView(data:item, pos:index,pagingController1: _pagingController1,redeemOffer: (v){
                                         setState(() {
+                                          ctx2 = v;
+                                        });
+                                        setState(() {
                                           singleOfferModel = item;
                                         });
 
                                         redeemOffersApi(item.id);
-                                      },);
+                                      },buttonController1: _buttonController);
 
                                     },
                                 noItemsFoundIndicatorBuilder: (context) => Center(
@@ -610,9 +614,11 @@ class _SavedCoupons2ViewState extends State<SavedCoupons2View>
               'storeName': singleOfferModel.store.name,
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
+              'redeem_at': response.data.redeem_at,
             });
       }
       else if (response.msg == "You have already availed this offer!") {
+        Navigator.pop(ctx2);
         ToastUtil.showToast(context, response.msg);
         Navigator.pop(dialogContext);
       } else if(response.data is SavedCouponModel) {
@@ -673,7 +679,8 @@ class SavedCouponActiveTileView extends StatefulWidget {
   final DataClass data;
   final int pos;
   final ValueChanged<BuildContext> redeemOffer;
-  SavedCouponActiveTileView({Key key,this.data,this.pos,this.pagingController1,this.redeemOffer}) : super(key: key);
+  final AnimationController buttonController1;
+  SavedCouponActiveTileView({Key key,this.data,this.pos,this.pagingController1,this.redeemOffer,this.buttonController1}) : super(key: key);
 
   @override
   _SavedCouponActiveTileViewState createState() => _SavedCouponActiveTileViewState();
@@ -702,9 +709,13 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
     List<String> split3String = split1String[1].split(":");
     DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
     var local = offerDate.toLocal();
-    print(local);
-    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()),minutes: int.parse(split3String[1])));
+
+    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString())));
     _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+    print(local);
+    print(updatedDate);
+    print(split2String);
+    print(split3String);
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
@@ -815,14 +826,19 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            int.parse(_newHours)>1?Text(
-                              "Time to Avail: More than an hour",
-                              style:
-                              AppStyles.blackWithDifferentFontTextStyle(
-                                  context, 12.0)
-                                  .copyWith(
-                                  color: AppColors
-                                      .APP__DETAILS_TEXT_COLOR_LIGHT),
+                            int.parse(_newHours)>1?Expanded(
+                              child: Container(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Text(
+                                  "Time to Avail: More than an hour",
+                                  style:
+                                  AppStyles.blackWithDifferentFontTextStyle(
+                                      context, 12.0)
+                                      .copyWith(
+                                      color: AppColors
+                                          .APP__DETAILS_TEXT_COLOR_LIGHT),
+                                ),
+                              ),
                             ):Text(
                               "Time to Avail: $_min : $_secs ",
                               style:
@@ -841,13 +857,13 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
 
                                       return CustomDialog(
                                         showAnimatedBtn: true,
-                                        contex: context,
+                                        contex: context3,
                                         subTitle: "Are you sure?",
                                         title: "Only redeem offers at checkout.",
 
                                         btnWidget: AnimatedGradientButton(
-                                          onAnimationTap: (){widget.redeemOffer(context3);Navigator.pop(context3);},
-                                          buttonController: _buttonController,
+                                          onAnimationTap: (){widget.redeemOffer(context3);},
+                                          buttonController: widget.buttonController1,
                                           text: AppStrings.YES,
                                         ),
                                         buttonText2: AppStrings.NO,

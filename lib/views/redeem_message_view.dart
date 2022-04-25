@@ -40,7 +40,6 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
   int _hoursDays = 0;
   Timer _timer;
   double offerRating = 0.0;
-  Timer _timer1;
   int _sec = 10;
   int _secc = 1;
   AnimationController _buttonController;
@@ -50,7 +49,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
   String reviewMessage = "";
   bool _isInternetAvailable = true;
   BuildContext customDialogBoxContext;
-  void startTimer() {
+  /*void startTimer() {
     const oneSec = const Duration(seconds: 1);
     _timer1 = new Timer.periodic(
       oneSec,
@@ -74,20 +73,26 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
 
       },
     );
-  }
+  }*/
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
+    var date = TimerUtils.formatUTCTime1(widget.map['redeem_at']);
+    List<String> split1String = date.split(" ");
+    List<String> split2String = split1String[0].split("-");
+    List<String> split3String = split1String[1].split(":");
+    DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
+    var local = offerDate.toLocal();
 
-      var today = new DateTime.now();
-      var updatedDate = today.add(new Duration(hours: widget.map['availTime']));
-      _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
-
-
-    startTimer();
+    var updatedDate = local.add(new Duration(hours: widget.map['availTime']));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+    print(local);
+    print(updatedDate);
+    print(split2String);
+    print(split3String);
     if (!TimerUtils.isAheadOrBefore(_time)) {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!TimerUtils.isAheadOrBefore(_time)) {
@@ -315,7 +320,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                       ),
                       GradientButton(
                         onTap: () {
-                            _timer1.cancel();
+                            _timer.cancel();
                             Navigator.pop(context);
                           showDialog(
                               context: context,

@@ -8,7 +8,7 @@ class Dataclass {
   String title;
   String productName;
   int type;
-  int value;
+  Object value;
   String expireAt;
   Object numberOfUses;
   Object dislikeTime;

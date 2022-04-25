@@ -41,7 +41,7 @@ class DataClass {
   String title;
   String productName;
   int type;
-  int value;
+  Object value;
   String expireAt;
   int numberOfUses;
   Object dislikeTime;
