@@ -44,9 +44,11 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
   bool _isInternetAvailable = true;
   BuildContext customDialogBoxContext;
   String reviewMessage = "";
+
   Timer _timer1;
-  int _sec = 30;
-  int _secc = 3;
+  int _sec = 10;
+  int _secc = 1;
+
   ScrollController controller = ScrollController();
   Timer _timer;
   String _time = "2022-4-15 09:00:00";
@@ -58,77 +60,88 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
 
   int _hoursDays = 0;
 
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer1 = new Timer.periodic(
+      oneSec,
+          (Timer timer) {
+
+        setState(() {
+          _sec--;
+          if(_sec == 9){
+            _secc = 0;
+          }
+          else if(_sec == 0){
+            _sec = 0;
+            _secc = 0;
+            timer.cancel();
+            Navigator.pushNamedAndRemoveUntil(
+                customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                route) => false, arguments: {
+              'isGuestLogin': false,
+              'tab_index': 0,
+              'show_tutorial': false
+            });
+          }
+        });
+
+        print(_sec);
+
+      },
+    );
+  }
+
+
   @override
   void initState() {
     super.initState();
 
-   /* var today = new DateTime.now();
-    var updatedDate = today.add(new Duration(hours: widget.map['availTime']));
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
-
-
     startTimer();
-    if (!TimerUtils.isAheadOrBefore(_time)) {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        if (!TimerUtils.isAheadOrBefore(_time)) {
-          if (mounted) {
-            setState(() {
-              _days = TimerUtils.getDays(_time, 'days');
-              int dayHour = int.parse(_days)*24;
-              _hours = TimerUtils.getDays(_time, 'hours');
-              _hoursDays = (int.parse(_hours)+dayHour);
-              if(_hoursDays>9){
-                _newHours ="$_hoursDays";
-              }else{
-                _newHours ="0$_hoursDays";
-              }
-              _min = TimerUtils.getDays(_time, 'min');
-              _secs = TimerUtils.getDays(_time, 'sec');
+    var date1 = widget.map['created_at'];
+    List<String> split1String = date1.split(" ");
+    List<String> split2String = split1String[0].split("-");
+    List<String> split3String = split1String[1].split(":");
+    DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
+    var local = offerDate.toLocal();
+
+    var updatedDate = local.add(new Duration(hours: widget.map['availTime']));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _days = TimerUtils.getDays(_time, 'days');
+          _hours = TimerUtils.getDays(_time, 'hours');
+          _min = TimerUtils.getDays(_time, 'min');
+          _secs = TimerUtils.getDays(_time, 'sec');
+          int dayHour = int.parse(_days)*24;
+          _hoursDays = (int.parse(_hours) + dayHour);
+
+          print("days $_days");
+          print("hours $_hoursDays");
+          print("min $_min");
+          print("sec $_secs");
+          if(_days == "00" && _newHours == "0" && _min == "00" && _secs == "00"){
+
+            _timer.cancel();
+            Navigator.pushNamedAndRemoveUntil(
+                customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                route) => false, arguments: {
+              'isGuestLogin': false,
+              'tab_index': 0,
+              'show_tutorial': false
             });
-          }
-        } else {
-          _timer.cancel();
-          if (mounted) {
             setState(() {
-              _days = "10";
+              _days = "00";
               _hours = "00";
               _min = "00";
               _secs = "00";
             });
           }
-        }
-      });
-    }*/
-    var date = widget.map['created_at'].toString();
-    print("asdasdasd $date");
-    List<String> split1String = date.split(" ");
-    List<String> split2String = split1String[0].split("-");
-    List<String> split3String = split1String[1].split(":");
-    DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
-    var local = offerDate.toLocal();
-    startTimer();
-    var updatedDate = local.add(new Duration(hours: int.parse(date.toString()) ));
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(local);
-    print(local);
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() {
-          _days = TimerUtils.getDays(_time, 'days');
-          int dayHour = int.parse(_days)*24;
-          _hours = TimerUtils.getDays(_time, 'hours');
-          _hoursDays = (int.parse(_hours) + dayHour + int.parse(date.toString()));
 
-          print(_hoursDays);
-          if(_hoursDays>9){
-            _newHours ="$_hoursDays";
-          }else{
-            _newHours ="0$_hoursDays";
-          }
-          _min = TimerUtils.getDays(_time, 'min');
-          _secs = TimerUtils.getDays(_time, 'sec');
         });
-
       }
+
     });
 
     _buttonController = AnimationController(
@@ -137,44 +150,6 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
     _qrScanViewModel = QrScanViewModel(App());
     subscribeToViewModel();
 
-  }
-
-
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer1 = new Timer.periodic(
-      oneSec,
-          (Timer timer) {
-
-          setState(() {
-            _sec--;
-            if(_sec == 29){
-              _secc = 2;
-            }
-            else if(_sec == 19){
-              _secc = 1;
-            }
-            else if(_sec == 9){
-              _secc = 0;
-            }
-            else if(_sec == 0){
-              _sec = 0;
-              _secc = 0;
-              timer.cancel();
-              Navigator.pushNamedAndRemoveUntil(
-                  customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
-                  route) => false, arguments: {
-                'isGuestLogin': false,
-                'tab_index': 0,
-                'show_tutorial': false
-              });
-            }
-          });
-
-          print(_sec);
-
-      },
-    );
   }
 
   @override
@@ -260,13 +235,13 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
                             children: [
 
                               Text(
-                                _newHours.toString(),
+                                _hoursDays.toString(),
                                 style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
                                 ,
                               ),
                               Text(
                                 //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
-                                int.parse(_newHours) > 1 ? 'Hours' : 'Hour',
+                                _hoursDays > 1 ? 'Hours' : 'Hour',
                                 style: AppStyles.poppinsTextStyle(
                                     fontSize: 10.0.sp,
                                     weight: FontWeight.w300).copyWith(color:AppColors.WHITE_COLOR),

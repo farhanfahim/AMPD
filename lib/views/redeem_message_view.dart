@@ -57,6 +57,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
           (Timer timer) {
 
         setState(() {
+          print(_sec);
           _sec--;
            if(_sec == 9){
             _secc = 0;
@@ -64,7 +65,7 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
           else if(_sec == 0){
             _sec = 0;
             _secc = 0;
-            timer.cancel();
+            _timer1.cancel();
             Navigator.pushNamedAndRemoveUntil(
                 customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
                 route) => false, arguments: {
@@ -86,37 +87,53 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
     // TODO: implement initState
     super.initState();
 
-    startTimer();
-    var date = widget.map['created_at'].toString();
-    print("asdasdasd $date");
-    List<String> split1String = date.split(" ");
+
+    var date1 = widget.map['created_at'];
+    List<String> split1String = date1.split(" ");
     List<String> split2String = split1String[0].split("-");
     List<String> split3String = split1String[1].split(":");
     DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
     var local = offerDate.toLocal();
 
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(local);
-    print(local);
+    var updatedDate = local.add(new Duration(hours: widget.map['availTime']));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (mounted) {
         setState(() {
           _days = TimerUtils.getDays(_time, 'days');
-          int dayHour = int.parse(_days)*24;
           _hours = TimerUtils.getDays(_time, 'hours');
-          _hoursDays = (int.parse(_hours) + dayHour + int.parse(date.toString()));
-
-          print(_hoursDays);
-          if(_hoursDays>9){
-            _newHours ="$_hoursDays";
-          }else{
-            _newHours ="0$_hoursDays";
-          }
           _min = TimerUtils.getDays(_time, 'min');
           _secs = TimerUtils.getDays(_time, 'sec');
-        });
+          int dayHour = int.parse(_days)*24;
+          _hoursDays = (int.parse(_hours) + dayHour);
 
+          print("days $_days");
+          print("hours $_hoursDays");
+          print("min $_min");
+          print("sec $_secs");
+          if(_days == "00" && _newHours == "0" && _min == "00" && _secs == "00"){
+
+            _timer.cancel();
+            Navigator.pushNamedAndRemoveUntil(
+                customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                route) => false, arguments: {
+              'isGuestLogin': false,
+              'tab_index': 0,
+              'show_tutorial': false
+            });
+            setState(() {
+              _days = "00";
+              _hours = "00";
+              _min = "00";
+              _secs = "00";
+            });
+          }
+
+        });
       }
+
     });
+
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
 
@@ -205,13 +222,13 @@ class _RedeemMessageState extends State<RedeemMessageView>  with TickerProviderS
                               children: [
 
                                 Text(
-                                  _newHours.toString(),
+                                  _hoursDays.toString(),
                                   style: AppStyles.blackWithBoldFontTextStyle(context, 30.0).copyWith(color: AppColors.WHITE_COLOR)
                                   ,
                                 ),
                                 Text(
                                   //widget.data.recurrenceTime > 1? 'Hours' : 'Hour',
-                                  int.parse(_newHours) > 1 ? 'Hours' : 'Hour',
+                                  _hoursDays > 1 ? 'Hours' : 'Hour',
                                   style: AppStyles.poppinsTextStyle(
                                       fontSize: 10.0.sp,
                                       weight: FontWeight.w300).copyWith(color:AppColors.WHITE_COLOR),

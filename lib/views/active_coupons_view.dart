@@ -484,36 +484,44 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
   void initState() {
 
     super.initState();
-    var date = widget.data.userOffers[0].createdAt;
-    List<String> split1String = date.split(" ");
+    var date1 = widget.data.userOffers[0].createdAt;
+    List<String> split1String = date1.split(" ");
     List<String> split2String = split1String[0].split("-");
     List<String> split3String = split1String[1].split(":");
     DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
     var local = offerDate.toLocal();
 
-    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()) ));
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(local);
-    print(local);
+    var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString())));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
           if (mounted) {
             setState(() {
               _days = TimerUtils.getDays(_time, 'days');
-              int dayHour = int.parse(_days)*24;
               _hours = TimerUtils.getDays(_time, 'hours');
-              _hoursDays = (int.parse(_hours) + dayHour + int.parse(widget.data.availTime.toString()));
- 
-              print(_hoursDays);
-              if(_hoursDays>9){
-                _newHours ="$_hoursDays";
-              }else{
-                _newHours ="0$_hoursDays";
-              }
               _min = TimerUtils.getDays(_time, 'min');
               _secs = TimerUtils.getDays(_time, 'sec');
-            });
+              int dayHour = int.parse(_days)*24;
+              _hoursDays = (int.parse(_hours) + dayHour);
 
-        }
+              if(_days == "00" && _newHours == "0" && _min == "00" && _secs == "00"){
+                print(_days);
+                print(_hoursDays);
+                print(_min);
+                print(_secs);
+                _timer.cancel();
+                setState(() {
+                  _days = "00";
+                  _hours = "00";
+                  _min = "00";
+                  _secs = "00";
+                });
+              }
+
+            });
+          }
+
       });
+
     controller = SwipeActionController(selectedIndexPathsChangeCallback:
         (changedIndexPaths, selected, currentCount) {});
 
@@ -653,7 +661,7 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              int.parse(_newHours)>1?Expanded(
+                              _hoursDays>=1?Expanded(
                                 child: Container(
                                   padding: EdgeInsets.only(right: 5),
                                   child: Text(

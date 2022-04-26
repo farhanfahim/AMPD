@@ -1110,7 +1110,7 @@ class _EditProfileViewState extends State<EditProfileView> with TickerProviderSt
         print('email ${editableEmailController.text}');
 
         var map = Map<String, dynamic>();
-        map['email'] = editableEmailController.text.trim().toString();
+        map['email'] = userDetails.data.email;
         _editProfileViewModel.verificationCodeToEmail(map);
       } else {
         setState(() {
