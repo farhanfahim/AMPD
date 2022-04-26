@@ -99,51 +99,38 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
         }
       });
     }*/
-
-    var date = TimerUtils.formatUTCTime1(widget.map['redeem_at']);
+    var date = widget.map['created_at'].toString();
+    print("asdasdasd $date");
     List<String> split1String = date.split(" ");
     List<String> split2String = split1String[0].split("-");
     List<String> split3String = split1String[1].split(":");
     DateTime offerDate = DateTime.utc(int.parse(split2String[0]),int.parse(split2String[1]),int.parse(split2String[2]),int.parse(split3String[0]),int.parse(split3String[1]),int.parse(split3String[2]) );
     var local = offerDate.toLocal();
-
-    var updatedDate = local.add(new Duration(hours: widget.map['availTime']));
-    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedDate);
+    startTimer();
+    var updatedDate = local.add(new Duration(hours: int.parse(date.toString()) ));
+    _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(local);
     print(local);
-    print(updatedDate);
-    print(split2String);
-    print(split3String);
-    if (!TimerUtils.isAheadOrBefore(_time)) {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        if (!TimerUtils.isAheadOrBefore(_time)) {
-          if (mounted) {
-            setState(() {
-              _days = TimerUtils.getDays(_time, 'days');
-              int dayHour = int.parse(_days)*24;
-              _hours = TimerUtils.getDays(_time, 'hours');
-              _hoursDays = (int.parse(_hours)+dayHour);
-              if(_hoursDays>9){
-                _newHours ="$_hoursDays";
-              }else{
-                _newHours ="0$_hoursDays";
-              }
-              _min = TimerUtils.getDays(_time, 'min');
-              _secs = TimerUtils.getDays(_time, 'sec');
-            });
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _days = TimerUtils.getDays(_time, 'days');
+          int dayHour = int.parse(_days)*24;
+          _hours = TimerUtils.getDays(_time, 'hours');
+          _hoursDays = (int.parse(_hours) + dayHour + int.parse(date.toString()));
+
+          print(_hoursDays);
+          if(_hoursDays>9){
+            _newHours ="$_hoursDays";
+          }else{
+            _newHours ="0$_hoursDays";
           }
-        } else {
-          _timer.cancel();
-          if (mounted) {
-            setState(() {
-              _days = "10";
-              _hours = "00";
-              _min = "00";
-              _secs = "00";
-            });
-          }
-        }
-      });
-    }
+          _min = TimerUtils.getDays(_time, 'min');
+          _secs = TimerUtils.getDays(_time, 'sec');
+        });
+
+      }
+    });
+
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
 
@@ -174,7 +161,13 @@ class _QrScanState extends State<QrScanView> with TickerProviderStateMixin {
               _sec = 0;
               _secc = 0;
               timer.cancel();
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(
+                  customDialogBoxContext, AppRoutes.DASHBOARD_VIEW, (
+                  route) => false, arguments: {
+                'isGuestLogin': false,
+                'tab_index': 0,
+                'show_tutorial': false
+              });
             }
           });
 

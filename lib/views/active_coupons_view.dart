@@ -403,7 +403,7 @@ class ActiveCouponsState extends State<ActiveCouponsView>
               'storeName': singleOfferModel.store.name,
               'redeemMessage': singleOfferModel.redeemMessage,
               'offer_id': response.data.offerId,
-              'redeem_at': model.redeemAt,
+              'created_at': model.createdAt,
             });
       }else if (response.msg == "You have already availed this offer!") {
         Navigator.pop(ctx2);

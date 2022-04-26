@@ -636,7 +636,7 @@ class _HomeViewState extends State<HomeView>
           'storeName': storeName,
           'redeemMessage': redeemMessage,
           'offer_id': response.data.offerId,
-          'redeem_at': model.redeemAt,
+          'created_at': model.createdAt,
         });
       }
       else if (response.msg == "You have already availed this offer!") {
