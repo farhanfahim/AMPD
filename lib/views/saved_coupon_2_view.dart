@@ -714,45 +714,26 @@ class _SavedCouponActiveTileViewState extends State<SavedCouponActiveTileView> w
     var updatedDate = local.add(new Duration(hours: int.parse(widget.data.availTime.toString()) ));
     _time = DateFormat('yyyy-MM-dd HH:mm:ss').format(local);
     print(local);
-    print(updatedDate);
-    print(split2String);
-    print(split3String);
-    print(_time);
-    print(_days);
-    if (TimerUtils.isAheadOrBefore(_time)) {
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        if (TimerUtils.isAheadOrBefore(_time)) {
-          if (mounted) {
-            setState(() {
-              _days = TimerUtils.getDays(_time, 'days');
-              int dayHour = int.parse(_days)*24;
-              _hours = TimerUtils.getDays(_time, 'hours');
-              _hoursDays = (int.parse(_hours) + dayHour + int.parse(widget.data.availTime.toString()));
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          _days = TimerUtils.getDays(_time, 'days');
+          int dayHour = int.parse(_days)*24;
+          _hours = TimerUtils.getDays(_time, 'hours');
+          _hoursDays = (int.parse(_hours) + dayHour + int.parse(widget.data.availTime.toString()));
 
-              print(_hours);
-              print(_hoursDays);
-              if(_hoursDays>9){
-                _newHours ="$_hoursDays";
-              }else{
-                _newHours ="0$_hoursDays";
-              }
-              _min = TimerUtils.getDays(_time, 'min');
-              _secs = TimerUtils.getDays(_time, 'sec');
-            });
+          print(_hoursDays);
+          if(_hoursDays>9){
+            _newHours ="$_hoursDays";
+          }else{
+            _newHours ="0$_hoursDays";
           }
-        } else {
-          _timer.cancel();
-          if (mounted) {
-            setState(() {
-              _days = "10";
-              _hours = "00";
-              _min = "00";
-              _secs = "00";
-            });
-          }
-        }
-      });
-    }
+          _min = TimerUtils.getDays(_time, 'min');
+          _secs = TimerUtils.getDays(_time, 'sec');
+        });
+
+      }
+    });
     _buttonController = AnimationController(
         duration: const Duration(milliseconds: 3000), vsync: this);
     _buttonController1 = AnimationController(
