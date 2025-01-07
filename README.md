@@ -1,16 +1,18 @@
-# ampd
+# AMPD
 
-A new Flutter project.
+## Objective
 
-## Getting Started
+AMPD Influence offers exclusive access to deals and offers in your local area through its innovative swipe feature. This unique feature allows users to discover and unlock various promotions, discounts, and special offers tailored specifically to their location. By swiping through the app, users can easily find deals from nearby businesses, such as restaurants, shops, events, and more. The swipe feature simplifies the process of browsing and redeeming these offers, making it effortless for users to take advantage of discounts right where they are. Whether you’re looking for a lunch deal, a shopping bargain, or an exciting local event, AMPD Influence brings the best of your area directly to your fingertips.
 
-This project is a starting point for a Flutter application.
+### Tools Used
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Flutter SDK
+Firebase
+Geolocator package
+Google Maps API
+flutter_tindercard widget
+Stripe
+Firebase Cloud Messaging (FCM)
+GetX
+Xcode
+Android Studio
