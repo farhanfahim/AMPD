@@ -6,13 +6,13 @@ AMPD Influence offers exclusive access to deals and offers in your local area th
 
 ### Tools Used
 
-Flutter SDK
-Firebase
-Geolocator package
-Google Maps API
-flutter_tindercard widget
-Stripe
-Firebase Cloud Messaging (FCM)
-GetX
-Xcode
-Android Studio
+- Flutter SDK
+- Firebase
+- Geolocator package
+- Google Maps API
+- flutter_tindercard widget
+- Stripe
+- Firebase Cloud Messaging (FCM)
+- GetX
+- Xcode
+- Android Studio
